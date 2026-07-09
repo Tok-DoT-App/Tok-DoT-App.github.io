@@ -1,5 +1,6 @@
-// sw.js (安定版・GitHub Pages向け)
-const CACHE_NAME = "doublecounter-app-v1";
+// sw.js (Double Bite!! 安定版・GitHub Pages向け)
+
+const CACHE_NAME = "double-bite-app-v2";
 
 // ★静的アセットのみキャッシュ（HTMLは入れない）
 const ASSETS = [
@@ -42,7 +43,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
 
-  // ★ HTMLは必ず最新取得（重要）
+  // ★ HTMLは必ず最新取得
   if (request.mode === "navigate") {
     event.respondWith(fetch(request));
     return;
