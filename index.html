@@ -2742,6 +2742,26 @@ iframe {
   margin-top:8px;
 }
 
+/* =========================
+   OFUSE 応援ボタン
+========================= */
+
+.ofuse-button {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #1a237e; /* 紺色 */
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.ofuse-button:hover {
+  opacity: 0.8;
+}
+
 </style>
 </head>
 
@@ -2871,7 +2891,7 @@ iframe {
 
       <p>
 
-        最終更新日：2026年7月10日
+        最終更新日：2026年7月7日
         <br><br>
 
         本規約は、Double Bite!!（以下「本アプリ」）の利用条件を定めるものです。<br>
@@ -2984,22 +3004,19 @@ iframe {
         <strong>下のボタンから応援をお願いします。</strong>
       </p>
 
-      <div class="ofuse-wrap">
+<div class="ofuse-wrap">
 
-        <a
-          href="https://ofuse.me/o?uid=142822"
-          data-ofuse-widget-button
-          data-ofuse-id="142822">
+  <a
+    href="https://ofuse.me/o?uid=142822"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ofuse-button">
 
-          <img
-            src="https://ofuse.me/images/ofuse_button.png"
-            alt="OFUSEで応援する"
-            style="max-width:180px; height:auto; display:block; margin:0 auto;"
-          />
+    OFUSEで応援する
 
-        </a>
+  </a>
 
-      </div>
+</div>
 
       <p class="ofuse-note">
         ※OFUSEという名前は「お布施」に似ていますが、
@@ -3271,9 +3288,11 @@ iframe {
   <div class="counter-grid" id="counterGrid"></div>
 
   <!-- SoloCounter iframe -->
-  <div class="solo-embed">
-    <iframe src="SoloCounter.html?iframe=1#solo"></iframe>
-  </div>
+  <!--
+<div class="solo-embed">
+  <iframe src="SoloCounter.html?iframe=1#solo"></iframe>
+</div>
+  -->
 
   <div style="margin-top:8px; text-align:center;">
     <button class="sub" onclick="showScreen('settingsScreen')">ちょっと休憩</button>
@@ -4935,20 +4954,6 @@ const soloWrapper = document.querySelector(".soloCounterWrapper");
 wrapperSlider.style.backgroundColor = fullWrapperColors[wrapperIndex];
 soloWrapper.style.backgroundColor = fullWrapperColors[wrapperIndex];
 
-// 色変更関数
-function changeWrapperColor(delta) {
-  if (delta < 0) {
-    wrapperIndex = (wrapperIndex + 1) % fullWrapperColors.length;
-  } else {
-    wrapperIndex =
-      (wrapperIndex - 1 + fullWrapperColors.length) %
-      fullWrapperColors.length;
-  }
-
-  wrapperSlider.style.backgroundColor = fullWrapperColors[wrapperIndex];
-  soloWrapper.style.backgroundColor = fullWrapperColors[wrapperIndex];
-}
-
 // マウスホイール対応
 wrapperSlider.addEventListener("wheel", e => {
   if (e.deltaY !== 0) {
@@ -5008,23 +5013,6 @@ let rightIndex = 0;
 const leftBox = document.querySelector(".left-color-box");
 const rightBox = document.querySelector(".right-color-box");
 
-// -------------------- 色変更関数 --------------------
-function changeLeftColor(delta) {
-  if (delta < 0) leftIndex = (leftIndex + 1) % fullLeftColors.length;
-  else leftIndex = (leftIndex - 1 + fullLeftColors.length) % fullLeftColors.length;
-
-  leftBox.style.backgroundColor = fullLeftColors[leftIndex];
-  document.getElementById("soloLeftCount").style.backgroundColor = fullLeftColors[leftIndex];
-}
-
-function changeRightColor(delta) {
-  if (delta < 0) rightIndex = (rightIndex + 1) % fullRightColors.length;
-  else rightIndex = (rightIndex - 1 + fullRightColors.length) % fullRightColors.length;
-
-  rightBox.style.backgroundColor = fullRightColors[rightIndex];
-  document.getElementById("soloRightCount").style.backgroundColor = fullRightColors[rightIndex];
-}
-
 // -------------------- マウスホイール対応 --------------------
 leftBox.addEventListener("wheel", e => {
   if (e.deltaY !== 0) {
@@ -5076,34 +5064,81 @@ const STORAGE_KEY = "hitoriCounterColors";
 
 // 初期ロード時に保存データがあれば適用
 window.addEventListener("DOMContentLoaded", () => {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if (saved) {
-    // 本体
+
+  let saved = null;
+
+  try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } catch (e) {
+    // 保存データ破損時
+    localStorage.removeItem(STORAGE_KEY);
+    saved = null;
+  }
+
+
+  if (
+  saved &&
+  saved.wrapperColor &&
+  saved.leftColor &&
+  saved.rightColor
+) {
+
+    // ----------------------------
+    // 保存色を復元
+    // ----------------------------
+
     soloWrapper.style.backgroundColor = saved.wrapperColor;
     wrapperSlider.style.backgroundColor = saved.wrapperColor;
 
-    // 左右ボックス本体
     leftBox.style.backgroundColor = saved.leftColor;
     rightBox.style.backgroundColor = saved.rightColor;
 
-    // 左右ボタン（パレット）にも反映
     document.getElementById("soloLeftCount").style.backgroundColor = saved.leftColor;
     document.getElementById("soloRightCount").style.backgroundColor = saved.rightColor;
+
+
+    // ----------------------------
+    // index復元
+    // ----------------------------
+
+    if (saved.wrapperIndex !== undefined) {
+      wrapperIndex = saved.wrapperIndex;
+    }
+
+    if (saved.leftIndex !== undefined) {
+      leftIndex = saved.leftIndex;
+    }
+
+    if (saved.rightIndex !== undefined) {
+      rightIndex = saved.rightIndex;
+    }
+
+
+    // ----------------------------
+    // ロック状態復元
+    // ----------------------------
 
     isLocked = true;
     lockButton.classList.add("locked");
   }
+
 });
 
 // ボタンクリックでトグル
 lockButton.addEventListener("click", () => {
   if (!isLocked) {
-    // ロック：現在の色を保存
-    const data = {
-      wrapperColor: soloWrapper.style.backgroundColor,
-      leftColor: leftBox.style.backgroundColor,
-      rightColor: rightBox.style.backgroundColor
-    };
+
+// ロック：現在の色を保存
+const data = {
+  wrapperColor: soloWrapper.style.backgroundColor,
+  leftColor: leftBox.style.backgroundColor,
+  rightColor: rightBox.style.backgroundColor,
+
+  wrapperIndex: wrapperIndex,
+  leftIndex: leftIndex,
+  rightIndex: rightIndex
+};
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
     isLocked = true;
@@ -5472,6 +5507,7 @@ let lastTapTime = 0;
 let rapidTapCount = 0;
 let totalCounts = 0;
 
+
 /* ---------------- 重複防止履歴 ---------------- */
 let recentMessages = [];
 const MESSAGE_HISTORY_LIMIT = 15;
@@ -5521,6 +5557,24 @@ const initMessages = [
 /* ---------------- 初回表示 ---------------- */
 function initPartnerMessage() {
   showPartnerMessage(randNoRepeat(initMessages), 0);
+}
+
+
+/* ---------------- 再スタート専用メッセージ ---------------- */
+const restartMessages = [
+  "新しい流れを作っていきましょう",
+  "ここからまた積み上げていきましょう",
+  "リセット完了です。次の一匹を狙いましょう",
+  "新しい釣りの時間が始まりますね",
+  "気持ちを切り替えて楽しみましょう",
+  "また一から見守っていますね",
+  "ここからどんな展開になるか楽しみです",
+  "新しい記録へのスタートですね"
+];
+
+/* ---------------- 再スタート表示 ---------------- */
+function initRestartMessage() {
+  showPartnerMessage(randNoRepeat(restartMessages), 0);
 }
 
 /* ---------------- 表示 ---------------- */
@@ -5755,11 +5809,11 @@ function getPartnerMessage(count){
   }
 
   /* ===== 沈黙15秒で完全リセット ===== */
-  if(now - lastTapTime > 15000){
-    rapidTapCount = 0;
-    rapidZoneAnnounced = false;
-    lastRapidTime = 0;
-  }
+if(now - lastTapTime > 15000){
+  rapidTapCount = 0;
+  rapidZoneAnnounced = false;
+  lastRapidTime = 0;
+}
 
   /* ===== 連掛け有効時間（8秒） ===== */
   const rapidActive = (now - lastRapidTime < 8000);
@@ -5909,15 +5963,57 @@ function confirmAllClearSolo() {
     localStorage.removeItem("liveHourlyHistory");
   }
 
-  // --- グラフ再描画（存在すれば） ---
-  if (typeof updateGraphDisplay === "function") {
-    updateGraphDisplay();
-  }
+ // --- グラフ再描画（存在すれば） ---
+if (typeof updateGraphDisplay === "function") {
+  updateGraphDisplay();
+}
 
-  // --- 情報表示（存在すれば） ---
-  if (typeof showInfo === "function") {
-    showInfo("すべてのカウントとグラフを初期化しました", "danger");
-  }
+// --- 情報表示（存在すれば） ---
+if (typeof showInfo === "function") {
+  showInfo("すべてのカウントとグラフを初期化しました", "danger");
+}
+
+
+// --- AI相棒 初期化＆新規開始 ---
+
+// 人格経験値リセット
+if (typeof totalCounts !== "undefined") {
+  totalCounts = 0;
+}
+
+// ③ メッセージ履歴リセット
+if (typeof recentMessages !== "undefined") {
+  recentMessages = [];
+}
+
+// ① 連掛け状態リセット
+if (typeof lastTapTime !== "undefined") {
+  lastTapTime = 0;
+}
+
+if (typeof rapidTapCount !== "undefined") {
+  rapidTapCount = 0;
+}
+
+if (typeof lastRapidTime !== "undefined") {
+  lastRapidTime = 0;
+}
+
+if (typeof rapidZoneAnnounced !== "undefined") {
+  rapidZoneAnnounced = false;
+}
+
+// ② 沈黙時間リセット
+if (typeof lastCountTime !== "undefined") {
+  lastCountTime = Date.now();
+}
+
+
+// 最後に再スタートメッセージ表示
+if (typeof initRestartMessage === "function") {
+  initRestartMessage();
+}
+
 }
 
 // ==================== カスタムモーダル ====================
