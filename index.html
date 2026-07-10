@@ -22,8 +22,9 @@ family=Saira:ital,wght@0,100..900;1,100..900&
 family=BBH+Hegarty&
 family=Comfortaa:wght@300..700&
 family=Alfa+Slab+One&
+family=M+PLUS+Rounded+1c:wght@400;700&
+family=Zen+Maru+Gothic:wght@400;500;700&
 display=swap" rel="stylesheet">
-
 
 <style>
 html, body{
@@ -285,25 +286,38 @@ li{
    アプリ標準ボタン：プライマリ（落ち着きブルー系・最上段）
    ===================================== */
 button.btn-solo {
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
   width: 100%;
   min-width: 120px;
-  min-height: 100px;       /* 縦幅 */
-  line-height: 1.2;
-  text-align: center;
-  padding: 16px 16px;      /* 上下左右余白 */
+  min-height: 100px;
+
+  padding: 16px;
+
+  /* ▼文字調整 */
+  font-size: 25px;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
 
   background: linear-gradient(
     to bottom,
-    #4f6fa8 0%,   /* 明るめブルー */
-    #2f4f8f 30%, 
-    #1f3f7a 70%, 
-    #162f5f 100%  /* 濃いブルー */
+    #4f6fa8 0%,
+    #2f4f8f 30%,
+    #1f3f7a 70%,
+    #162f5f 100%
   );
+
   color: #fff;
   font-weight: bold;
-  font-family: "RocknRoll One", sans-serif;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+
+  border: none;
   border-radius: 14px;
+
+  text-align: center;
+  white-space: nowrap;
 
   /* ぷっくり＋浮き感 */
   box-shadow:
@@ -317,6 +331,7 @@ button.btn-solo {
     box-shadow 0.12s cubic-bezier(.25,.8,.3,1),
     filter 0.12s ease,
     text-shadow 0.12s ease;
+
   text-shadow: 0 1px 1px rgba(0,0,0,0.2);
   outline: none;
 }
@@ -997,7 +1012,7 @@ button.btn-part:active {
   filter: brightness(0.95);
 }
 
-/* エサ投入交換ボタン：ぷっくり盛り上がり（影なし） */
+/* Next bite!!ボタン：ぷっくり盛り上がり（影なし） */
 .screen.solo-counter .bait-btn {
   display: block;
   width: 116px;
@@ -1038,6 +1053,15 @@ button.btn-part:active {
 /* 時間切れ */
 .screen.solo-counter .bait-btn.timeout{
   background: linear-gradient(to bottom, #EF5350, #C62828);
+}
+
+.screen.solo-counter .bait-btn .bait-icon{
+  display:inline-block;
+  font-size:0.68em;
+  transform:translateY(-1px);
+  letter-spacing:-2px;
+  margin-right:6px;
+  opacity:.85;
 }
 
 /* =========================
@@ -1097,6 +1121,23 @@ button.btn-part:active {
     box-shadow:
       inset 0 1px 2px rgba(255,255,255,.8),
       inset 0 -1px 2px rgba(0,0,0,.08);
+}
+
+.bait-label{
+  display: inline-block;
+  font-size: 0.7em;
+  opacity: .85;
+  transform: translateY(-1px);
+  margin-right: 3px;
+}
+
+/* 「設定：」 */
+.bait-setting-label{
+  display: inline-block;
+  font-size: 0.7em;
+  opacity: .85;
+  transform: translateY(-1px);
+  margin-right: 3px;
 }
 
 /* -------------------------------- ひとりカウンター枠 -------------------------------- */
@@ -2251,7 +2292,7 @@ iframe {
 }
 
 /* =====================================
-   エサ投入・交換時間設定モーダル
+   Next bite!!時間設定モーダル
    ===================================== */
 
 /* 背景 */
@@ -2795,7 +2836,7 @@ iframe {
 
 <button id="soloBtn" class="btn-solo"
         onclick="enterSoloCounterWithConfirm()">
-  Let's Go Fishing!!
+  レッツ フィッシング!!
 </button>
 
 <!-- =========================
@@ -3165,16 +3206,17 @@ iframe {
 
   <!-- 新しい表示 -->
   <button id="baitTimerBtn" class="bait-btn">
-    エサ投入・交換
+  <span class="bait-icon">▶▶</span> Next Bite!!
   </button>
 
 <div id="baitTimer" class="bait-timer">
-  あと <span class="bait-min">15</span>:<span class="bait-sec">00</span>
+  <span class="bait-label">あと</span>
+  <span class="bait-min">15</span>:<span class="bait-sec">00</span>
 </div>
 
-  <div id="baitSetting" class="bait-setting">
-    設定：15分
-  </div>
+<div id="baitSetting" class="bait-setting">
+  <span class="bait-label">設定：</span>15分
+</div>
 
 </div>
 
@@ -4910,37 +4952,52 @@ function addVibrationToggleLongPress(button) {
 // -------------------- 中央カウンター左色パレット --------------------
 
 function generateWrapperColors() {
+
   const colors = [];
 
-  // --- 黒系（必須） ---
-  colors.push(
-    "#000000",
-    "#121212",
-    "#1C1C1C",
-    "#263238",
-    "#37474F"
-  );
+  // --------------------
+  // 黒 → グレー（20色）
+  // --------------------
+  for (let i = 0; i < 20; i++) {
+    const l = Math.round(i * 2.3);   // 0～44%
+    colors.push(`hsl(0, 0%, ${l}%)`);
+  }
 
-  // --- クリーム系（必須） ---
-  colors.push(
-    "#FFF8E1",
-    "#FFF3CC",
-    "#FFECB3",
-    "#F5E6B3",
-    "#EADFB4"
-  );
+  // --------------------
+  // 白・クリーム（20色）
+  // --------------------
+  for (let i = 0; i < 20; i++) {
 
-  // --- はっきりした有彩色（90色） ---
-  const total = 90;
+    const lightness = 92 + i * 0.4;     // 92～99%
+    const saturation = 15 + i * 1.2;    // 少しずつ暖色へ
+
+    colors.push(
+      `hsl(45, ${saturation}%, ${lightness}%)`
+    );
+  }
+
+  // --------------------
+  // カラー（180色）
+  // --------------------
+
+  const total = 180;
+
   for (let i = 0; i < total; i++) {
-    const hue = Math.round((360 / total) * i);
-    const saturation = 85; // 高彩度
-    const lightness = 55;  // くっきり
 
-    colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    const hue = i * 2;
+
+    // 少しだけ揺らぎ
+    const saturation = 82 + Math.sin(i * 0.12) * 6;
+    const lightness  = 54 + Math.cos(i * 0.15) * 5;
+
+    colors.push(
+      `hsl(${hue}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%)`
+    );
+
   }
 
   return colors;
+
 }
 
 const fullWrapperColors = generateWrapperColors();
@@ -4987,17 +5044,25 @@ wrapperSlider.addEventListener("touchmove", e => {
 const leftColors = ["#1ABC9C"];
 const rightColors = ["#E67E22"];
 
-// デフォルト色1色を基準にランダムな濃淡で拡張（合計100色）
-// 自然にループするように HSL を生成
-function generateExtraColors(baseColors, total = 100) {
+// デフォルト色＋滑らかなグラデーションカラー
+function generateExtraColors(baseColors, total = 360) {
+
   const colors = [];
-  const step = 360 / total; // Hue のステップ
+
   for (let i = 0; i < total; i++) {
-    const hue = (i * step) % 360;                 // Hue 0-360°でループ
-    const saturation = 65 + Math.random() * 10;   // 65～75%
-    const lightness  = 45 + Math.random() * 10;   // 45～55%
-    colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+
+    // 色相を1度ずつ変化
+    const hue = i;
+
+    // 彩度・明度をほんの少しだけ変化
+    const saturation = 72 + Math.sin(i * 0.08) * 6;
+    const lightness  = 50 + Math.cos(i * 0.10) * 5;
+
+    colors.push(
+      `hsl(${hue}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%)`
+    );
   }
+
   // 初期色を先頭に追加
   return baseColors.concat(colors);
 }
@@ -5076,51 +5141,50 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  if (
-  saved &&
-  saved.wrapperColor &&
-  saved.leftColor &&
-  saved.rightColor
-) {
+if (saved) {
 
-    // ----------------------------
-    // 保存色を復元
-    // ----------------------------
+  // ----------------------------
+  // 保存色を復元
+  // ----------------------------
 
+  if (saved.wrapperColor) {
     soloWrapper.style.backgroundColor = saved.wrapperColor;
     wrapperSlider.style.backgroundColor = saved.wrapperColor;
-
-    leftBox.style.backgroundColor = saved.leftColor;
-    rightBox.style.backgroundColor = saved.rightColor;
-
-    document.getElementById("soloLeftCount").style.backgroundColor = saved.leftColor;
-    document.getElementById("soloRightCount").style.backgroundColor = saved.rightColor;
-
-
-    // ----------------------------
-    // index復元
-    // ----------------------------
-
-    if (saved.wrapperIndex !== undefined) {
-      wrapperIndex = saved.wrapperIndex;
-    }
-
-    if (saved.leftIndex !== undefined) {
-      leftIndex = saved.leftIndex;
-    }
-
-    if (saved.rightIndex !== undefined) {
-      rightIndex = saved.rightIndex;
-    }
-
-
-    // ----------------------------
-    // ロック状態復元
-    // ----------------------------
-
-    isLocked = true;
-    lockButton.classList.add("locked");
   }
+
+  if (saved.leftColor) {
+    leftBox.style.backgroundColor = saved.leftColor;
+    document.getElementById("soloLeftCount").style.backgroundColor = saved.leftColor;
+  }
+
+  if (saved.rightColor) {
+    rightBox.style.backgroundColor = saved.rightColor;
+    document.getElementById("soloRightCount").style.backgroundColor = saved.rightColor;
+  }
+
+  // ----------------------------
+  // index復元
+  // ----------------------------
+
+  if (saved.wrapperIndex !== undefined) {
+    wrapperIndex = saved.wrapperIndex;
+  }
+
+  if (saved.leftIndex !== undefined) {
+    leftIndex = saved.leftIndex;
+  }
+
+  if (saved.rightIndex !== undefined) {
+    rightIndex = saved.rightIndex;
+  }
+
+  // ----------------------------
+  // ロック状態復元
+  // ----------------------------
+
+  isLocked = true;
+  lockButton.classList.add("locked");
+}
 
 });
 
@@ -5130,13 +5194,13 @@ lockButton.addEventListener("click", () => {
 
 // ロック：現在の色を保存
 const data = {
-  wrapperColor: soloWrapper.style.backgroundColor,
-  leftColor: leftBox.style.backgroundColor,
-  rightColor: rightBox.style.backgroundColor,
+  wrapperColor: getComputedStyle(soloWrapper).backgroundColor,
+  leftColor: getComputedStyle(leftBox).backgroundColor,
+  rightColor: getComputedStyle(rightBox).backgroundColor,
 
-  wrapperIndex: wrapperIndex,
-  leftIndex: leftIndex,
-  rightIndex: rightIndex
+  wrapperIndex,
+  leftIndex,
+  rightIndex
 };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -5533,7 +5597,7 @@ const initMessages = [
   "今日も良い一日になりそうですね",
   "落ち着いて積み上げていきましょう",
   "今日の流れ、楽しみですね",
-  "静かなスタートも悪くないですね",
+  "落ち着いたスタートですね",
   "良い釣り日和になりそうです",
   "今日の展開、期待できそうですね",
   "無理せず、いいペースでいきましょう",
@@ -5544,7 +5608,7 @@ const initMessages = [
   "気持ちの良い一日になりそうです",
 
   // 追加
-  "今日は静かな立ち上がりですね",
+  "今日は静かな始まりですね",
   "今日の湖、雰囲気がいいですね",
   "集中しやすい空気感ですね",
   "穏やかな一日になりそうです",
@@ -5625,7 +5689,7 @@ const personalityLevels = {
   ],
   lv2: [
     "誘いの精度が上がっていますね",
-    "魚の反応を上手く捉えています",
+    "魚とのタイミングが合っていますね",
     "無駄のない動きになっています",
     "テンポが洗練されてきました",
     "手返しがとても安定しています",
@@ -5633,7 +5697,7 @@ const personalityLevels = {
   ],
   lv3: [
     "魚の癖をしっかり把握しています",
-    "誘いが名人級ですね",
+    "誘いのタイミングが素晴らしいですね",
     "釣り運びがとても美しいです",
     "熟練者の釣り方そのものです",
     "完成形に近い釣りですね"
@@ -5649,8 +5713,8 @@ const personalityLevels = {
     "もう伝説クラスの釣りですね",
     "語り継がれる釣果になりそうです",
     "歴史的な一日になりましたね",
-    "釣りの神に祝福されています",
-    "後世の基準記録になりそうです"
+    "特別な一日になっていますね",
+    "記録に残る一日になりそうですね"
   ]
 };
 
@@ -5659,14 +5723,13 @@ const sequenceMsgs = {
   early: [
     "穏やかな入り方ですね",
     "静かなスタートです",
-    "その一匹、大記録の予感",
+    "その一匹が今日の流れを変えるかもしれませんね",
     "一匹一匹が価値ある展開です",
     "落ち着いて進めていますね",
     "無理のない滑り出しです",
     "丁寧なスタートですね",
     "ここからペースを作れそうですね",
     "今日の展開が見えてきます",
-    "静かな立ち上がりも悪くないですね",
     "ここから流れが生まれそうです",
 
     // 追加
@@ -5674,7 +5737,7 @@ const sequenceMsgs = {
     "穏やかなリズムです",
     "静かながら良い兆しです",
     "無理のない流れですね",
-    "今日は伸びそうな空気です"
+    "今日は伸びそうな予感ですね"
   ],
 
   mid: [
@@ -5701,7 +5764,7 @@ const sequenceMsgs = {
   funMid: [
     "釣りの醍醐味ですね",
     "釣れるとやはり楽しいですね",
-    "魚群が寄っています",
+    "良い群れが入ってきているかもしれませんね",
     "テンポがとても良いです",
     "今日は良い日ですね",
     "見ていて気持ちいい釣りです",
@@ -5755,27 +5818,115 @@ const sequenceMsgs = {
 
   rapidTap: [
     "連掛けモードですね",
-    "全てが噛み合っています",
+    "全部がうまく合っていますね",
     "タナがドンピシャですね",
     "群れの中心にいます",
-    "仕掛けが完全に合っています",
+    "仕掛けとの相性が良さそうですね",
     "完全に群れを掴んでいます",
     "良いタナを捉えています",
     "流れに乗っていますね",
     "合わせが鋭いです",
     "入れ食いの気配ですね",
-    "魚群に当たっています",
+    "群れを捉えていますね",
     "連続ヒットの波です",
     "爆釣ゾーンに入っています"
   ],
 
   over1000: [
     "1000匹突破、お見事です。今日は仕上がっていますね",
-    "4桁到達ですね。安定感が素晴らしいです",
-    "記録級の釣果です。淡々と積み上げていますね",
-    "伝説ラインに入りました。さすがの釣りです",
     "4桁は別格ですね。完成された釣り運びです"
-  ]
+  ],
+
+  idleMessages: {
+    min1: [
+      "そろそろ来る予感がしますね",
+      "魚はきっと近くまで来ていますよ",
+      "焦らなくて大丈夫ですよ",
+      "この静けさも釣りの楽しさですね",
+      "次の一匹が楽しみですね",
+      "群れを待ちましょう",
+      "良いタイミングは突然やってきます",
+      "まだまだこれからですよ",
+      "焦らずに、はじまったばかりです",
+      "期待しながら待ちましょう"
+    ],
+
+    min3: [
+      "なかなか当たりが来ませんね",
+      "今日は魚の動きが少し控えめみたいですね",
+      "もう少し待ってみましょう",
+      "魚も様子を見ているのかもしれません",
+      "次の群れを待ちましょう",
+      "こういう時間もありますね",
+      "焦らずいきましょう",
+      "静かな時間が続いていますね",
+      "ここを乗り越えると流れが変わるかもしれません",
+      "一匹来れば流れが変わることもあります"
+    ],
+
+    min5: [
+      "魚が少し遠いところを回遊しているようです",
+      "群れが戻るのを待ちましょう",
+      "今日は回遊がゆっくりなのかもしれません",
+      "今日は魚もゆっくり過ごしているようです",
+      "次のチャンスはきっと来ます",
+      "静かな時間ほど次が楽しみですね",
+      "一匹来ると流れが変わるんですけどね",
+      "そろそろ状況が動きそうですね",
+      "もう少しだけ粘ってみましょう"
+    ],
+
+    min8: [
+      "群れはきっと近くまで来ていますよ",
+      "もう少しで流れが変わる気がします",
+      "ここを乗り越えればチャンスがありそうですね",
+      "魚も慎重に様子を見ているようです",
+      "静かな時間も大切な釣りですね",
+      "あと一歩で当たりが来そうな気がします",
+      "焦らなくても大丈夫ですよ",
+      "次の群れを一緒に待ちましょう",
+      "良い展開は突然やってきますよ"
+    ],
+
+    min10: [
+      "今日は我慢比べですね",
+      "諦めなければチャンスはあります",
+      "一匹の価値が大きい時間ですね",
+      "待つのも釣りの技術ですよ",
+      "きっと次は来ます",
+      "応援しています",
+      "焦らず、自分のペースでいきましょう",
+      "良い流れは突然始まります",
+      "次の一匹を信じましょう"
+    ],
+
+    min15: [
+      "今日は魚も気まぐれですね",
+      "こういう日もありますよ",
+      "粘った人だけが出会える一匹があります",
+      "きっと次の一匹は特別ですよ",
+      "焦らず続けていきましょう",
+      "流れは必ず変わります",
+      "魚もタイミングを見ているのでしょうね",
+      "待つ時間も釣りの楽しさですね",
+      "あと少し、一緒に頑張りましょう"
+    ],
+
+    min20: [
+      "魚も今日はのんびりしているみたいですね",
+      "ここまで待てるのも釣りの楽しさですね",
+      "こんな日も思い出になりますよ",
+      "ここまで待てるのも立派な腕前です",
+      "魚も根比べをしているようですね",
+      "次の一匹が今日一番嬉しい一匹になるかもしれません",
+      "ここまで粘れるのも立派な釣りですね",
+      "私はまだまだ応援しています",
+      "ここから流れが変わることも珍しくありません",
+      "一緒に次の当たりを待ちましょう",
+      "次の一匹はきっと忘れられない一匹になりますよ"
+    ]
+  }
+
 };
 
 /* ---------------- 節目設定 ---------------- */
@@ -5808,8 +5959,8 @@ function getPartnerMessage(count){
     lastRapidTime = now;
   }
 
-  /* ===== 沈黙15秒で完全リセット ===== */
-if(now - lastTapTime > 15000){
+/* ===== 連掛け15秒無反応で完全リセット ===== */
+if(lastRapidTime && now - lastRapidTime > 15000){
   rapidTapCount = 0;
   rapidZoneAnnounced = false;
   lastRapidTime = 0;
@@ -5823,6 +5974,45 @@ if(now - lastTapTime > 15000){
     rapidZoneAnnounced = true;
     return "完全に連掛けゾーンに入りました";
   }
+
+/* ===== 長時間沈黙後の一匹 ===== */
+const idle = now - lastCountTime;
+
+if(idle > 10*60*1000 && count > 0){
+  lastCountTime = now;
+  return randNoRepeat(sequenceMsgs.specialTime);
+}
+
+
+/* ===== 待機時間声掛け ===== */
+
+if(idle > 20*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min20);
+}
+
+if(idle > 15*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min15);
+}
+
+if(idle > 10*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min10);
+}
+
+if(idle > 8*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min8);
+}
+
+if(idle > 5*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min5);
+}
+
+if(idle > 3*60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min3);
+}
+
+if(idle > 60*1000){
+  return randNoRepeat(sequenceMsgs.idleMessages.min1);
+}
 
   /* ===== 通常連掛け演出 ===== */
   if (rapidActive && rapidTapCount >= 2 && Math.random() < rapidChance) {
@@ -5888,10 +6078,83 @@ function updateInfoBar(count){
   const level = getPersonalityLevel(totalCounts);
   showPartnerMessage(msg, fixed ? 0 : (level==="legend" ? 5000 : 3000));
   lastCountTime = Date.now();
+  lastIdleMessageLevel = 0;
 }
 
 /* ---------------- 初期化 ---------------- */
 document.addEventListener("DOMContentLoaded", initPartnerMessage);
+
+/* ---------------- 待機時間AI声掛けタイマー ---------------- */
+
+let idleMessageTimer = null;
+let lastIdleMessageLevel = 0;
+
+function startIdleMessageTimer(){
+
+  if(idleMessageTimer){
+    clearInterval(idleMessageTimer);
+  }
+
+  idleMessageTimer = setInterval(()=>{
+
+    const idle = Date.now() - lastCountTime;
+
+    let level = 0;
+    let messages = null;
+
+    if(idle >= 20*60*1000){
+      level = 20;
+      messages = sequenceMsgs.idleMessages.min20;
+    }
+    else if(idle >= 15*60*1000){
+      level = 15;
+      messages = sequenceMsgs.idleMessages.min15;
+    }
+    else if(idle >= 10*60*1000){
+      level = 10;
+      messages = sequenceMsgs.idleMessages.min10;
+    }
+    else if(idle >= 8*60*1000){
+      level = 8;
+      messages = sequenceMsgs.idleMessages.min8;
+    }
+    else if(idle >= 5*60*1000){
+      level = 5;
+      messages = sequenceMsgs.idleMessages.min5;
+    }
+    else if(idle >= 3*60*1000){
+      level = 3;
+      messages = sequenceMsgs.idleMessages.min3;
+    }
+    else if(idle >= 60*1000){
+      level = 1;
+      messages = sequenceMsgs.idleMessages.min1;
+    }
+
+
+    // 同じ時間帯で連続表示しない
+    if(level > 0 && level !== lastIdleMessageLevel){
+
+      lastIdleMessageLevel = level;
+
+      showPartnerMessage(
+        randNoRepeat(messages),
+        5000
+      );
+
+    }
+
+
+  },10000); // 10秒ごと確認
+
+}
+
+
+/* 起動時開始 */
+document.addEventListener(
+  "DOMContentLoaded",
+  startIdleMessageTimer
+);
 
 /* ---------------------------------- 声かけ表示機能 ---------------------------------- */
 
@@ -6237,7 +6500,7 @@ function showTempInfo(msg, duration=2500){
 
 
 /* =========================================
-   エサ投入・交換タイマー STEP1
+   Next bite!!タイマー STEP1
 ========================================= */
 
 let baitTimerMinutes = 15;      // 設定時間（分）
@@ -6250,11 +6513,10 @@ function updateBaitTimerDisplay() {
     const min = Math.floor(baitTimerSeconds / 60);
     const sec = baitTimerSeconds % 60;
 
-document.querySelector(".bait-min").textContent =
-  String(min).padStart(2,"0");
-
-document.querySelector(".bait-sec").textContent =
-  String(sec).padStart(2,"0");
+    document.getElementById("baitTimer").innerHTML = `
+        <span class="bait-label">あと</span>
+        <span class="bait-min">${String(min).padStart(2, "0")}</span>:<span class="bait-sec">${String(sec).padStart(2, "0")}</span>
+    `;
 
 }
 
@@ -6287,8 +6549,8 @@ function startBaitTimer(){
             clearInterval(baitTimerInterval);
 
             // 時間切れ表示
-            document.getElementById("baitTimer").textContent =
-                "交換です！";
+    document.getElementById("baitTimer").innerHTML =
+    '<span class="bait-label">⏰</span>Next Bite!!';
 
             // ボタンを赤くする
             document
@@ -6402,10 +6664,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // モーダルを閉じる
   function closeQrModal() {
 
-    modal.classList.remove("show");
-    modal.setAttribute("aria-hidden", "true");
+  document.activeElement.blur();
 
-  }
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+
+}
 
   closeBtn.addEventListener("click", closeQrModal);
 
@@ -6442,10 +6706,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function closeTermsDialog() {
 
-    dialog.classList.remove("show");
-    dialog.setAttribute("aria-hidden", "true");
+  document.activeElement.blur();
 
-  }
+  dialog.classList.remove("show");
+  dialog.setAttribute("aria-hidden", "true");
+
+}
 
   // 閉じるボタン
   closeBtn.addEventListener("click", closeTermsDialog);
@@ -6493,20 +6759,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ------------------------
-  // 閉じるボタン
+  // 閉じる共通処理
   // ------------------------
-  closeBtn.addEventListener("click", () => {
+  function closeSupportModal() {
+
+    // フォーカスを外す（Chrome警告対策）
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     modal.classList.remove("show");
     modal.setAttribute("aria-hidden", "true");
-  });
+  }
+
+  // ------------------------
+  // 閉じるボタン
+  // ------------------------
+  closeBtn.addEventListener("click", closeSupportModal);
 
   // ------------------------
   // 背景クリックで閉じる
   // ------------------------
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
+      closeSupportModal();
     }
   });
 
@@ -6514,9 +6790,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // ESCキーで閉じる
   // ------------------------
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      modal.classList.remove("show");
-      modal.setAttribute("aria-hidden", "true");
+    if (e.key === "Escape" && modal.classList.contains("show")) {
+      closeSupportModal();
     }
   });
 
@@ -6548,48 +6823,60 @@ window.addEventListener('load', applyAutoScale);
 window.addEventListener('resize', onResize);
 
 // =========================
-// エサ設定モーダル
+// Next Bite!! 設定モーダル
 // =========================
 window.addEventListener("load", () => {
-
-// 保存されている設定時間を読み込む
-const savedMinutes = localStorage.getItem("baitTimerMinutes");
-
-if(savedMinutes){
-
-    baitTimerMinutes = Number(savedMinutes);
-
-    baitTimerSeconds = baitTimerMinutes * 60;
-
-    document.getElementById("baitSetting").textContent =
-        `設定：${baitTimerMinutes}分`;
-
-    updateBaitTimerDisplay();
-
-}
 
     const baitModal = document.getElementById("baitSettingModal");
     const baitSetting = document.getElementById("baitSetting");
     const closeBaitModal = document.getElementById("closeBaitModal");
 
+    // ------------------------
+    // 保存されている設定時間を読み込む
+    // ------------------------
+    const savedMinutes = localStorage.getItem("baitTimerMinutes");
+
+    if (savedMinutes) {
+
+        baitTimerMinutes = Number(savedMinutes);
+        baitTimerSeconds = baitTimerMinutes * 60;
+
+        baitSetting.innerHTML =
+            `<span class="bait-label">設定：</span>${baitTimerMinutes}分`;
+
+        updateBaitTimerDisplay();
+    }
+
+    // ------------------------
+    // モーダルを開く
+    // ------------------------
     baitSetting.addEventListener("click", () => {
         baitModal.style.display = "flex";
     });
 
+    // ------------------------
+    // 閉じる
+    // ------------------------
     closeBaitModal.addEventListener("click", () => {
         baitModal.style.display = "none";
     });
 
+    // ------------------------
+    // 時間選択
+    // ------------------------
     document.querySelectorAll(".bait-time-option").forEach(btn => {
 
         btn.addEventListener("click", () => {
 
             baitTimerMinutes = Number(btn.dataset.time);
+            baitTimerSeconds = baitTimerMinutes * 60;
 
             localStorage.setItem("baitTimerMinutes", baitTimerMinutes);
 
-            document.getElementById("baitSetting").textContent =
-            `設定：${baitTimerMinutes}分`;
+            baitSetting.innerHTML =
+                `<span class="bait-label">設定：</span>${baitTimerMinutes}分`;
+
+            updateBaitTimerDisplay();
 
             baitModal.style.display = "none";
 
@@ -6597,12 +6884,13 @@ if(savedMinutes){
 
     });
 
+    // ------------------------
+    // 背景クリックで閉じる
+    // ------------------------
     baitModal.addEventListener("click", e => {
 
-        if(e.target === baitModal){
-
+        if (e.target === baitModal) {
             baitModal.style.display = "none";
-
         }
 
     });
@@ -6612,13 +6900,13 @@ if(savedMinutes){
 </script>
 
 <!-- =========================
-     エサ投入・交換時間設定モーダル
+     Next bite!!時間設定モーダル
 ========================= -->
 <div id="baitSettingModal" class="bait-modal">
 
   <div class="bait-modal-content">
 
-    <h3>エサ投入・交換時間</h3>
+    <h3>Next bite!!タイマー</h3>
 
     <div id="baitTimeList">
 
