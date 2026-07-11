@@ -89,7 +89,7 @@ input, textarea {
 /* 各画面の下中央に戻るボタンを配置 */
 .screenBackBtn {
   position: fixed;
-  bottom: 320px;
+  top: 420px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -2862,6 +2862,67 @@ iframe {
   opacity: 0.8;
 }
 
+/* -------------------------- リロードボタン -------------------------- */
+
+.reloadFab {
+  position: fixed;
+  left: 20px;
+  top: 480px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #ff416c, #ff4b2b) !important;
+  border: 2px solid rgba(255,255,255,0.65);
+
+  box-shadow: 0 3px 8px rgba(255,75,43,0.35);
+  cursor: pointer;
+
+  z-index: 3000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  transition:
+    box-shadow .2s ease,
+    transform .2s ease;
+
+  /* 既存buttonの色を完全に無効化 */
+  color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* ⟳ */
+.reloadFab::before{
+  content:"⟳";
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-45%,-60%);
+
+  font-size:30px;
+  font-weight:600;
+  line-height:1;
+
+  color:#fff;
+  opacity:.95;
+}
+
+.reloadFab:hover{
+  box-shadow:0 4px 10px rgba(255,75,43,.45);
+}
+
+.reloadFab:active{
+  transform:translateY(1px);
+  box-shadow:0 2px 5px rgba(255,75,43,.35) inset;
+}
+
+/* -------------------------- リロードボタン -------------------------- */
+
 </style>
 </head>
 
@@ -3134,6 +3195,76 @@ iframe {
 
   </div>
 
+</div>
+
+<!-- リロードボタン -->
+<button
+  class="reloadFab"
+  onclick="showExitConfirm()"
+  aria-label="リロード">
+</button>
+
+<!-- ==================== リロード確認ダイアログ ==================== -->
+<div id="exitConfirm" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+">
+  <div style="
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    padding:22px 18px;
+    border-radius:18px;
+    text-align:center;
+    color:#fff;
+    width:82%;
+    max-width:340px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+  ">
+
+    <div style="
+      font-size:1.2rem;
+      font-weight:600;
+      margin-bottom:22px;
+    ">
+      アプリをリロードしますか？
+    </div>
+
+    <div style="display:flex;gap:12px">
+
+      <button onclick="reloadApp()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:linear-gradient(135deg,#ff416c,#ff4b2b);
+        color:#fff;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        リロード
+      </button>
+
+      <button onclick="closeExitConfirm()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:#fff;
+        color:#2a5298;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        キャンセル
+      </button>
+
+    </div>
+
+  </div>
 </div>
 
 <!-- =========================
@@ -6893,6 +7024,39 @@ document.addEventListener("DOMContentLoaded", () => {
       closeSupportModal();
     }
   });
+
+});
+
+// ----------------------------
+// リロードボタン
+// ----------------------------
+function showExitConfirm() {
+  document.getElementById("exitConfirm").style.display = "flex";
+}
+
+function closeExitConfirm() {
+  document.getElementById("exitConfirm").style.display = "none";
+}
+
+function reloadApp() {
+  location.reload();
+}
+
+// ----------------------------
+// Android 戻るボタン対応
+// ----------------------------
+
+// 初回に履歴を追加
+history.pushState({ app: "lock" }, "", location.href);
+
+// 戻るボタン
+window.addEventListener("popstate", () => {
+
+  // 戻らせない
+  history.pushState({ app: "lock" }, "", location.href);
+
+  // リロード確認ダイアログ
+  showExitConfirm();
 
 });
 
