@@ -94,7 +94,7 @@ input, textarea {
   transform: translateX(-50%);
   z-index: 1;
 
-  width: min(320px, 80vw);
+  width: min(180px, 80vw);
   padding: 10px 0;
 
   background-color: #ff9800;
@@ -2950,7 +2950,7 @@ iframe {
 <span class="title-main">Double Bite!!</span>
 </div>
 
-<!-- ダブルカウンター -->
+<!-- さあ、始めよう -->
 <div class="counter-solo-main gradient" id="soloMain"></div>
 <div class="counter-solo-sub">--- あなたの釣果を、もっと楽しく。---</div>
 
@@ -3732,6 +3732,11 @@ let lastRapidTime = 0; //超連掛けゾーン演出解除用
 
 // ----------------------------------- タイトル演出関数 -----------------------------------
 function playTitleSequence() {
+
+ // ============================
+  // 起動画面 戻るボタン対策
+  // ============================
+  history.pushState({ screen: 'splash' }, '', location.href);
 
   const titleWrapper = document.getElementById('titleWrapper');
   const titleScreen  = document.getElementById('titleScreen');
@@ -4527,7 +4532,7 @@ function randomSymbolsWithSnow(n){
 
 // ページ読み込み時にタイトルをセット
 function setRandomTitles(){
-  const soloText = " ダブルカウンター ";
+  const soloText = " さあ、始めよう ";
   const groupText = " みんなでテント ";
 
   document.getElementById("soloMain").innerText = 
@@ -7046,16 +7051,22 @@ function reloadApp() {
 // Android 戻るボタン対応
 // ----------------------------
 
-// 初回に履歴を追加
-history.pushState({ app: "lock" }, "", location.href);
-
-// 戻るボタン
 window.addEventListener("popstate", () => {
 
-  // 戻らせない
-  history.pushState({ app: "lock" }, "", location.href);
+  // 戻る履歴を再追加
+  history.pushState({ screen: 'lock' }, '', location.href);
 
-  // リロード確認ダイアログ
+
+  // 起動画面中
+  if (document.getElementById("splashScreen")?.classList.contains("active")) {
+
+    // 何もしない
+    return;
+
+  }
+
+
+  // 通常画面
   showExitConfirm();
 
 });
