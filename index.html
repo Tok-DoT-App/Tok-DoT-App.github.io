@@ -89,12 +89,12 @@ input, textarea {
 /* 各画面の下中央に戻るボタンを配置 */
 .screenBackBtn {
   position: fixed;
-  top: 420px;
+  top: 450px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 100;
 
-  width: min(180px, 80vw);
+  width: min(150px, 80vw);
   padding: 10px 0;
 
   background-color: #ff9800;
@@ -527,9 +527,16 @@ button.btn-part:active {
 /* ひとりカウンター全体枠 */
 #soloCounterScreen {
   background-color: #F5F5F5;  /* 好きな色に変更可能 */
-  border-radius: 16px;         /* 角丸 */
-  padding: 12px;               /* 内側余白 */
+  border-radius: 22px;         /* 角丸 */
+  padding: 6px;               /* 内側余白 */
   box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* 軽い影で浮いた感じ */
+}
+
+/* ひとりカウンター専用：外側枠サイズ調整 */
+#soloCounterScreen.screen.solo-counter {
+  min-height: auto;
+  height: 490px;
+  margin-top:30px;
 }
 
 /* ひとりカウンター画面背景専用 */
@@ -546,9 +553,11 @@ button.btn-part:active {
 /* ひとりカウンター本体 */
 .soloCounterWrapper {
   position: absolute;
-  top: 30%;
+
+  /* 位置調整：上側基準に変更 */
+  top: 30px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 
   display: flex;
   flex-direction: column;
@@ -558,19 +567,21 @@ button.btn-part:active {
   background-color: #FFF8DC;   /* 初期クリーム色 */
   color: #000;                  /* 初期文字色 */
 
-  border-radius: 20px;          /* さらに丸くぷっくり */
+  border-radius: 20px;          /* ぷっくり感 */
   padding: 12px;
+
   max-width: 400px;
   width: 90%;
 
-  max-height: calc(100vh - 40px);
+  /* 高さ制限解除：下側へ伸びる枠対策 */
+  max-height: none;
   overflow-x: hidden;
-  overflow-y: auto; 
+  overflow-y: visible;
 
   /* 内側光でぷっくり感 */
   box-shadow:
-    inset 0 6px 12px rgba(255,255,255,0.6),  /* 上面の光 */
-    inset 0 -4px 6px rgba(0,0,0,0.08);      /* 下側の微陰影 */
+    inset 0 6px 12px rgba(255,255,255,0.6),
+    inset 0 -4px 6px rgba(0,0,0,0.08);
 
   /* 背景や文字色の変化に対応 */
   transition:
@@ -578,7 +589,6 @@ button.btn-part:active {
     color 0.6s ease,
     box-shadow 0.6s ease;
 }
-
 
 .row {
   display: grid;
@@ -2878,7 +2888,7 @@ iframe {
   box-shadow: 0 3px 8px rgba(255,75,43,0.35);
   cursor: pointer;
 
-  z-index: 3000;
+  z-index: 50;
 
   display: flex;
   align-items: center;
@@ -2923,6 +2933,77 @@ iframe {
 
 /* -------------------------- リロードボタン -------------------------- */
 
+/* -------------------------- インフォメーションボタン -------------------------- */
+
+.app-info-btn {
+  position: fixed;
+
+  /* 画面下 右側 */
+ top: 480px;
+  right: 20px;
+
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+
+  background-color: #2f80ed;
+  color: #ffffff;
+
+  border: 2px solid rgba(255,255,255,0.65);
+
+  font-size: 20px;
+  font-weight: bold;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.28);
+
+  transition:
+    background-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+
+  /*
+    リロードボタンより少し上、
+    モーダルより下
+  */
+  z-index:100;
+}
+
+
+.app-info-btn:hover {
+
+  background-color:#1c6ed5;
+
+  transform:scale(1.03);
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.3);
+}
+
+
+.app-info-btn:active {
+
+  transform:scale(0.95);
+
+}
+
+/* -------------------------- インフォメーションボタン -------------------------- */
+
 </style>
 </head>
 
@@ -2941,6 +3022,7 @@ iframe {
 <!------------------------------ アプリスケール ------------------------------>
 <div id="appScaleWrapper">
 <!------------------------------ アプリスケール ------------------------------>
+
 
 <!------------------------------ 初期画面 ------------------------------>
 <!-- エントリー -->
@@ -3197,76 +3279,6 @@ iframe {
 
 </div>
 
-<!-- リロードボタン -->
-<button
-  class="reloadFab"
-  onclick="showExitConfirm()"
-  aria-label="リロード">
-</button>
-
-<!-- ==================== リロード確認ダイアログ ==================== -->
-<div id="exitConfirm" style="
-  display:none;
-  position:fixed;
-  inset:0;
-  background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  backdrop-filter:blur(6px);
-">
-  <div style="
-    background:linear-gradient(135deg,#1e3c72,#2a5298);
-    padding:22px 18px;
-    border-radius:18px;
-    text-align:center;
-    color:#fff;
-    width:82%;
-    max-width:340px;
-    box-shadow:0 10px 30px rgba(0,0,0,.45);
-  ">
-
-    <div style="
-      font-size:1.2rem;
-      font-weight:600;
-      margin-bottom:22px;
-    ">
-      アプリをリロードしますか？
-    </div>
-
-    <div style="display:flex;gap:12px">
-
-      <button onclick="reloadApp()" style="
-        flex:1;
-        padding:12px 0;
-        border:none;
-        border-radius:12px;
-        background:linear-gradient(135deg,#ff416c,#ff4b2b);
-        color:#fff;
-        font-size:1rem;
-        font-weight:600;
-      ">
-        リロード
-      </button>
-
-      <button onclick="closeExitConfirm()" style="
-        flex:1;
-        padding:12px 0;
-        border:none;
-        border-radius:12px;
-        background:#fff;
-        color:#2a5298;
-        font-size:1rem;
-        font-weight:600;
-      ">
-        キャンセル
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
 <!-- =========================
      シンプルアラートダイアログ
 ========================= -->
@@ -3298,6 +3310,110 @@ iframe {
 
 
 </div>
+
+<!-- =========================
+     共通インフォメーションモーダル
+========================= -->
+
+<div id="helpModal"
+     class="help-modal"
+     aria-hidden="true">
+
+  <div class="help-modal-content">
+
+    <h2>インフォメーション</h2>
+
+    <div class="modal-body">
+
+      <div class="about-logo">
+        <img src="icon-192.png" alt="Double Bite!! ロゴ">
+      </div>
+
+
+      <p class="about-concept">
+        ワカサギ釣りを<br>
+        もっと楽しく<br>
+        もっと分かりやすく
+      </p>
+
+
+      <div class="about-smash">
+        <span class="name">Double Bite</span>
+        <span class="exclamations">!!</span>
+      </div>
+
+
+      <!-- はじめての方へ -->
+      <h3 class="accordion-toggle">
+        はじめての方へ
+      </h3>
+
+      <div class="accordion-content">
+
+        <p>
+          Double Bite!! は、
+          ワカサギ釣りの釣果を楽しく記録するための
+          カウンターアプリです。
+        </p>
+
+        <p>
+          スマートフォンのブラウザで動作し、
+          ホーム画面へ追加することで
+          アプリのように使用できます。
+        </p>
+
+      </div>
+
+
+      <!-- ひとりカウンターについて -->
+      <h3 class="accordion-toggle">
+        ひとりカウンターについて
+      </h3>
+
+      <div class="accordion-content">
+
+        <p>
+          左右の釣果を分けて記録できます。
+          合計数や時間ごとの状況を確認しながら、
+          ワカサギ釣りを楽しめます。
+        </p>
+
+      </div>
+
+
+      <!-- アプリ更新について -->
+      <h3 class="accordion-toggle">
+        ご利用について
+      </h3>
+
+      <div class="accordion-content">
+
+        <p class="note">
+
+          ※ 本アプリはブラウザ上で動作しています。<br>
+          更新内容が反映されない場合は、
+          リロードボタンを押して再読み込みしてください。
+
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+    <button
+      class="help-close"
+      type="button"
+      id="closeHelp">
+      閉じる
+    </button>
+
+
+  </div>
+
+</div>
+
 <!------------------------------ 初期画面 ------------------------------>
 
 <!---------------------- ひとりカウンター（新デザイン・中央セル拡張版） ---------------------->
@@ -3427,6 +3543,85 @@ iframe {
 </div>
 
 <!---------------------- ひとりカウンター（新デザイン・中央セル拡張版） ---------------------->
+
+<!-- 全画面共通リロード -->
+<button
+  class="reloadFab"
+  onclick="showExitConfirm()"
+  aria-label="リロード">
+</button>
+
+<!-- 全画面共通 インフォメーション -->
+<button
+  id="appInfoBtn"
+  class="app-info-btn"
+  aria-label="インフォメーション">
+  i
+</button>
+
+<!-- ==================== リロード確認ダイアログ ==================== -->
+<div id="exitConfirm" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+">
+  <div style="
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    padding:22px 18px;
+    border-radius:18px;
+    text-align:center;
+    color:#fff;
+    width:82%;
+    max-width:340px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+  ">
+
+    <div style="
+      font-size:1.2rem;
+      font-weight:600;
+      margin-bottom:22px;
+    ">
+      アプリをリロードしますか？
+    </div>
+
+    <div style="display:flex;gap:12px">
+
+      <button onclick="reloadApp()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:linear-gradient(135deg,#ff416c,#ff4b2b);
+        color:#fff;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        リロード
+      </button>
+
+      <button onclick="closeExitConfirm()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:#fff;
+        color:#2a5298;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        キャンセル
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
 
 <!------------------------------ わいわいテント登録画面 ------------------------------>
 <!-- わいわいテント登録 -->
@@ -4547,7 +4742,16 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 
 // ★ ここからタイトル演出を追加
 window.addEventListener('load', () => {
+
+  // 起動画面 戻るボタン対策
+  history.pushState(
+    { screen: 'splash' },
+    '',
+    location.href
+  );
+
   playTitleSequence();
+
 });
 
 // ------------------------------ 初期画面タイトル記号のランダム表示 ------------------------------
@@ -7032,6 +7236,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
 // ----------------------------
 // リロードボタン
 // ----------------------------
@@ -7053,23 +7258,27 @@ function reloadApp() {
 
 window.addEventListener("popstate", () => {
 
-  // 戻る履歴を再追加
-  history.pushState({ screen: 'lock' }, '', location.href);
+  if(history.state?.screen === "splash"){
+    
+    history.pushState(
+      { screen:'splash' },
+      '',
+      location.href
+    );
 
-
-  // 起動画面中
-  if (document.getElementById("splashScreen")?.classList.contains("active")) {
-
-    // 何もしない
     return;
-
   }
 
+  history.pushState(
+    { screen:'lock' },
+    '',
+    location.href
+  );
 
-  // 通常画面
   showExitConfirm();
 
 });
+
 
 // ----------------------------
 // スケーリング処理
@@ -7095,6 +7304,46 @@ function onResize(){
 }
 window.addEventListener('load', applyAutoScale);
 window.addEventListener('resize', onResize);
+
+// アプリ インフォメーション表示
+window.addEventListener("DOMContentLoaded", () => {
+
+  const infoBtn = document.getElementById("appInfoBtn");
+  const helpModal = document.getElementById("helpModal");
+  const closeHelp = document.getElementById("closeHelp");
+
+  if (!infoBtn || !helpModal || !closeHelp) return;
+
+
+  // 開く
+  infoBtn.onclick = () => {
+    helpModal.classList.add("show");
+    helpModal.setAttribute("aria-hidden","false");
+  };
+
+
+  // 閉じるボタン
+  closeHelp.onclick = () => {
+    helpModal.classList.remove("show");
+    helpModal.setAttribute("aria-hidden","true");
+  };
+
+
+  // ★ モーダル外側タップで閉じる
+  helpModal.onclick = (e) => {
+
+    // 背景部分だけをクリックした場合
+    if (e.target === helpModal) {
+
+      helpModal.classList.remove("show");
+      helpModal.setAttribute("aria-hidden","true");
+
+    }
+
+  };
+
+});
+
 
 // =========================
 // Next Bite!! 設定モーダル
@@ -7204,6 +7453,8 @@ window.addEventListener("load", () => {
   </div>
 
 </div>
+
+
 
 <!-- =========================
      サービスワーカー
