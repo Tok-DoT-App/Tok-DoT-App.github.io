@@ -2646,10 +2646,22 @@ iframe {
   padding: 18px 20px;
 
   background: #f9f9f9;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+
   border-radius: 8px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,.15);
+
+  text-align: left;
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ----------------- モーダル本文（スクロール可能） ----------------- */
@@ -2801,7 +2813,6 @@ iframe {
 
 .about-logo {
   margin: 12px 0 8px;
-  text-align: center;
 }
 
 .about-logo img {
@@ -2817,6 +2828,99 @@ iframe {
   margin-bottom: 32px;
   color: #333;
   text-align: left;
+}
+
+/* ------------ インフォメーション用 Double Bite!! ------------ */
+
+.about-doublebite{
+
+    margin-top:10px;
+    margin-bottom:28px;
+
+    text-align:center;
+
+    font-family:'BBH Hegarty',sans-serif;
+
+}
+
+.about-doublebite .name{
+  color:#444;
+}
+
+.about-doublebite .exclamations{
+  margin-left:3px;
+  color:#FF8C00;
+  font-weight:bold;
+}
+
+#infoBiteFace{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:18px;
+
+    font-size:2rem;
+
+    color:#444;
+
+}
+
+.info-eye{
+
+    display:inline-block;
+
+    position:relative;
+    top:-1px;
+
+    transform-origin:center;
+
+    animation:eyeBlink 4.2s infinite;
+
+}
+
+@keyframes eyeBlink{
+
+    0%,46%,54%,100%{
+        transform:scaleY(1);
+    }
+
+    50%{
+        transform:scaleY(.08);
+    }
+
+}
+
+#infoLeft,
+#infoRight{
+
+    display:flex;
+    align-items:center;
+    gap:0;
+
+}
+
+.info-bite-title{
+
+    margin-top:12px;
+
+    font-family:'Alfa Slab One', cursive;
+
+    font-size:2rem;
+
+    color:#444;
+
+}
+
+.info-bite-sub{
+
+    margin-top:4px;
+
+    font-size:1rem;
+
+    color:#666;
+
 }
 
 /* =========================
@@ -3312,7 +3416,7 @@ iframe {
 </div>
 
 <!-- =========================
-     共通インフォメーションモーダル
+     インフォメーションモーダル
 ========================= -->
 
 <div id="helpModal"
@@ -3331,43 +3435,99 @@ iframe {
 
 
       <p class="about-concept">
-        ワカサギ釣りを<br>
-        もっと楽しく<br>
-        もっと分かりやすく
+        その一瞬に<br>
+        そっと寄り添う<br>
+        カウンターアプリ
       </p>
 
 
-      <div class="about-smash">
-        <span class="name">Double Bite</span>
-        <span class="exclamations">!!</span>
-      </div>
+ <div class="about-doublebite">
 
+  <div id="infoBiteFace">
 
-      <!-- はじめての方へ -->
+  <div id="infoLeft">
+    <span id="infoLeftEye" class="info-eye">⦿</span>
+    <span>＞</span>
+  </div>
+
+  <span>・</span>
+
+  <div id="infoRight">
+    <span>＜</span>
+    <span id="infoRightEye" class="info-eye">⦿</span>
+  </div>
+
+</div>
+
+  <div class="info-bite-title">
+    Bite!!
+  </div>
+
+  <div class="info-bite-sub">
+    ダブル バイト!!
+  </div>
+
+</div>
+
+<!-- はじめての方へ（折りたたみ） -->
+<h3 class="accordion-toggle">はじめての方へ</h3>
+
+<div class="accordion-content">
+
+  <p>
+    Double Bite!! はインターネットブラウザで動作するアプリです。
+    スマートフォンから「ホーム画面に追加」（iPhone・Android対応）すると、
+    他のアプリと同じようにアイコンから起動できます。
+  </p>
+
+  <h4 class="accordion-toggle nested">
+    LINEでURLを開いた場合の注意
+  </h4>
+
+  <div class="accordion-content nested">
+    <p>
+      LINE内ブラウザでは「ホーム画面に追加」が表示されないため、
+      <strong>Safari（iPhone）</strong> または
+      <strong>Chrome（Android）</strong>
+      で開き直してください。
+    </p>
+  </div>
+
+  <h4 class="accordion-toggle nested">
+    iPhone の場合（LINE → Safari）
+  </h4>
+
+  <div class="accordion-content nested">
+    <ol>
+      <li>LINEで Double Bite!! のURLをタップ</li>
+      <li>画面右下（または右上）のメニューから <strong>共有アイコン</strong> をタップ</li>
+      <li>「Safariで開く」を選択</li>
+      <li>Safariで表示されたら下部の <strong>共有ボタン</strong> をタップ</li>
+      <li>「ホーム画面に追加」を選択</li>
+      <li>名前を確認して「追加」をタップ</li>
+    </ol>
+  </div>
+
+  <h4 class="accordion-toggle nested">
+    Android の場合（LINE → Chrome）
+  </h4>
+
+  <div class="accordion-content nested">
+    <ol>
+      <li>LINEで Double Bite!! のURLをタップ</li>
+      <li>画面右下の <strong>︙（メニュー）</strong> をタップ</li>
+      <li>「ブラウザで開く」または「Chromeで開く」を選択</li>
+      <li>Chrome右上の <strong>︙（メニュー）</strong> をタップ</li>
+      <li>「ホーム画面に追加」を選択</li>
+      <li>表示名を確認して追加</li>
+    </ol>
+  </div>
+
+</div>
+
+      <!-- ダブルカウンターについて -->
       <h3 class="accordion-toggle">
-        はじめての方へ
-      </h3>
-
-      <div class="accordion-content">
-
-        <p>
-          Double Bite!! は、
-          ワカサギ釣りの釣果を楽しく記録するための
-          カウンターアプリです。
-        </p>
-
-        <p>
-          スマートフォンのブラウザで動作し、
-          ホーム画面へ追加することで
-          アプリのように使用できます。
-        </p>
-
-      </div>
-
-
-      <!-- ひとりカウンターについて -->
-      <h3 class="accordion-toggle">
-        ひとりカウンターについて
+        ダブルカウンターについて
       </h3>
 
       <div class="accordion-content">
@@ -4727,7 +4887,7 @@ function randomSymbolsWithSnow(n){
 
 // ページ読み込み時にタイトルをセット
 function setRandomTitles(){
-  const soloText = " さあ、始めよう ";
+  const soloText = " その一瞬を 重ねよう ";
   const groupText = " みんなでテント ";
 
   document.getElementById("soloMain").innerText = 
@@ -7236,6 +7396,80 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+// ----------------------------
+// インフォメーションモーダル
+// ----------------------------
+
+function setupAccordion(modal) {
+
+  const toggles = modal.querySelectorAll(".accordion-toggle");
+
+  toggles.forEach(toggle => {
+
+    if (toggle.dataset.accordionReady) return;
+    toggle.dataset.accordionReady = "true";
+
+    toggle.addEventListener("click", function () {
+
+      const content = this.nextElementSibling;
+
+      if (!content || !content.classList.contains("accordion-content")) {
+        return;
+      }
+
+      this.classList.toggle("open");
+      content.classList.toggle("open");
+
+    });
+
+  });
+
+}
+
+// ----------------------------
+// インフォメーションモーダル 初期設定
+// ----------------------------
+document.addEventListener("DOMContentLoaded", () => {
+
+  const helpModal  = document.getElementById("helpModal");
+  const helpButton = document.getElementById("helpButtonFooter");
+  const closeHelp  = document.getElementById("closeHelp");
+
+  setupAccordion(helpModal);
+
+  function closeHelpModal(){
+
+    helpModal.classList.remove("show");
+    helpModal.setAttribute("aria-hidden","true");
+
+    helpModal.querySelectorAll(".accordion-content").forEach(c=>{
+      c.classList.remove("open");
+    });
+
+    helpModal.querySelectorAll(".accordion-toggle").forEach(t=>{
+      t.classList.remove("open");
+    });
+
+  }
+
+  if(helpButton){
+    helpButton.addEventListener("click",()=>{
+      helpModal.classList.add("show");
+      helpModal.setAttribute("aria-hidden","false");
+    });
+  }
+
+  if(closeHelp){
+    closeHelp.addEventListener("click",closeHelpModal);
+  }
+
+  helpModal.addEventListener("click",(e)=>{
+    if(e.target===helpModal){
+      closeHelpModal();
+    }
+  });
+
+});
 
 // ----------------------------
 // リロードボタン
