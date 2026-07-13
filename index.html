@@ -1529,12 +1529,12 @@ font-family: 'Alfa Slab One', cursive;
     overflow: visible;
     text-overflow: clip;
     white-space: nowrap;
-    font-size: 12px; /* 任意 */
+    font-size: 11px; /* 任意 */
 }
 
 
 #weatherBox span.region.prefecture {
-    font-size: 11px;
+    font-size: 10px;
     opacity: 0.9;
 }
 
@@ -1546,7 +1546,7 @@ font-family: 'Alfa Slab One', cursive;
 /* 天気表示の横間隔を完全に均一化 */
 #weatherBox span,
 #weatherBox i {
-    margin-right: 4px;
+    margin-right: 2px;
 }
 
 /* 最後だけ余白なし */
@@ -2033,7 +2033,7 @@ font-family: 'Alfa Slab One', cursive;
 .bite-symbols {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0px;
 }
 
 .bite-mark {
@@ -2044,7 +2044,8 @@ font-family: 'Alfa Slab One', cursive;
 .bite-dot {
   font-size: 1.5rem;
   opacity: 0;
-  margin: 0 2px;
+  margin-left:-6px;
+  margin-right:-6px;
   transform-origin: center;
 }
 
@@ -2074,31 +2075,112 @@ font-family: 'Alfa Slab One', cursive;
   100% { opacity:1; transform: translateY(0); }
 }
 
+/* ---------------------------------
+   魚 登場アニメーション調整版
+--------------------------------- */
+
+
+/* ---------------------------------
+   右魚：エサ直前まで寄る
+--------------------------------- */
 @keyframes fishEnterRightStop {
-  0%   { opacity:0; transform: translateX(140px); }
-  50%  { opacity:1; transform: translateX(0px); }
-  92%  { transform: translateX(3px); }
-  100% { transform: translateX(0); }     /* 餌の手前 */
+
+  0% {
+    opacity:0;
+    transform:translateX(140px);
+  }
+
+  55% {
+    opacity:1;
+    transform:translateX(5px);
+  }
+
+  85% {
+    transform:translateX(-14px);
+  }
+
+  100% {
+    transform:translateX(-22px);
+  }
+
 }
 
 
+/* ---------------------------------
+   右魚 つんつん → 少し離れる
+--------------------------------- */
 @keyframes pokeRightDouble {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(0); }
-  75% { transform: translateX(-3px); }
-  100% { transform: translateX(0); }
+
+  /* つんつん開始位置 */
+  0% {
+    transform:translateX(-22px);
+  }
+
+  /* エサへつん */
+  25% {
+    transform:translateX(-28px);
+  }
+
+  /* 戻る */
+  50% {
+    transform:translateX(-22px);
+  }
+
+  /* もう一度つん */
+  65% {
+    transform:translateX(-26px);
+  }
+
+  /* 少し離れて落ち着く */
+  100% {
+    transform:translateX(-10px);
+  }
+
 }
 
+
+/* ---------------------------------
+   左魚：エサ直前まで寄る
+--------------------------------- */
 @keyframes fishEnterLeft {
-  0% { opacity:0; transform: translateX(-140px); }
-  100% { opacity:1; transform: translateX(0); }
+
+  0% {
+    opacity:0;
+    transform:translateX(-140px);
+  }
+
+  60% {
+    opacity:1;
+    transform:translateX(-5px);
+  }
+
+  100% {
+    transform:translateX(22px);
+  }
+
 }
 
+
+/* ---------------------------------
+   左魚 つん → 少し離れる
+--------------------------------- */
 @keyframes pokeLeftSingle {
-  0% { transform: translateX(0); }
-  60% { transform: translateX(3px); }
-  100% { transform: translateX(0); }
+
+  /* つんつん開始位置 */
+  0% {
+    transform:translateX(22px);
+  }
+
+  /* エサへつん */
+  60% {
+    transform:translateX(28px);
+  }
+
+  /* 少し離れて落ち着く */
+  100% {
+    transform:translateX(10px);
+  }
+
 }
 
 @keyframes frameInRight {
@@ -2835,93 +2917,122 @@ iframe {
 .about-doublebite{
 
     margin-top:10px;
+    margin-left:18px;
     margin-bottom:28px;
 
-    text-align:center;
-
-    font-family:'BBH Hegarty',sans-serif;
+    text-align:left;
 
 }
 
-.about-doublebite .name{
-  color:#444;
-}
 
-.about-doublebite .exclamations{
-  margin-left:3px;
-  color:#FF8C00;
-  font-weight:bold;
-}
+/* テンの顔 */
 
 #infoBiteFace{
 
     display:flex;
-    justify-content:center;
+
+    justify-content:flex-start;
+
     align-items:center;
 
-    gap:18px;
+    gap:2px;
 
-    font-size:2rem;
+    transform:translateX(10px);
+
+    font-size:1.2rem;
+
+    color:#444;
+
+    font-family:system-ui,
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 sans-serif;
+
+}
+
+
+/* Bite!! */
+.info-bite-title{
+
+    margin-top:0px;
+
+    width: max-content;
+
+    margin-left:0;
+
+    text-align:center;
+
+    transform:translateX(6px);
+
+    font-family:'Alfa Slab One', cursive;
+
+    font-size:2.2rem;
 
     color:#444;
 
 }
+
+
+/* ダブル バイト!! */
+.info-bite-sub{
+
+    margin-top:0px;
+
+    width: max-content;
+
+    margin-left:0;
+
+    text-align:center;
+
+    transform:translateX(4px);
+
+    font-size:.88rem;
+
+    color:#666;
+
+}
+
+/* 目 */
 
 .info-eye{
 
     display:inline-block;
 
-    position:relative;
-    top:-1px;
-
     transform-origin:center;
 
-    animation:eyeBlink 4.2s infinite;
+    position:relative;
+
+    top:-1px;
+
+    animation:infoEyeBlink 11s infinite;
 
 }
 
-@keyframes eyeBlink{
 
-    0%,46%,54%,100%{
+@keyframes infoEyeBlink{
+
+    0%,12%,15%,63%,66%,69%,72%,100%{
         transform:scaleY(1);
     }
 
-    50%{
+    13%,64%,70%{
         transform:scaleY(.08);
     }
 
 }
 
+
 #infoLeft,
 #infoRight{
 
     display:flex;
+
     align-items:center;
+
     gap:0;
 
 }
 
-.info-bite-title{
-
-    margin-top:12px;
-
-    font-family:'Alfa Slab One', cursive;
-
-    font-size:2rem;
-
-    color:#444;
-
-}
-
-.info-bite-sub{
-
-    margin-top:4px;
-
-    font-size:1rem;
-
-    color:#666;
-
-}
 
 /* =========================
    OFUSE
@@ -3105,6 +3216,7 @@ iframe {
   transform:scale(0.95);
 
 }
+
 
 /* -------------------------- インフォメーションボタン -------------------------- */
 
@@ -3725,7 +3837,7 @@ iframe {
   position:fixed;
   inset:0;
   background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
-  z-index:9999;
+  z-index:2147483647;
   align-items:center;
   justify-content:center;
   backdrop-filter:blur(6px);
@@ -4085,13 +4197,24 @@ let currentRecordId = null; //現在選択中の保存データ
 let rapidZoneAnnounced = false; //超連掛けゾーン演出用変数
 let lastRapidTime = 0; //超連掛けゾーン演出解除用
 
+let historyInitialized = false;
+
 // ----------------------------------- タイトル演出関数 -----------------------------------
 function playTitleSequence() {
 
- // ============================
-  // 起動画面 戻るボタン対策
-  // ============================
-  history.pushState({ screen: 'splash' }, '', location.href);
+
+  if(!historyInitialized){
+
+    history.pushState(
+      {screen:"app"},
+      "",
+      location.href
+    );
+
+    historyInitialized = true;
+
+  }
+
 
   const titleWrapper = document.getElementById('titleWrapper');
   const titleScreen  = document.getElementById('titleScreen');
@@ -4214,7 +4337,7 @@ function playTitleSequence() {
         <div id="biteSub" style="
           margin-top:6px;
           font-family:'Kosugi Maru',sans-serif;
-          font-size:1.0rem;
+          font-size:1.2rem;
           opacity:0;
         ">ダブル バイト!!</div>
       </div>
@@ -4292,16 +4415,42 @@ function blinkEyes() {
   rightEye.style.animation = 'eyeBlink .35s ease';
 }
 
-// 白フェード後 少し待つ
+// ---------------------------------
+// 目パチパチ前に位置を固定
+// ---------------------------------
 setTimeout(() => {
+
+  // アニメーション停止
+  L.style.animation = "none";
+  R.style.animation = "none";
+
+  // 現在の位置を維持
+  L.style.transition = "none";
+  R.style.transition = "none";
+
+  L.style.transform = "translateX(10px)";
+  R.style.transform = "translateX(-10px)";
+
+},12600);
+
+// ---------------------------------
+// 白フェード後 少し待って瞬き
+// ---------------------------------
+setTimeout(() => {
+
   blinkEyes();
+
 }, 13200);
 
-// 余韻を持たせてもう一度
-setTimeout(() => {
-  blinkEyes();
-}, 13750);
 
+// ---------------------------------
+// 余韻を持たせてもう一度
+// ---------------------------------
+setTimeout(() => {
+
+  blinkEyes();
+
+}, 13550);
 
 }, 5500);
 
@@ -4309,6 +4458,7 @@ setTimeout(() => {
 // 終了 → 初期画面
 // ============================
 setTimeout(() => {
+
   titleWrapper.style.display = 'none';
 
   if (app) {
@@ -4324,6 +4474,8 @@ setTimeout(() => {
   const entry = document.getElementById('entryScreen');
   entry.style.display = 'block';
   entry.classList.add('active');
+
+
 }, 20500);
 
 }
@@ -4887,7 +5039,7 @@ function randomSymbolsWithSnow(n){
 
 // ページ読み込み時にタイトルをセット
 function setRandomTitles(){
-  const soloText = " その一瞬を 重ねよう ";
+  const soloText = " その一瞬を重ねよう ";
   const groupText = " みんなでテント ";
 
   document.getElementById("soloMain").innerText = 
@@ -4903,19 +5055,47 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 // ★ ここからタイトル演出を追加
 window.addEventListener('load', () => {
 
-  // 起動画面 戻るボタン対策
-  history.pushState(
-    { screen: 'splash' },
-    '',
-    location.href
-  );
-
   playTitleSequence();
 
 });
 
 // ------------------------------ 初期画面タイトル記号のランダム表示 ------------------------------
 
+// ============================
+// Android 戻るボタン → リロード確認
+// ============================
+
+let exitConfirmOpen=false;
+
+window.addEventListener("popstate",()=>{
+
+  if(exitConfirmOpen)return;
+
+  exitConfirmOpen=true;
+
+  showExitConfirm();
+
+});
+
+// 確認表示
+function closeExitConfirm(){
+
+  const modal = document.getElementById("exitConfirm");
+
+  if(modal){
+    modal.style.display = "none";
+  }
+
+  exitConfirmOpen = false;
+
+}
+
+// リロード
+function reloadApp(){
+
+  location.reload();
+
+}
 
 
 // ======================================== ひとりカウンター関連関数まとめ ========================================
@@ -7474,8 +7654,14 @@ document.addEventListener("DOMContentLoaded", () => {
 // ----------------------------
 // リロードボタン
 // ----------------------------
-function showExitConfirm() {
-  document.getElementById("exitConfirm").style.display = "flex";
+function showExitConfirm(){
+
+  const modal = document.getElementById("exitConfirm");
+
+  if(!modal) return;
+
+  modal.style.display = "flex";
+
 }
 
 function closeExitConfirm() {
@@ -7485,33 +7671,6 @@ function closeExitConfirm() {
 function reloadApp() {
   location.reload();
 }
-
-// ----------------------------
-// Android 戻るボタン対応
-// ----------------------------
-
-window.addEventListener("popstate", () => {
-
-  if(history.state?.screen === "splash"){
-    
-    history.pushState(
-      { screen:'splash' },
-      '',
-      location.href
-    );
-
-    return;
-  }
-
-  history.pushState(
-    { screen:'lock' },
-    '',
-    location.href
-  );
-
-  showExitConfirm();
-
-});
 
 
 // ----------------------------
