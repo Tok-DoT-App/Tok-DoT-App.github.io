@@ -1451,6 +1451,7 @@ font-family: 'Alfa Slab One', cursive;
 
 /* ------------------- お天気と日時（2段表示＋調整版） ------------------- */
 #dateWeatherContainer {
+    -webkit-tap-highlight-color: transparent;
     width: 380;
     max-width: 390px; /* 
     margin: 1px auto;
@@ -2657,11 +2658,13 @@ iframe {
   background: #1e3c72;
 }
 
+
 /* =========================
-   QRコード共有
+   QRコード共有リンクCSS
 ========================= */
 
 .share-qr-trigger{
+  -webkit-tap-highlight-color: transparent;
   display:block;
   width:fit-content;
   margin:6px auto;
@@ -2675,10 +2678,11 @@ iframe {
 }
 
 /* =========================
-   著作権表示
+   著作権表示リンクCSS
 ========================= */
 
 #settingsFooter {
+  -webkit-tap-highlight-color: transparent;
   margin-top: 12px;
   margin-bottom: 8px;
   font-size: 12px;
@@ -2827,6 +2831,21 @@ iframe {
   border-radius: 4px;
 }
 
+/* ----------------- フッターメッセージ ----------------- */
+.help-footer-message{
+
+    margin:20px 0 14px;
+
+    text-align:left;
+
+    font-size:.92rem;
+
+    line-height:1.8;
+
+    color:#666;
+
+}
+
 /* ----------------- 閉じるボタン ----------------- */
 .help-close {
   margin-top: 16px;
@@ -2863,6 +2882,7 @@ iframe {
   margin-top: 8px;
   margin-bottom: 4px;
   font-weight: 600;
+  text-align:left;
   transition: color 0.2s ease;
 }
 
@@ -2891,7 +2911,11 @@ iframe {
   content: " ▲";
 }
 
-/* ----------------- アプリロゴ ----------------- */
+/* ===============================
+   共通 インフォメーションモーダル　共通
+   =============================== */
+
+/* ----------------- インフォメーション内アプリロゴCSS ----------------- */
 
 .about-logo {
   margin: 12px 0 8px;
@@ -2912,7 +2936,44 @@ iframe {
   text-align: left;
 }
 
-/* ------------ インフォメーション用 Double Bite!! ------------ */
+/* ------------ Tok.DoT ブランド表示追加 ------------ */
+
+.about-logo-area {
+  display: flex;
+  align-items: center;
+  margin-left: 0;
+}
+
+
+.tokdot-brand {
+  text-align: left;
+  margin-left: 22px;
+  margin-top: 4px;
+}
+
+
+.tokdot-name {
+  font-family: 'BBH Hegarty', sans-serif;
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: 0.05em;
+  color: #222;
+}
+
+
+.tokdot-dot {
+  color: #FF8C00;
+}
+
+
+.tokdot-copy {
+  margin-top: 5px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #777;
+}
+
+/* ------------ インフォメーション用CSS  ------------ */
 
 .about-doublebite{
 
@@ -3033,12 +3094,14 @@ iframe {
 
 }
 
+/* ------------ インフォメーション用CSS  ------------ */
 
 /* =========================
-   OFUSE
+   OFUSE関連CSS
 ========================= */
 
 .support-section{
+  -webkit-tap-highlight-color: transparent;
   font-size:12px;
   text-align:center;
   margin-top:10px;
@@ -3068,7 +3131,7 @@ iframe {
 }
 
 /* =========================
-   OFUSE 応援ボタン
+   OFUSE 応援ボタン関連CSS
 ========================= */
 
 .ofuse-button {
@@ -3087,7 +3150,7 @@ iframe {
   opacity: 0.8;
 }
 
-/* -------------------------- リロードボタン -------------------------- */
+/* -------------------------- リロードボタンCSS -------------------------- */
 
 .reloadFab {
   position: fixed;
@@ -3146,9 +3209,9 @@ iframe {
   box-shadow:0 2px 5px rgba(255,75,43,.35) inset;
 }
 
-/* -------------------------- リロードボタン -------------------------- */
+/* -------------------------- リロードボタンCSS -------------------------- */
 
-/* -------------------------- インフォメーションボタン -------------------------- */
+/* -------------------------- インフォメーションボタンCSS -------------------------- */
 
 .app-info-btn {
   position: fixed;
@@ -3218,7 +3281,7 @@ iframe {
 }
 
 
-/* -------------------------- インフォメーションボタン -------------------------- */
+/* -------------------------- インフォメーションボタンCSS -------------------------- */
 
 </style>
 </head>
@@ -3240,7 +3303,7 @@ iframe {
 <!------------------------------ アプリスケール ------------------------------>
 
 
-<!------------------------------ 初期画面 ------------------------------>
+<!------------------------------ ホーム画面 ------------------------------>
 <!-- エントリー -->
 <div id="entryScreen" class="screen active">
 
@@ -3278,46 +3341,14 @@ iframe {
 
 </div>
 
-<!-- QRコード共有 -->
+<!-- =========================
+     QRコード共有
+========================= -->
+
 <div class="share-qr-trigger" id="openQrModal">
   QRコードで近くの友達と共有
 </div>
 
-<!-- QRコード共有 モーダル -->
-<div id="qrModal" class="help-modal" aria-hidden="true">
-
-  <div class="help-modal-content">
-
-    <h2>QRコードで共有</h2>
-
-    <div class="modal-body" style="text-align:center;">
-
-      <p style="font-size:14px;margin-bottom:10px;">
-        スマホで読み取って、<br>
-        アプリをすぐに開けます
-      </p>
-
-      <canvas
-        id="qrCanvas"
-        width="200"
-        height="200">
-      </canvas>
-
-      <p id="qrUrlText"
-         style="font-size:12px;color:#666;">
-      </p>
-
-    </div>
-
-    <button
-      class="help-close"
-      id="closeQrModal">
-      閉じる
-    </button>
-
-  </div>
-
-</div>
 
 <!-- =========================
      著作権表示
@@ -3330,110 +3361,6 @@ iframe {
   </span>
 </div>
 
-<!-- =========================
-     利用規約・免責事項
-========================= -->
-
-<div id="termsDialog"
-     class="help-modal"
-     aria-hidden="true">
-
-  <div class="help-modal-content">
-
-    <h2>Double Bite!! 利用規約</h2>
-
-    <p class="terms-intro">
-      本アプリを安心してご利用いただくための内容です。
-    </p>
-
-    <div class="modal-body">
-
-      <p>
-
-        最終更新日：2026年7月7日
-        <br><br>
-
-        本規約は、Double Bite!!（以下「本アプリ」）の利用条件を定めるものです。<br>
-        本アプリを利用することで、本規約に同意したものとみなします。
-        <br><br>
-
-        <strong>1. 利用条件</strong><br>
-
-        本アプリは、ワカサギ釣りの釣果管理を目的として、
-        無料で自由にご利用いただけます。<br>
-
-        商用利用、再配布、改変はご遠慮ください。
-        <br><br>
-
-        <em>禁止行為の例：</em><br>
-
-        ・不正アクセスや改ざん行為<br>
-        ・他の利用者へ迷惑を及ぼす行為<br>
-        ・法律・公序良俗に反する行為
-
-        <br><br>
-
-        <strong>2. 著作権</strong><br>
-
-        本アプリの著作権は、
-        Tok.DoT / Hiroki Sato に帰属します。<br>
-
-        © 2026 Tok.DoT. All Rights Reserved.
-
-        <br><br>
-
-        <strong>3. 免責事項</strong><br>
-
-        ・本アプリの利用によって生じたいかなる損害についても、
-        運営者は責任を負いません。<br>
-
-        ・本アプリの内容は、
-        予告なく変更・停止・終了する場合があります。<br>
-
-        ・本アプリの情報は参考目的で提供しており、
-        正確性を保証するものではありません。
-
-        <br><br>
-
-        <strong>4. ユーザーの責任</strong><br>
-
-        ・端末やデータの管理は利用者自身の責任で行ってください。<br>
-
-        ・本アプリ利用中のトラブルや誤操作について、
-        運営者は責任を負いません。
-
-        <br><br>
-
-        <strong>5. プライバシー</strong><br>
-
-        ・本アプリは個人情報を保存しません。<br>
-
-        ・匿名のアクセス情報を取得する場合があります。
-
-        <br><br>
-
-        <strong>6. 改訂</strong><br>
-
-        本利用規約は予告なく改訂される場合があります。<br>
-        最新版はアプリ内でご確認ください。
-
-      </p>
-
-      <p class="terms-end">
-        ここまでご確認いただきありがとうございます。
-      </p>
-
-    </div>
-
-    <button class="help-close" type="button">
-      閉じる
-    </button>
-
-  </div>
-
-</div>
-
-<!-- ========================= -->
 
 <!-- =========================
      OFUSE
@@ -3445,65 +3372,7 @@ iframe {
   </a>
 </section>
 
-<div id="supportModal"
-     class="help-modal"
-     aria-hidden="true">
 
-  <div class="help-modal-content">
-
-    <h2>応援ありがとうございます</h2>
-
-    <div class="modal-body" style="text-align:center;">
-
-      <p>
-        このアプリは無料でご利用いただけます。<br>
-        もし役に立ったと感じていただけたら、<br>
-        開発の励みになりますので、
-        <br><br>
-        <strong>下のボタンから応援をお願いします。</strong>
-      </p>
-
-<div class="ofuse-wrap">
-
-  <a
-    href="https://ofuse.me/o?uid=142822"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="ofuse-button">
-
-    OFUSEで応援する
-
-  </a>
-
-</div>
-
-      <p class="ofuse-note">
-        ※OFUSEという名前は「お布施」に似ていますが、
-        宗教とは関係なく、
-        気軽に応援やサポートの気持ちを届けられるサービスです。
-      </p>
-
-    </div>
-
-    <button
-      class="help-close"
-      id="closeSupportModal">
-      閉じる
-    </button>
-
-  </div>
-
-</div>
-
-<!-- =========================
-     シンプルアラートダイアログ
-========================= -->
-<div id="simpleAlertDialog">
-  <div class="simple-alert-box">
-    <div id="simpleAlertMessage"></div>
-    <button type="button" onclick="simpleAlertOK()">OK</button>
-  </div>
-</div>
 
 <!-- みんなでテント -->
 <div class="counter-group-main gradient" id="groupMain"></div>
@@ -3527,168 +3396,10 @@ iframe {
 
 </div>
 
-<!-- =========================
-     インフォメーションモーダル
-========================= -->
 
-<div id="helpModal"
-     class="help-modal"
-     aria-hidden="true">
+<!------------------------------ ホーム画面 ------------------------------>
 
-  <div class="help-modal-content">
-
-    <h2>インフォメーション</h2>
-
-    <div class="modal-body">
-
-      <div class="about-logo">
-        <img src="icon-192.png" alt="Double Bite!! ロゴ">
-      </div>
-
-
-      <p class="about-concept">
-        その一瞬に<br>
-        そっと寄り添う<br>
-        カウンターアプリ
-      </p>
-
-
- <div class="about-doublebite">
-
-  <div id="infoBiteFace">
-
-  <div id="infoLeft">
-    <span id="infoLeftEye" class="info-eye">⦿</span>
-    <span>＞</span>
-  </div>
-
-  <span>・</span>
-
-  <div id="infoRight">
-    <span>＜</span>
-    <span id="infoRightEye" class="info-eye">⦿</span>
-  </div>
-
-</div>
-
-  <div class="info-bite-title">
-    Bite!!
-  </div>
-
-  <div class="info-bite-sub">
-    ダブル バイト!!
-  </div>
-
-</div>
-
-<!-- はじめての方へ（折りたたみ） -->
-<h3 class="accordion-toggle">はじめての方へ</h3>
-
-<div class="accordion-content">
-
-  <p>
-    Double Bite!! はインターネットブラウザで動作するアプリです。
-    スマートフォンから「ホーム画面に追加」（iPhone・Android対応）すると、
-    他のアプリと同じようにアイコンから起動できます。
-  </p>
-
-  <h4 class="accordion-toggle nested">
-    LINEでURLを開いた場合の注意
-  </h4>
-
-  <div class="accordion-content nested">
-    <p>
-      LINE内ブラウザでは「ホーム画面に追加」が表示されないため、
-      <strong>Safari（iPhone）</strong> または
-      <strong>Chrome（Android）</strong>
-      で開き直してください。
-    </p>
-  </div>
-
-  <h4 class="accordion-toggle nested">
-    iPhone の場合（LINE → Safari）
-  </h4>
-
-  <div class="accordion-content nested">
-    <ol>
-      <li>LINEで Double Bite!! のURLをタップ</li>
-      <li>画面右下（または右上）のメニューから <strong>共有アイコン</strong> をタップ</li>
-      <li>「Safariで開く」を選択</li>
-      <li>Safariで表示されたら下部の <strong>共有ボタン</strong> をタップ</li>
-      <li>「ホーム画面に追加」を選択</li>
-      <li>名前を確認して「追加」をタップ</li>
-    </ol>
-  </div>
-
-  <h4 class="accordion-toggle nested">
-    Android の場合（LINE → Chrome）
-  </h4>
-
-  <div class="accordion-content nested">
-    <ol>
-      <li>LINEで Double Bite!! のURLをタップ</li>
-      <li>画面右下の <strong>︙（メニュー）</strong> をタップ</li>
-      <li>「ブラウザで開く」または「Chromeで開く」を選択</li>
-      <li>Chrome右上の <strong>︙（メニュー）</strong> をタップ</li>
-      <li>「ホーム画面に追加」を選択</li>
-      <li>表示名を確認して追加</li>
-    </ol>
-  </div>
-
-</div>
-
-      <!-- ダブルカウンターについて -->
-      <h3 class="accordion-toggle">
-        ダブルカウンターについて
-      </h3>
-
-      <div class="accordion-content">
-
-        <p>
-          左右の釣果を分けて記録できます。
-          合計数や時間ごとの状況を確認しながら、
-          ワカサギ釣りを楽しめます。
-        </p>
-
-      </div>
-
-
-      <!-- アプリ更新について -->
-      <h3 class="accordion-toggle">
-        ご利用について
-      </h3>
-
-      <div class="accordion-content">
-
-        <p class="note">
-
-          ※ 本アプリはブラウザ上で動作しています。<br>
-          更新内容が反映されない場合は、
-          リロードボタンを押して再読み込みしてください。
-
-        </p>
-
-      </div>
-
-
-    </div>
-
-
-    <button
-      class="help-close"
-      type="button"
-      id="closeHelp">
-      閉じる
-    </button>
-
-
-  </div>
-
-</div>
-
-<!------------------------------ 初期画面 ------------------------------>
-
-<!---------------------- ひとりカウンター（新デザイン・中央セル拡張版） ---------------------->
+<!---------------------- ダブルカウンター（アプリ内：ひとりカウンター） ---------------------->
 <div id="soloCounterScreen" class="screen solo-counter">
 
   <!-- カウンター本体だけラップ -->
@@ -3814,7 +3525,7 @@ iframe {
   <button class="screenBackBtn" onclick="showScreen('entryScreen')">戻る</button>
 </div>
 
-<!---------------------- ひとりカウンター（新デザイン・中央セル拡張版） ---------------------->
+<!---------------------- ダブルカウンター（アプリ内：ひとりカウンター） ---------------------->
 
 <!-- 全画面共通リロード -->
 <button
@@ -3830,69 +3541,6 @@ iframe {
   aria-label="インフォメーション">
   i
 </button>
-
-<!-- ==================== リロード確認ダイアログ ==================== -->
-<div id="exitConfirm" style="
-  display:none;
-  position:fixed;
-  inset:0;
-  background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
-  z-index:2147483647;
-  align-items:center;
-  justify-content:center;
-  backdrop-filter:blur(6px);
-">
-  <div style="
-    background:linear-gradient(135deg,#1e3c72,#2a5298);
-    padding:22px 18px;
-    border-radius:18px;
-    text-align:center;
-    color:#fff;
-    width:82%;
-    max-width:340px;
-    box-shadow:0 10px 30px rgba(0,0,0,.45);
-  ">
-
-    <div style="
-      font-size:1.2rem;
-      font-weight:600;
-      margin-bottom:22px;
-    ">
-      アプリをリロードしますか？
-    </div>
-
-    <div style="display:flex;gap:12px">
-
-      <button onclick="reloadApp()" style="
-        flex:1;
-        padding:12px 0;
-        border:none;
-        border-radius:12px;
-        background:linear-gradient(135deg,#ff416c,#ff4b2b);
-        color:#fff;
-        font-size:1rem;
-        font-weight:600;
-      ">
-        リロード
-      </button>
-
-      <button onclick="closeExitConfirm()" style="
-        flex:1;
-        padding:12px 0;
-        border:none;
-        border-radius:12px;
-        background:#fff;
-        color:#2a5298;
-        font-size:1rem;
-        font-weight:600;
-      ">
-        キャンセル
-      </button>
-
-    </div>
-
-  </div>
-</div>
 
 
 <!------------------------------ わいわいテント登録画面 ------------------------------>
@@ -3999,6 +3647,8 @@ iframe {
 
 </div>
 <!------------------------------ わいわいカウンター画面 ------------------------------>
+
+<!------------------------------ モーダル・ダイアログ関係コード群 ------------------------------>
 
 <!-- 離脱モーダル -->
 <div id="leaveModal" class="modal">
@@ -4165,6 +3815,734 @@ iframe {
   </div>
 </div>
 
+<!-- =========================
+     シンプルアラートダイアログ
+========================= -->
+<div id="simpleAlertDialog">
+  <div class="simple-alert-box">
+    <div id="simpleAlertMessage"></div>
+    <button type="button" onclick="simpleAlertOK()">OK</button>
+  </div>
+</div>
+
+<!-- QRコード共有 モーダル -->
+<div id="qrModal" class="help-modal" aria-hidden="true">
+
+  <div class="help-modal-content">
+
+    <h2>QRコードで共有</h2>
+
+    <div class="modal-body" style="text-align:center;">
+
+      <p style="font-size:14px;margin-bottom:10px;">
+        スマホで読み取って、<br>
+        アプリをすぐに開けます
+      </p>
+
+      <canvas
+        id="qrCanvas"
+        width="200"
+        height="200">
+      </canvas>
+
+      <p id="qrUrlText"
+         style="font-size:12px;color:#666;">
+      </p>
+
+    </div>
+
+    <button
+      class="help-close"
+      id="closeQrModal">
+      閉じる
+    </button>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     利用規約・免責事項モーダル
+========================= -->
+
+<div id="termsDialog"
+     class="help-modal"
+     aria-hidden="true">
+
+  <div class="help-modal-content">
+
+    <h2>Double Bite!! 利用規約</h2>
+
+    <p class="terms-intro">
+      本アプリを安心してご利用いただくための内容です。
+    </p>
+
+    <div class="modal-body">
+
+      <p>
+
+        最終更新日：2026年7月7日
+        <br><br>
+
+        本規約は、Double Bite!!（以下「本アプリ」）の利用条件を定めるものです。<br>
+        本アプリを利用することで、本規約に同意したものとみなします。
+        <br><br>
+
+        <strong>1. 利用条件</strong><br>
+
+        本アプリは、ワカサギ釣りの釣果管理を目的として、
+        無料で自由にご利用いただけます。<br>
+
+        商用利用、再配布、改変はご遠慮ください。
+        <br><br>
+
+        <em>禁止行為の例：</em><br>
+
+        ・不正アクセスや改ざん行為<br>
+        ・他の利用者へ迷惑を及ぼす行為<br>
+        ・法律・公序良俗に反する行為
+
+        <br><br>
+
+        <strong>2. 著作権</strong><br>
+
+        本アプリの著作権は、
+        Tok.DoT / Hiroki Sato に帰属します。<br>
+
+        © 2026 Tok.DoT. All Rights Reserved.
+
+        <br><br>
+
+        <strong>3. 免責事項</strong><br>
+
+        ・本アプリの利用によって生じたいかなる損害についても、
+        運営者は責任を負いません。<br>
+
+        ・本アプリの内容は、
+        予告なく変更・停止・終了する場合があります。<br>
+
+        ・本アプリの情報は参考目的で提供しており、
+        正確性を保証するものではありません。
+
+        <br><br>
+
+        <strong>4. ユーザーの責任</strong><br>
+
+        ・端末やデータの管理は利用者自身の責任で行ってください。<br>
+
+        ・本アプリ利用中のトラブルや誤操作について、
+        運営者は責任を負いません。
+
+        <br><br>
+
+        <strong>5. プライバシー</strong><br>
+
+        ・本アプリは個人情報を保存しません。<br>
+
+        ・匿名のアクセス情報を取得する場合があります。
+
+        <br><br>
+
+        <strong>6. 改訂</strong><br>
+
+        本利用規約は予告なく改訂される場合があります。<br>
+        最新版はアプリ内でご確認ください。
+
+      </p>
+
+      <p class="terms-end">
+        ここまでご確認いただきありがとうございます。
+      </p>
+
+    </div>
+
+    <button class="help-close" type="button">
+      閉じる
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ========================= -->
+
+<!-- =========================
+     OFUSEモーダル
+========================= -->
+
+<div id="supportModal"
+     class="help-modal"
+     aria-hidden="true">
+
+  <div class="help-modal-content">
+
+    <h2>応援ありがとうございます</h2>
+
+    <div class="modal-body" style="text-align:center;">
+
+      <p>
+        このアプリは無料でご利用いただけます。<br>
+        もし役に立ったと感じていただけたら、<br>
+        開発の励みになりますので、
+        <br><br>
+        <strong>下のボタンから応援をお願いします。</strong>
+      </p>
+
+<div class="ofuse-wrap">
+
+  <a
+    href="https://ofuse.me/o?uid=142822"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ofuse-button">
+
+    OFUSEで応援する
+
+  </a>
+
+</div>
+
+      <p class="ofuse-note">
+        ※OFUSEという名前は「お布施」に似ていますが、
+        宗教とは関係なく、
+        気軽に応援やサポートの気持ちを届けられるサービスです。
+      </p>
+
+    </div>
+
+    <button
+      class="help-close"
+      id="closeSupportModal">
+      閉じる
+    </button>
+
+  </div>
+
+</div>
+<!-- ========================= -->
+
+<!-- =========================
+     インフォメーションモーダル
+========================= -->
+
+<div id="helpModal"
+     class="help-modal"
+     aria-hidden="true">
+
+  <div class="help-modal-content">
+
+    <h2>インフォメーション</h2>
+
+    <div class="modal-body">
+
+ <div class="about-logo-area">
+
+  <div class="about-logo">
+    <img src="icon-192.png" alt="Double Bite!! ロゴ">
+  </div>
+
+  <div class="tokdot-brand">
+<div class="tokdot-name">
+  Tok<span class="tokdot-dot">.</span>DoT
+</div>
+
+    <div class="tokdot-copy">
+      Take Your Step.
+    </div>
+  </div>
+
+</div>
+
+      <p class="about-concept">
+        その一瞬に<br>
+        そっと寄り添う<br>
+        カウンターアプリ
+      </p>
+
+
+ <div class="about-doublebite">
+
+  <div id="infoBiteFace">
+
+  <div id="infoLeft">
+    <span id="infoLeftEye" class="info-eye">⦿</span>
+    <span>＞</span>
+  </div>
+
+  <span>・</span>
+
+  <div id="infoRight">
+    <span>＜</span>
+    <span id="infoRightEye" class="info-eye">⦿</span>
+  </div>
+
+</div>
+
+  <div class="info-bite-title">
+    Bite!!
+  </div>
+
+  <div class="info-bite-sub">
+    ダブル バイト!!
+  </div>
+
+</div>
+
+<!-- はじめての方へ（折りたたみ） -->
+<h3 class="accordion-toggle">はじめての方へ</h3>
+
+<div class="accordion-content">
+
+  <p>
+    Double Bite!!（ダブルバイト!!） は、インターネットブラウザで動作するアプリです。
+    スマートフォンから「ホーム画面に追加」（iPhone・Android対応）すると、
+    他のアプリと同じようにアイコンから起動できます。
+  </p>
+
+  <h4 class="accordion-toggle nested">
+    LINEでURLを開いた場合の注意
+  </h4>
+
+  <div class="accordion-content nested">
+    <p>
+      LINE内ブラウザでは「ホーム画面に追加」が表示されないため、
+      <strong>Safari（iPhone）</strong> または
+      <strong>Chrome（Android）</strong>
+      で開き直してください。
+    </p>
+  </div>
+
+  <h4 class="accordion-toggle nested">
+    iPhone の場合（LINE → Safari）
+  </h4>
+
+  <div class="accordion-content nested">
+    <ol>
+      <li>LINEで Double Bite!! のURLをタップ</li>
+      <li>画面右下（または右上）のメニューから <strong>共有アイコン</strong> をタップ</li>
+      <li>「Safariで開く」を選択</li>
+      <li>Safariで表示されたら下部の <strong>共有ボタン</strong> をタップ</li>
+      <li>「ホーム画面に追加」を選択</li>
+      <li>名前を確認して「追加」をタップ</li>
+    </ol>
+  </div>
+
+  <h4 class="accordion-toggle nested">
+    Android の場合（LINE → Chrome）
+  </h4>
+
+  <div class="accordion-content nested">
+    <ol>
+      <li>LINEで Double Bite!! のURLをタップ</li>
+      <li>画面右下の <strong>︙（メニュー）</strong> をタップ</li>
+      <li>「ブラウザで開く」または「Chromeで開く」を選択</li>
+      <li>Chrome右上の <strong>︙（メニュー）</strong> をタップ</li>
+      <li>「ホーム画面に追加」を選択</li>
+      <li>表示名を確認して追加</li>
+    </ol>
+  </div>
+
+</div>
+
+<!-- このアプリについて -->
+<h3 class="accordion-toggle">
+  このアプリについて
+</h3>
+
+<div class="accordion-content">
+
+  <p>
+    <strong>その一瞬を重ねよう。</strong>
+  </p>
+
+  <p>
+    このアプリは、左右2つのカウンターで独立してカウントできる、
+    通称「ダブルカウンターアプリ」です。
+  </p>
+
+  <p>
+    これまでありそうでなかった、
+    2つのカウンターを1つにした"二刀流"スタイルで、
+    さまざまなシーンでのカウントをサポートします。
+  </p>
+
+  <p>
+    本アプリは、特にワカサギ釣りでの使いやすさを重視して
+    設計・調整していますが、
+    片方だけを使うシングルカウンターとしても
+    快適にご利用いただけます。
+  </p>
+
+<p>
+  アプリ名は
+  <strong>「Double Bite!!（ダブルバイト!!）」</strong>です。
+</p>
+
+<p>
+  「Double Bite!!」という言葉の響きと、
+  ワカサギ釣りの楽しさをイメージして名付けました。
+</p>
+
+<p>
+  ワカサギ釣りで二匹同時に釣れる
+  「2連掛け」のような、
+  思わず笑顔になる特別な瞬間も、
+  このアプリ名に込めています。
+</p>
+
+</div>
+
+<!-- ホーム画面について -->
+<h3 class="accordion-toggle">
+  ホーム画面について
+</h3>
+
+<div class="accordion-content">
+
+  <p>
+  「レッツ フィッシング!!」ボタンをタップすると、
+  ダブルカウンター画面が表示されます。
+  </p>
+
+</div>
+
+<!-- ダブルカウンター画面について -->
+<h3 class="accordion-toggle">
+  ダブルカウンター画面について
+</h3>
+
+<div class="accordion-content">
+
+  <p>
+    使い方はとても簡単です。
+  </p>
+
+  <p>
+    左右それぞれの穴釣りカウンターをタップすると、
+    独立してカウントされます。
+  </p>
+
+  <p>
+    カウンターは氷上の穴釣りをイメージしたデザインになっており、
+    タップすると水面に波紋が広がります。
+  </p>
+
+  <p>
+    釣れた瞬間の小さな気持ちよさを演出する、
+    通称「穴釣りカウンター」です。
+  </p>
+
+  <p>
+    中央（上部）のカウンターには、
+    左右の合計数が表示されます。
+  </p>
+
+  <p>
+    また、各穴釣りカウンター上部では、
+    それぞれ独立して次の操作が行えます。
+  </p>
+
+  <ul>
+    <li>Cボタン … カウントをクリア</li>
+    <li>▼ボタン … 1つ減算</li>
+  </ul>
+
+ <h4 class="accordion-toggle nested">
+  ※Cボタン使用時のご注意
+</h4>
+
+<div class="accordion-content nested">
+
+  <p class="note">
+    例えば、片方の穴釣りカウンターで100匹までカウントしたあとに、
+    Cボタンで0匹へ戻した場合、
+    次回以降の声かけ機能（便利な機能④）が、
+    現在の釣果とは異なる内容になることがあります。
+  </p>
+
+<p class="note">
+    これは、内部で「100匹まで到達した」という情報を保持しているためです。
+  </p>
+
+<p class="note">
+    大きくカウントをリセットしたい場合は、
+  「戻る」ボタンでホーム画面へ戻り、
+    再度ダブルカウンター画面を開き、
+  カウント情報をオールクリアしてから
+  ご利用いただくことをおすすめします。
+  </p>
+<p class="note">
+    なお、数匹程度のカウントをCボタンでリセットする場合は、
+    特に問題ありません。
+  </p>
+
+</div>
+
+</div>
+
+
+<!-- 便利な機能 -->
+<h3 class="accordion-toggle">
+  便利な機能
+</h3>
+
+<div class="accordion-content">
+
+  <!-- ① -->
+  <h4 class="accordion-toggle nested">
+    ① 釣果ログレポート機能
+  </h4>
+
+  <div class="accordion-content nested">
+
+    <p>
+      カウントした時間帯を自動で記録し、
+      時間帯ごとの釣果をあとから確認できます。
+    </p>
+
+    <p>
+      レポートは保存・削除が可能です。
+    </p>
+
+    <p>
+      釣りの思い出として残すだけでなく、
+      自分の釣果傾向を知り、
+      今後の釣果アップにもぜひお役立てください。
+    </p>
+
+<h4 class="accordion-toggle nested">
+  ※釣果ログレポート機能のご注意
+</h4>
+
+<div class="accordion-content nested">
+
+  <p class="note">
+    仕様上、時間帯をまたいだ減算には対応していません。
+例えば、6時59分ごろに2匹カウントし、
+7時台になってから▼ボタンで1匹減算した場合、
+6時台の記録は減算されません。そのため、
+カウンターの合計と釣果ログレポートの合計数に
+差が生じる場合があります。
+あらかじめご了承ください。
+
+  </p>
+
+</div>
+
+  </div>
+
+  <!-- ② -->
+  <h4 class="accordion-toggle nested">
+    ② 現地のお天気機能
+  </h4>
+
+  <div class="accordion-content nested">
+
+    <p>
+      現在地や釣り場周辺の天気を確認できます。
+    </p>
+
+    <p>
+      天候は、仕掛けやエサ選びにも影響する大切な要素です。
+    </p>
+
+    <p>
+      釣行前や釣行中の天候チェックに、
+      ぜひお役立てください。
+    </p>
+
+  </div>
+
+  <!-- ③ -->
+  <h4 class="accordion-toggle nested">
+    ③ カラー変更機能
+  </h4>
+
+  <div class="accordion-content nested">
+
+    <p>
+      ズバリ!!
+      釣れない時のおまじない機能です（笑）
+    </p>
+
+    <p>
+      カウンター本体や、
+      左右それぞれの穴釣りカウンターのカラーを、
+      お好みに合わせて変更できます。
+    </p>
+
+    <p>
+      自分だけの
+      「勝負カウンター」
+      にカスタマイズしてお楽しみください。
+    </p>
+
+  </div>
+
+  <!-- ④ -->
+  <h4 class="accordion-toggle nested">
+    ④ 声かけ機能
+  </h4>
+
+  <div class="accordion-content nested">
+
+    <p>
+      釣果に応じて、
+      カウンターがやさしく声をかけてくれます。
+    </p>
+
+    <p>
+      釣りのひとときに、
+      ほんの少し寄り添う機能です。
+    </p>
+
+  </div>
+
+  <!-- ⑤ -->
+  <h4 class="accordion-toggle nested">
+    ⑤ Fresh Bait!!（ﾌﾚｯｼｭﾍﾞｲﾄ!!）機能
+  </h4>
+
+  <div class="accordion-content nested">
+
+    <p>
+      5分〜60分まで、
+      5分刻みでタイマーを設定できます。
+    </p>
+
+    <p>
+      さまざまな用途で利用できますが、
+      ボタン名のとおり、
+      新しいエサ（ベイト）を投入したタイミングから、
+      次のエサ交換の目安として使うのがおすすめです。
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- 思い出をスクリーンショット -->
+<h3 class="accordion-toggle">
+  思い出をスクリーンショット
+</h3>
+
+<div class="accordion-content">
+
+  <p>
+    端末のスクリーンショット機能を使えば、
+    その日の釣果や思い出を、
+    ご家族やご友人と気軽に共有することもできます。
+  </p>
+
+</div>
+
+
+<!-- ご利用上の注意 -->
+<h3 class="accordion-toggle">
+  ご利用上の注意
+</h3>
+
+<div class="accordion-content">
+
+  <p class="note">
+    本アプリはブラウザで動作しているため、
+    アプリの更新内容がすぐに反映されない場合があります。
+    その際は、
+    リロードボタンを数回タップして、
+    再読み込みを行ってください。
+  </p>
+
+</div>
+
+</div>
+
+<div class="help-footer-message">
+
+  操作に迷ったときは、<br>
+  このインフォメーションを参考にしながら<br>
+  ご利用ください。
+
+</div>
+
+<button
+  class="help-close"
+  type="button"
+  id="closeHelp">
+  閉じる
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ==================== リロード確認ダイアログ ==================== -->
+<div id="exitConfirm" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.75));
+  z-index:2147483647;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+">
+  <div style="
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    padding:22px 18px;
+    border-radius:18px;
+    text-align:center;
+    color:#fff;
+    width:82%;
+    max-width:340px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+  ">
+
+    <div style="
+      font-size:1.2rem;
+      font-weight:600;
+      margin-bottom:22px;
+    ">
+      アプリをリロードしますか？
+    </div>
+
+    <div style="display:flex;gap:12px">
+
+      <button onclick="reloadApp()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:linear-gradient(135deg,#ff416c,#ff4b2b);
+        color:#fff;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        リロード
+      </button>
+
+      <button onclick="closeExitConfirm()" style="
+        flex:1;
+        padding:12px 0;
+        border:none;
+        border-radius:12px;
+        background:#fff;
+        color:#2a5298;
+        font-size:1rem;
+        font-weight:600;
+      ">
+        キャンセル
+      </button>
+
+    </div>
+
+  </div>
+</div>
+<!-- ==================== リロード確認ダイアログ ==================== -->
+
+<!------------------------------ モーダル・ダイアログ関係コード群 ------------------------------>
+
 <!-- 全スマホ対応スケーリング終り -->
 </div>
 
@@ -4256,7 +4634,7 @@ function playTitleSequence() {
     letter-spacing: 0.05em;
   ">
     <div>Tok<span style="color:#FF8C00;">.</span>DoT</div>
-    <div id="companySub">Take Your Step</div>
+    <div id="companySub">Take Your Step.</div>
   </h1>
   `;
 
@@ -5039,7 +5417,7 @@ function randomSymbolsWithSnow(n){
 
 // ページ読み込み時にタイトルをセット
 function setRandomTitles(){
-  const soloText = " その一瞬を重ねよう ";
+  const soloText = " その一瞬を重ねよう。 ";
   const groupText = " みんなでテント ";
 
   document.getElementById("soloMain").innerText = 
