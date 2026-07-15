@@ -8255,6 +8255,18 @@ function startBaitTimer(){
                 .getElementById("baitTimerBtn")
                 .classList.add("timeout");
 
+    // 時間切れバイブ通知
+    if (navigator.vibrate && isVibrationEnabled) {
+
+        navigator.vibrate([
+            300,
+            150,
+            300,
+            150,
+            500
+        ]);
+
+    }
 
         }
 
