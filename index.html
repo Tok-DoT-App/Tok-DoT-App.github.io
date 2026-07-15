@@ -1143,101 +1143,6 @@ button.btn-part:active {
   margin-right: 3px;
 }
 
-/* ==========================
-   バイブ設定
-========================== */
-
-.bait-vibration-setting{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin:12px 0 18px;
-
-}
-
-.bait-vibration-text{
-
-    font-size:15px;
-    font-weight:bold;
-
-    margin-left:15px;
-
-}
-
-/* スイッチ */
-
-.bait-switch{
-
-    position:relative;
-    display:inline-block;
-    width:52px;
-    height:28px;
-
-}
-
-.bait-switch input{
-
-    display:none;
-
-}
-
-.bait-slider{
-
-    position:absolute;
-    inset:0;
-
-    background:#bbb;
-    border-radius:999px;
-
-    transition:.25s;
-
-    cursor:pointer;
-
-}
-
-.bait-slider:before{
-
-    content:"";
-
-    position:absolute;
-
-    width:22px;
-    height:22px;
-
-    left:3px;
-    top:3px;
-
-    background:#fff;
-
-    border-radius:50%;
-
-    transition:.25s;
-
-}
-
-.bait-switch input:checked + .bait-slider{
-
-    background:#4CAF50;
-
-}
-
-.bait-switch input:checked + .bait-slider:before{
-
-    transform:translateX(24px);
-
-}
-
-.bait-vibration-note{
-
-    font-size:12px;
-    color:#888;
-    margin-top:-10px;
-    margin-bottom:15px;
-
-}
-
 
 /* -------------------------------- ひとりカウンター枠 -------------------------------- */
 
@@ -8350,22 +8255,6 @@ function startBaitTimer(){
                 .getElementById("baitTimerBtn")
                 .classList.add("timeout");
 
-// バイブレーション
-if (
-    baitVibrationEnabled &&
-    typeof navigator.vibrate === "function"
-) {
-
-    navigator.vibrate([
-        300,
-        150,
-        300,
-        150,
-        500
-    ]);
-
-}
-
 
         }
 
@@ -8795,39 +8684,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // =========================
 window.addEventListener("load", () => {
 
-// =========================
-// バイブ設定
-// =========================
-const vibrationToggle = document.getElementById("baitVibrationToggle");
-const vibrationUnsupported = document.getElementById("baitVibrationUnsupported");
-
-// バイブ対応判定
-const vibrationSupported =
-    typeof navigator.vibrate === "function";
-
-// 保存値を読み込み（初期値ON）
-let baitVibrationEnabled =
-    localStorage.getItem("baitVibrationEnabled");
-
-baitVibrationEnabled =
-    baitVibrationEnabled === null
-        ? true
-        : baitVibrationEnabled === "true";
-
-// 対応端末
-if (vibrationSupported) {
-
-    vibrationToggle.checked = baitVibrationEnabled;
-
-} else {
-
-    vibrationToggle.checked = false;
-    vibrationToggle.disabled = true;
-
-    vibrationUnsupported.style.display = "block";
-
-}
-
     const baitModal = document.getElementById("baitSettingModal");
     const baitSetting = document.getElementById("baitSetting");
     const closeBaitModal = document.getElementById("closeBaitModal");
@@ -8848,19 +8704,6 @@ if (vibrationSupported) {
         updateBaitTimerDisplay();
     }
 
-// =========================
-// バイブ設定変更
-// =========================
-vibrationToggle.addEventListener("change", () => {
-
-    baitVibrationEnabled = vibrationToggle.checked;
-
-    localStorage.setItem(
-        "baitVibrationEnabled",
-        baitVibrationEnabled
-    );
-
-});
 
     // ------------------------
     // モーダルを開く
@@ -8922,21 +8765,6 @@ vibrationToggle.addEventListener("change", () => {
   <div class="bait-modal-content">
 
     <h3>Next Bait!!タイマー</h3>
-
-<div class="bait-vibration-setting">
-
-  <span class="bait-vibration-text">バイブレーション</span>
-
-  <label class="bait-switch">
-    <input type="checkbox" id="baitVibrationToggle">
-    <span class="bait-slider"></span>
-  </label>
-
-</div>
-
-<div id="baitVibrationUnsupported" class="bait-vibration-note" style="display:none;">
-  ※ この端末ではバイブレーションは利用できません
-</div>
 
     <div id="baitTimeList">
 
