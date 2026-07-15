@@ -8291,7 +8291,7 @@ function showTempInfo(msg, duration=2500){
    Next bite!!タイマー STEP1
 ========================================= */
 
-let baitTimerMinutes = 0.05;      // 設定時間（分）
+let baitTimerMinutes = 15;      // 設定時間（分）
 let baitTimerSeconds = baitTimerMinutes * 60;
 let baitTimerInterval = null;
 
@@ -8351,13 +8351,13 @@ function startBaitTimer(){
         isBaitVibrationEnabled
     ) {
 
-        navigator.vibrate([
-            300,
-            150,
-            300,
-            150,
-            500
-        ]);
+navigator.vibrate([
+    600,
+    200,
+    600,
+    200,
+    900
+]);
 
     }
 
