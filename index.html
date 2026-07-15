@@ -2549,6 +2549,95 @@ iframe {
 
 }
 
+/* ==========================
+   Fresh Bait!!通知バイブ設定
+========================== */
+
+.bait-vibration-setting{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin:12px 15px 18px;
+
+}
+
+.bait-vibration-text{
+
+    font-size:14px;
+    font-weight:bold;
+
+}
+
+
+.bait-switch{
+
+    position:relative;
+    display:inline-block;
+
+    width:50px;
+    height:26px;
+
+}
+
+
+.bait-switch input{
+
+    display:none;
+
+}
+
+
+.bait-slider{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#ccc;
+
+    border-radius:20px;
+
+    transition:.25s;
+
+}
+
+
+.bait-slider:before{
+
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    top:3px;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    transition:.25s;
+
+}
+
+
+.bait-switch input:checked + .bait-slider{
+
+    background:#4CAF50;
+
+}
+
+
+.bait-switch input:checked + .bait-slider:before{
+
+    transform:translateX(24px);
+
+}
+
 /* =========================
    シンプルアラートダイアログ
 ========================= */
@@ -5109,7 +5198,8 @@ let soloCounter = { count:0, name:"", msg:"" };
 let soloLeftCounter  = { count: 0 };
 let soloRightCounter = { count: 0 };
 
-let isVibrationEnabled = true; // 振動ON/OFF
+let isVibrationEnabled = true; // カウンター振動ON/OFF
+let isBaitVibrationEnabled = true; // ベイトタイマー振動ON/OFF
 
 let currentRecordId = null; //現在選択中の保存データ
 
@@ -8201,7 +8291,7 @@ function showTempInfo(msg, duration=2500){
    Next bite!!タイマー STEP1
 ========================================= */
 
-let baitTimerMinutes = 15;      // 設定時間（分）
+let baitTimerMinutes = 0.05;      // 設定時間（分）
 let baitTimerSeconds = baitTimerMinutes * 60;
 let baitTimerInterval = null;
 
@@ -8255,8 +8345,11 @@ function startBaitTimer(){
                 .getElementById("baitTimerBtn")
                 .classList.add("timeout");
 
-    // 時間切れバイブ通知
-    if (navigator.vibrate && isVibrationEnabled) {
+    // Fresh Bait!!時間切れ通知バイブ
+    if (
+        navigator.vibrate &&
+        isBaitVibrationEnabled
+    ) {
 
         navigator.vibrate([
             300,
@@ -8700,6 +8793,46 @@ window.addEventListener("load", () => {
     const baitSetting = document.getElementById("baitSetting");
     const closeBaitModal = document.getElementById("closeBaitModal");
 
+// ========================
+// Fresh Bait!!バイブ設定
+// ========================
+
+const baitVibrationToggle =
+    document.getElementById("baitVibrationToggle");
+
+
+// 保存データ読み込み
+const savedBaitVibration =
+    localStorage.getItem("baitVibrationEnabled");
+
+if(savedBaitVibration !== null){
+
+    isBaitVibrationEnabled =
+        savedBaitVibration === "true";
+
+}
+
+
+// 表示状態を反映
+baitVibrationToggle.checked =
+    isBaitVibrationEnabled;
+
+
+
+// ON/OFF変更
+baitVibrationToggle.addEventListener("change",()=>{
+
+    isBaitVibrationEnabled =
+        baitVibrationToggle.checked;
+
+
+    localStorage.setItem(
+        "baitVibrationEnabled",
+        isBaitVibrationEnabled
+    );
+
+});
+
     // ------------------------
     // 保存されている設定時間を読み込む
     // ------------------------
@@ -8777,6 +8910,19 @@ window.addEventListener("load", () => {
   <div class="bait-modal-content">
 
     <h3>Next Bait!!タイマー</h3>
+
+<div class="bait-vibration-setting">
+
+  <span class="bait-vibration-text">
+    タイマー終了通知バイブ
+  </span>
+
+  <label class="bait-switch">
+    <input type="checkbox" id="baitVibrationToggle" checked>
+    <span class="bait-slider"></span>
+  </label>
+
+</div>
 
     <div id="baitTimeList">
 
