@@ -3653,7 +3653,7 @@ iframe {
 
 <!-- さあ、始めよう -->
 <div class="counter-solo-main gradient" id="soloMain"></div>
-<div class="counter-solo-sub">--- あなたの釣果を、もっと楽しく。---</div>
+<div class="counter-solo-sub">--- その一瞬を重ねよう。---</div>
 
 <button id="soloBtn" class="btn-solo"
         onclick="enterSoloCounterWithConfirm()">
@@ -6048,7 +6048,7 @@ function randomSymbolsWithSnow(n){
 
 // ページ読み込み時にタイトルをセット
 function setRandomTitles(){
-  const soloText = " その一瞬を重ねよう。 ";
+  const soloText = " ダブルカウンター ";
   const groupText = " みんなでテント ";
 
   document.getElementById("soloMain").innerText = 
@@ -6076,11 +6076,11 @@ window.addEventListener('load', () => {
 
 let exitConfirmOpen=false;
 
-window.addEventListener("popstate",()=>{
+window.addEventListener("popstate", () => {
 
-  if(exitConfirmOpen)return;
+  if(exitConfirmOpen) return;
 
-  exitConfirmOpen=true;
+  exitConfirmOpen = true;
 
   showExitConfirm();
 
@@ -6096,6 +6096,12 @@ function closeExitConfirm(){
   }
 
   exitConfirmOpen = false;
+
+  history.pushState(
+    {screen:"app"},
+    "",
+    location.href
+  );
 
 }
 
