@@ -1032,6 +1032,10 @@ button.btn-part:active {
   filter: brightness(0.95);
 }
 
+/* =========================
+   エサ交換タイマーNext bite!!ボタン表示
+   ========================= */
+
 /* Next bite!!ボタン：ぷっくり盛り上がり（影なし） */
 .screen.solo-counter .bait-btn {
   display: block;
@@ -1076,27 +1080,21 @@ button.btn-part:active {
 }
 
 /* =========================
-   エサ交換タイマー表示
+   エサ交換タイマー（そのもの）表示
    ========================= */
 
 .bait-timer{
     width:116px;
-
     margin:1px auto 0;
-
     padding:2px 0;
-
     border-radius:16px;
-
     background:#fff;
     border:1px solid #ddd;
-
     font-size:16px;
     font-weight:bold;
     line-height:1.2;
     text-align:center;
     color:#333;
-
     box-shadow:
       inset 0 1px 2px rgba(255,255,255,.8),
       inset 0 -1px 2px rgba(0,0,0,.08);
@@ -1110,25 +1108,19 @@ button.btn-part:active {
 }
 
 .bait-setting{
+    -webkit-tap-highlight-color: transparent;
     width:116px;
-
     margin:2px auto 0;      
-
     padding:2px 0;          
-
     border-radius:16px;
-
     background:linear-gradient(to bottom,#E3F2FD,#BBDEFB);
     border:1px solid #90CAF9;
-
     font-size:14px;
     font-weight:bold;
     line-height:1.2;        /* 高さを抑える */
     text-align:center;
     color:#1565C0;
-
     cursor:pointer;
-
     box-shadow:
       inset 0 1px 2px rgba(255,255,255,.8),
       inset 0 -1px 2px rgba(0,0,0,.08);
@@ -1150,6 +1142,102 @@ button.btn-part:active {
   transform: translateY(-1px);
   margin-right: 3px;
 }
+
+/* ==========================
+   バイブ設定
+========================== */
+
+.bait-vibration-setting{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin:12px 0 18px;
+
+}
+
+.bait-vibration-text{
+
+    font-size:15px;
+    font-weight:bold;
+
+    margin-left:15px;
+
+}
+
+/* スイッチ */
+
+.bait-switch{
+
+    position:relative;
+    display:inline-block;
+    width:52px;
+    height:28px;
+
+}
+
+.bait-switch input{
+
+    display:none;
+
+}
+
+.bait-slider{
+
+    position:absolute;
+    inset:0;
+
+    background:#bbb;
+    border-radius:999px;
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+.bait-slider:before{
+
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+    height:22px;
+
+    left:3px;
+    top:3px;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    transition:.25s;
+
+}
+
+.bait-switch input:checked + .bait-slider{
+
+    background:#4CAF50;
+
+}
+
+.bait-switch input:checked + .bait-slider:before{
+
+    transform:translateX(24px);
+
+}
+
+.bait-vibration-note{
+
+    font-size:12px;
+    color:#888;
+    margin-top:-10px;
+    margin-bottom:15px;
+
+}
+
 
 /* -------------------------------- ひとりカウンター枠 -------------------------------- */
 
@@ -2710,7 +2798,7 @@ iframe {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.25);
-  z-index: 2000;
+  z-index: 200;
 }
 
 /* 表示時 */
@@ -2748,6 +2836,8 @@ iframe {
 
   margin-left: auto;
   margin-right: auto;
+
+  position:relative;
 }
 
 /* ----------------- モーダル本文（スクロール可能） ----------------- */
@@ -2948,32 +3038,285 @@ iframe {
 .tokdot-brand {
   text-align: left;
   margin-left: 22px;
-  margin-top: 4px;
+  margin-top: 0px;
 }
 
 
 .tokdot-name {
-  font-family: 'BBH Hegarty', sans-serif;
-  font-size: 24px;
-  font-weight: normal;
-  letter-spacing: 0.05em;
-  color: #222;
+    font-family: 'BBH Hegarty', sans-serif;
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: #222;
+
+    transform-origin: left center;
 }
 
 
 .tokdot-dot {
-  color: #FF8C00;
+    color: #FF8C00;
 }
 
 
 .tokdot-copy {
-  margin-top: 5px;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: #777;
+    margin-top: 0px;
+    margin-left: 6px;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.00em;
+    color: #777;
+
+    transform-origin: left center;
 }
 
-/* ------------ インフォメーション用CSS  ------------ */
+/* ------------ Tok.DoT Story用ページCSS ------------ */
+
+
+/* ------------ Tok.DoT Story用ロゴCSS ------------ */
+.tokdot-title{
+
+    margin-top:10px;
+    margin-bottom:30px;
+
+    text-align:left;
+
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+
+}
+
+.tokdot-title-name{
+
+    font-family:'BBH Hegarty', sans-serif;
+    font-size:30px;
+    font-weight:normal;
+    letter-spacing:-0.01em;
+    color:#222;
+    line-height:1;
+
+}
+
+.tokdot-title-copy{
+
+    margin-top:6px;
+    margin-left:14px;
+
+    font-family:'Comfortaa', sans-serif;
+    font-size:13px;
+    letter-spacing:0;
+    color:#777;
+
+}
+
+/* ------------ Tok.DoT Story用ロゴCSS ------------ */
+
+/* ------------ Tok.DoT Story用テンCSS ------------ */
+
+.tokdot-story-face{
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    align-items:center;
+
+    margin:10px 0 20px;
+
+    padding-left:15px; 
+
+}
+
+.story-face{
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    align-items:center;
+
+    gap:2px;
+
+    font-size:1.30rem;
+
+    color:#666;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+
+}
+
+/* テンの目 */
+
+.story-eye{
+
+    display:inline-block;
+
+    transform-origin:center;
+
+    position:relative;
+
+    top:-1px;
+
+    animation:storyEyeBlink 11s infinite;
+
+}
+
+@keyframes storyEyeBlink{
+
+    0%,12%,15%,63%,66%,69%,72%,100%{
+        transform:scaleY(1);
+    }
+
+    13%,64%,70%{
+        transform:scaleY(.08);
+    }
+
+}
+
+.story-left,
+.story-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:0;
+
+}
+
+/* ------------ Tok.DoT Story用テンCSS ------------ */
+
+
+.tokdot-story {
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:#fff;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+    border-radius:inherit;
+
+    z-index:100;
+
+    opacity:0;
+
+    transition:
+        opacity .3s ease,
+        visibility .3s ease;
+
+}
+
+.tokdot-story.show {
+
+    visibility:visible;
+
+    pointer-events:auto;
+
+    opacity:1;
+
+}
+
+.tokdot-scroll {
+
+    height:calc(100% - 50px);
+
+    overflow-y:auto;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+    background:#fff;
+
+}
+
+.tokdot-scroll h2 {
+
+    margin-top:10px;
+
+    text-align:left;
+
+    font-family:'BBH Hegarty', sans-serif;
+
+}
+
+
+.tokdot-header {
+
+    height:50px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding-left:20px;
+
+    border-bottom:1px solid #eee;
+
+    background:#fff;
+
+}
+
+
+.tokdot-back {
+
+    border:none;
+
+    background:none;
+
+    font-size:15px;
+
+    color:#333;
+
+    cursor:pointer;
+
+    padding:0;
+
+}
+
+.tokdot-story-body {
+
+    font-size:14px;
+
+    line-height:1.9;
+
+    color:#333;
+
+    text-align:left;
+
+}
+
+.tokdot-story-body h3 {
+
+    margin-top:32px;
+
+    font-size:18px;
+
+    text-align:left;
+
+}
+
+
+/* ------------ Tok.DoT Story用ページCSS ------------ */
+
+/* ------------ インフォメーションアプリ名等CSS  ------------ */
 
 .about-doublebite{
 
@@ -3011,49 +3354,7 @@ iframe {
 
 }
 
-
-/* Bite!! */
-.info-bite-title{
-
-    margin-top:0px;
-
-    width: max-content;
-
-    margin-left:0;
-
-    text-align:center;
-
-    transform:translateX(6px);
-
-    font-family:'Alfa Slab One', cursive;
-
-    font-size:2.2rem;
-
-    color:#444;
-
-}
-
-
-/* ダブル バイト!! */
-.info-bite-sub{
-
-    margin-top:0px;
-
-    width: max-content;
-
-    margin-left:0;
-
-    text-align:center;
-
-    transform:translateX(4px);
-
-    font-size:.88rem;
-
-    color:#666;
-
-}
-
-/* 目 */
+/* テンの目 */
 
 .info-eye{
 
@@ -3094,7 +3395,51 @@ iframe {
 
 }
 
-/* ------------ インフォメーション用CSS  ------------ */
+
+/* Bite!! */
+.info-bite-title{
+
+    margin-top:0px;
+
+    width: max-content;
+
+    margin-left:4px;
+
+    text-align:center;
+
+    transform:translateX(6px);
+
+    font-family:'Alfa Slab One', cursive;
+
+    font-size:2.2rem;
+
+    color:#444;
+
+}
+
+
+/* ダブル バイト!! */
+.info-bite-sub{
+
+    margin-top:0px;
+
+    width: max-content;
+
+    margin-left:4px;
+
+    text-align:center;
+
+    transform:translateX(4px);
+
+    font-size:.88rem;
+
+    color:#666;
+
+}
+
+
+/* ------------ インフォメーションアプリ名等CSS  ------------ */
+
 
 /* =========================
    OFUSE関連CSS
@@ -3214,6 +3559,7 @@ iframe {
 /* -------------------------- インフォメーションボタンCSS -------------------------- */
 
 .app-info-btn {
+     -webkit-tap-highlight-color: transparent;
   position: fixed;
 
   /* 画面下 右側 */
@@ -4041,15 +4387,18 @@ iframe {
     <img src="icon-192.png" alt="Double Bite!! ロゴ">
   </div>
 
-  <div class="tokdot-brand">
-<div class="tokdot-name">
-  Tok<span class="tokdot-dot">.</span>DoT
-</div>
+<div class="tokdot-brand"
+     onclick="openTokdotStory()">
 
-    <div class="tokdot-copy">
-      Take Your Step.
-    </div>
+  <div class="tokdot-name">
+    Tok<span class="tokdot-dot">.</span>DoT
   </div>
+
+  <div class="tokdot-copy">
+    Take Your Step.
+  </div>
+
+</div>
 
 </div>
 
@@ -4058,7 +4407,6 @@ iframe {
         そっと寄り添う<br>
         カウンターアプリ
       </p>
-
 
  <div class="about-doublebite">
 
@@ -4085,6 +4433,295 @@ iframe {
   <div class="info-bite-sub">
     ダブル バイト!!
   </div>
+
+</div>
+
+<!-- =========================
+     Tok.DoT Storyページ
+========================= -->
+
+<div id="tokdotStory"
+     class="tokdot-story">
+
+    <div class="tokdot-header">
+
+        <button class="tokdot-back"
+                onclick="closeTokdotStory()">
+            ← 戻る
+        </button>
+
+    </div>
+
+    <div class="tokdot-scroll">
+
+
+<h2 class="tokdot-title">
+
+    <span class="tokdot-title-name">
+        Tok<span class="tokdot-dot">.</span>DoT
+    </span>
+
+    <span class="tokdot-title-copy">
+        Take Your Step.
+    </span>
+
+</h2>
+
+<div class="tokdot-story-face">
+
+    <div class="story-face">
+
+        <div class="story-left">
+            <span class="story-eye">⦿</span>
+            <span>＞</span>
+        </div>
+
+        <span class="story-nose">・</span>
+
+        <div class="story-right">
+            <span>＜</span>
+            <span class="story-eye">⦿</span>
+        </div>
+
+    </div>
+
+</div>
+
+        <div class="tokdot-story-body">
+
+            <h3>
+                「Tok.DoT（トックドット）」
+            </h3>
+
+            <p>
+                初めてこの名前を見たとき、
+                「どういう意味？」
+                「変わった名前だね。」
+                と思われるかもしれません。
+            </p>
+
+            <p>
+                Tok.DoTは、私たちの会社名であり、
+                ものづくりへの想いを込めたブランドです。
+            </p>
+
+            <p>
+                この少し不思議な名前には、
+                私たちが大切にしている
+                「点」という考え方が込められています。
+            </p>
+
+            <h3>
+                Tok と DoT
+            </h3>
+
+            <p>
+                「Tok」は、得点の「得」を
+                イメージして生み出した造語です。
+            </p>
+
+            <p>
+                スポーツで一点を取ること。<br>
+                釣りで一匹を釣り上げること。<br>
+                ゲームでスコアを重ねること。
+            </p>
+
+            <p>
+                どれも、小さな成功の積み重ねです。
+            </p>
+
+            <p>
+                「DoT」は、日本語の「点」
+                という考え方を表した言葉です。
+            </p>
+
+            <p>
+                「得」と「点」を組み合わせて生まれたのが、
+                Tok.DoTという名前です。
+            </p>
+
+            <h3>
+                「点」に込めた想い
+            </h3>
+
+            <p>
+                私たちにとって、
+                「点」は単なる数字ではありません。
+            </p>
+
+            <p>
+                一点入った。<br>
+                一匹釣れた。<br>
+                昨日より少し上達した。
+            </p>
+
+            <p>
+                どれも、前へ進んだ証です。
+            </p>
+
+            <p>
+                どんな大きな成果も、
+                始まりは小さな一つの点です。
+            </p>
+
+            <p>
+                私たちが大切にしているのは、
+                結果だけではありません。
+            </p>
+
+            <p>
+                その瞬間に生まれる、
+                一つひとつの「点」です。
+            </p>
+
+            <h3>
+                Double Bite!! が教えてくれたこと
+            </h3>
+
+            <p>
+                ワカサギ釣り用ダブルカウンターアプリ
+                「Double Bite!!」を開発していたとき、
+                忘れられない出来事がありました。
+            </p>
+
+            <p>
+                起動アニメーションでは、
+                湖底でワカサギがエサを
+                「つん、つん」とつつく様子を描いていました。
+            </p>
+
+            <p>
+                そして、
+                釣れた瞬間に氷上へ上がってくる場面を
+                表現していました。
+            </p>
+
+            <p>
+                その制作途中、<br>
+                背景が真っ白な氷上のシーンになった瞬間、
+            </p>
+
+            <p>
+                ふと気付きます。
+            </p>
+
+            <p>
+                「……これ、動物のテンの顔に見える。」
+            </p>
+
+            <p>
+                もちろん、
+                最初から狙っていたわけではありません。
+            </p>
+
+            <p>
+                でも、
+                その偶然に気付いた瞬間、
+            </p>
+
+            <p>
+                「テン」と「点（てん）」
+            </p>
+
+            <p>
+                という二つの言葉が重なりました。
+            </p>
+
+            <p>
+                会社名に込めた「点」という想いと、
+                偶然生まれた「テン」。
+            </p>
+
+            <p>
+                まるでその想いに、
+                新しい意味が加わったような出来事でした。
+            </p>
+
+            <p>
+                それ以来、
+                「テン」はTok.DoTの小さなシンボルとして、
+                ブランドを見守る存在になっています。
+            </p>
+
+            <h3>
+                Tok.DoTが届けたい想い
+            </h3>
+
+            <p>
+                私たちが届けたいのは、
+                小さな「点」を積み重ねる楽しさです。
+            </p>
+
+            <p>
+                一点。<br>
+                一匹。<br>
+                一歩。
+            </p>
+
+            <p>
+                一つひとつは小さくても、
+                未来へつながる大切な記録です。
+            </p>
+
+            <h3>
+                Take Your Step.
+            </h3>
+
+            <p>
+                この言葉は、
+                「一歩を踏み出そう」
+                という意味だけではありません。
+            </p>
+
+            <p>
+                Tok.DoTにとって「Step」とは、<br>
+                新しい「点」を刻むこと。
+            </p>
+
+            <p>
+                新しいことに挑戦した日。<br>
+                初めてできた瞬間。<br>
+                誰かと笑い合えた時間。
+            </p>
+
+            <p>
+                そんな何気ない毎日も、
+                かけがえのない一つの「点」です。
+            </p>
+
+            <p>
+                その小さな点は、
+                やがて線となり、
+                自分だけの軌跡になっていきます。
+            </p>
+
+            <p>
+                だからこそ、
+                私たちが大切にしたいのは、
+                大きな成功ではなく、
+                今日という一日に刻まれる
+                小さな「点」です。
+            </p>
+
+            <p>
+                <strong>
+                    Take Your Step.
+                </strong>
+            </p>
+
+            <p>
+                今日、
+                あなたが踏み出すその一歩が、
+            </p>
+
+            <p>
+                あなただけの軌跡へと続く、<br>
+                大切な一つの「点」になりますように。
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
@@ -4460,8 +5097,7 @@ iframe {
 <div class="help-footer-message">
 
   操作に迷ったときは、<br>
-  このインフォメーションを参考にしながら<br>
-  ご利用ください。
+  上記を参考にしながらご利用ください。
 
 </div>
 
@@ -7714,6 +8350,23 @@ function startBaitTimer(){
                 .getElementById("baitTimerBtn")
                 .classList.add("timeout");
 
+// バイブレーション
+if (
+    baitVibrationEnabled &&
+    typeof navigator.vibrate === "function"
+) {
+
+    navigator.vibrate([
+        300,
+        150,
+        300,
+        150,
+        500
+    ]);
+
+}
+
+
         }
 
     },1000);
@@ -8042,6 +8695,10 @@ function showExitConfirm(){
 
 }
 
+// ----------------------------
+// Tok.DoTブランドイメージ用JS
+// ----------------------------
+
 function closeExitConfirm() {
   document.getElementById("exitConfirm").style.display = "none";
 }
@@ -8050,6 +8707,23 @@ function reloadApp() {
   location.reload();
 }
 
+function openTokdotStory(){
+
+    const story =
+        document.getElementById("tokdotStory");
+
+    story.classList.add("show");
+
+}
+
+function closeTokdotStory(){
+
+    const story =
+        document.getElementById("tokdotStory");
+
+    story.classList.remove("show");
+
+}
 
 // ----------------------------
 // スケーリング処理
@@ -8121,6 +8795,39 @@ window.addEventListener("DOMContentLoaded", () => {
 // =========================
 window.addEventListener("load", () => {
 
+// =========================
+// バイブ設定
+// =========================
+const vibrationToggle = document.getElementById("baitVibrationToggle");
+const vibrationUnsupported = document.getElementById("baitVibrationUnsupported");
+
+// バイブ対応判定
+const vibrationSupported =
+    typeof navigator.vibrate === "function";
+
+// 保存値を読み込み（初期値ON）
+let baitVibrationEnabled =
+    localStorage.getItem("baitVibrationEnabled");
+
+baitVibrationEnabled =
+    baitVibrationEnabled === null
+        ? true
+        : baitVibrationEnabled === "true";
+
+// 対応端末
+if (vibrationSupported) {
+
+    vibrationToggle.checked = baitVibrationEnabled;
+
+} else {
+
+    vibrationToggle.checked = false;
+    vibrationToggle.disabled = true;
+
+    vibrationUnsupported.style.display = "block";
+
+}
+
     const baitModal = document.getElementById("baitSettingModal");
     const baitSetting = document.getElementById("baitSetting");
     const closeBaitModal = document.getElementById("closeBaitModal");
@@ -8140,6 +8847,20 @@ window.addEventListener("load", () => {
 
         updateBaitTimerDisplay();
     }
+
+// =========================
+// バイブ設定変更
+// =========================
+vibrationToggle.addEventListener("change", () => {
+
+    baitVibrationEnabled = vibrationToggle.checked;
+
+    localStorage.setItem(
+        "baitVibrationEnabled",
+        baitVibrationEnabled
+    );
+
+});
 
     // ------------------------
     // モーダルを開く
@@ -8201,6 +8922,21 @@ window.addEventListener("load", () => {
   <div class="bait-modal-content">
 
     <h3>Next Bait!!タイマー</h3>
+
+<div class="bait-vibration-setting">
+
+  <span class="bait-vibration-text">バイブレーション</span>
+
+  <label class="bait-switch">
+    <input type="checkbox" id="baitVibrationToggle">
+    <span class="bait-slider"></span>
+  </label>
+
+</div>
+
+<div id="baitVibrationUnsupported" class="bait-vibration-note" style="display:none;">
+  ※ この端末ではバイブレーションは利用できません
+</div>
 
     <div id="baitTimeList">
 
