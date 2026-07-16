@@ -5587,6 +5587,15 @@ setTimeout(() => {
   entry.style.display = 'block';
   entry.classList.add('active');
 
+// ============================
+  // 戻るボタン対策 初期履歴
+  // ============================
+  history.pushState(
+    { app:"doubleCounter" },
+    "",
+    location.href
+  );
+
 
 }, 20500);
 
@@ -9096,11 +9105,15 @@ let allowExit = false;
 
 
 // 初期履歴作成
-history.pushState(
-  { app:"doubleCounter" },
-  "",
-  location.href
-);
+setTimeout(()=>{
+
+  history.pushState(
+    { app:"doubleCounter" },
+    "",
+    location.href
+  );
+
+},500);
 
 
 // 戻るボタン検知
