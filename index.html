@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>ワカサギ釣りカウンター</title>
+<title>ダブルカウンターアプリ for ワカサギ釣り</title>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSFRVYN0GD"></script>
@@ -97,7 +97,7 @@ input, textarea {
   width: min(150px, 80vw);
   padding: 10px 0;
 
-  background-color: #ff9800;
+  background-color: #607d8b;
   color: #fff;
   border: none;
   border-radius: 999px;
@@ -1214,7 +1214,16 @@ button.btn-part:active {
   gap:10px;
   margin-top:12px;
 }
-.modal-buttons button{flex:1;}
+
+.modal-buttons .cancel-btn {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.modal-buttons .ok-btn {
+  background: #d32f2f;
+  color: #fff;
+}
 
 /* パスワード表示切り替えボタン */
 .eye-btn{
@@ -1894,6 +1903,7 @@ font-family: 'Alfa Slab One', cursive;
 
 /* モーダル共通ボタン */
 .modal-buttons button {
+  flex: 1;
   padding: 6px 14px;
   border-radius: 8px;
   border: none;
@@ -2348,7 +2358,7 @@ gap:18px;
 
 /* OKボタン */
 .ac-solo-btn-ok {
-  background-color: #FF8C00;
+  background-color: #d32f2f;
   color: #fff;
   border: none;
   padding: 6px 14px; /* 小さく */
@@ -2359,8 +2369,8 @@ gap:18px;
 
 /* キャンセルボタン */
 .ac-solo-btn-cancel {
-  background-color: #aaa;
-  color: #fff;
+  background-color: #e0e0e0;
+  color: #333;
   border: none;
   padding: 6px 14px; /* 小さく */
   border-radius: 6px;
@@ -3271,6 +3281,8 @@ iframe {
 
 .tokdot-back {
 
+    -webkit-tap-highlight-color: transparent;
+
     border:none;
 
     background:none;
@@ -3862,7 +3874,7 @@ iframe {
   </div> <!-- /soloCounterWrapper -->
 
   <!-- 戻るボタンは wrapper の外 -->
-  <button class="screenBackBtn" onclick="showScreen('entryScreen')">戻る</button>
+  <button class="screenBackBtn" onclick="showScreen('entryScreen')">ホーム画面へ</button>
 </div>
 
 <!---------------------- ダブルカウンター（アプリ内：ひとりカウンター） ---------------------->
@@ -3919,7 +3931,7 @@ iframe {
      style="margin-top:6px; padding:6px; border-radius:10px;
             text-align:center; font-weight:bold;">
 </div>
-<button class="screenBackBtn">戻る</button>
+<button class="screenBackBtn">ホーム画面へ</button>
 </div>
 
 <!------------------------------ わいわいテント登録画面 ------------------------------>
@@ -3949,7 +3961,7 @@ iframe {
   <div class="list-box">
     <ul id="partList"></ul>
   </div>
-<button class="screenBackBtn">戻る</button>
+<button class="screenBackBtn">ホーム画面へ</button>
 </div>
 
 <!------------------------------ わいわいテント参加画面 ------------------------------>
@@ -4030,9 +4042,9 @@ iframe {
     <p><strong>カウンターをリセットしますか？</strong></p>
     <p style="font-size:13px">カウンターが0になります</p>
     <div class="modal-buttons">
-      <button onclick="closeResetSoloModal()">キャンセル</button>
-      <button onclick="confirmResetSolo()">OK</button>
-    </div>
+  <button class="cancel-btn" onclick="closeResetSoloModal()">キャンセル</button>
+  <button class="ok-btn" onclick="confirmResetSolo()">OK</button>
+</div>
   </div>
 </div>
 
@@ -4129,7 +4141,7 @@ iframe {
     <p id="confirmSaveMessage">釣果を保存しますか？</p>
     <div class="modal-buttons">
       <button id="confirmSaveCancel" class="btn-cancel">キャンセル</button>
-      <button id="confirmSaveOk" class="btn-ok">OK</button>
+      <button id="confirmSaveOk" class="btn-ok">保存</button>
     </div>
   </div>
 </div>
@@ -4149,8 +4161,9 @@ iframe {
   <div class="ac-solo-modal-content">
     <p>前回のカウント情報が残っています。<br>オールクリアしますか？</p>
     <div class="ac-solo-modal-buttons">
-      <button id="acConfirmOk" class="ac-solo-btn-ok">はい</button>
-      <button id="acConfirmCancel" class="ac-solo-btn-cancel">いいえ</button>
+      <button id="acConfirmCancel" class="ac-solo-btn-cancel">キャンセル</button>
+      <button id="acConfirmOk" class="ac-solo-btn-ok">OK</button>
+      
     </div>
   </div>
 </div>
@@ -4787,13 +4800,13 @@ iframe {
   </p>
 
   <p>
-    このアプリは、左右2つのカウンターで独立してカウントできる、
-    通称「ダブルカウンターアプリ」です。
+    このアプリは、左右2つのカウンターでそれぞれ独立してカウントできる、
+    「ダブルカウンタースタイル」のアプリです。
   </p>
 
   <p>
     これまでありそうでなかった、
-    2つのカウンターを1つにした"二刀流"スタイルで、
+    2つのカウンターをひとつの画面に搭載した"二刀流"スタイルで、
     さまざまなシーンでのカウントをサポートします。
   </p>
 
@@ -4849,8 +4862,13 @@ iframe {
   </p>
 
   <p>
-    左右それぞれの穴釣りカウンターをタップすると、
+    左右それぞれのカウンターをタップすると、
     独立してカウントされます。
+  </p>
+
+  <p class="note">
+    振動フィードバック機能により、タップ時に振動でカウントを確認できます。<br>
+    振動の ON / OFF はカウンターの長押しで切り替え可能です。
   </p>
 
   <p>
@@ -4887,7 +4905,7 @@ iframe {
   <p class="note">
     例えば、片方の穴釣りカウンターで100匹までカウントしたあとに、
     Cボタンで0匹へ戻した場合、
-    次回以降の声かけ機能（便利な機能④）が、
+    次回以降の相棒メッセージ（＋α機能④）が、
     現在の釣果とは異なる内容になることがあります。
   </p>
 
@@ -4897,7 +4915,7 @@ iframe {
 
 <p class="note">
     大きくカウントをリセットしたい場合は、
-  「戻る」ボタンでホーム画面へ戻り、
+  「ホーム画面へ」ボタンでホーム画面へ戻り、
     再度ダブルカウンター画面を開き、
   カウント情報をオールクリアしてから
   ご利用いただくことをおすすめします。
@@ -4912,16 +4930,101 @@ iframe {
 </div>
 
 
-<!-- 便利な機能 -->
+<!-- シングルカウンター活用アイデア -->
 <h3 class="accordion-toggle">
-  便利な機能
+  シングルカウンター活用アイデア
+</h3>
+
+<div class="accordion-content">
+
+<p>
+  シングルカウンターとして使用する場合でも、
+  目的に合わせて左右のカウンターを自由に使い分け、
+  さまざまな楽しみ方ができます。
+</p>
+
+    <!-- ① -->
+    <h4 class="accordion-toggle nested">
+      ① 魚種別に記録する
+    </h4>
+
+    <div class="accordion-content nested">
+
+      <p>
+        左右のカウンターを使い分けることで、
+        ワカサギと外道（モロコなど）を分けて記録できます。
+      </p>
+
+      <p>
+        「今日は何匹釣れたか」だけではなく、
+        「どんな魚との出会いがあったか」も残せる、
+        釣りの楽しみ方を広げる活用方法です。
+      </p>
+
+    </div>
+
+    <!-- ② -->
+    <h4 class="accordion-toggle nested">
+      ② アタリや状況を記録する
+    </h4>
+
+    <div class="accordion-content nested">
+
+      <p>
+        片方を釣れた数、
+        もう片方をバラシやアタリの回数として、
+        釣りの状況を記録することもできます。
+      </p>
+
+      <p>
+        釣れた数だけでは分からない、
+        その日の魚の活性や状況を振り返る、
+        釣果分析にも役立つ使い方です。
+      </p>
+
+    </div>
+
+    <!-- ③ -->
+    <h4 class="accordion-toggle nested">
+      ③ エサを比較する
+    </h4>
+
+    <div class="accordion-content nested">
+
+      <p>
+        左右のカウンターを使い分けて、
+        エサごとの釣果を記録することもできます。
+      </p>
+
+      <p>
+        「今日はどのエサが好調だったか」を振り返ることで、
+        自分だけの釣れるパターン探しにも役立つ、
+        釣り人ならではの楽しみ方です。
+      </p>
+
+    </div>
+
+<p>
+  使い方はあなた次第。
+  釣り方やアイデアに合わせて、
+  自分だけのダブルカウンタースタイルを見つけ、
+  釣りの楽しみをさらに広げてみてください。
+</p>
+
+  </div>
+
+
+
+<!-- 釣りをもっと楽しむ＋α機能 -->
+<h3 class="accordion-toggle">
+  釣りをもっと楽しむ＋α機能
 </h3>
 
 <div class="accordion-content">
 
   <!-- ① -->
   <h4 class="accordion-toggle nested">
-    ① 釣果ログレポート機能
+    ① 釣果メモリー＆分析機能
   </h4>
 
   <div class="accordion-content nested">
@@ -4942,7 +5045,7 @@ iframe {
     </p>
 
 <h4 class="accordion-toggle nested">
-  ※釣果ログレポート機能のご注意
+  ※釣果メモリー機能のご注意
 </h4>
 
 <div class="accordion-content nested">
@@ -4964,7 +5067,7 @@ iframe {
 
   <!-- ② -->
   <h4 class="accordion-toggle nested">
-    ② 現地のお天気機能
+    ② 釣り場お天気ナビ
   </h4>
 
   <div class="accordion-content nested">
@@ -4986,7 +5089,7 @@ iframe {
 
   <!-- ③ -->
   <h4 class="accordion-toggle nested">
-    ③ カラー変更機能
+    ③ 勝負カラーセレクト機能
   </h4>
 
   <div class="accordion-content nested">
@@ -5012,41 +5115,47 @@ iframe {
 
   <!-- ④ -->
   <h4 class="accordion-toggle nested">
-    ④ 声かけ機能
+    ④ 釣り相棒メッセージ機能
   </h4>
 
   <div class="accordion-content nested">
 
     <p>
       釣果に応じて、
-      カウンターがやさしく声をかけてくれます。
+      相棒がやさしく声をかけてくれます。
     </p>
 
     <p>
-      釣りのひとときに、
-      ほんの少し寄り添う機能です。
+      たくさん釣れた時の喜びも、
+      なかなか釣れない時の励ましも、
+      釣り時間に寄り添う小さな相棒機能です。
     </p>
 
   </div>
 
   <!-- ⑤ -->
   <h4 class="accordion-toggle nested">
-    ⑤ Fresh Bait!!（ﾌﾚｯｼｭﾍﾞｲﾄ!!）機能
+    ⑤ Fresh Bait!! （エサ交換タイマー）
   </h4>
 
   <div class="accordion-content nested">
 
     <p>
+      タイマーは、
       5分〜60分まで、
-      5分刻みでタイマーを設定できます。
+      5分刻みで設定できます。
     </p>
 
-    <p>
-      さまざまな用途で利用できますが、
-      ボタン名のとおり、
-      新しいエサ（ベイト）を投入したタイミングから、
-      次のエサ交換の目安として使うのがおすすめです。
-    </p>
+<p>
+タイマー終了時には端末のバイブレーションでお知らせします。
+振動通知のON / OFFは、お好みに合わせて切り替え可能です。
+</p>
+
+<p>
+ボタン名のとおり、
+新しいエサ（ベイト）を投入したタイミングから、
+次のエサ交換の目安として使うのがおすすめです。
+</p>
 
   </div>
 
@@ -5213,12 +5322,6 @@ function playTitleSequence() {
 
 
   if(!historyInitialized){
-
-    history.pushState(
-      {screen:"app"},
-      "",
-      location.href
-    );
 
     historyInitialized = true;
 
@@ -6070,48 +6173,6 @@ window.addEventListener('load', () => {
 
 // ------------------------------ 初期画面タイトル記号のランダム表示 ------------------------------
 
-// ============================
-// Android 戻るボタン → リロード確認
-// ============================
-
-let exitConfirmOpen=false;
-
-window.addEventListener("popstate", () => {
-
-  if(exitConfirmOpen) return;
-
-  exitConfirmOpen = true;
-
-  showExitConfirm();
-
-});
-
-// 確認表示
-function closeExitConfirm(){
-
-  const modal = document.getElementById("exitConfirm");
-
-  if(modal){
-    modal.style.display = "none";
-  }
-
-  exitConfirmOpen = false;
-
-  history.pushState(
-    {screen:"app"},
-    "",
-    location.href
-  );
-
-}
-
-// リロード
-function reloadApp(){
-
-  location.reload();
-
-}
-
 
 // ======================================== ひとりカウンター関連関数まとめ ========================================
 
@@ -6750,44 +6811,69 @@ function generateWrapperColors() {
   const colors = [];
 
   // --------------------
-  // 黒 → グレー（20色）
+  // 黒～グレー
   // --------------------
-  for (let i = 0; i < 20; i++) {
-    const l = Math.round(i * 2.3);   // 0～44%
-    colors.push(`hsl(0, 0%, ${l}%)`);
-  }
+  colors.push(
+    "#000000",
+    "#111111",
+    "#222222",
+    "#333333",
+    "#444444",
+    "#555555",
+    "#666666",
+    "#777777",
+    "#888888",
+    "#999999"
+  );
 
   // --------------------
-  // 白・クリーム（20色）
+// ベージュ・黄色・ゴールド系
+// （真っ白のみ除外）
+// --------------------
+colors.push(
+
+  // ベージュ
+  "#b8aa8a",
+  "#c6b48a",
+  "#d4c094",
+  "#d8c8a2",
+
+  // 黄色
+  "#ffff00",
+  "#ffe600",
+  "#ffd700",
+  "#ffcc00",
+  "#e6b800",
+  "#d4a900",
+
+  // ゴールド・黄土色
+  "#c99700",
+  "#b8860b",
+  "#a67c00",
+  "#8f6b00",
+
+  // 落ち着いたクリーム
+  "#eadc9e",
+  "#e6d58a",
+  "#d9c46c"
+);
+
   // --------------------
-  for (let i = 0; i < 20; i++) {
-
-    const lightness = 92 + i * 0.4;     // 92～99%
-    const saturation = 15 + i * 1.2;    // 少しずつ暖色へ
-
-    colors.push(
-      `hsl(45, ${saturation}%, ${lightness}%)`
-    );
-  }
-
+  // カラー（72色）
   // --------------------
-  // カラー（180色）
-  // --------------------
-
-  const total = 180;
+  const total = 72;
 
   for (let i = 0; i < total; i++) {
 
-    const hue = i * 2;
+    const hue = i * 5;
 
-    // 少しだけ揺らぎ
-    const saturation = 82 + Math.sin(i * 0.12) * 6;
-    const lightness  = 54 + Math.cos(i * 0.15) * 5;
+    // 背景なので少し落ち着かせる
+    const saturation = 72 + Math.sin(i * 0.18) * 5;
+    const lightness  = 48 + Math.cos(i * 0.15) * 4;
 
     colors.push(
       `hsl(${hue}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%)`
     );
-
   }
 
   return colors;
@@ -6833,36 +6919,131 @@ wrapperSlider.addEventListener("touchmove", e => {
 
 // ------------------------------ 左右スクロールバーで穴の色変更 ------------------------------
 
+// ------------------------------ 左右スクロールバーで穴の色変更 ------------------------------
+
 // ---------- 左右ボックスの色パレット ----------
 // デフォルト1色（初期表示）だけ指定
 const leftColors = ["#1ABC9C"];
 const rightColors = ["#E67E22"];
 
-// デフォルト色＋滑らかなグラデーションカラー
-function generateExtraColors(baseColors, total = 360) {
+// 左右で開始位置を変える
+function generateExtraColors(baseColors) {
 
-  const colors = [];
+  // 左（ターコイズ）
+  if (baseColors[0] === "#1ABC9C") {
 
-  for (let i = 0; i < total; i++) {
+    return [
 
-    // 色相を1度ずつ変化
-    const hue = i;
+      "#1ABC9C",
 
-    // 彩度・明度をほんの少しだけ変化
-    const saturation = 72 + Math.sin(i * 0.08) * 6;
-    const lightness  = 50 + Math.cos(i * 0.10) * 5;
+      // エメラルド
+      "#00ff99","#00e699","#00d68f","#00cc99","#00b386","#33ccaa","#009977","#006655",
 
-    colors.push(
-      `hsl(${hue}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%)`
-    );
+      // シアン
+      "#00ffff","#33ffff","#22dddd","#00dddd","#00bbbb","#009999","#008888","#006666",
+
+      // 水色
+      "#66ccff","#44bbee","#33bbff","#0099ff","#0077cc","#0066aa","#005fa3","#004466",
+
+      // 青
+"#2255ff","#0000ff","#3333ff","#6666ff","#2222aa","#0000cc","#000099","#000066",
+"#003399",   // 濃い青
+
+      // 紫
+"#8000ff","#8844dd","#9933ff","#aa66ff","#6633aa","#6600cc","#550099","#440066",
+"#4B0082",   // 濃い紫
+
+      // ピンク
+      "#ff00aa","#ff33bb","#ee3399","#ff66cc","#cc3399","#ff99dd","#cc0088","#990066",
+
+      // 赤
+"#ff0000","#ff3333","#ff4444","#ff6666","#cc4444","#ff9999","#cc0000","#990000",
+"#800000",   // 濃い赤
+
+      // オレンジ
+      "#ff6600","#ff7700","#ff8800","#dd7700","#ffaa00","#ffbb33","#cc6600","#995500",
+
+      // 黄色（白文字が見える色だけ）
+      "#ffcc00","#e6c200","#d4b000","#b38f00","#998000",
+
+      // 黄緑
+      "#ccff00","#b3e600","#99ff00","#80cc00","#66ff00","#99cc33","#669900","#4d7300",
+
+     // 緑
+"#00ff00","#22dd22","#33cc33","#00cc66","#00994d","#00aa44","#008800","#006600",
+"#006400",   // 濃い緑
+
+      // 茶
+      "#8b4513","#a0522d","#b5651d","#cd853f","#654321","#5c4033",
+
+      // グレー・黒
+      "#cccccc",
+      "#999999",
+      "#666666",
+      "#333333",
+      "#000000",
+
+    ];
   }
 
-  // 初期色を先頭に追加
-  return baseColors.concat(colors);
+  // ---------------- 右（オレンジ） ----------------
+  return [
+
+    "#E67E22",
+
+    // オレンジ
+    "#ff6600","#ff7700","#ff8800","#dd7700","#ffaa00","#ffbb33","#cc6600","#995500",
+
+    // 黄色（白文字が見える色だけ）
+    "#ffcc00","#e6c200","#d4b000","#b38f00","#998000",
+
+    // 黄緑
+    "#ccff00","#b3e600","#99ff00","#80cc00","#66ff00","#99cc33","#669900","#4d7300",
+
+   // 緑
+"#00ff00","#22dd22","#33cc33","#00cc66","#00994d","#00aa44","#008800","#006600",
+"#006400",
+
+    // エメラルド
+    "#00ff99","#00e699","#00d68f","#00cc99","#00b386","#33ccaa","#009977","#006655",
+
+    // シアン
+    "#00ffff","#33ffff","#22dddd","#00dddd","#00bbbb","#009999","#008888","#006666",
+
+    // 水色
+    "#66ccff","#44bbee","#33bbff","#0099ff","#0077cc","#0066aa","#005fa3","#004466",
+
+   // 青
+"#2255ff","#0000ff","#3333ff","#6666ff","#2222aa","#0000cc","#000099","#000066",
+"#003399",
+
+    // 紫
+"#8000ff","#8844dd","#9933ff","#aa66ff","#6633aa","#6600cc","#550099","#440066",
+"#4B0082",
+
+    // ピンク
+    "#ff00aa","#ff33bb","#ee3399","#ff66cc","#cc3399","#ff99dd","#cc0088","#990066",
+
+    // 赤
+"#ff0000","#ff3333","#ff4444","#ff6666","#cc4444","#ff9999","#cc0000","#990000",
+"#800000",
+
+    // 茶
+    "#8b4513","#a0522d","#b5651d","#cd853f","#654321","#5c4033",
+
+    // グレー・黒
+    "#cccccc",
+    "#999999",
+    "#666666",
+    "#333333",
+    "#000000",
+
+  ];
 }
 
 const fullLeftColors = generateExtraColors(leftColors);
 const fullRightColors = generateExtraColors(rightColors);
+
 
 // -------------------- 初期インデックス --------------------
 let leftIndex = 0;
@@ -8699,12 +8880,12 @@ function showExitConfirm(){
 // Tok.DoTブランドイメージ用JS
 // ----------------------------
 
-function closeExitConfirm() {
-  document.getElementById("exitConfirm").style.display = "none";
-}
+function reloadApp(){
 
-function reloadApp() {
+  allowExit = true;
+
   location.reload();
+
 }
 
 function openTokdotStory(){
@@ -8906,6 +9087,72 @@ baitVibrationToggle.addEventListener("change",()=>{
 
 });
 
+
+// ============================
+// Android 戻るボタン対策
+// ============================
+
+let allowExit = false;
+
+
+// 初期履歴作成
+history.pushState(
+  { app:"doubleCounter" },
+  "",
+  location.href
+);
+
+
+// 戻るボタン検知
+window.addEventListener("popstate",()=>{
+
+
+  if(allowExit){
+    return;
+  }
+
+
+  // 戻る動作をキャンセル
+  history.pushState(
+    { app:"doubleCounter_lock" },
+    "",
+    location.href
+  );
+
+
+  showExitConfirm();
+
+
+});
+
+
+// 確認キャンセル
+function closeExitConfirm(){
+
+  const modal =
+    document.getElementById("exitConfirm");
+
+
+  if(modal){
+    modal.style.display="none";
+  }
+
+
+}
+
+
+// リロード実行
+function reloadApp(){
+
+  allowExit = true;
+
+  location.reload();
+
+}
+
+
+// ---------------------------------------------------------　JS追加最後の行　---------------------------------------------------------
+
 </script>
 
 <!-- =========================
@@ -8920,7 +9167,7 @@ baitVibrationToggle.addEventListener("change",()=>{
 <div class="bait-vibration-setting">
 
   <span class="bait-vibration-text">
-    タイマー終了通知バイブ
+    タイマー終了時にバイブ
   </span>
 
   <label class="bait-switch">
