@@ -3104,10 +3104,10 @@ iframe {
 .tokdot-title-copy{
 
     margin-top:6px;
-    margin-left:14px;
+    margin-left:10px;
 
     font-family:'Comfortaa', sans-serif;
-    font-size:13px;
+    font-size:14px;
     letter-spacing:0;
     color:#777;
 
@@ -3127,7 +3127,7 @@ iframe {
 
     margin:10px 0 20px;
 
-    padding-left:15px; 
+    padding-left:14px; 
 
 }
 
@@ -4234,7 +4234,7 @@ iframe {
 
       <p>
 
-        最終更新日：2026年7月7日
+        最終更新日：2026年7月17日
         <br><br>
 
         本規約は、Double Bite!!（以下「本アプリ」）の利用条件を定めるものです。<br>
@@ -6173,12 +6173,61 @@ function setRandomTitles(){
 // 実行
 window.addEventListener("DOMContentLoaded", setRandomTitles);
 
+
+
+// ============================
+// 起動アニメーション設定
+// ============================
+
+// true  = 一定時間以内なら起動演出をスキップ
+// false = 毎回起動演出を表示
+const ENABLE_TITLE_SKIP = false;
+
+// 起動演出をスキップする時間（分）
+const TITLE_SKIP_MINUTES = 10;
+
+
 // ★ ここからタイトル演出を追加
 window.addEventListener('load', () => {
 
+  const lastHidden =
+    Number(localStorage.getItem("lastHiddenTime") || 0);
+
+  const elapsed =
+    Date.now() - lastHidden;
+
+
+  // 一定時間以内なら演出スキップ
+  if (
+      ENABLE_TITLE_SKIP &&
+      elapsed < TITLE_SKIP_MINUTES * 60 * 1000
+  ) {
+
+    const titleWrapper =
+      document.getElementById("titleWrapper");
+
+    const app =
+      document.getElementById("appScaleWrapper");
+
+    if (titleWrapper) {
+      titleWrapper.style.display = "none";
+    }
+
+    if (app) {
+      app.style.display = "block";
+    }
+
+    applyAutoScale();
+    showScreen("entryScreen");
+
+    return;
+  }
+
+  // 通常起動
   playTitleSequence();
 
 });
+
 
 // ------------------------------ 初期画面タイトル記号のランダム表示 ------------------------------
 
@@ -9164,7 +9213,23 @@ function reloadApp(){
 }
 
 
-// ---------------------------------------------------------　JS追加最後の行　---------------------------------------------------------
+// ----------------------------
+// アプリを離れた時刻を保存
+// ----------------------------
+document.addEventListener("visibilitychange", () => {
+
+  if (document.hidden) {
+
+    localStorage.setItem(
+      "lastHiddenTime",
+      Date.now()
+    );
+
+  }
+
+});
+
+// ---------------------------------------------------------　JS最後の行　---------------------------------------------------------
 
 </script>
 
