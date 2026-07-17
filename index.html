@@ -8531,6 +8531,7 @@ function showTempInfo(msg, duration=2500){
 
 /* ------------------------ ひとりカウンター送信ボタン ------------------------ */
 
+// ============================== Fresh Bait!! タイマー コード群 ============================== //
 
 // =========================================
 // Fresh Bait!! タイマー管理
@@ -8680,64 +8681,151 @@ function clearBaitTimerState(){
 
 
 // =========================================
-// Fresh Bait!! タイマー開始（完成版）
+// Fresh Bait!! 共通監視ループ
 // =========================================
-function startBaitTimer(){
 
-    // 既存タイマー停止
+function runBaitTimerLoop(){
+
+
     clearInterval(baitTimerInterval);
 
 
-    // ボタン状態リセット
-    const btn =
-        document.getElementById("baitTimerBtn");
-
-    if(btn){
-        btn.classList.remove("timeout");
-    }
-
-
-    // 初期状態
-    baitVibrationDone = false;
-
-    baitTimeoutTime = 0;
-
-
-    // 設定時間から終了時刻を作成
-    baitEndTime =
-        Date.now() +
-        (baitTimerMinutes * 60 * 1000);
-
-
-    // 保存
-    saveBaitTimerState();
-
-
-    // 表示更新
-    updateBaitTimerDisplay();
-
-    // =====================================
-    // 実時間ベース監視
-    // =====================================
-    baitTimerInterval = setInterval(()=>{
+    baitTimerInterval =
+    setInterval(()=>{
 
 
         const now = Date.now();
 
 
-        // 残り秒数計算
-        const remaining = Math.ceil(
-            (baitEndTime - now) / 1000
-        );
-
 
         // -----------------------------
-        // カウントダウン中
+        // カウント中
         // -----------------------------
-        if(remaining > 0){
+        if(now < baitEndTime){
+
+
+            const remaining =
+                Math.ceil(
+                    (baitEndTime - now) / 1000
+                );
 
 
             baitTimerSeconds = remaining;
+
+
+            updateBaitTimerDisplay(
+                "countdown",
+                remaining
+            );
+
+
+            return;
+
+        }
+
+
+
+        // -----------------------------
+        // 終了時刻到達
+        // -----------------------------
+        if(baitTimeoutTime === 0){
+
+
+            baitTimeoutTime =
+                baitEndTime;
+
+
+            saveBaitTimerState();
+
+
+
+            // ボタン赤
+            const btn =
+                document.getElementById(
+                    "baitTimerBtn"
+                );
+
+
+            if(btn){
+
+                btn.classList.add("timeout");
+
+            }
+
+
+
+            // バイブ1回
+            if(
+                navigator.vibrate &&
+                isBaitVibrationEnabled &&
+                !baitVibrationDone
+            ){
+
+                navigator.vibrate([
+                    600,
+                    200,
+                    600,
+                    200,
+                    900
+                ]);
+
+
+                baitVibrationDone = true;
+
+
+                saveBaitTimerState();
+
+            }
+
+
+        }
+
+
+
+        // -----------------------------
+        // 終了後経過秒
+        // -----------------------------
+        const elapsed =
+            Math.floor(
+                (now - baitTimeoutTime) / 1000
+            );
+
+
+
+        // -----------------------------
+        // 30分以上放置
+        // -----------------------------
+        if(
+            elapsed >= BAIT_RESET_SECONDS
+        ){
+
+
+            clearBaitTimerState();
+
+
+            baitEndTime = 0;
+            baitTimeoutTime = 0;
+
+
+            baitTimerSeconds =
+                baitTimerMinutes * 60;
+
+
+
+            const btn =
+                document.getElementById(
+                    "baitTimerBtn"
+                );
+
+
+            if(btn){
+
+                btn.classList.remove(
+                    "timeout"
+                );
+
+            }
+
 
 
             updateBaitTimerDisplay();
@@ -8748,126 +8836,91 @@ function startBaitTimer(){
         }
 
 
-        // -----------------------------
-        // 時間切れ処理
-        // -----------------------------
-        clearInterval(baitTimerInterval);
-
-
-        baitTimerInterval = null;
-
-
-        baitTimeoutTime = Date.now();
-
-
-        saveBaitTimerState();
-
-
-        const timer =
-            document.getElementById("baitTimer");
-
-
-        if(timer){
-
-            timer.innerHTML =
-            '<span class="bait-label">⏰</span>Next Bait!!';
-
-        }
-
-
-        const button =
-            document.getElementById("baitTimerBtn");
-
-
-        if(button){
-
-            button.classList.add("timeout");
-
-        }
 
         // -----------------------------
-        // バイブ通知（1回のみ）
+        // Next Bait!! 30秒
         // -----------------------------
         if(
-            navigator.vibrate &&
-            isBaitVibrationEnabled &&
-            !baitVibrationDone
+            elapsed < BAIT_MESSAGE_SECONDS
         ){
 
-            navigator.vibrate([
-                600,
-                200,
-                600,
-                200,
-                900
-            ]);
 
-
-            baitVibrationDone = true;
-
-
-            saveBaitTimerState();
-
-        }
-
-
-        // -----------------------------
-        // Next Bait!!表示開始
-        // -----------------------------
-        const messageStart =
-            baitTimeoutTime;
-
-
-        const messageElapsed =
-            Math.floor(
-                (Date.now() - messageStart) / 1000
+            updateBaitTimerDisplay(
+                "message"
             );
 
-
-        // 30秒間はNext Bait!!
-        if(messageElapsed < 30){
 
             return;
 
         }
 
 
+
         // -----------------------------
-        // 経過時間表示
+        // 経過表示
         // -----------------------------
-        const passed =
-            Math.floor(
-                (Date.now() - messageStart) / 1000
-            );
+        updateBaitTimerDisplay(
+            "over",
+            elapsed
+        );
 
 
-        const pMin =
-            Math.floor(passed / 60);
 
-
-        const pSec =
-            passed % 60;
-
-
- const overTimer =
-    document.getElementById("baitTimer");
-
-
-if(overTimer){
-
-    overTimer.innerHTML =
-    `
-    <span class="bait-label">
-    経過
-    </span>
-    ${String(pMin).padStart(2,"0")}:
-    ${String(pSec).padStart(2,"0")}
-    `;
+    },1000);
 
 }
 
 
-    },1000);
+
+// =========================================
+// Fresh Bait!! 開始
+// =========================================
+
+function startBaitTimer(){
+
+
+    clearInterval(
+        baitTimerInterval
+    );
+
+
+    const btn =
+        document.getElementById(
+            "baitTimerBtn"
+        );
+
+
+    if(btn){
+
+        btn.classList.remove(
+            "timeout"
+        );
+
+    }
+
+
+
+    baitVibrationDone = false;
+
+
+
+    baitTimeoutTime = 0;
+
+
+
+    baitEndTime =
+        Date.now()
+        +
+        baitTimerMinutes * 60 * 1000;
+
+
+
+    saveBaitTimerState();
+
+
+
+    runBaitTimerLoop();
+
 
 
 }
@@ -8938,7 +8991,7 @@ function restoreBaitTimer(){
 
 
         // 監視再開
-        startBaitRestoreLoop();
+        runBaitTimerLoop();
 
 
         return;
@@ -8969,173 +9022,17 @@ if(button){
 }
 
 
-    startBaitRestoreLoop();
+    runBaitTimerLoop();
 
 }
 
-// =========================================
-// 復元後タイマー監視
-// =========================================
-function startBaitRestoreLoop(){
-
-
-    clearInterval(baitTimerInterval);
-
-
-    baitTimerInterval =
-    setInterval(()=>{
-
-
-        const now = Date.now();
-
-
-
-        // -----------------------------
-        // カウント中
-        // -----------------------------
-        if(now < baitEndTime){
-
-
-            const remaining =
-                Math.ceil(
-                    (baitEndTime - now) / 1000
-                );
-
-
-            baitTimerSeconds =
-                remaining;
-
-
-            updateBaitTimerDisplay();
-
-
-            return;
-
-        }
-
-
-
-        // -----------------------------
-        // 終了後処理
-        // -----------------------------
-        if(baitTimeoutTime === 0){
-
-
-            baitTimeoutTime =
-                baitEndTime;
-
-
-            saveBaitTimerState();
-
-
-        }
-
-
-
-        const elapsed =
-            Math.floor(
-                (now - baitTimeoutTime) / 1000
-            );
-
-
-
-        // -----------------------------
-        // 30分以上放置
-        // -----------------------------
-if(elapsed >= BAIT_RESET_SECONDS){
-
-
-    clearInterval(baitTimerInterval);
-
-
-    clearBaitTimerState();
-
-
-    baitTimerSeconds =
-        baitTimerMinutes * 60;
-
-
-    const button =
-        document.getElementById("baitTimerBtn");
-
-    if(button){
-
-        button.classList.remove("timeout");
-
-    }
-
-
-    updateBaitTimerDisplay();
-
-
-    return;
-
-}
-
-        // -----------------------------
-        // Next Bait!!表示
-        // -----------------------------
-        if(elapsed < BAIT_MESSAGE_SECONDS){
-
-
-            const timer =
-                document.getElementById("baitTimer");
-
-
-            if(timer){
-
-                timer.innerHTML =
-                '<span class="bait-label">⏰</span>Next Bait!!';
-
-            }
-
-
-            return;
-
-        }
-
-
-
-        // -----------------------------
-        // 経過時間表示
-        // -----------------------------
-        const min =
-            Math.floor(elapsed / 60);
-
-
-        const sec =
-            elapsed % 60;
-
-
-
-        const timer =
-            document.getElementById("baitTimer");
-
-
-        if(timer){
-
-            timer.innerHTML =
-            `
-            <span class="bait-label">
-            経過
-            </span>
-            ${String(min).padStart(2,"0")}:
-            ${String(sec).padStart(2,"0")}
-            `;
-
-        }
-
-
-
-    },1000);
-
-
-}
 
 
 // ボタン
 document.getElementById("baitTimerBtn")
 .addEventListener("click",startBaitTimer);
+
+// ============================== Fresh Bait!! タイマー コード群 ============================== //
 
 
 /* =========================
