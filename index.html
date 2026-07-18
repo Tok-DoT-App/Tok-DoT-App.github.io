@@ -8304,6 +8304,34 @@ if (typeof lastCountTime !== "undefined") {
   lastCountTime = Date.now();
 }
 
+// =========================================
+// Fresh Bait!! タイマー初期化
+// =========================================
+
+// タイマー停止
+clearInterval(baitTimerInterval);
+baitTimerInterval = null;
+
+// 状態リセット
+baitEndTime = 0;
+baitTimeoutTime = 0;
+baitVibrationDone = false;
+
+// ボタン色を戻す
+const baitBtn = document.getElementById("baitTimerBtn");
+if (baitBtn) {
+    baitBtn.classList.remove("timeout");
+}
+
+// 設定時間へ戻す
+baitTimerSeconds = baitTimerMinutes * 60;
+
+// 表示更新
+updateBaitTimerDisplay();
+
+// 保存データ削除
+clearBaitTimerState();
+
 
 // 最後に再スタートメッセージ表示
 if (typeof initRestartMessage === "function") {
