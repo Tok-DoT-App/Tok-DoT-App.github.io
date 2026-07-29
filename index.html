@@ -6181,7 +6181,7 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 
 // true  = 一定時間以内なら起動演出をスキップ
 // false = 毎回起動演出を表示
-const ENABLE_TITLE_SKIP = false;
+const ENABLE_TITLE_SKIP = true;
 
 // 起動演出をスキップする時間（分）
 const TITLE_SKIP_MINUTES = 10;
@@ -6255,9 +6255,16 @@ soloLeftCountElem.onclick = () => {
   createRipple(centralCount, 'ripple-center');
   if (navigator.vibrate && isVibrationEnabled) navigator.vibrate(20);
 
-// --- ここから声かけ表示 ---
-  updateInfoBar(soloCounter.count);
-  // --- ここまで ---
+// --- PartnerMind Ver2 ---
+
+partnerMind.observe(
+    soloCounter.count
+);
+
+
+// --- 既存AIは一旦停止 ---
+// updateInfoBar(soloCounter.count);
+
 
 };
 
@@ -6271,9 +6278,17 @@ soloRightCountElem.onclick = () => {
   createRipple(centralCount, 'ripple-center');
   if (navigator.vibrate && isVibrationEnabled) navigator.vibrate(20);
 
-// --- ここから声かけ表示 ---
-  updateInfoBar(soloCounter.count);
-  // --- ここまで ---
+// --- PartnerMind Ver2 ---
+
+partnerMind.observe(
+    soloCounter.count
+);
+
+
+// --- 既存AIは一旦停止 ---
+// updateInfoBar(soloCounter.count);
+
+
 
 };
 
@@ -7639,8 +7654,6 @@ const initMessages = [
   "今日も見守っていますね",
   "流れを作っていきましょう",
   "気持ちの良い一日になりそうです",
-
-  // 追加
   "今日は静かな始まりですね",
   "今日の湖、雰囲気がいいですね",
   "集中しやすい空気感ですね",
@@ -7659,14 +7672,26 @@ function initPartnerMessage() {
 
 /* ---------------- 再スタート専用メッセージ ---------------- */
 const restartMessages = [
-  "新しい流れを作っていきましょう",
-  "ここからまた積み上げていきましょう",
-  "リセット完了です。次の一匹を狙いましょう",
-  "新しい釣りの時間が始まりますね",
-  "気持ちを切り替えて楽しみましょう",
-  "また一から見守っていますね",
+  "今日も良い一日になりそうですね",
+  "落ち着いて積み上げていきましょう",
+  "今日の流れ、楽しみですね",
+  "落ち着いたスタートですね",
+  "良い釣り日和になりそうです",
+  "今日の展開、期待できそうですね",
+  "無理せず、いいペースでいきましょう",
   "ここからどんな展開になるか楽しみです",
-  "新しい記録へのスタートですね"
+  "静かな朝の釣り、好きです",
+  "今日も見守っていますね",
+  "流れを作っていきましょう",
+  "気持ちの良い一日になりそうです",
+  "今日は静かな始まりですね",
+  "今日の湖、雰囲気がいいですね",
+  "集中しやすい空気感ですね",
+  "穏やかな一日になりそうです",
+  "今日も淡々と積み上げましょう",
+  "良い流れを作れそうですね",
+  "楽しみな一日になりそうです",
+  "落ち着いたスタートですね"
 ];
 
 /* ---------------- 再スタート表示 ---------------- */
@@ -9712,6 +9737,15 @@ document.addEventListener("visibilitychange", () => {
 
 });
 
+
+
+/* ==================================================
+   PartnerMind Ver2
+================================================== */
+
+console.log("PartnerMind.js を読み込みました");
+
+
 // ---------------------------------------------------------　JS最後の行　---------------------------------------------------------
 
 </script>
@@ -9785,6 +9819,8 @@ if ('serviceWorker' in navigator) {
 
 <!-- OFUSE ウィジェット（async でOK） -->
 <script async src="https://ofuse.me/assets/platform/widget.js" charset="utf-8"></script>
+
+<script src="partnerMind.js"></script>
 
 </body>
 </html>
