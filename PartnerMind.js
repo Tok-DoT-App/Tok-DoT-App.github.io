@@ -1834,6 +1834,42 @@ if(today){
 
 
 // =========================
+// 久々に釣れた瞬間は反射的に話す
+// =========================
+
+if(this.afterLongSilence){
+
+    result = {
+
+        speak:true,
+
+        reason:"after_wait",
+
+        message:
+            this.applyPersonalityLevel(
+
+                this.applyCloseness(
+
+                    this.getMessage("after_wait")
+
+                )
+
+            )
+
+    };
+
+    this.afterLongSilence = false;
+
+    this.rememberSpeak(
+        result.message,
+        result.reason
+    );
+
+    return result;
+
+}
+
+// =========================
 // 自然な発言間隔制御
 // =========================
 
@@ -1845,7 +1881,6 @@ if(
         candidates.some(
             c => c.reason === "recall_memory"
         );
-
 
     if(!hasRecall){
 
@@ -1878,28 +1913,6 @@ if(
     });
 
 }
-
-// =========================
-// 長時間待った後に釣れた
-// =========================
-
-if(this.afterLongSilence){
-
-    candidates.push({
-
-        priority:100,
-
-        reason:"after_wait",
-
-        message:
-            this.getMessage("after_wait")
-
-    });
-
-    this.afterLongSilence = false;
-
-}
-
 
 // =========================
 // 爆釣状態
@@ -2271,7 +2284,9 @@ after_wait:[
 
     "待った甲斐がありましたね。",
 
-    "流れが変わるかもしれませんね"
+    "この一匹は大きいですね",
+
+    "これは嬉しいですね"
 
 ],
 

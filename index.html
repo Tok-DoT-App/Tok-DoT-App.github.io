@@ -6184,7 +6184,7 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 const ENABLE_TITLE_SKIP = true;
 
 // 起動演出をスキップする時間（分）
-const TITLE_SKIP_MINUTES = 10;
+const TITLE_SKIP_MINUTES = 1;
 
 
 // ★ ここからタイトル演出を追加
@@ -7609,610 +7609,51 @@ document.getElementById("addressConfirmBtn").onclick = ()=>{
 /* ------------------- お天気 高速安全版 最終・アラート付き 完了 ------------------- */
 
 /* ---------------------------------- 声かけ表示機能 ---------------------------------- */
-/* ---------------------------------
-   声かけ表示用関数（人格成長AI相棒・究極完成版＋自然言語拡張・姉系調整＋非重複制御）
---------------------------------- */
 
 let infoTimeout = null;
-let lastCountTime = Date.now();
-let lastTapTime = 0;
-let rapidTapCount = 0;
-let totalCounts = 0;
 
 
-/* ---------------- 重複防止履歴 ---------------- */
-let recentMessages = [];
-const MESSAGE_HISTORY_LIMIT = 15;
-
-/* ---------------- ランダム（非重複） ---------------- */
-function randNoRepeat(arr){
-  let tries = 0;
-  let msg;
-  do {
-    msg = arr[Math.floor(Math.random()*arr.length)];
-    tries++;
-  } while (recentMessages.includes(msg) && tries < 50);
-
-  recentMessages.push(msg);
-  if(recentMessages.length > MESSAGE_HISTORY_LIMIT){
-    recentMessages.shift();
-  }
-  return msg;
-}
-
-/* ---------------- 初回専用メッセージ ---------------- */
-const initMessages = [
-  "今日も良い一日になりそうですね",
-  "落ち着いて積み上げていきましょう",
-  "今日の流れ、楽しみですね",
-  "落ち着いたスタートですね",
-  "良い釣り日和になりそうです",
-  "今日の展開、期待できそうですね",
-  "無理せず、いいペースでいきましょう",
-  "ここからどんな展開になるか楽しみです",
-  "静かな朝の釣り、好きです",
-  "今日も見守っていますね",
-  "流れを作っていきましょう",
-  "気持ちの良い一日になりそうです",
-  "今日は静かな始まりですね",
-  "今日の湖、雰囲気がいいですね",
-  "集中しやすい空気感ですね",
-  "穏やかな一日になりそうです",
-  "今日も淡々と積み上げましょう",
-  "良い流れを作れそうですね",
-  "楽しみな一日になりそうです",
-  "落ち着いたスタートですね"
-];
-
-/* ---------------- 初回表示 ---------------- */
-function initPartnerMessage() {
-  showPartnerMessage(randNoRepeat(initMessages), 0);
-}
-
-
-/* ---------------- 再スタート専用メッセージ ---------------- */
-const restartMessages = [
-  "今日も良い一日になりそうですね",
-  "落ち着いて積み上げていきましょう",
-  "今日の流れ、楽しみですね",
-  "落ち着いたスタートですね",
-  "良い釣り日和になりそうです",
-  "今日の展開、期待できそうですね",
-  "無理せず、いいペースでいきましょう",
-  "ここからどんな展開になるか楽しみです",
-  "静かな朝の釣り、好きです",
-  "今日も見守っていますね",
-  "流れを作っていきましょう",
-  "気持ちの良い一日になりそうです",
-  "今日は静かな始まりですね",
-  "今日の湖、雰囲気がいいですね",
-  "集中しやすい空気感ですね",
-  "穏やかな一日になりそうです",
-  "今日も淡々と積み上げましょう",
-  "良い流れを作れそうですね",
-  "楽しみな一日になりそうです",
-  "落ち着いたスタートですね"
-];
-
-/* ---------------- 再スタート表示 ---------------- */
-function initRestartMessage() {
-  showPartnerMessage(randNoRepeat(restartMessages), 0);
-}
-
-/* ---------------- 表示 ---------------- */
 function showPartnerMessage(msg, duration=3000){
-  const bar = document.querySelector(".info-placeholder-text");
-  if(!bar) return;
-  if(infoTimeout) clearTimeout(infoTimeout);
 
-  const level = getPersonalityLevel(totalCounts);
+    const bar =
+        document.querySelector(
+            ".info-placeholder-text"
+        );
 
-  // legend人格だけ特別フェード
-  bar.classList.remove("legend-slow");
-  if(level === "legend"){
-    bar.classList.add("legend-slow");
-  }
+    if(!bar) return;
 
-  // フェードリセット
-  bar.classList.remove("show");
-  void bar.offsetWidth; // reflow強制（重要）
 
-  bar.textContent = msg;
-  bar.classList.add("show");
+    if(infoTimeout){
 
-  if(duration > 0){
-    infoTimeout = setTimeout(()=>bar.classList.remove("show"), duration);
-  }
-}
-
-/* ---------------- 人格レベル判定 ---------------- */
-function getPersonalityLevel(total){
-  if(total < 50) return "lv1";
-  if(total < 200) return "lv2";
-  if(total < 500) return "lv3";
-  if(total < 1000) return "lv4";
-  return "legend";
-}
-
-/* ---------------- 人格成長セリフ ---------------- */
-const personalityLevels = {
-  lv1: [
-    "少しずつ感覚が整ってきていますね",
-    "基礎が自然に馴染んでいます",
-    "落ち着いた釣りができていますね",
-    "良いスタートの流れです",
-    "丁寧な所作が印象的です",
-    "安心感のあるペースですね",
-    "綺麗な釣りの組み立てです"
-  ],
-  lv2: [
-    "誘いの精度が上がっていますね",
-    "魚とのタイミングが合っていますね",
-    "無駄のない動きになっています",
-    "テンポが洗練されてきました",
-    "手返しがとても安定しています",
-    "釣りのリズムが完成しつつあります"
-  ],
-  lv3: [
-    "魚の癖をしっかり把握しています",
-    "誘いのタイミングが素晴らしいですね",
-    "釣り運びがとても美しいです",
-    "熟練者の釣り方そのものです",
-    "完成形に近い釣りですね"
-  ],
-  lv4: [
-    "王者の雰囲気が出ていますね",
-    "勝負圏内の釣りになっています",
-    "記録更新が現実的なラインです",
-    "芸術的な釣り運びですね",
-    "伝説級が射程圏に入っています"
-  ],
-  legend: [
-    "もう伝説クラスの釣りですね",
-    "語り継がれる釣果になりそうです",
-    "歴史的な一日になりましたね",
-    "特別な一日になっていますね",
-    "記録に残る一日になりそうですね"
-  ]
-};
-
-/* ---------------- シチュエーション文言 ---------------- */
-const sequenceMsgs = {
-  early: [
-    "穏やかな入り方ですね",
-    "静かなスタートです",
-    "その一匹が流れを変えるかもしれませんね",
-    "一匹一匹が価値ある展開です",
-    "落ち着いて進めていますね",
-    "無理のない滑り出しです",
-    "丁寧なスタートですね",
-    "ここからペースを作れそうですね",
-    "今日の展開が見えてきます",
-    "ここから流れが生まれそうです",
-
-    // 追加
-    "いい入り方ですね",
-    "穏やかなリズムです",
-    "静かながら良い兆しです",
-    "無理のない流れですね",
-    "今日は伸びそうな予感ですね"
-  ],
-
-  mid: [
-    "良い流れに乗っていますね",
-    "釣れる時間帯に入っています",
-    "魚の活性が上がっています",
-    "集中力が冴えていますね",
-    "安定したペースです",
-    "その誘い効いています",
-    "良いリズムを刻んでいます",
-    "見ていてワクワクします", 
-    "手返しが効いていますね",
-    "素敵なペースですよ",
-    "釣りのテンポが心地いいです",
-
-    // 追加
-    "良いペース感です",
-    "流れができています",
-    "仕掛けの相性が良さそうです",
-    "魚の反応が素直ですね",
-    "釣りが噛み合っています"
-  ],
-
-  funMid: [
-    "釣りの醍醐味ですね",
-    "釣れるとやはり楽しいですね",
-    "良い群れが入ってきているかもしれませんね",
-    "テンポがとても良いです",
-    "今日は良い日ですね",
-    "見ていて気持ちいい釣りです",
-    "今日は絶好調ですね",
-    "釣りが波に乗っています",
-    "良いペース配分です",
-    "ここから伸ばせますね",
-    "楽しい時間帯に入っています",
-    "どんどん増えて嬉しいですね",
-    "釣果が気持ちよく伸びています",
-
-    // 追加
-    "群れにしっかり当たっています",
-    "釣りの波に乗れています",
-    "集中力が継続しています",
-    "良い展開になっています",
-    "楽しい展開ですね"
-  ],
-
-  late: [
-    "完成された釣り運びですね",
-    "記録更新ゾーンに入っています",
-    "堂々たる釣果です",
-    "周囲が驚く釣果になりそうですね",
-    "落ち着いた王者の釣りです",
-    "プロ級の安定感ですね",
-    "別次元の展開になっています",
-    "勝負を決める流れです",
-
-    // 追加
-    "完成度の高い釣りですね",
-    "見事な積み上げです",
-    "記録的な流れです",
-    "隙のない釣り運びです",
-    "圧巻の釣果です"
-  ],
-
-  specialTime: [
-    "その一匹、価値がありますね",
-    "粘りの一匹ですね",
-    "流れを変える一匹です",
-    "待った甲斐がありますね",
-    "最高の一匹です",
-    "久しぶりの一匹、価値がありますね",
-    "長い待ちの一匹、素晴らしいです",
-    "じっくり待った甲斐があります",
-    "この一匹は意味がありますね",
-    "沈黙を破るヒットです",
-    "粘り勝ちの一匹ですね"
-  ],
-
-  rapidTap: [
-    "連掛けモードですね",
-    "全部がうまく合っていますね",
-    "タナがドンピシャですね",
-    "群れの中心にいます",
-    "仕掛けとの相性が良さそうですね",
-    "完全に群れを掴んでいます",
-    "良いタナを捉えています",
-    "流れに乗っていますね",
-    "合わせが鋭いです",
-    "入れ食いの気配ですね",
-    "群れを捉えていますね",
-    "連続ヒットの波です",
-    "爆釣ゾーンに入っています"
-  ],
-
-  over1000: [
-    "1000匹突破、お見事です。今日は絶好調ですね",
-    "4桁は別格ですね。完成された釣り運びです"
-  ],
-
-  idleMessages: {
-    min1: [
-      "そろそろ来る予感がしますね",
-      "魚はきっと近くまで来ていますよ",
-      "焦らなくて大丈夫ですよ",
-      "この静けさも釣りの楽しさですね",
-      "次の一匹が楽しみですね",
-      "群れを待ちましょう",
-      "良いタイミングは突然やってきます",
-      "まだまだこれからですよ",
-      "焦らずに、はじまったばかりです",
-      "期待しながら待ちましょう"
-    ],
-
-    min3: [
-      "なかなか当たりが来ませんね",
-      "今日は魚の動きが少し控えめみたいですね",
-      "もう少し待ってみましょう",
-      "魚も様子を見ているのかもしれません",
-      "次の群れを待ちましょう",
-      "こういう時間もありますね",
-      "焦らずいきましょう",
-      "静かな時間が続いていますね",
-      "ここを越えると流れが変わるかもしれません",
-      "一匹来れば流れが変わることもあります"
-    ],
-
-    min5: [
-      "魚が少し遠いところを回遊しているようです",
-      "群れが戻るのを待ちましょう",
-      "今日は回遊がゆっくりなのかもしれません",
-      "今日は魚もゆっくり過ごしているようです",
-      "次のチャンスはきっと来ます",
-      "静かな時間ほど次が楽しみですね",
-      "一匹来ると流れが変わるんですけどね",
-      "そろそろ状況が動きそうですね",
-      "もう少しだけ粘ってみましょう"
-    ],
-
-    min8: [
-      "群れはきっと近くまで来ていますよ",
-      "もう少しで流れが変わる気がします",
-      "ここを越えればチャンスがありそうですね",
-      "魚も慎重に様子を見ているようです",
-      "静かな時間も大切な釣りですね",
-      "あと一歩で当たりが来そうな気がします",
-      "焦らなくても大丈夫ですよ",
-      "次の群れを一緒に待ちましょう",
-      "良い展開は突然やってきますよ"
-    ],
-
-    min10: [
-      "今日は我慢比べですね",
-      "諦めなければチャンスはあります",
-      "一匹の価値が大きい時間ですね",
-      "待つのも釣りの技術ですよ",
-      "きっと次は来ます",
-      "応援しています",
-      "焦らず、自分のペースでいきましょう",
-      "良い流れは突然始まります",
-      "次の一匹を信じましょう"
-    ],
-
-    min15: [
-      "今日は魚も気まぐれですね",
-      "こういう日もありますよ",
-      "粘った人だけが出会える一匹があります",
-      "きっと次の一匹は特別ですよ",
-      "焦らず続けていきましょう",
-      "流れは必ず変わります",
-      "魚もタイミングを見ているのでしょうね",
-      "待つ時間も釣りの楽しさですね",
-      "あと少し、一緒に頑張りましょう"
-    ],
-
-    min20: [
-      "魚も今日はのんびりしているみたいですね",
-      "ここまで待てるのも釣りの楽しさですね",
-      "こんな日も思い出になりますよ",
-      "ここまで待てるのも立派な腕前です",
-      "魚も根比べをしているようですね",
-      "次の一匹が今日一番嬉しい一匹になるかもしれません",
-      "ここまで粘れるのも立派な釣りですね",
-      "私はまだまだ応援しています",
-      "ここから流れが変わることも珍しくありません",
-      "一緒に次の当たりを待ちましょう",
-      "次の一匹はきっと忘れられない一匹になりますよ"
-    ]
-  }
-
-};
-
-/* ---------------- 節目設定 ---------------- */
-const bigMilestones = [
-  10,20,30,40,50,60,70,80,90,
-  100,150,200,250,300,400,500,
-  700,800,900,1000
-];
-
-/* ---------------- メッセージ判定 ---------------- */
-function getPartnerMessage(count){
-  const now = Date.now();
-  totalCounts = Math.max(totalCounts, count);
-
-  // 連続タップ判定（完全リビルド）
-  if(now - lastTapTime < 2000){
-  rapidTapCount = Math.min(rapidTapCount + 1, 10);
-  } else {
-  rapidTapCount = 0; // ← 超重要
-  }
-  lastTapTime = now;
-
-  // 連掛け確率調整
-  let rapidChance = 0.6;
-  if(totalCounts > 200) rapidChance = 0.3;
-  if(totalCounts > 500) rapidChance = 0.15;
-
-  /* ===== 連掛け時間記録 ===== */
-  if(rapidTapCount >= 2){
-    lastRapidTime = now;
-  }
-
-/* ===== 連掛け15秒無反応で完全リセット ===== */
-if(lastRapidTime && now - lastRapidTime > 15000){
-  rapidTapCount = 0;
-  rapidZoneAnnounced = false;
-  lastRapidTime = 0;
-}
-
-  /* ===== 連掛け有効時間（8秒） ===== */
-  const rapidActive = (now - lastRapidTime < 8000);
-
-  /* ===== 超連掛けゾーン突入演出（1回だけ） ===== */
-  if(rapidActive && rapidTapCount >= 4 && !rapidZoneAnnounced){
-    rapidZoneAnnounced = true;
-    return "完全に連掛けゾーンに入りました";
-  }
-
-/* ===== 長時間沈黙後の一匹 ===== */
-const idle = now - lastCountTime;
-
-if(idle > 10*60*1000 && count > 0){
-  lastCountTime = now;
-  return randNoRepeat(sequenceMsgs.specialTime);
-}
-
-
-/* ===== 待機時間声掛け ===== */
-
-if(idle > 20*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min20);
-}
-
-if(idle > 15*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min15);
-}
-
-if(idle > 10*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min10);
-}
-
-if(idle > 8*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min8);
-}
-
-if(idle > 5*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min5);
-}
-
-if(idle > 3*60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min3);
-}
-
-if(idle > 60*1000){
-  return randNoRepeat(sequenceMsgs.idleMessages.min1);
-}
-
-  /* ===== 通常連掛け演出 ===== */
-  if (rapidActive && rapidTapCount >= 2 && Math.random() < rapidChance) {
-    return randNoRepeat(sequenceMsgs.rapidTap);
-  }
-
-  // 長時間沈黙後の一匹
-  if(now - lastCountTime > 10*60*1000){
-    lastCountTime = now;
-    return randNoRepeat(sequenceMsgs.specialTime);
-  }
-
-  // 節目前演出
-  for(let m of bigMilestones){
-    if(count >= m-3 && count < m){
-      return `あと${m-count}匹で${m}匹達成`;
-    }
-  }
-
-  // 10匹刻み
-  if(count % 10 === 0 && count > 0){
-    return `${count}匹達成。${count+10}匹が見えてきました`;
-  }
-
-  // 1000超え特別
-  if(count >= 1000 && Math.random() < 0.35){
-    return randNoRepeat(sequenceMsgs.over1000);
-  }
-
-  // 人格レベルセリフ
-  const level = getPersonalityLevel(totalCounts);
-  if(Math.random() < 0.3){
-    return randNoRepeat(personalityLevels[level]);
-  }
-
-  // 通常メッセージ
-  let msg;
-  if(count <=30) msg = randNoRepeat(sequenceMsgs.early);
-  else if(count <=50) msg = randNoRepeat(sequenceMsgs.mid);
-  else if(count <=100) msg = randNoRepeat(sequenceMsgs.funMid);
-  else msg = randNoRepeat(sequenceMsgs.late);
-
-  /* ===== 人格進化による口調変換 ===== */
-  if(level === "legend" && !personalityLevels.legend.includes(msg)){
-    msg = msg
-      .replace(/ですね/g, "です")
-      .replace(/ですよ/g, "です");
-  }
-
-  return msg;
-}
-
-/* ---------------- 更新 ---------------- */
-function updateInfoBar(count){
-  const msg = getPartnerMessage(count);
-  if(!msg) return;
-
-  const fixed =
-    count===0 ||
-    bigMilestones.some(m=>count>=m-3 && count<m) ||
-    (count%10===0 && count>0);
-
-  const level = getPersonalityLevel(totalCounts);
-  showPartnerMessage(msg, fixed ? 0 : (level==="legend" ? 5000 : 3000));
-  lastCountTime = Date.now();
-  lastIdleMessageLevel = 0;
-}
-
-/* ---------------- 初期化 ---------------- */
-document.addEventListener("DOMContentLoaded", initPartnerMessage);
-
-/* ---------------- 待機時間AI声掛けタイマー ---------------- */
-
-let idleMessageTimer = null;
-let lastIdleMessageLevel = 0;
-
-function startIdleMessageTimer(){
-
-  if(idleMessageTimer){
-    clearInterval(idleMessageTimer);
-  }
-
-  idleMessageTimer = setInterval(()=>{
-
-    const idle = Date.now() - lastCountTime;
-
-    let level = 0;
-    let messages = null;
-
-    if(idle >= 20*60*1000){
-      level = 20;
-      messages = sequenceMsgs.idleMessages.min20;
-    }
-    else if(idle >= 15*60*1000){
-      level = 15;
-      messages = sequenceMsgs.idleMessages.min15;
-    }
-    else if(idle >= 10*60*1000){
-      level = 10;
-      messages = sequenceMsgs.idleMessages.min10;
-    }
-    else if(idle >= 8*60*1000){
-      level = 8;
-      messages = sequenceMsgs.idleMessages.min8;
-    }
-    else if(idle >= 5*60*1000){
-      level = 5;
-      messages = sequenceMsgs.idleMessages.min5;
-    }
-    else if(idle >= 3*60*1000){
-      level = 3;
-      messages = sequenceMsgs.idleMessages.min3;
-    }
-    else if(idle >= 60*1000){
-      level = 1;
-      messages = sequenceMsgs.idleMessages.min1;
-    }
-
-
-    // 同じ時間帯で連続表示しない
-    if(level > 0 && level !== lastIdleMessageLevel){
-
-      lastIdleMessageLevel = level;
-
-      showPartnerMessage(
-        randNoRepeat(messages),
-        5000
-      );
+        clearTimeout(infoTimeout);
 
     }
 
 
-  },10000); // 10秒ごと確認
+    bar.classList.remove("show");
+
+    void bar.offsetWidth;
+
+
+    bar.textContent = msg;
+
+
+    bar.classList.add("show");
+
+
+    if(duration > 0){
+
+        infoTimeout =
+            setTimeout(()=>{
+
+                bar.classList.remove("show");
+
+            },duration);
+
+    }
 
 }
 
-
-/* 起動時開始 */
-document.addEventListener(
-  "DOMContentLoaded",
-  startIdleMessageTimer
-);
 
 /* ---------------------------------- 声かけ表示機能 ---------------------------------- */
 
@@ -8357,6 +7798,93 @@ updateBaitTimerDisplay();
 // 保存データ削除
 clearBaitTimerState();
 
+// =========================================
+// PartnerMind 今日の釣行状態リセット
+// =========================================
+
+if(window.partnerMind){
+
+    partnerMind.tripMemory = {
+
+        startCount:0,
+
+        endCount:0,
+
+        maxCount:0,
+
+        catchCount:0,
+
+        events:[],
+
+        mood:"normal"
+
+    };
+
+
+    partnerMind.totalCount = 0;
+
+
+    partnerMind.focus = {
+
+        topic:null,
+
+        since:0,
+
+        strength:0
+
+    };
+
+
+    partnerMind.thought.level = 0;
+
+
+    partnerMind.innerThought = {
+
+        message:null,
+
+        reason:null,
+
+        confidence:0,
+
+        since:0
+
+    };
+
+
+    // =========================
+    // 今日の感情・発言状態リセット
+    // =========================
+
+    partnerMind.afterLongSilence = false;
+
+
+    partnerMind.lastCatchTime =
+        Date.now();
+
+
+    partnerMind.lastMessageTime =
+        Date.now();
+
+
+    partnerMind.speechControl.fatigue = 0;
+
+
+    partnerMind.lingeringThought = {
+
+        topic:null,
+
+        strength:0,
+
+        created:0
+
+    };
+
+
+    console.log(
+        "PartnerMind 今日の状態をリセットしました"
+    );
+
+}
 
 // 最後に再スタートメッセージ表示
 if (typeof initRestartMessage === "function") {
@@ -9724,19 +9252,40 @@ function reloadApp(){
 // ----------------------------
 // アプリを離れた時刻を保存
 // ----------------------------
-document.addEventListener("visibilitychange", () => {
 
-  if (document.hidden) {
+let appVisibleTime = Date.now();
 
-    localStorage.setItem(
-      "lastHiddenTime",
-      Date.now()
-    );
 
-  }
+document.addEventListener(
+"visibilitychange",
+() => {
+
+    if(document.visibilityState === "hidden"){
+
+        const hiddenTime = Date.now();
+
+        // 起動直後の誤検知防止
+        if(
+            hiddenTime - appVisibleTime > 3000
+        ){
+
+            localStorage.setItem(
+                "lastHiddenTime",
+                hiddenTime
+            );
+
+        }
+
+    }
+
+
+    if(document.visibilityState === "visible"){
+
+        appVisibleTime = Date.now();
+
+    }
 
 });
-
 
 
 /* ==================================================
