@@ -7608,17 +7608,34 @@ document.getElementById("addressConfirmBtn").onclick = ()=>{
 
 /* ------------------- お天気 高速安全版 最終・アラート付き 完了 ------------------- */
 
-/* ---------------------------------- 声かけ表示機能 ---------------------------------- */
+/* ----------------------------------
+   声かけ表示機能
+   PartnerMind対応・簡略版
+---------------------------------- */
+
 
 let infoTimeout = null;
 
 
-function showPartnerMessage(msg, duration=3000){
+/*
+    状態保持
+    保存・削除・ダイアログ側との互換用
+*/
+let totalCounts = 0;
+let lastCountTime = Date.now();
+
+
+
+/*
+    メッセージ表示本体
+*/
+function showPartnerMessage(msg, duration = 3000){
 
     const bar =
         document.querySelector(
             ".info-placeholder-text"
         );
+
 
     if(!bar) return;
 
@@ -7630,6 +7647,7 @@ function showPartnerMessage(msg, duration=3000){
     }
 
 
+    // フェード再表示
     bar.classList.remove("show");
 
     void bar.offsetWidth;
@@ -7641,6 +7659,7 @@ function showPartnerMessage(msg, duration=3000){
     bar.classList.add("show");
 
 
+
     if(duration > 0){
 
         infoTimeout =
@@ -7648,14 +7667,124 @@ function showPartnerMessage(msg, duration=3000){
 
                 bar.classList.remove("show");
 
-            },duration);
+            }, duration);
 
     }
 
 }
 
 
-/* ---------------------------------- 声かけ表示機能 ---------------------------------- */
+
+
+/*
+    PartnerMindから呼ぶ入口
+*/
+function updateInfoBar(count){
+
+    totalCounts = count;
+
+    lastCountTime = Date.now();
+
+
+    /*
+       PartnerMindが存在する場合
+    */
+    if(
+        window.partnerMind &&
+        typeof partnerMind.observe === "function"
+    ){
+
+        partnerMind.observe({
+
+            type:"count",
+
+            count:count
+
+        });
+
+    }
+
+}
+
+
+
+
+/*
+    初期メッセージ
+    PartnerMind側で管理するため
+    空処理にする
+*/
+function initPartnerMessage(){
+
+    if(
+        window.partnerMind &&
+        typeof partnerMind.start === "function"
+    ){
+
+        partnerMind.start();
+
+    }
+
+}
+
+
+
+
+/*
+    再スタート互換
+*/
+function initRestartMessage(){
+
+    initPartnerMessage();
+
+}
+
+
+
+/*
+    保存・削除系互換用
+*/
+function getPartnerState(){
+
+    return {
+
+        totalCounts: totalCounts,
+
+        lastCountTime: lastCountTime
+
+    };
+
+}
+
+
+
+function resetPartnerState(){
+
+    totalCounts = 0;
+
+    lastCountTime = Date.now();
+
+}
+
+
+
+/*
+    起動
+*/
+document.addEventListener(
+    "DOMContentLoaded",
+    ()=>{
+
+        initPartnerMessage();
+
+    }
+);
+
+
+/* ----------------------------------
+   声かけ表示機能 END
+---------------------------------- */
+
 
 /* ---------------------------------- カウントオールクリア機能 ---------------------------------- */
 
