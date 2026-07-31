@@ -1,5 +1,5 @@
 /* ==================================================
-   PartnerMind Ver2
+   PartnerMind
 ================================================== */
 
 class PartnerMind {
@@ -84,10 +84,6 @@ interest:{
     difference:50,
 
 
-    // =========================
-    // 釣りスタイル系
-    // =========================
-
     fishing_style:50,
 
     style_active:50,
@@ -105,8 +101,14 @@ interest:{
 
     today_slow:50,
 
-    mixed:50
+    mixed:50,
 
+
+    experience_recall:50,
+
+    recall_memory:50,
+
+    after_wait:50
 
 }
 
@@ -182,6 +184,13 @@ this.tripMemory = {
 
 
     // =========================
+    // 今日の釣果履歴
+    // =========================
+
+    history:[],
+
+
+    // =========================
     // 記録更新発言済み
     // =========================
 
@@ -214,6 +223,14 @@ this.tripMemory.startCount =
 
 this.tripMemory.date =
     new Date().toLocaleDateString();
+
+
+// 新しい釣行開始時は記録発言状態をリセット
+
+this.tripMemory.recordAnnounced = false;
+
+this.personalityMemory.recordAnnounced = false;
+
 
 // 保存データ読み込み
 
@@ -263,12 +280,6 @@ this.state = {
     // =========================
 
     speakFatigue:0,
-
-// =========================
-// 今一番気になっていること
-// =========================
-
-focus:"none",
 
 // =========================
     // 新しい話題へ移りたい気持ち
@@ -1243,12 +1254,23 @@ if(
 // 感情の自然変化
 // =========================
 
-// 盛り上がりは少しずつ落ち着く
+// 盛り上がりは時間経過で自然減衰
+
+const elapsedThink =
+    (now - this.thinkingState.lastThinkTime)
+    /1000;
+
+
 this.state.excitement =
     Math.max(
-        this.state.excitement - 0.3,
+        this.state.excitement -
+        elapsedThink * 0.05,
         0
     );
+
+
+this.thinkingState.lastThinkTime =
+    now;
 
 // 機嫌は50へ少しずつ戻る
 if(this.state.mood > 50){
@@ -1267,7 +1289,8 @@ else if(this.state.mood < 50){
 // 今話したい気分
 // =========================
 
-let desireToTalk = 0;
+let desireToTalk = 20;
+let speakDesire = 0;
 
 // =========================
 // 時間経過による感情変化
@@ -1290,7 +1313,7 @@ if(silence > 60){
 
 if(silence > 180){
 
-    this.state.concern += 5;
+    this.state.concern += 0.5;
 
 }
 
@@ -1749,7 +1772,7 @@ if(styleMessage){
 
     candidates.push({
 
-        priority:45,
+        priority:35,
 
         reason:"fishing_style",
 
@@ -2050,13 +2073,22 @@ for(const candidate of candidates){
 
 }
 
+console.log(
+    "候補一覧",
+    candidates.map(c => ({
+        reason: c.reason,
+        priority: c.priority,
+        message: c.message
+    }))
+);
+
     const best =
     this.selectBestCandidate(
         candidates,
         situation
     );
 
-    let speakDesire =
+    speakDesire =
     this.getSpeakDesire();
 
 // =========================
@@ -2064,9 +2096,26 @@ for(const candidate of candidates){
 // =========================
 
 console.log(
-    "desireToTalk:", desireToTalk,
-    "speakDesire:", speakDesire,
-    "reason:", best?.reason
+    "desireToTalk:",
+    desireToTalk,
+
+    "speakDesire:",
+    speakDesire,
+
+    "reason:",
+    best?.reason,
+
+    "候補数:",
+    candidates.length,
+
+    "Focus:",
+    this.focus.topic,
+
+    "thought:",
+    this.thought.level,
+
+    "fatigue:",
+    this.speechControl.fatigue
 );
 
 // =========================
@@ -2100,10 +2149,22 @@ const selected = best;
     if(selected){
 
         if(
-            speakDesire < 30
+            speakDesire < 20
         ){
+
+console.log(
+    "think終了",
+    result
+);
+
             return result;
         }
+
+console.log(
+    "selected!",
+    selected.reason,
+    speakDesire
+);
 
         result = {
 
@@ -2130,7 +2191,8 @@ const selected = best;
 
 
 // =========================
-// 話す気分ではない
+// 話す気分による最終制御
+// Ver2.50
 // =========================
 
 if(
@@ -2138,10 +2200,49 @@ if(
     desireToTalk < 30
 ){
 
-    result.speak = false;
+    const strongReasons = [
+
+        "record_break",
+        "after_wait",
+        "long_silence",
+        "streak",
+
+        "experience_recall",
+        "recall_memory"
+
+    ];
+
+
+    const isStrongReason =
+        strongReasons.includes(
+            result.reason
+        );
+
+
+    const priority =
+        result.reason &&
+        candidates.find(
+            c =>
+            c.reason === result.reason
+        )?.priority || 0;
+
+
+
+    if(
+
+        !isStrongReason &&
+
+        priority < 65 &&
+
+        speakDesire < 60
+
+    ){
+
+        result.speak = false;
+
+    }
 
 }
-
 
 // =========================
 // 発話した内容を記録
@@ -3196,29 +3297,6 @@ getDisplayWidth(text){
 
     for(const ch of text){
 
-        // 半角
-        if(ch.charCodeAt(0) <= 0xFF){
-            width += 1;
-        }
-        // 全角
-        else{
-            width += 2;
-        }
-
-    }
-
-    return width;
-
-}
-
-getDisplayWidth(text){
-
-    if(!text) return 0;
-
-    let width = 0;
-
-    for(const ch of text){
-
         width += (ch.charCodeAt(0) <= 0xFF) ? 1 : 2;
 
     }
@@ -3784,7 +3862,7 @@ for(const candidate of available){
 
 if(available.length === 0){
 
-    return null;
+    return candidates[0] || null;
 
 }
 
@@ -3792,6 +3870,13 @@ const selected =
     this.weightedRandom(
         available
     );
+
+
+console.log(
+    "選択候補:",
+    selected
+);
+
 
 return this.finalThinking(
     selected
@@ -3850,12 +3935,12 @@ finalThinking(candidate){
             )
         );
 
-    if(
-        Math.random() * 100 >
-        probability
-    ){
-        return null;
-    }
+if(
+    Math.random() * 100 >
+    probability + 15
+){
+    return null;
+}
 
 // 同じFocusの話を連続で避ける
 if(
@@ -4209,14 +4294,43 @@ loadConversationMemory(){
     try{
 
 
-        this.conversationMemory =
-            {
+const oldConversation =
+    JSON.parse(saved);
 
-            ...this.conversationMemory,
 
-            ...JSON.parse(saved)
+this.conversationMemory =
+{
 
-            };
+    ...this.conversationMemory,
+
+    ...oldConversation,
+
+
+    interest:{
+
+        ...this.conversationMemory.interest,
+
+        ...(oldConversation.interest || {})
+
+    },
+
+    reasons:{
+
+        ...this.conversationMemory.reasons,
+
+        ...(oldConversation.reasons || {})
+
+    },
+
+    topics:{
+
+        ...this.conversationMemory.topics,
+
+        ...(oldConversation.topics || {})
+
+    }
+
+};
 
 
         console.log(
@@ -4252,20 +4366,40 @@ loadPastTrips(){
         );
 
 
-    if(saved){
+if(saved){
+
+try{
+
+    const data =
+        JSON.parse(saved);
 
 
-        this.pastTrips =
-            JSON.parse(saved);
+    if(Array.isArray(data)){
 
-
-        console.log(
-            "過去釣行を復元しました",
-            this.pastTrips
-        );
-
+        this.pastTrips = data;
 
     }
+
+
+    console.log(
+        "過去釣行を復元しました",
+        this.pastTrips
+    );
+
+
+}
+catch(e){
+
+    console.warn(
+        "過去釣行データ破損",
+        e
+    );
+
+    this.pastTrips = [];
+
+}
+
+}
 
 
 }
@@ -4916,27 +5050,26 @@ rememberSpeak(
     }
 
 
-    this.speakHistory.push({
+this.speakHistory.push({
 
-        message:message,
+    message:message,
 
-        reason:reason,
+    reason:reason,
 
-        time:Date.now()
+    time:Date.now()
 
-    });
+});
 
 
+// 最大20件保持
 
-    // 古いものは削除
+if(
+    this.speakHistory.length > 20
+){
 
-    if(
-        this.speakHistory.length > 20
-    ){
+    this.speakHistory.shift();
 
-        this.speakHistory.shift();
-
-    }
+}
 
 
 }
@@ -5310,25 +5443,56 @@ startThinking(){
     const loop = ()=>{
 
 
-try{
+        // =========================
+        // カウンター画面確認
+        // =========================
 
-    const thought =
-        this.think();
+        const counterScreen =
+            document.getElementById(
+                "soloCounterScreen"
+            );
 
 
-    this.speak(
-        thought
-    );
+        if(
+            !counterScreen ||
+            !counterScreen.classList.contains("active")
+        ){
 
-}
-catch(e){
+            setTimeout(
+                loop,
+                this.getNextThinkInterval()
+            );
 
-    console.error(
-        "PartnerMind思考エラー",
-        e
-    );
+            return;
 
-}
+        }
+
+
+
+        try{
+
+
+            const thought =
+                this.think();
+
+
+
+            this.speak(
+                thought
+            );
+
+
+        }
+        catch(e){
+
+            console.error(
+                "PartnerMind思考エラー",
+                e
+            );
+
+        }
+
+
 
         setTimeout(
             loop,
@@ -5339,10 +5503,11 @@ catch(e){
     };
 
 
-setTimeout(
-    loop,
-    5000
-);
+
+    setTimeout(
+        loop,
+        10000 + Math.random()*10000
+    );
 
 
 }
@@ -5350,10 +5515,25 @@ setTimeout(
 
 speak(result){
 
-    if(!result || !result.speak){
-    return;
-}
+    if(!result){
 
+        console.log("speak() : result=null");
+
+        return;
+
+    }
+
+    if(!result.speak){
+
+        console.log(
+            "speak() : speak=false",
+            result.reason,
+            result.message
+        );
+
+        return;
+
+    }
 
     console.log(
         "PartnerMind 発言:",
@@ -5671,11 +5851,12 @@ window.addEventListener("load", () => {
             ? soloCounter.count
             : 0;
 
-    window.partnerMind =
-        new PartnerMind(initialCount);
+window.partnerMind =
+    new PartnerMind(initialCount);
 
-    window.partnerMind.startThinking();
+console.log(
+    "PartnerMind 待機状態"
+);
 
-    console.log("PartnerMind 起動完了");
 });
 

@@ -2270,7 +2270,10 @@ gap:18px;
 /* ---------------- 声かけ表示用プレースホルダー ---------------- */
 .info-placeholder {
   width: 100%;
-  height: 28px;                 /* 元ニュースバーと同じ高さ */
+  height: 28px;
+
+  overflow:hidden;
+
   background-color: #ffffff;
   border-radius: 8px;
   border: 1px solid #dcdcdc;
@@ -2290,17 +2293,55 @@ gap:18px;
 
 /* 声かけ表示アニメーション */
 .info-placeholder-text {
-  font-size: 14px;
-  color: #000;
-  font-weight: 500;
-  user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out; /* 通常人格 */
+  font-size:14px;
+  color:#000;
+  font-weight:500;
+  user-select:none;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  display:block;
+
+  width:100%;
+
+  opacity:0;
+
+  transition:opacity 0.5s ease-in-out;
+
 }
+
+
+/* 長文スクロール用 */
+.info-placeholder-text.scroll-text {
+
+  animation:
+    infoScroll 6s linear forwards;
+
+}
+
+
+
+@keyframes infoScroll {
+
+  0% {
+    transform: translateX(0);
+  }
+
+
+  35% {
+    transform: translateX(0);
+  }
+
+
+  100% {
+    transform: translateX(-40px);
+  }
+
+}
+
 
 /* 表示状態 */
 .info-placeholder-text.show {
@@ -5613,7 +5654,7 @@ setTimeout(() => {
   // 初期画面（エントリー画面）→ ひとりカウンター画面
   document.getElementById('soloBtn')?.addEventListener('click', () => {
   enterSoloCounterWithConfirm(); // ここでAC確認＋画面切替をまとめて呼ぶ
-  restoreSoloNameMsg();          // ここでニックネーム＆つぶやき復元
+  restoreSoloNameMsg();          
   });
 
   // 初期画面（エントリー画面）→ わいわいテント登録画面
@@ -7629,7 +7670,7 @@ let lastCountTime = Date.now();
 /*
     メッセージ表示本体
 */
-function showPartnerMessage(msg, duration = 3000){
+function showPartnerMessage(msg, duration = 12000){
 
     const bar =
         document.querySelector(
@@ -7647,10 +7688,25 @@ function showPartnerMessage(msg, duration = 3000){
     }
 
 
+    // =========================
+    // スクロール状態リセット
+    // =========================
+
+    bar.classList.remove(
+        "scroll-text"
+    );
+
+    bar.style.transform =
+        "translateX(0)";
+
+
+
     // フェード再表示
+
     bar.classList.remove("show");
 
     void bar.offsetWidth;
+
 
 
     bar.textContent = msg;
@@ -7660,6 +7716,84 @@ function showPartnerMessage(msg, duration = 3000){
 
 
 
+    // =========================
+    // 長文チェック
+    // 3秒後スクロール開始
+    // =========================
+
+setTimeout(()=>{
+
+
+    console.log(
+        "文字幅確認",
+        "scrollWidth:",
+        bar.scrollWidth,
+        "clientWidth:",
+        bar.clientWidth,
+        "text:",
+        bar.textContent
+    );
+
+
+     const overflow =
+        bar.scrollWidth -
+        bar.clientWidth;
+
+
+    console.log(
+        "文字超過量:",
+        overflow
+    );
+
+
+        // 5px以上はみ出した場合だけスクロール
+    if(
+        overflow > 5
+    ){
+
+        console.log(
+            "スクロール開始"
+        );
+
+
+        bar.classList.add(
+            "scroll-text"
+        );
+
+
+        // =========================
+        // 長文の場合は表示時間延長
+        // =========================
+
+        if(infoTimeout){
+
+            clearTimeout(infoTimeout);
+
+        }
+
+
+        infoTimeout =
+            setTimeout(()=>{
+
+                bar.classList.remove(
+                    "show"
+                );
+
+
+                bar.classList.remove(
+                    "scroll-text"
+                );
+
+
+            },14000);
+
+
+    }
+
+
+},3000);
+
+
     if(duration > 0){
 
         infoTimeout =
@@ -7667,13 +7801,17 @@ function showPartnerMessage(msg, duration = 3000){
 
                 bar.classList.remove("show");
 
+
+                bar.classList.remove(
+                    "scroll-text"
+                );
+
+
             }, duration);
 
     }
 
 }
-
-
 
 
 /*
@@ -7793,6 +7931,43 @@ function canAllClearSolo() {
   return soloLeftCounter.count > 0 || soloRightCounter.count > 0;
 }
 
+function startPartnerMindThinking(){
+
+    if(!window.partnerMind){
+
+        console.log(
+            "PartnerMind 未起動"
+        );
+
+        return;
+
+    }
+
+
+    // すでに動作中なら何もしない
+    if(
+        window.partnerMind.thinkingState &&
+        window.partnerMind.thinkingState.running
+    ){
+
+        console.log(
+            "PartnerMind 思考ループは起動済み"
+        );
+
+        return;
+
+    }
+
+
+    window.partnerMind.startThinking();
+
+
+    console.log(
+        "PartnerMind 思考開始"
+    );
+
+}
+
 // カウンター画面に入る時の確認付き処理（他コードに影響なし）
 function enterSoloCounterWithConfirm() {
   // まず今日のデータをロードしてカウンターを復元
@@ -7807,27 +7982,43 @@ function enterSoloCounterWithConfirm() {
   soloRightCountElem.textContent = totalRight;
   soloCount.textContent          = soloCounter.count;
 
-  // AC判定
-  if (!canAllClearSolo()) {
+// AC判定
+if (!canAllClearSolo()) {
+
     showScreen("soloCounterScreen");
+
+    startPartnerMindThinking();
+
     return;
-  }
+}
 
-  // カスタムモーダル表示
-  openAcConfirmModal();
+// カスタムモーダル表示
+openAcConfirmModal();
 
-  // OKボタン
-  acConfirmOk.onclick = () => {
+// OKボタン
+acConfirmOk.onclick = () => {
+
     confirmAllClearSolo();
-    closeAcConfirmModal();
-    showScreen("soloCounterScreen");
-  };
 
-  // キャンセルボタン
-  acConfirmCancel.onclick = () => {
     closeAcConfirmModal();
+
     showScreen("soloCounterScreen");
-  };
+
+    startPartnerMindThinking();
+
+};
+
+// キャンセルボタン
+acConfirmCancel.onclick = () => {
+
+    closeAcConfirmModal();
+
+    showScreen("soloCounterScreen");
+
+    startPartnerMindThinking();
+
+};
+
 }
 
 // 完全オールクリア処理（他コードに依存せず単独動作可能）
@@ -8182,7 +8373,7 @@ function setupSoloSendButton() {
     console.log("ニックネーム保存:", record);
 
     // ★ 送信完了表示
-    showPartnerMessage("ひとりカウンター情報を送信しました", 3000);
+    showPartnerMessage("ひとりカウンター情報を送信しました", 7000);
 
   };
 }
