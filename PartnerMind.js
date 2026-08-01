@@ -391,10 +391,19 @@ this.lastMessageTime = 0;
 
 
 // =========================
+// 即時思考管理
+// =========================
+
+// 同じ話題で何度も即時思考しない
+this.lastImmediateTopic = "";
+
+
+// =========================
 // 発言管理
 // =========================
 
 this.lastReason = null;
+
 
 
 // =========================
@@ -683,8 +692,63 @@ if(
 
 this.analyzeFishingStyle();
 
+// =========================
+// 即時思考チェック
+// =========================
+
+this.immediateThink();
+
+
 }
 
+
+}
+
+immediateThink(){
+
+    console.log(
+        "即時思考チェック",
+        this.focus.topic,
+        "thinking:",
+        this.isThinking
+    );
+
+
+    if(this.isThinking){
+
+        console.log(
+            "即時思考キャンセル：思考中"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        Date.now() - this.lastMessageTime < 5000
+    ){
+
+        return;
+
+    }
+
+
+
+    if(
+        this.focus.topic === "record_break" ||
+        this.focus.topic === "streak"
+    ){
+
+        console.log(
+            "即時思考開始:",
+            this.focus.topic
+        );
+
+
+        this.think();
+
+    }
 
 }
 
@@ -797,20 +861,23 @@ if(
     }
 
     // 変更されたら保存
-    if(topic !== this.focus.topic){
+if(topic !== this.focus.topic){
 
-        this.focus.topic = topic;
+    this.focus.topic = topic;
 
-        this.focus.since = Date.now();
+    this.focus.since = Date.now();
 
-        this.focus.strength = strength;
+    this.focus.strength = strength;
 
-        console.log(
-            "Focus変更:",
-            topic
-        );
+    // 即時思考リセット
+    this.lastImmediateTopic = "";
 
-    }
+    console.log(
+        "Focus変更:",
+        topic
+    );
+
+}
 
 }
 
@@ -2309,6 +2376,8 @@ streak:[
 
     "このままいけそう",
 
+    "この流れ、まだ続きそうですね",
+
     "今日は良い流れを感じますね"
 
 ],
@@ -2320,7 +2389,9 @@ streak:[
 style_active:[
 
     "流れを掴むのが上手ですね",
+
     "良いタイミングをしっかり拾えていますね",
+
     "チャンスへの反応が早いですね"
 
 ],
@@ -2329,7 +2400,9 @@ style_active:[
 style_patient:[
 
     "待つ時間も大切にできていますね",
+
     "焦らず続けるところ、素敵な釣りですね",
+
     "粘った一匹の価値を分かっていますね"
 
 ],
@@ -2338,7 +2411,9 @@ style_patient:[
 style_balanced:[
 
     "状況を見ながら変えられるのが強みですね",
+
     "流れにも静かな時間にも対応できていますね",
+
     "安定した釣り運びですね"
 
 ],
@@ -2422,19 +2497,17 @@ memory_record:[
     // 感情：テンション高い
     // =========================
 
-    excitement_high:[
+excitement_high:[
 
-        "この流れ、まだ続きそうですね",
+    "私まで嬉しくなってきました",
 
-        "魚との息が合っていますね",
+    "なんだかワクワクしてきますね",
 
-        "今日は楽しませてくれますね",
+    "今日は見ていて楽しいです",
 
-        "私も一緒にワクワクしています"
+    "この時間が心地いいですね"
 
-    ],
-
-
+],
 
     // =========================
     // 感情：退屈
