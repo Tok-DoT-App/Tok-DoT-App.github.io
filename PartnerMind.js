@@ -2856,15 +2856,16 @@ if(
         // Lv3
         case 3:
 
-    if(
-        traits.warmth >= 60 &&
-        !message.includes("一緒に")
-    ){
+if(
+    traits.warmth >= 60 &&
+    !message.includes("一緒に") &&
+    Math.random() < 0.35
+){
 
-        message +=
-            " 一緒に頑張りましょう";
+    message +=
+        " 一緒に頑張ろうね";
 
-    }
+}
 
     return message;
 

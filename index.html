@@ -2301,44 +2301,15 @@ gap:18px;
 
   white-space:nowrap;
 
-  overflow:hidden;
-
-  display:block;
-
-  width:100%;
+  display:inline-block;
 
   opacity:0;
 
-  transition:opacity 0.5s ease-in-out;
+  transition:
+      opacity .5s ease-in-out,
+      transform 8s linear;
 
-}
-
-
-/* 長文スクロール用 */
-.info-placeholder-text.scroll-text {
-
-  animation:
-    infoScroll 6s linear forwards;
-
-}
-
-
-
-@keyframes infoScroll {
-
-  0% {
-    transform: translateX(0);
-  }
-
-
-  35% {
-    transform: translateX(0);
-  }
-
-
-  100% {
-    transform: translateX(-40px);
-  }
+  transform:translateX(0);
 
 }
 
@@ -7692,12 +7663,11 @@ function showPartnerMessage(msg, duration = 12000){
     // スクロール状態リセット
     // =========================
 
-    bar.classList.remove(
-        "scroll-text"
-    );
+bar.style.transition =
+    "opacity .5s ease-in-out";
 
-    bar.style.transform =
-        "translateX(0)";
+bar.style.transform =
+    "translateX(0)";
 
 
 
@@ -7716,80 +7686,46 @@ function showPartnerMessage(msg, duration = 12000){
 
 
 
-    // =========================
-    // 長文チェック
-    // 3秒後スクロール開始
-    // =========================
+// =========================
+// 長文チェック
+// 3秒後スクロール開始
+// =========================
 
 setTimeout(()=>{
 
+    // 22文字以上ならスクロール
+    if(msg.length >= 22){
 
-    console.log(
-        "文字幅確認",
-        "scrollWidth:",
-        bar.scrollWidth,
-        "clientWidth:",
-        bar.clientWidth,
-        "text:",
-        bar.textContent
-    );
+        console.log("長文スクロール開始");
 
+        // 文字数に応じて移動距離
+        const move =
+            (msg.length - 21) * 10;
 
-     const overflow =
-        bar.scrollWidth -
-        bar.clientWidth;
+        bar.style.transition =
+            "transform 8s linear";
 
+        bar.style.transform =
+            `translateX(-${move}px)`;
 
-    console.log(
-        "文字超過量:",
-        overflow
-    );
-
-
-        // 5px以上はみ出した場合だけスクロール
-    if(
-        overflow > 5
-    ){
-
-        console.log(
-            "スクロール開始"
-        );
-
-
-        bar.classList.add(
-            "scroll-text"
-        );
-
-
-        // =========================
-        // 長文の場合は表示時間延長
-        // =========================
-
+        // 長文だけ表示時間延長
         if(infoTimeout){
 
             clearTimeout(infoTimeout);
 
         }
 
-
         infoTimeout =
             setTimeout(()=>{
 
-                bar.classList.remove(
-                    "show"
-                );
+                bar.classList.remove("show");
 
+                bar.style.transform =
+                    "translateX(0)";
 
-                bar.classList.remove(
-                    "scroll-text"
-                );
-
-
-            },14000);
-
+            },12000);
 
     }
-
 
 },3000);
 
