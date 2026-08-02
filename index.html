@@ -8015,19 +8015,11 @@ function updateInfoBar(count){
 */
 function initPartnerMessage(){
 
-    if(
-        window.partnerMind &&
-        typeof partnerMind.start === "function"
-    ){
-
-        partnerMind.start();
-
-    }
+    console.log(
+        "初期メッセージはPartnerMind側で管理"
+    );
 
 }
-
-
-
 
 /*
     再スタート互換
@@ -8067,17 +8059,7 @@ function resetPartnerState(){
 
 
 
-/*
-    起動
-*/
-document.addEventListener(
-    "DOMContentLoaded",
-    ()=>{
 
-        initPartnerMessage();
-
-    }
-);
 
 
 /* ----------------------------------
@@ -8105,7 +8087,34 @@ function startPartnerMindThinking(){
     }
 
 
-    // すでに動作中なら何もしない
+    // =========================
+    // 初回開始メッセージ
+    // =========================
+
+    if(
+        window.partnerMind.totalCount === 0 &&
+        !window.partnerMind.startMessageShown
+    ){
+
+        window.partnerMind.startMessageShown = true;
+
+
+        const result =
+            window.partnerMind.startMessage();
+
+
+        if(result){
+
+            window.partnerMind.speak(
+                result
+            );
+
+        }
+
+    }
+
+
+
     if(
         window.partnerMind.thinkingState &&
         window.partnerMind.thinkingState.running
@@ -8120,6 +8129,7 @@ function startPartnerMindThinking(){
     }
 
 
+
     window.partnerMind.startThinking();
 
 
@@ -8128,6 +8138,7 @@ function startPartnerMindThinking(){
     );
 
 }
+
 
 // カウンター画面に入る時の確認付き処理（他コードに影響なし）
 function enterSoloCounterWithConfirm() {
@@ -8305,6 +8316,11 @@ if(window.partnerMind){
     partnerMind.totalCount = 0;
 
 
+// 初回開始メッセージ状態リセット
+
+partnerMind.startMessageShown = false;
+
+
     partnerMind.focus = {
 
         topic:null,
@@ -8367,10 +8383,6 @@ if(window.partnerMind){
 
 }
 
-// 最後に再スタートメッセージ表示
-if (typeof initRestartMessage === "function") {
-  initRestartMessage();
-}
 
 }
 

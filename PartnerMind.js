@@ -704,20 +704,32 @@ this.immediateThink();
 
 }
 
+// =========================
+// 即時思考
+// Ver2.51
+// 釣れた瞬間の反応専用
+// =========================
+
 immediateThink(){
 
+    const now = Date.now();
+
+
     console.log(
-        "即時思考チェック",
-        this.focus.topic,
-        "thinking:",
-        this.isThinking
+        "即時思考チェック"
     );
 
 
-    if(this.isThinking){
+    // =========================
+    // 連続発言防止
+    // =========================
+
+    if(
+        now - this.lastMessageTime < 5000
+    ){
 
         console.log(
-            "即時思考キャンセル：思考中"
+            "即時思考キャンセル：発言直後"
         );
 
         return;
@@ -725,9 +737,87 @@ immediateThink(){
     }
 
 
-    if(
-        Date.now() - this.lastMessageTime < 5000
-    ){
+
+    // =========================
+    // 重要イベント判定
+    // =========================
+
+
+    let result = null;
+
+
+
+    // =========================
+    // 記録更新
+    // =========================
+
+    const record =
+        this.checkRecordBreak();
+
+
+
+    if(record){
+
+        result = {
+
+            speak:true,
+
+            reason:"record_break",
+
+            message:
+                this.getMessage(
+                    "record_break"
+                )
+
+        };
+
+    }
+
+
+    // =========================
+    // 爆釣反応
+    // =========================
+
+    else {
+
+
+        const situation =
+            this.analyze();
+
+
+
+        if(
+            situation.streak
+        ){
+
+            result = {
+
+                speak:true,
+
+                reason:"streak",
+
+                message:
+                    this.getMessage(
+                        "streak"
+                    )
+
+            };
+
+        }
+
+    }
+
+
+
+    // =========================
+    // 発言なし
+    // =========================
+
+    if(!result){
+
+        console.log(
+            "即時反応なし"
+        );
 
         return;
 
@@ -735,22 +825,41 @@ immediateThink(){
 
 
 
-    if(
-        this.focus.topic === "record_break" ||
-        this.focus.topic === "streak"
-    ){
+    // =========================
+    // 口調補正
+    // =========================
 
-        console.log(
-            "即時思考開始:",
-            this.focus.topic
+    result.message =
+        this.applyPersonalityLevel(
+
+            this.applyCloseness(
+
+                result.message
+
+            )
+
         );
 
 
-        this.think();
 
-    }
+    console.log(
+        "即時発言:",
+        result
+    );
+
+
+
+    // =========================
+    // 発言
+    // =========================
+
+    this.speak(
+        result
+    );
+
 
 }
+
 
 // =========================
 // 話したい気持ち
@@ -2821,6 +2930,7 @@ randomChoice(list){
 
 // =========================
 // 親密度による口調補正
+// Ver2.52 修正版
 // =========================
 
 applyCloseness(message){
@@ -2830,8 +2940,17 @@ applyCloseness(message){
         this.personalityMemory.closeness;
 
 
+    if(!message){
 
-    // 親密度が低い
+        return message;
+
+    }
+
+
+
+    // 親密度60未満
+    // → 補正なし
+
     if(closeness < 60){
 
         return message;
@@ -2840,25 +2959,59 @@ applyCloseness(message){
 
 
 
-    // 親密度が高い
+    // =========================
+    // 親密度80以上
+    // 自然な相棒感追加
+    // =========================
+
     if(closeness >= 80){
 
 
-        message =
-            message
-            .replace(
-                /ですね/g,
-                "ですね。"
-            );
-
-
-        // すでに追加表現がある場合は重ねない
-
+        // すでに相棒表現がある場合
         if(
-            !message.includes("一緒に")
+            message.includes("一緒に") ||
+            message.includes("私") ||
+            message.includes("見ています") ||
+            message.includes("待っています")
         ){
 
-            message += " 一緒に見ていますね";
+            return message;
+
+        }
+
+
+
+        const additions = [
+
+            "一緒に見守っていますね",
+
+            "私も楽しみにしていますね",
+
+            "そばで応援していますね",
+
+            "一緒に感じていますね"
+
+        ];
+
+
+
+        // 25%程度で追加
+        // 毎回付けない
+
+        if(
+            Math.random() < 0.35
+        ){
+
+            message +=
+                " "
+                +
+                additions[
+                    Math.floor(
+                        Math.random()
+                        *
+                        additions.length
+                    )
+                ];
 
         }
 
@@ -2944,16 +3097,42 @@ if(
 
 
         // Lv4
-        case 4:
+case 4:
 
-            if(!message.includes("きっと")){
 
-                message =
-                    "きっと" + message;
+    const futureWords = [
 
-            }
+        "楽しみ",
+        "思い出",
+        "来ます",
+        "なる",
+        "なりそう",
+        "予感",
+        "期待"
 
-            return message;
+    ];
+
+
+    const canAdd =
+        futureWords.some(
+            word =>
+            message.includes(word)
+        );
+
+
+    if(
+        canAdd &&
+        !message.includes("きっと")
+    ){
+
+        message =
+            "きっと" + message;
+
+    }
+
+
+    return message;
+
 
         // Lv5
         case 5:
@@ -4159,6 +4338,8 @@ getReasonTopic(reason){
         record_break:"memory",
 
         long_silence:"waiting",
+
+        start:"emotion",
 
         emotion:"emotion",
 
@@ -5586,6 +5767,65 @@ startThinking(){
 
 }
 
+// =========================
+// 釣行開始メッセージ
+// Ver2.52
+// =========================
+
+startMessage(){
+
+
+    const messages = [
+
+        "今日も一緒に楽しみましょうね",
+
+        "今日はどんな一日になるか楽しみですね",
+
+        "準備できました。ゆっくり楽しんでいきましょう",
+
+        "今日の一匹、一緒に待っていますね",
+
+        "新しい思い出を作っていきましょう"
+
+    ];
+
+
+    const message =
+        messages[
+            Math.floor(
+                Math.random()
+                *
+                messages.length
+            )
+        ];
+
+
+
+    const result = {
+
+        speak:true,
+
+        reason:"start",
+
+        message:
+
+            this.applyCloseness(
+                message
+            )
+
+    };
+
+
+    this.rememberSpeak(
+        result.message,
+        result.reason
+    );
+
+
+    return result;
+
+}
+
 
 speak(result){
 
@@ -5630,14 +5870,22 @@ this.speechMemory.history.push({
 
 // =========================
 // 人格経験を蓄積
+// Ver2.52
 // =========================
 
-this.personalityMemory.totalTalk++;
+// 開始メッセージは経験値対象外
 
-this.personalityMemory.experience++;
+if(
+    result.reason !== "start"
+){
 
-this.updatePersonality();
+    this.personalityMemory.totalTalk++;
 
+    this.personalityMemory.experience++;
+
+    this.updatePersonality();
+
+}
 
 // =========================
 // 会話経験を記録
@@ -5700,7 +5948,18 @@ if(
 
 // 発言による親密度上昇
 
-let closenessGain = 0.01;
+let closenessGain = 0;
+
+
+// 開始挨拶は親密度対象外
+
+if(
+    result.reason !== "start"
+){
+
+    closenessGain = 0.01;
+
+}
 
 
 // 思い出系は少し大きく成長
@@ -5920,17 +6179,21 @@ if(this.topicMemory.length > 5){
 
 window.addEventListener("load", () => {
 
-    const initialCount =
-        (typeof soloCounter !== "undefined")
-            ? soloCounter.count
-            : 0;
+
+const initialCount =
+    (typeof soloCounter !== "undefined")
+        ? soloCounter.count
+        : 0;
+
 
 window.partnerMind =
     new PartnerMind(initialCount);
+
+
 
 console.log(
     "PartnerMind 待機状態"
 );
 
-});
 
+});
