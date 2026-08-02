@@ -421,6 +421,12 @@ this.lastThought = {
 };
 
 // =========================
+// 経験想起クールタイム
+// =========================
+
+this.lastExperienceRecallTime = 0;
+
+// =========================
 // 思考リズム管理
 // Step 2.30-⑰
 // =========================
@@ -1424,6 +1430,10 @@ if(
 
     this.focus.topic = null;
 
+    this.thought.topic = null;
+
+    this.thought.level = 0;
+
 }
 
 // =========================
@@ -1605,7 +1615,15 @@ const experienceMessage =
 // 経験記憶から思い出す
 // =========================
 
-if(experienceMessage){
+if(
+
+    experienceMessage &&
+
+    !this.isRepeatedMessage(
+        experienceMessage
+    )
+
+){
 
     candidates.push({
 
@@ -2260,8 +2278,7 @@ console.log(
 
     const best =
     this.selectBestCandidate(
-        candidates,
-        situation
+        candidates
     );
 
     speakDesire =
@@ -2451,6 +2468,18 @@ getMessage(reason){
 // 私自身の感情
 // =========================
 
+happiness_high:[
+
+    "私も嬉しくなってきました",
+
+    "一緒に喜べるのが嬉しいですね",
+
+    "良い時間を過ごせていますね",
+
+    "この瞬間を一緒に見られて嬉しいです"
+
+],
+
 concern_high:[
 
     "少し静かな時間ですね",
@@ -2471,7 +2500,7 @@ trust_high:[
 
     "釣り方の特徴が少し分かってきました",
 
-    "一緒に積み重ねてきた感じがしますね"
+    "これまでの時間が少しずつ積み重なっていますね"
 
 ],
 
@@ -2480,8 +2509,6 @@ streak:[
     "連続で来てるね！",
 
     "今日は調子いいかも",
-
-    "すごい流れだね",
 
     "このままいけそう",
 
@@ -2535,7 +2562,7 @@ record_break:[
 
     "新しい思い出ができましたね",
 
-    "私の記憶が更新されました",
+    "新しい記録として覚えておきます",
 
     "特別な一日になりそうですね"
 
@@ -2587,7 +2614,7 @@ memory_compare:[
 
     "以前より釣りのリズムが自然になっていますね",
 
-    "一緒に積み重ねてきた感じがしますね"
+    "これまでの釣りの時間が少しずつ形になっていますね"
 
 ],
 
@@ -2644,7 +2671,7 @@ excitement_high:[
 
         "今日は良い流れが来ていますね",
 
-        "なんだか良い予感がします",
+        "今日は心地よい流れですね",
 
         "落ち着いた良い時間ですね",
 
@@ -2969,10 +2996,12 @@ applyCloseness(message){
 
         // すでに相棒表現がある場合
         if(
-            message.includes("一緒に") ||
-            message.includes("私") ||
-            message.includes("見ています") ||
-            message.includes("待っています")
+    message.includes("一緒に") ||
+    message.includes("私も") ||
+    message.includes("私の") ||
+    message.includes("見守") ||
+    message.includes("待っています") ||
+    message.includes("応援しています")
         ){
 
             return message;
@@ -2983,13 +3012,13 @@ applyCloseness(message){
 
         const additions = [
 
-            "一緒に見守っていますね",
+            "一緒に見守っています",
 
-            "私も楽しみにしていますね",
+            "私も楽しみにしています",
 
-            "そばで応援していますね",
+            "そばで応援しています",
 
-            "一緒に感じていますね"
+            "この時間を一緒に楽しんでいます"
 
         ];
 
@@ -3139,11 +3168,11 @@ case 4:
 
     if(
         traits.warmth >= 100 &&
-        !message.includes("私")
+        !message.includes("見守")
     ){
 
         message +=
-            " 私はずっと見守っています";
+            " これからもそばで見守っています";
 
     }
 
@@ -3327,10 +3356,11 @@ getFishingStyle(){
         this.personalityMemory;
 
     // テンポ型
-    if(
-        memory.fastCatchCount >
-        memory.patienceCount * 2
-    ){
+if(
+    memory.fastCatchCount >= 5 &&
+    memory.fastCatchCount >
+    memory.patienceCount * 2
+){
 
         memory.fishingStyle = "fast";
 
@@ -3989,8 +4019,7 @@ weightedRandom(candidates){
 
 
 selectBestCandidate(
-    candidates,
-    situation
+    candidates
 ){
 
     const available = [];
@@ -4235,7 +4264,8 @@ getMessageTopic(message){
             "ペース",
             "テンポ",
             "リズム",
-            "調子"
+            "調子",
+            "時間"
         ],
 
 
@@ -5179,7 +5209,7 @@ generateRecallThought(){
     // =========================
 
 const shuffled =
-    memories.sort(
+    [...memories].sort(
         () => Math.random() - 0.5
     );
 
@@ -5211,24 +5241,24 @@ return null;
 
 // =========================
 // 経験記憶から思い出す
+// Ver2.52 調整版
 // =========================
 
 generateExperienceRecall(){
 
-
     if(
-    !this.tripMemory ||
-    !this.tripMemory.events ||
-    this.tripMemory.events.length < 5
-){
+        !this.tripMemory ||
+        !this.tripMemory.events ||
+        this.tripMemory.events.length < 5
+    ){
 
-    return null;
+        return null;
 
-}
+    }
 
-const recent =
-    this.tripMemory.events.slice(-10);
 
+    const recent =
+        this.tripMemory.events.slice(-10);
 
 
     const first =
@@ -5241,62 +5271,138 @@ const recent =
         ];
 
 
-
     const diff =
         last.count -
         first.count;
 
 
 
+    let candidates = [];
+
+
     // =========================
-    // ペースアップ
+    // 過去に伸びた流れ
+    // 現在の好調とは断定しない
     // =========================
 
-    if(
-        diff >= 5
-    ){
+    if(diff >= 5){
 
-        return (
+        candidates = [
 
-            "途中から流れが変わってきましたね"
+            "途中で流れが変わった時間がありましたね",
 
-        );
+            "あの時間帯は少し動きがありましたね",
+
+            "途中から釣れ方が変わったのを覚えています",
+
+            "あの時は少しずつ数が伸びていきましたね",
+
+            "途中で雰囲気が変わった時間がありましたね"
+
+        ];
+
+    }
+
+
+    // =========================
+    // 静かな流れ
+    // =========================
+
+    else if(diff <= 0){
+
+        candidates = [
+
+            "こういう静かな時間も覚えています",
+
+            "待つ時間も釣りの一部ですね",
+
+            "こういう時間のあとに動き出す日もありましたね",
+
+            "静かな時間にも意味があるのかもしれませんね",
+
+            "焦らず待っていた時間もありましたね"
+
+        ];
+
+    }
+
+
+    if(candidates.length === 0){
+
+        return null;
 
     }
 
 
 
     // =========================
-    // 停滞
+    // 最近発言した内容を除外
     // =========================
 
-    if(
-        diff <= 0
-    ){
+    const recentSpeak =
+        this.speakHistory
+            .slice(-10)
+            .map(
+                h=>h.message
+            );
 
-        return (
 
-            "こういう静かな時間も覚えています"
-
+    const filtered =
+        candidates.filter(
+            m =>
+            !recentSpeak.includes(m)
         );
+
+
+    if(filtered.length === 0){
+
+        return null;
 
     }
 
 
 
-    return null;
-
+    return filtered[
+        Math.floor(
+            Math.random()
+            *
+            filtered.length
+        )
+    ];
 
 }
 
 // =========================
 // 発話履歴保存
+// Ver2.53 修正版
 // =========================
 
 rememberSpeak(
     message,
     reason
 ){
+
+    if(!message){
+
+        return;
+
+    }
+
+
+    const data = {
+
+        message:message,
+
+        reason:reason,
+
+        time:Date.now()
+
+    };
+
+
+    // =========================
+    // 内部発話履歴
+    // =========================
 
     if(!this.speakHistory){
 
@@ -5305,26 +5411,44 @@ rememberSpeak(
     }
 
 
-this.speakHistory.push({
-
-    message:message,
-
-    reason:reason,
-
-    time:Date.now()
-
-});
+    this.speakHistory.push(
+        data
+    );
 
 
-// 最大20件保持
+    if(
+        this.speakHistory.length > 20
+    ){
 
-if(
-    this.speakHistory.length > 20
-){
+        this.speakHistory.shift();
 
-    this.speakHistory.shift();
+    }
 
-}
+
+
+    // =========================
+    // 重複判定用履歴にも同期
+    // =========================
+
+    if(
+        this.speechMemory &&
+        this.speechMemory.history
+    ){
+
+        this.speechMemory.history.push(
+            data
+        );
+
+
+        if(
+            this.speechMemory.history.length > 20
+        ){
+
+            this.speechMemory.history.shift();
+
+        }
+
+    }
 
 
 }
@@ -5632,6 +5756,30 @@ createTripMemory(){
     this.tripMemory
 );
 
+// =========================
+// 重複釣行保存防止
+// =========================
+
+const lastTrip =
+    this.pastTrips[
+        this.pastTrips.length - 1
+    ];
+
+
+if(
+    lastTrip &&
+    lastTrip.date === this.tripMemory.date &&
+    lastTrip.endCount === this.tripMemory.endCount
+){
+
+    console.log(
+        "同じ釣行記録のため保存スキップ"
+    );
+
+    return this.tripMemory;
+
+}
+
 
 // =========================
 // 過去履歴へ保存
@@ -5727,14 +5875,17 @@ startThinking(){
         try{
 
 
-            const thought =
-                this.think();
+const thought =
+    this.think();
 
 
+if(thought){
 
-            this.speak(
-                thought
-            );
+    this.speak(
+        thought
+    );
+
+}
 
 
         }
@@ -5783,7 +5934,7 @@ startMessage(){
 
         "準備できました。ゆっくり楽しんでいきましょう",
 
-        "今日の一匹、一緒に待っていますね",
+        "今日の一匹との出会いを楽しみにしています",
 
         "新しい思い出を作っていきましょう"
 
@@ -6083,8 +6234,9 @@ if(
 
     this.personalityMemory.recordAnnounced = true;
 
-}
+    this.savePersonalityMemory();
 
+}
 
 // =========================
 // 話したテーマを記憶
