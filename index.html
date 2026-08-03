@@ -89,16 +89,17 @@ input, textarea {
 /* 各画面の下中央に戻るボタンを配置 */
 .screenBackBtn {
   position: fixed;
-  top: 450px;
+  top: 482px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
 
-  width: min(150px, 80vw);
-  padding: 10px 0;
+  width: min(120px, 80vw);
+  padding: 4px 0;
 
   background-color: #607d8b;
   color: #fff;
+  font-size:16px;
   border: none;
   border-radius: 999px;
   text-align: center;
@@ -3671,6 +3672,25 @@ iframe {
 
 }
 
+/* -------------------------- 誘いの名人CSS -------------------------- */
+
+#sasoiNoMeijinArea {
+  position:absolute;
+  top:320px;
+
+  left:50%;
+  transform:translateX(-50%);
+
+  width:390px;
+  height:120px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* -------------------------- 誘いの名人CSS -------------------------- */
+
 
 /* -------------------------- インフォメーションボタンCSS -------------------------- */
 
@@ -3911,6 +3931,12 @@ iframe {
       </div>
     </div>
   </div> <!-- /soloCounterWrapper -->
+
+  <!---------------------- 誘いの名人 ---------------------->
+  <div id="sasoiNoMeijinArea">
+
+  </div>
+  <!---------------------- /誘いの名人 ---------------------->
 
   <!-- 戻るボタンは wrapper の外 -->
   <button class="screenBackBtn" onclick="showScreen('entryScreen')">ホーム画面へ</button>
@@ -6220,7 +6246,7 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 
 // true  = 一定時間以内なら起動演出をスキップ
 // false = 毎回起動演出を表示
-const ENABLE_TITLE_SKIP = false;
+const ENABLE_TITLE_SKIP = true;
 
 // 起動演出をスキップする時間（分）
 const TITLE_SKIP_MINUTES = 1;
@@ -9881,7 +9907,11 @@ if ('serviceWorker' in navigator) {
 <!-- OFUSE ウィジェット（async でOK） -->
 <script async src="https://ofuse.me/assets/platform/widget.js" charset="utf-8"></script>
 
+<!-- メッセージAI -->
 <script src="PartnerMind.js"></script>
+
+<!-- 誘いの名人 -->
+<script src="SasoiNoMeijin.js"></script>
 
 </body>
 </html>
