@@ -7923,12 +7923,16 @@ setTimeout(()=>{
 
         console.log("長文スクロール開始");
 
-        // 文字数に応じて移動距離
-        const move =
-            (msg.length - 21) * 10;
+// 文字数に応じて移動距離
+// 少し長い文章でもしっかり動くよう最低35pxは移動
+const move =
+    Math.max(
+        35,
+        (msg.length - 21) * 10
+    );
 
         bar.style.transition =
-            "transform 8s linear";
+            "opacity .5s ease-in-out, transform 8s linear";
 
         bar.style.transform =
             `translateX(-${move}px)`;
@@ -7940,17 +7944,32 @@ setTimeout(()=>{
 
         }
 
-        infoTimeout =
-            setTimeout(()=>{
+infoTimeout =
+    setTimeout(()=>{
 
-                bar.classList.remove("show");
+        // 先にフェードアウト
+        bar.classList.remove("show");
 
-                bar.style.transform =
-                    "translateX(0)";
+        // フェード完了後に位置を戻す
+        setTimeout(()=>{
 
-            },12000);
+            bar.style.transition =
+                "none";
 
-    }
+            bar.style.transform =
+                "translateX(0)";
+
+            // 次回の表示用にtransitionを戻す
+            void bar.offsetWidth;
+
+            bar.style.transition =
+                "opacity .5s ease-in-out";
+
+        },500);
+
+    },12000);
+
+}
 
 },3000);
 

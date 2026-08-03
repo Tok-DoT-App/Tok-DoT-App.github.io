@@ -2138,16 +2138,28 @@ if(
 if(situation.streak){
 
 
-    candidates.push({
+    const streakMessage =
+        this.getMessage("streak");
 
-        priority:70,
 
-        reason:"streak",
+    if(
+        !this.isRepeatedMessage(
+            streakMessage
+        )
+    ){
 
-        message:
-            this.getMessage("streak")
+        candidates.push({
 
-    });
+            priority:70,
+
+            reason:"streak",
+
+            message:
+                streakMessage
+
+        });
+
+    }
 
 
 }
@@ -2470,13 +2482,13 @@ getMessage(reason){
 
 happiness_high:[
 
-    "私も嬉しくなってきました",
+"この瞬間を一緒に見られて嬉しいです",
 
-    "一緒に喜べるのが嬉しいですね",
+"今日はいろいろな変化があって楽しいですね",
 
-    "良い時間を過ごせていますね",
+"一匹一匹の出会いが印象に残りますね",
 
-    "この瞬間を一緒に見られて嬉しいです"
+"こういう時間って良いですね"
 
 ],
 
@@ -2484,13 +2496,13 @@ concern_high:[
 
     "少し静かな時間ですね",
 
-    "無理せずいきましょう",
+    "こういう時間も釣りの一部ですね",
 
-    "焦らなくても大丈夫です",
+    "焦らず流れを待ちましょう",
 
-    "待つ時間も大切ですね",
+    "次の動きをゆっくり見ていきましょう",
 
-    "少し休憩しながらでも大丈夫ですよ"
+    "静かな時間も楽しめていますね"
 
 ],
 
@@ -2506,15 +2518,21 @@ trust_high:[
 
 streak:[
 
-    "連続で来てるね！",
+    "連続で来ていますね",
 
-    "今日は調子いいかも",
+    "良い流れができていますね",
 
-    "このままいけそう",
+    "この流れ、心地いいですね",
 
-    "この流れ、まだ続きそうですね",
+    "良いペースが続いていますね",
 
-    "今日は良い流れを感じますね"
+    "良い流れが長く続いていますね",
+
+    "今日は本当に安定していますね",
+
+    "ここまで安定するのは珍しいですね",
+
+    "まだ良い流れが残っていますね"
 
 ],
 
@@ -2556,30 +2574,28 @@ style_balanced:[
 
 record_break:[
 
-    "前の記録を超えましたね",
+"前の記録を超えましたね",
 
-    "すごいです！",
+"新しい記録になりましたね",
 
-    "新しい思い出ができましたね",
+"また一つ大切な記録が増えましたね",
 
-    "新しい記録として覚えておきます",
-
-    "特別な一日になりそうですね"
+"今日は特別な一日になりましたね"
 
 ],
 
 
 long_silence:[
 
-    "少し静かになったね",
+    "少し静かな時間ですね",
 
-    "そろそろ来るかもしれないよ",
+    "こういう時間も釣りの一部ですね",
 
-    "待つ時間も釣りの楽しみだね",
+    "流れが変わるのを待つ時間ですね",
 
-    "焦らなくて大丈夫",
+    "次の一匹をゆっくり待ちましょう",
 
-    "次の一匹を待とう"
+    "まだこれから動くかもしれませんね"
 
 ],
 
@@ -2588,15 +2604,15 @@ after_wait:[
 
     "おっ、来ましたね！",
 
-    "おぉ！",
+    "おぉ！来ましたね",
 
     "やっと来ましたね。",
 
-    "この一匹は嬉しいですね。",
+    "この一匹、嬉しいですね。",
 
     "待った甲斐がありましたね。",
 
-    "この一匹は大きいですね",
+    "この一匹は特別ですね",
 
     "これは嬉しいですね"
 
@@ -2639,9 +2655,9 @@ excitement_high:[
 
     "なんだかワクワクしてきますね",
 
-    "今日は見ていて楽しいです",
+    "この流れ、見ていて楽しいです",
 
-    "この時間が心地いいですね"
+    "今日は良い展開ですね"
 
 ],
 
@@ -2675,21 +2691,21 @@ excitement_high:[
 
         "落ち着いた良い時間ですね",
 
-        "私も楽しく見守っています"
+        "ゆっくり楽しめていますね"
 
     ],
 
 today_good:[
 
-    "今日は良いペースですね。",
+    "今日は安定した一日になっていますね",
 
-    "今日は順調ですね。",
+    "ここまで良い流れで続いていますね",
 
-    "この調子でいきましょう。",
+    "今日は落ち着いて楽しめていますね",
 
-    "今日は良い流れですね。",
+    "良い時間を積み重ねていますね",
 
-    "ここまで気持ちよく釣れていますね。"
+    "今日は印象に残る釣りになっていますね"
 
 ],
 
@@ -2721,15 +2737,15 @@ mixed_good:[
 
 memory:[
 
-    "前にもこんな良い流れの日がありましたね",
+    "前にもこんな流れの日がありましたね",
 
-    "以前も似たようなペースの日がありました",
+    "以前も似たようなペースの日がありましたね",
 
-    "今日は前回を思い出します",
+    "今日は前回の釣りを少し思い出しますね",
 
     "こういう日は印象に残りますね",
 
-    "少し前の釣行を思い出しています"
+    "前にも似た時間がありましたね"
 
 ]
 
@@ -2886,15 +2902,16 @@ getEmotionMessage(){
 
     // =========================
     // テンションが高い
+    // 本当に盛り上がっている時だけ
     // =========================
 
-    if(this.state.excitement >= 50){
-
+    if(
+        this.state.excitement >= 75
+    ){
 
         return this.getMessage(
             "excitement_high"
         );
-
 
     }
 
@@ -2902,15 +2919,16 @@ getEmotionMessage(){
 
     // =========================
     // 退屈している
+    // 長い沈黙時のみ
     // =========================
 
-    if(this.state.boredom >= 40){
-
+    if(
+        this.state.boredom >= 50
+    ){
 
         return this.getMessage(
             "boredom_high"
         );
-
 
     }
 
@@ -2918,15 +2936,17 @@ getEmotionMessage(){
 
     // =========================
     // 機嫌が良い
+    // 穏やかな好調状態
     // =========================
 
-    if(this.state.mood >= 70){
-
+    if(
+        this.state.mood >= 80 &&
+        this.state.excitement < 60
+    ){
 
         return this.getMessage(
             "mood_high"
         );
-
 
     }
 
@@ -2984,6 +3004,20 @@ applyCloseness(message){
 
     }
 
+// =========================
+// 思い出系メッセージは補正しない
+// =========================
+
+if(
+    message.includes("前回") ||
+    message.includes("以前") ||
+    message.includes("覚") ||
+    message.includes("思い出")
+){
+
+    return message;
+
+}
 
 
     // =========================
@@ -3001,7 +3035,10 @@ applyCloseness(message){
     message.includes("私の") ||
     message.includes("見守") ||
     message.includes("待っています") ||
-    message.includes("応援しています")
+    message.includes("応援しています") ||
+    message.includes("来ました") ||
+    message.includes("おっ") ||
+    message.includes("おぉ")
         ){
 
             return message;
@@ -3010,18 +3047,15 @@ applyCloseness(message){
 
 
 
-        const additions = [
+const additions = [
 
-            "一緒に見守っています",
+"私も楽しみにしています",
 
-            "私も楽しみにしています",
+"一緒に楽しめていますね",
 
-            "そばで応援しています",
+"この時間を見守っています"
 
-            "この時間を一緒に楽しんでいます"
-
-        ];
-
+];
 
 
         // 25%程度で追加
@@ -3068,8 +3102,10 @@ applyPersonalityLevel(message){
 const level =
     this.personalityMemory.personalityLevel;
 
+
 // =========================
 // 観察力による補足
+// Ver2.54 調整
 // =========================
 
 if(
@@ -3080,9 +3116,32 @@ if(
 
 ){
 
+    const avoidTodayWords = [
+
+        "前回",
+        "以前",
+        "記録",
+        "思い出",
+        "覚え",
+        "過去"
+
+    ];
+
+
+    const isMemoryMessage =
+        avoidTodayWords.some(
+            word =>
+            message.includes(word)
+        );
+
+
     if(
 
-        !message.includes("今日は")
+        !isMemoryMessage &&
+
+        !message.includes("今日は") &&
+
+        Math.random() < 0.3
 
     ){
 
@@ -3095,21 +3154,21 @@ if(
 
     switch(level){
 
-        // Lv1
-        case 1:
+// Lv1
+case 1:
 
             return message;
 
-        // Lv2
-        case 2:
+// Lv2
+case 2:
 
             return message.replace(
                 "ですね",
                 "ですね。"
             );
 
-        // Lv3
-        case 3:
+// Lv3
+case 3:
 
 if(
     traits.warmth >= 60 &&
@@ -3118,14 +3177,14 @@ if(
 ){
 
     message +=
-        " 一緒に頑張ろうね";
+        " 一緒に楽しんでいきましょう";
 
 }
 
     return message;
 
 
-        // Lv4
+// Lv4
 case 4:
 
 
@@ -3151,11 +3210,11 @@ case 4:
 
     if(
         canAdd &&
-        !message.includes("きっと")
+        !message.includes("なんだか")
     ){
 
         message =
-            "きっと" + message;
+            "なんだか" + message;
 
     }
 
@@ -3163,12 +3222,18 @@ case 4:
     return message;
 
 
-        // Lv5
-        case 5:
+// Lv5
+case 5:
 
     if(
         traits.warmth >= 100 &&
-        !message.includes("見守")
+        !message.includes("見守") &&
+        (
+            message.includes("思い出") ||
+            message.includes("記録") ||
+            message.includes("特別")
+        ) &&
+        Math.random() < 0.25
     ){
 
         message +=
@@ -3710,10 +3775,10 @@ isRepeatedMessage(message){
 
 
     const history =
-        this.speechMemory.history;
+        this.speechMemory.history || [];
 
 
-    // 過去5回を見る
+    // 最近20回を見る
 
     const recent =
         history.slice(-20);
@@ -3723,11 +3788,42 @@ isRepeatedMessage(message){
     for(const item of recent){
 
 
-        if(item.message === message){
+        if(!item.message){
+
+            continue;
+
+        }
+
+
+
+        const oldMessage =
+            item.message;
+
+
+
+        // 完全一致
+
+        if(
+            oldMessage === message
+        ){
 
             return true;
 
         }
+
+
+
+        // 一方を含む場合も重複扱い
+
+        if(
+            oldMessage.includes(message) ||
+            message.includes(oldMessage)
+        ){
+
+            return true;
+
+        }
+
 
     }
 
@@ -3736,6 +3832,7 @@ isRepeatedMessage(message){
 
 
 }
+
 
 isRepeatedTopic(message){
 
@@ -5553,10 +5650,10 @@ getMemoryMessage(){
 
     // 今回が平均超え
 
-    if(
-        this.totalCount >
-        average * 1.3
-    ){
+if(
+    this.totalCount > average * 1.5 &&
+    this.totalCount > 100
+){
 
         return this.getMessage(
             "memory_compare"
@@ -5597,7 +5694,7 @@ getPastMemoryMessage(type){
 
             "最近の中でも良い展開ですね",
 
-            "私の記憶では、今日はかなり順調な方ですよ",
+            "これまでの釣りを見ても、今日は良い流れですね",
 
             "いつものペースより少し上を走っていますね",
 
