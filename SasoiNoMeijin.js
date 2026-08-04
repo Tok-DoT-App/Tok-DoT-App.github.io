@@ -229,7 +229,7 @@ style.textContent = `
 
   position:absolute;
 
-  left:310px;
+  left:0px;
 
   top:40px;
 
@@ -253,78 +253,34 @@ style.textContent = `
 
   position:absolute;
 
-  opacity:0;
+  opacity:1;
 
-  transform:translateX(0);
-
-}
-
-.sasoi-flow span:nth-child(1){
   left:0;
+
 }
 
+.sasoi-note-move{
 
-.sasoi-flow span:nth-child(2){
-  left:18px;
-}
-
-
-.sasoi-flow span:nth-child(3){
-  left:36px;
-}
-
-
-.sasoi-flow span:nth-child(4){
-  left:54px;
-}
-
-
-.sasoi-flow span:nth-child(5){
-  left:72px;
-}
-
-.sasoi-flow.show span{
-
-  animation:sasoiPop 0.4s forwards;
+  animation:sasoiNoteMove 2.5s linear forwards;
 
 }
 
 
-.sasoi-flow.show span:nth-child(1){
+@keyframes sasoiNoteMove{
 
-  animation-delay:0s;
+  from{
 
-}
+    left:310px;
 
+  }
 
-.sasoi-flow.show span:nth-child(2){
+  to{
 
-  animation-delay:0.15s;
+    left:-40px;
 
-}
-
-
-.sasoi-flow.show span:nth-child(3){
-
-  animation-delay:0.3s;
+  }
 
 }
-
-
-.sasoi-flow.show span:nth-child(4){
-
-  animation-delay:0.45s;
-
-}
-
-
-.sasoi-flow.show span:nth-child(5){
-
-  animation-delay:0.6s;
-
-}
-
-
 
 @keyframes sasoiPop{
 
@@ -342,30 +298,6 @@ style.textContent = `
     opacity:1;
 
     transform:scale(1);
-
-  }
-
-}
-
-.sasoi-flow.move{
-
-  animation:sasoiSlide 2.5s linear forwards;
-
-}
-
-
-@keyframes sasoiSlide{
-
-  from{
-
-    left:310px;
-
-  }
-
-
-  to{
-
-    left:-120px;
 
   }
 
@@ -536,6 +468,112 @@ let sasoiTimer = null;
 
 let sasoiPlaying = false;
 
+// -------------------------------
+// プレイヤー状態
+// -------------------------------
+
+let sasoiAction = "release";
+
+// -------------------------------
+// 譜面再生管理
+// -------------------------------
+
+let sasoiIndex = 0;
+
+let sasoiPlayTimer = null;
+
+let sasoiStartTime = null;
+
+// -------------------------------
+// 現在判定対象の音符
+// -------------------------------
+
+let currentSasoiNote = null;
+
+// -------------------------------
+// 譜面データ
+// -------------------------------
+
+const sasoiScore = [
+
+  // カウントダウン
+  {
+    id:1,
+    time:0,
+    type:"count",
+    value:3
+  },
+
+  {
+    id:2,
+    time:1000,
+    type:"count",
+    value:2
+  },
+
+  {
+    id:3,
+    time:2000,
+    type:"count",
+    value:1
+  },
+
+
+  // 誘い開始
+
+  {
+    id:4,
+    time:3000,
+    type:"press"
+  },
+
+  {
+    id:5,
+    time:4000,
+    type:"press"
+  },
+
+  {
+    id:6,
+    time:5000,
+    type:"release"
+  },
+
+
+  {
+    id:7,
+    time:6000,
+    type:"press"
+  },
+
+  {
+    id:8,
+    time:7000,
+    type:"release"
+  },
+
+
+  {
+    id:9,
+    time:8000,
+    type:"press"
+  },
+
+  {
+    id:10,
+    time:9000,
+    type:"press"
+  },
+
+  {
+    id:11,
+    time:10000,
+    type:"release"
+  }
+
+];
+
+
 const area =
 document.getElementById(
 "sasoiNoMeijinArea"
@@ -614,12 +652,6 @@ area.innerHTML = `
 class="sasoi-flow"
 id="sasoiFlow">
 
-<span>◎</span>
-<span>●</span>
-<span>●</span>
-<span>●</span>
-<span>○</span>
-
 </div>
 
 <div class="sasoi-touch">
@@ -632,6 +664,149 @@ id="sasoiFlow">
 </div>
 
 `;
+
+
+// -------------------------------
+// 次の譜面表示
+// -------------------------------
+
+function playNextSasoiNote(){
+
+
+if(
+sasoiIndex >= sasoiScore.length
+){
+
+console.log("譜面終了");
+
+return;
+
+}
+
+
+const note =
+sasoiScore[sasoiIndex];
+
+
+
+// 現在の譜面を表示
+
+createSasoiNote(note);
+
+
+sasoiIndex++;
+
+
+// 次の音符までの間隔計算
+
+let nextDelay = 500;
+
+
+if(
+sasoiIndex < sasoiScore.length
+){
+
+nextDelay =
+sasoiScore[sasoiIndex].time
+-
+note.time;
+
+}
+
+
+sasoiPlayTimer =
+setTimeout(
+playNextSasoiNote,
+nextDelay
+);
+
+
+}
+
+
+// -------------------------------
+// 音符生成
+// -------------------------------
+
+function createSasoiNote(note){
+
+
+const flow =
+document.getElementById(
+"sasoiFlow"
+);
+
+
+if(!flow) return;
+
+
+
+const span =
+document.createElement("span");
+
+
+
+// 種類判定
+
+if(note.type==="count"){
+
+
+span.innerText =
+note.value;
+
+
+}
+
+
+else if(note.type==="press"){
+
+
+span.innerText =
+"●";
+
+
+}
+
+
+else if(note.type==="release"){
+
+
+span.innerText =
+"○";
+
+
+}
+
+
+
+// 初期位置
+
+span.style.left =
+"0px";
+
+
+// 移動開始
+
+span.classList.add(
+"sasoi-note-move"
+);
+
+
+
+flow.appendChild(span);
+
+
+// 画面外へ出たら削除
+
+setTimeout(()=>{
+
+  span.remove();
+
+},3000);
+
+
+}
+
 
 function checkSasoiHit(){
 
@@ -671,6 +846,14 @@ console.log(
 distance
 );
 
+if(distance < 20){
+
+ console.log(
+  "判定:",
+  currentSasoiNote.type
+ );
+
+}
 
 
 // 判定範囲
@@ -736,20 +919,34 @@ document
 sasoiPlaying = true;
 
 
+sasoiIndex = 0;
+
+
+if(sasoiPlayTimer){
+
+clearTimeout(
+sasoiPlayTimer
+);
+
+sasoiPlayTimer=null;
+
+}
+
+
 const flow =
 document.getElementById("sasoiFlow");
 
 
+flow.innerHTML="";
+
+
 flow.classList.remove("show");
-flow.classList.remove("move");
 
 
 // ポンポン表示＋同時移動
-
 setTimeout(()=>{
 
-  flow.classList.add("show");
-  flow.classList.add("move");
+  playNextSasoiNote();
 
 },300);
 
@@ -778,6 +975,13 @@ document
 
 stopSasoiCheck();
 
+if(sasoiPlayTimer){
+
+ clearTimeout(sasoiPlayTimer);
+
+ sasoiPlayTimer=null;
+
+}
 
 document
 .getElementById("sasoiGame")
