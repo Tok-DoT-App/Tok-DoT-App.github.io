@@ -16,27 +16,15 @@ const style = document.createElement("style");
 
 style.textContent = `
 
-#sasoiNoMeijinArea {
-
-  width:100%;
-  margin-top:8px;
-
-  display:flex;
-  justify-content:center;
-}
-
-
 .sasoi-panel {
 
   width:95%;
-  height:110px;
+  height:160px;
 
   border-radius:12px;
 
   box-shadow:
     0 2px 6px rgba(0,0,0,0.15);
-
-  background:#ffffff;
 
   color:#333;
 
@@ -100,11 +88,11 @@ style.textContent = `
   position:relative;
 
   width:95%;
-  height:110px;
+  height:160px;
 
   border-radius:12px;
 
-  background:#163a63;
+  background:#D2B24C;
 
   overflow:hidden;
 
@@ -125,7 +113,7 @@ style.textContent = `
   width:60px;
   height:18px;
 
-  font-size:10px;
+  font-size:14px;
 
   border:none;
 
@@ -144,9 +132,9 @@ style.textContent = `
 
   position:absolute;
 
-  left:18px;
+  left:39px;
 
-  top:30px;
+  top:42px;
 
   display:flex;
 
@@ -159,11 +147,23 @@ style.textContent = `
 }
 
 
-.sasoi-reel{
+.sasoi-tip{
 
-  font-size:28px;
+  width:26px;
 
-  color:white;
+  height:26px;
+
+  border-radius:50%;
+
+  border:1px solid white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  box-sizing:border-box;
 
 }
 
@@ -172,11 +172,11 @@ style.textContent = `
 
 .sasoi-line{
 
-  font-size:24px;
+  width:3px;
 
-  line-height:18px;
+  height:30px;
 
-  color:white;
+  background:white;
 
 }
 
@@ -185,9 +185,40 @@ style.textContent = `
 
 .sasoi-weight{
 
-  font-size:24px;
+  width:16px;
 
-  color:red;
+  height:40px;
+
+  background:#e53935;
+
+  border-radius:4px;
+
+  margin-top:0px;
+
+  box-shadow:
+    inset 0 0 4px rgba(255,255,255,0.4),
+    0 2px 4px rgba(0,0,0,0.3);
+
+}
+
+/* たたき台 */
+.sasoi-black{
+
+  position:absolute;
+
+  left:32px;
+
+  top:95px;
+
+  width:40px;
+
+  height:70px;
+
+  background:#111;
+
+  border-radius:4px;
+
+  z-index:0;
 
 }
 
@@ -198,9 +229,9 @@ style.textContent = `
 
   position:absolute;
 
-  left:220px;
+  left:310px;
 
-  top:28px;
+  top:40px;
 
   font-size:18px;
 
@@ -213,6 +244,8 @@ style.textContent = `
   z-index:3;
 
   pointer-events:none;
+
+  will-change:transform,left;
 
 }
 
@@ -314,25 +347,52 @@ style.textContent = `
 
 }
 
+.sasoi-flow.move{
+
+  animation:sasoiSlide 2.5s linear forwards;
+
+}
+
+
+@keyframes sasoiSlide{
+
+  from{
+
+    left:310px;
+
+  }
+
+
+  to{
+
+    left:-120px;
+
+  }
+
+}
+
+
 /* 長押し位置 */
 
 .sasoi-touch{
 
   position:absolute;
 
-  right:18px;
+  right:22px;
 
-  top:28px;
+  top:98px;
 
-  width:40px;
+  width:50px;
 
-  height:40px;
+  height:50px;
 
   border-radius:50%;
 
   border:3px solid white;
 
   color:white;
+
+  background:#1D3E70;
 
   display:flex;
 
@@ -346,13 +406,6 @@ style.textContent = `
 
 }
 
-.sasoi-weight{
-
-  font-size:16px;
-
-  color:#e53935;
-
-}
 
 /* 穂先横ライン */
 
@@ -372,70 +425,116 @@ style.textContent = `
 
 }
 
+/* 中央の釣り穴ライン */
 
-.sasoi-horizontal.top{
+.sasoi-center-line{
 
-  top:10px;
+  position:absolute;
+
+  left:0;
+  top:30px;
+
+  width:100%;
+
+  height:60px;
+
+  background:#1D3E70;
+
+  z-index:1;
 
 }
 
 
-.sasoi-horizontal.bottom{
+/* 中央ライン上下の縁 */
 
-  top:72px;
+.sasoi-edge{
+
+  position:absolute;
+
+  left:0;
+
+  width:100%;
+
+  height:4px;
+
+  background:#9A9A9A;
+
+  z-index:2;
 
 }
+
+
+.sasoi-edge.top{
+
+  top:26px;
+
+}
+
+
+.sasoi-edge.bottom{
+
+  top:88px;
+
+}
+
 
 /* ゲーム表示全体位置調整 */
 
 .sasoi-rod,
-.sasoi-flow,
-.sasoi-touch {
+.sasoi-flow {
 
-  transform:translateY(-10px);
+  transform:translateY(5px);
+
+}
+
+/* 穂先ヒット演出 */
+
+.sasoi-tip.hit{
+
+  animation:sasoiTipShake 0.12s infinite;
 
 }
 
 
-.sasoi-flow.move{
+@keyframes sasoiTipShake{
 
-  animation:sasoiSlide 2.5s linear forwards;
-
-}
-
-
-@keyframes sasoiSlide{
-
-  from{
-
-    left:220px;
-
+  0%{
+    transform:translateX(0);
   }
 
+  25%{
+    transform:translateX(-3px);
+  }
 
-  to{
+  50%{
+    transform:translateX(3px);
+  }
 
-    left:80px;
+  75%{
+    transform:translateX(-3px);
+  }
 
+  100%{
+    transform:translateX(0);
   }
 
 }
 
+/* --------------------------------------------　CSS最後　-------------------------------------------- */
 
 `;
 
 document.head.appendChild(style);
 
 
-
-// -------------------------------
-// 初期表示生成
-// -------------------------------
 // -------------------------------
 // 初期表示生成
 // -------------------------------
 function initSasoiNoMeijin(){
 
+let sasoiTimer = null;
+
+let sasoiPlaying = false;
 
 const area =
 document.getElementById(
@@ -484,14 +583,26 @@ area.innerHTML = `
 
   </button>
 
+<!-- ドーム船の縁 -->
+<div class="sasoi-edge top"></div>
+
+<!-- 中央ライン -->
+<div class="sasoi-center-line"></div>
+
+<!-- ドーム船の縁 -->
+<div class="sasoi-edge bottom"></div>
+
+
+<div class="sasoi-black"></div>
+
 
 <div class="sasoi-rod">
 
-  <div class="sasoi-reel">○</div>
+  <div class="sasoi-tip"></div>
 
-  <div class="sasoi-line">│</div>
+  <div class="sasoi-line"></div>
 
-  <div class="sasoi-weight">■</div>
+  <div class="sasoi-weight"></div>
 
 </div>
 
@@ -522,6 +633,88 @@ id="sasoiFlow">
 
 `;
 
+function checkSasoiHit(){
+
+
+const flow =
+document.getElementById("sasoiFlow");
+
+
+const tip =
+document.querySelector(".sasoi-tip");
+
+
+if(!flow || !tip) return;
+
+
+
+const flowRect =
+flow.getBoundingClientRect();
+
+
+const tipRect =
+tip.getBoundingClientRect();
+
+
+
+const distance =
+Math.abs(
+(flowRect.left + 10)
+-
+tipRect.left
+);
+
+
+
+console.log(
+"誘い距離:",
+distance
+);
+
+
+
+// 判定範囲
+
+if(distance < 20){
+
+
+  tip.classList.add("hit");
+
+
+  setTimeout(()=>{
+
+    tip.classList.remove("hit");
+
+  },1000);
+
+
+}
+
+
+}
+
+
+function stopSasoiCheck(){
+
+
+  sasoiPlaying = false;
+
+
+  if(sasoiTimer){
+
+
+    clearInterval(sasoiTimer);
+
+
+    sasoiTimer = null;
+
+
+    console.log("誘い判定終了");
+
+  }
+
+
+}
 
 
 // スタート
@@ -540,6 +733,9 @@ document
 .getElementById("sasoiGame")
 .style.display="block";
 
+sasoiPlaying = true;
+
+
 const flow =
 document.getElementById("sasoiFlow");
 
@@ -557,6 +753,18 @@ setTimeout(()=>{
 
 },300);
 
+
+sasoiTimer =
+setInterval(()=>{
+
+
+  checkSasoiHit();
+
+
+},100);
+
+
+
 };
 
 
@@ -566,6 +774,9 @@ setTimeout(()=>{
 document
 .getElementById("sasoiBackBtn")
 .onclick=function(){
+
+
+stopSasoiCheck();
 
 
 document
@@ -594,7 +805,91 @@ document.addEventListener(
 
     initSasoiNoMeijin();
 
+
+    // 誘いの名人 ON/OFF
+
+    const btn =
+    document.getElementById(
+      "sasoiToggleBtn"
+    );
+
+
+    const area =
+    document.getElementById(
+      "sasoiNoMeijinArea"
+    );
+
+
+    if(btn && area){
+
+
+      // 保存状態読み込み
+
+      const saved =
+      localStorage.getItem(
+        "sasoiNoMeijinEnabled"
+      );
+
+
+      // 初回はON
+
+      if(saved === "false"){
+
+        btn.checked = false;
+
+        area.style.display="none";
+
+
+      }else{
+
+        btn.checked = true;
+
+        area.style.display="flex";
+
+      }
+
+
+
+      // スイッチ変更
+
+      btn.onchange=function(){
+
+
+        if(this.checked){
+
+
+          area.style.display="flex";
+
+
+          localStorage.setItem(
+            "sasoiNoMeijinEnabled",
+            "true"
+          );
+
+
+        }else{
+
+
+          area.style.display="none";
+
+
+          localStorage.setItem(
+            "sasoiNoMeijinEnabled",
+            "false"
+          );
+
+
+        }
+
+
+      };
+
+
+    }
+
+
   }
 );
+
 
 })();
