@@ -1,6 +1,6 @@
 // sw.js (Double Bite!! 安定版・GitHub Pages向け)
 
-const CACHE_NAME = "double-bite-app-v43";
+const CACHE_NAME = "double-bite-app-v44";
 
 // ★静的アセットのみキャッシュ（HTMLは入れない）
 const ASSETS = [
