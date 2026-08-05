@@ -8,7 +8,6 @@
 
 "use strict";
 
-
 // -------------------------------
 // CSS追加
 // -------------------------------
@@ -126,7 +125,7 @@ style.textContent = `
 }
 
 
-/* 穂先 */
+/* 電動リール全般 */
 
 .sasoi-rod{
 
@@ -146,7 +145,7 @@ style.textContent = `
 
 }
 
-
+/* 穂先〇 */
 .sasoi-tip{
 
   width:26px;
@@ -155,7 +154,11 @@ style.textContent = `
 
   border-radius:50%;
 
-  border:1px solid white;
+  border:4px solid white;
+
+  background:rgba(255,255,255,0.15);
+
+  box-shadow:0 0 0 1px rgba(255,255,255,0.45);
 
   display:flex;
 
@@ -172,11 +175,25 @@ style.textContent = `
 
 .sasoi-line{
 
-  width:3px;
-
+  width:4px;
   height:30px;
 
-  background:white;
+  background:
+  repeating-linear-gradient(
+    to bottom,
+
+    #ffffff 0px,
+    #ffffff 5px,
+
+    #ff4d4d 5px,
+    #ff4d4d 6px,
+
+    #ffffff 6px,
+    #ffffff 11px,
+
+    #222222 11px,
+    #222222 12px
+  );
 
 }
 
@@ -185,32 +202,125 @@ style.textContent = `
 
 .sasoi-weight{
 
-  width:16px;
+  width:24px;
 
-  height:40px;
+  height:52px;
 
-  background:#e53935;
+  background:
+linear-gradient(
+    to right,
+    #b32020,
+    #e53935 40%,
+    #ff6a6a
+);
 
-  border-radius:4px;
+  border-radius:8px 8px 4px 4px;
 
-  margin-top:0px;
+  margin-top:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  box-sizing:border-box;
+
+  padding-top:2px;
 
   box-shadow:
-    inset 0 0 4px rgba(255,255,255,0.4),
-    0 2px 4px rgba(0,0,0,0.3);
+    inset 0 0 5px rgba(255,255,255,.35),
+    0 2px 4px rgba(0,0,0,.35);
 
 }
+
+
+/* 電動リールのスプール */
+
+.sasoi-spool{
+
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  background:#222;
+
+  border:2px solid #777;
+
+  margin-bottom:2px;
+
+}
+
+
+/* 電動リールの表示盤 */
+
+.sasoi-display{
+
+  margin-top:1px;
+
+  width:16px;
+  height:14px;
+
+  background:#b9ff95;
+
+  border:1px solid #5d8f54;
+
+  border-radius:2px;
+
+  color:#1d2b16;
+
+  font-size:6px;
+
+  font-family:"DSEG7";
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  box-shadow:
+      inset 0 0 2px rgba(0,0,0,.25);
+
+}
+
+
+/* Tok.DoT ロゴ（リール用） */
+
+.sasoi-label .tokdot-name{
+
+  font-family:'BBH Hegarty',sans-serif;
+
+  font-size:4.5px;
+
+  font-weight:normal;
+
+  letter-spacing:-0.01em;
+
+  color:white;
+
+  line-height:1;
+
+}
+
+.sasoi-label .tokdot-dot{
+
+  color:#FF8C00;
+
+}
+
 
 /* たたき台 */
 .sasoi-black{
 
   position:absolute;
 
-  left:32px;
+  left:28px;
 
   top:95px;
 
-  width:40px;
+  width:48px;
 
   height:70px;
 
@@ -223,7 +333,7 @@ style.textContent = `
 }
 
 
-/* 流れてくる表示（まだ固定） */
+/* 流れてくる表示 */
 
 .sasoi-flow{
 
@@ -233,7 +343,7 @@ style.textContent = `
 
   top:40px;
 
-  font-size:18px;
+  font-size:20px;
 
   letter-spacing:5px;
 
@@ -640,7 +750,27 @@ area.innerHTML = `
 
   <div class="sasoi-line"></div>
 
-  <div class="sasoi-weight"></div>
+<!-- 電動リール本体 -->
+
+<div class="sasoi-weight">
+
+  <div class="sasoi-spool"></div>
+
+  <div class="sasoi-display">
+    P01
+  </div>
+
+<div class="sasoi-label">
+
+  <span class="tokdot-name">
+    Tok<span class="tokdot-dot">.</span>DoT
+  </span>
+
+</div>
+
+</div>
+
+<!-- 電動リール本体 -->
 
 </div>
 
@@ -745,6 +875,14 @@ const span =
 document.createElement("span");
 
 
+// 音符情報を保存
+
+span.dataset.id =
+note.id;
+
+span.dataset.type =
+note.type;
+
 
 // 種類判定
 
@@ -785,13 +923,14 @@ span.style.left =
 "0px";
 
 
+span.dataset.hit = "false";
+
+
 // 移動開始
 
 span.classList.add(
 "sasoi-note-move"
 );
-
-
 
 flow.appendChild(span);
 
@@ -805,70 +944,118 @@ setTimeout(()=>{
 },3000);
 
 
+console.log(
+ "生成音符",
+ span.dataset.id,
+ span.dataset.type
+);
+
 }
 
 
 function checkSasoiHit(){
 
 
-const flow =
-document.getElementById("sasoiFlow");
-
-
 const tip =
 document.querySelector(".sasoi-tip");
 
 
-if(!flow || !tip) return;
+const flow =
+document.getElementById("sasoiFlow");
 
 
+if(!tip || !flow) return;
 
-const flowRect =
-flow.getBoundingClientRect();
 
 
 const tipRect =
 tip.getBoundingClientRect();
 
 
+// 流れている音符を取得
 
-const distance =
-Math.abs(
-(flowRect.left + 10)
--
-tipRect.left
-);
+const notes =
+flow.querySelectorAll("span");
 
 
+let nearestNote = null;
 
-console.log(
-"誘い距離:",
-distance
-);
+let nearestDistance = Infinity;
 
-if(distance < 20){
 
- console.log(
-  "判定:",
-  currentSasoiNote.type
- );
+
+notes.forEach((note)=>{
+
+
+  const rect =
+  note.getBoundingClientRect();
+
+
+  const distance =
+  Math.abs(
+    rect.left - tipRect.left
+  );
+
+
+  if(distance < nearestDistance){
+
+    nearestDistance = distance;
+
+    nearestNote = note;
+
+  }
+
+
+});
+
+
+
+// 音符が無い場合
+
+if(!nearestNote){
+
+  return;
 
 }
 
-
-// 判定範囲
-
-if(distance < 20){
-
-
-  tip.classList.add("hit");
+if(nearestNote.dataset.type==="count"){
+    return;
+}
 
 
-  setTimeout(()=>{
+console.log(
+"最近音符",
+nearestNote.dataset.id,
+nearestNote.dataset.type,
+"距離",
+nearestDistance
+);
 
-    tip.classList.remove("hit");
 
-  },1000);
+
+if(
+  nearestDistance < 20 &&
+  nearestNote.dataset.hit !== "true"
+){
+
+
+ nearestNote.dataset.hit = "true";
+
+
+ console.log(
+  "判定成功",
+  nearestNote.dataset.type
+ );
+
+
+ tip.classList.add("hit");
+
+
+ setTimeout(()=>{
+
+   tip.classList.remove("hit");
+
+ },300);
 
 
 }

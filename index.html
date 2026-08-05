@@ -36,6 +36,9 @@ family=M+PLUS+Rounded+1c:wght@400;700&
 family=Zen+Maru+Gothic:wght@400;500;700&
 display=swap" rel="stylesheet">
 
+<link rel="stylesheet"
+href="https://fonts.googleapis.com/css2?family=DSEG7+Classic:wght@700&display=swap">
+
 <style>
 html, body{
   margin:0;
@@ -67,6 +70,20 @@ input, textarea {
   height:100vh;
   box-sizing:border-box;
   padding:10px;
+}
+
+/* 電卓風フォント埋め込み */
+@font-face{
+
+  font-family:"DSEG7";
+
+  src:url("fonts/DSEG7Classic-Regular.woff2")
+      format("woff2");
+
+  font-weight:normal;
+
+  font-style:normal;
+
 }
 
 /* アプリ共通スクリーン（背景・フォント） */
@@ -1087,13 +1104,14 @@ button.btn-part:active {
    ========================= */
 
 .bait-timer{
+    font-family:"DSEG7";
     width:116px;
     margin:1px auto 0;
     padding:2px 0;
     border-radius:16px;
     background:#fff;
     border:1px solid #ddd;
-    font-size:16px;
+    font-size:12px;
     font-weight:bold;
     line-height:1.2;
     text-align:center;
@@ -1111,6 +1129,7 @@ button.btn-part:active {
 }
 
 .bait-setting{
+    font-family:"DSEG7";
     -webkit-tap-highlight-color: transparent;
     width:116px;
     margin:2px auto 0;      
@@ -1118,7 +1137,7 @@ button.btn-part:active {
     border-radius:16px;
     background:linear-gradient(to bottom,#E3F2FD,#BBDEFB);
     border:1px solid #90CAF9;
-    font-size:14px;
+    font-size:12px;
     font-weight:bold;
     line-height:1.2;        /* 高さを抑える */
     text-align:center;
@@ -1474,7 +1493,8 @@ font-family: 'Alfa Slab One', cursive;
 
 /* 日時（少し大きく） */
 #safeDateTimeBox {
-    font-size: 15px;
+    font-family:"DSEG7";
+    font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -2547,6 +2567,8 @@ iframe {
 /* 時間ボタン */
 .bait-time-option{
 
+  font-family:"DSEG7";
+
   padding:10px 0;
 
   border:none;
@@ -2557,7 +2579,7 @@ iframe {
 
   color:#fff;
 
-  font-size:16px;
+  font-size:14px;
 
   font-weight:bold;
 
