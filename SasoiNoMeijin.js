@@ -214,46 +214,44 @@ style.textContent = `
     #ff7777
   );
 
-/* 電動リール 横から見た流線型（底面アーチ状） */
-clip-path:polygon(
-  /* 上部 */
-  30% 0%,
-  70% 0%,
+/* 電動リール 横から見た流線型（底面ポッコリ・強調アーチ版） */
+clip-path: polygon(
+  /* --- 1. 穂先挿入口（上部先端） --- */
+  35% 0%,
+  65% 0%,
 
-  /* スプール付近で最大幅 */
-  86% 6%,
-  94% 14%,
-  98% 24%,
+  /* --- 2. スプール周り（肩の最大幅） --- */
+  84% 5%,
+  95% 15%,
+  98% 28%,
+  98% 36%,  /* 最幅部 */
 
-  /* ここが最大幅 */
-  98% 34%,
+  /* --- 3. 中央のライン（絞り込みを緩やかに調整） --- */
+  93% 48%,  /* 90% → 93%（幅を保持） */
+  88% 60%,  /* 82% → 88%（緩やかに） */
+  86% 68%,  /* 80% → 86%（絞りを浅く） */
 
-  /* 下へ行くにつれ徐々に細く */
-  95% 46%,
-  91% 58%,
-  89% 70%,
-  88% 82%,
-
-  /* 底部（※弧を描く丸みを追加） */
-  92% 92%,
-  88% 97%,
+  /* --- 4. 下部ボディ〜底面（ふっくらしたアーチへスムーズに接続） --- */
+  88% 78%,  /* 86% → 88% */
+  92% 88%,  /* お尻側の張り出し */
+  90% 94%,
+  82% 98.5%,
   50% 100%, /* 底面中央の頂点 */
-  12% 97%,
-  8% 92%,
+  18% 98.5%,
+  10% 94%,
+  8% 88%,   /* 左お尻の張り出し */
+  12% 78%,  /* 14% → 12% */
 
-  /* 左側 */
-  12% 82%,
-  11% 70%,
-  9% 58%,
-  5% 46%,
+  /* --- 5. 左側ライン〜上部（対比） --- */
+  14% 68%,  /* 20% → 14%（絞りを浅く） */
+  12% 60%,  /* 18% → 12%（緩やかに） */
+  7% 48%,   /* 10% → 7%（幅を保持） */
 
-  /* 最大幅 */
-  2% 34%,
-
-  /* 上部へ戻る */
-  2% 24%,
-  6% 14%,
-  14% 6%
+  /* 左肩（スプール最大幅） */
+  2% 36%,
+  2% 28%,
+  5% 15%,
+  16% 5%
 );
 
   margin-top:0;
@@ -280,19 +278,13 @@ clip-path:polygon(
 
 
 /* 電動リールのスプール */
-
 .sasoi-spool{
-
   width:14px;
   height:14px;
-
   min-width:14px;
   min-height:14px;
-
   aspect-ratio:1 / 1;
-
   border-radius:50%;
-
   background:
   radial-gradient(
     circle,
@@ -303,70 +295,116 @@ clip-path:polygon(
     #777 70%,
     #333 100%
   );
-
   border:1px solid #999;
-
   box-sizing:border-box;
-
   flex-shrink:0;
 
-
-  /* ★追加：スプール位置を下げる */
-  margin-top:1px;
-
+  margin-top:2px;
   margin-bottom:1px;
 
+  /* ★追加：スイッチの基準点にするため設定 */
+  position: relative;
+}
+
+/* ★追加：ロックフリーレバー（黒の横線スイッチ） */
+.sasoi-spool::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;        /* ★スプール下部からの距離（位置調整） */
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 10px;          /* ★横線の幅 */
+  height: 2px;       /* ★横線の太さ */
+  background: #1a1a1a; /* スイッチの色（黒） */
+  border-radius: 1px;  /* 角に少し丸みを持たせる */
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.5); /* 立体感用の薄い影 */
 }
 
 
 /* 電動リールの表示盤 */
-
 .sasoi-display{
-
-  margin-top:1px;
-
+  margin-top:8px;
   flex-shrink:0;
 
-  width:8px;
-  height:12px;
+  width:4px;
+  height:5px;
 
   background:#b9ff95;
-
   border:1px solid #5d8f54;
-
   border-radius:2px;
 
   color:#1d2b16;
-
-  font-size:3.5px;
-
+  font-size:2.5px;
   font-family:"DSEG7";
-
   line-height:5px;
 
   display:flex;
-
   justify-content:center;
-
   align-items:center;
-
   text-align:center;
 
-  box-shadow:
-      inset 0 0 2px rgba(0,0,0,.25);
+  box-shadow: inset 0 0 2px rgba(0,0,0,.25);
 
+  /* 台形を正しく背後に配置するための相対設定 */
+  position: relative;
+  overflow: visible;
+}
+
+/* ★液晶画面の「後ろ側」に敷く黒い台形 */
+.sasoi-display::before {
+  content: "";
+  position: absolute;
+
+  top: -4px;
+  bottom: -7px;
+  left: -4px;
+  right: -4px;
+
+  background: #1a1a1a;
+  z-index: -1;
+
+  clip-path: polygon(
+    0% 0%,     /* 左上 */
+    100% 0%,   /* 右上 */
+    80% 100%,  /* 右下 */
+    20% 100%   /* 左下 */
+  );
+}
+
+/* ★追加：黒い台形の「さらに後ろ」に敷く白縁用台形 */
+.sasoi-display::after {
+  content: "";
+  position: absolute;
+
+  /* 黒台形より全方向に「0.5px〜1px」大きく広げて白フチにする */
+  top: -4.5px;
+  bottom: -7.5px;
+  left: -4.5px;
+  right: -4.5px;
+
+  background: #ffffff; /* 白縁の色 */
+  z-index: -2; /* 黒台形のさらに後ろへ配置 */
+
+  /* 白縁用の台形（ほぼ同じ比率） */
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    80% 100%,
+    20% 100%
+  );
 }
 
 
 /* Tok.DoT ロゴ（リール用） */
 .sasoi-label {
-  margin-top: -6px; /* ★負の値を大きくすると、さらに上に移動します */
+  margin-top: -4px; /* ★負の値を大きくすると、さらに上に移動します */
   flex-shrink: 0;
 }
 
 .sasoi-label .tokdot-name{
   font-family:'BBH Hegarty',sans-serif;
-  font-size:6px;
+  font-size:8px;
   font-weight:normal;
   letter-spacing:-0.01em;
   color:white;
@@ -918,36 +956,27 @@ area.innerHTML = `
 
 <div class="sasoi-black"></div>
 
-
 <div class="sasoi-rod">
-
   <div class="sasoi-tip"></div>
-
   <div class="sasoi-line"></div>
 
-<!-- 電動リール本体 -->
+  <!-- 電動リール本体 -->
+  <div class="sasoi-weight">
+    <div class="sasoi-spool"></div>
 
-<div class="sasoi-weight">
+    <div class="sasoi-display">
+      P01
+    </div>
 
-  <div class="sasoi-spool"></div>
-
-  <div class="sasoi-display">
-    P01
+    <div class="sasoi-label">
+      <span class="tokdot-name">
+        <span class="tokdot-dot">.</span>D
+      </span>
+    </div>
   </div>
-
-<div class="sasoi-label">
-
-  <span class="tokdot-name">
-    <span class="tokdot-dot">.</span>D
-  </span>
-
-</div>
-
 </div>
 
 <!-- 電動リール本体 -->
-
-</div>
 
 <div class="sasoi-horizontal top"></div>
 
