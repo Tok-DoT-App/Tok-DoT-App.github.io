@@ -198,25 +198,66 @@ style.textContent = `
 }
 
 
-/* 電動リール */
+/* 電動リール本体（くびれ形状） */
 
 .sasoi-weight{
 
-  width:24px;
+  width:18px;
 
   height:52px;
 
   background:
-linear-gradient(
+  linear-gradient(
     to right,
-    #b32020,
-    #e53935 40%,
-    #ff6a6a
+    #8f1818,
+    #e53935 45%,
+    #ff7777
+  );
+
+/* 電動リール 横から見た流線型（底面アーチ状） */
+clip-path:polygon(
+  /* 上部 */
+  30% 0%,
+  70% 0%,
+
+  /* スプール付近で最大幅 */
+  86% 6%,
+  94% 14%,
+  98% 24%,
+
+  /* ここが最大幅 */
+  98% 34%,
+
+  /* 下へ行くにつれ徐々に細く */
+  95% 46%,
+  91% 58%,
+  89% 70%,
+  88% 82%,
+
+  /* 底部（※弧を描く丸みを追加） */
+  92% 92%,
+  88% 97%,
+  50% 100%, /* 底面中央の頂点 */
+  12% 97%,
+  8% 92%,
+
+  /* 左側 */
+  12% 82%,
+  11% 70%,
+  9% 58%,
+  5% 46%,
+
+  /* 最大幅 */
+  2% 34%,
+
+  /* 上部へ戻る */
+  2% 24%,
+  6% 14%,
+  14% 6%
 );
 
-  border-radius:8px 8px 4px 4px;
-
   margin-top:0;
+
 
   display:flex;
 
@@ -224,13 +265,16 @@ linear-gradient(
 
   align-items:center;
 
+
   box-sizing:border-box;
 
   padding-top:2px;
 
+
   box-shadow:
-    inset 0 0 5px rgba(255,255,255,.35),
-    0 2px 4px rgba(0,0,0,.35);
+  inset 0 -2px 4px rgba(0,0,0,.25),
+  inset 0 0 6px rgba(255,255,255,.35),
+  0 2px 4px rgba(0,0,0,.35);
 
 }
 
@@ -239,16 +283,38 @@ linear-gradient(
 
 .sasoi-spool{
 
-  width:12px;
-  height:12px;
+  width:14px;
+  height:14px;
+
+  min-width:14px;
+  min-height:14px;
+
+  aspect-ratio:1 / 1;
 
   border-radius:50%;
 
-  background:#222;
+  background:
+  radial-gradient(
+    circle,
+    #d9a441 0%,
+    #d9a441 22%,
+    #222 25%,
+    #222 65%,
+    #777 70%,
+    #333 100%
+  );
 
-  border:2px solid #777;
+  border:1px solid #999;
 
-  margin-bottom:2px;
+  box-sizing:border-box;
+
+  flex-shrink:0;
+
+
+  /* ★追加：スプール位置を下げる */
+  margin-top:1px;
+
+  margin-bottom:1px;
 
 }
 
@@ -259,8 +325,10 @@ linear-gradient(
 
   margin-top:1px;
 
-  width:16px;
-  height:14px;
+  flex-shrink:0;
+
+  width:8px;
+  height:12px;
 
   background:#b9ff95;
 
@@ -270,15 +338,19 @@ linear-gradient(
 
   color:#1d2b16;
 
-  font-size:6px;
+  font-size:3.5px;
 
   font-family:"DSEG7";
+
+  line-height:5px;
 
   display:flex;
 
   justify-content:center;
 
   align-items:center;
+
+  text-align:center;
 
   box-shadow:
       inset 0 0 2px rgba(0,0,0,.25);
@@ -287,27 +359,22 @@ linear-gradient(
 
 
 /* Tok.DoT ロゴ（リール用） */
+.sasoi-label {
+  margin-top: -6px; /* ★負の値を大きくすると、さらに上に移動します */
+  flex-shrink: 0;
+}
 
 .sasoi-label .tokdot-name{
-
   font-family:'BBH Hegarty',sans-serif;
-
-  font-size:12px;
-
+  font-size:6px;
   font-weight:normal;
-
   letter-spacing:-0.01em;
-
   color:white;
-
   line-height:1;
-
 }
 
 .sasoi-label .tokdot-dot{
-
   color:#FF8C00;
-
 }
 
 
@@ -618,6 +685,9 @@ let currentSasoiNote = null;
 
 let sasoiPressStartTime = null;
 
+// PRESS入力待ち猶予時間
+let sasoiPressWaiting = false;
+
 let sasoiHoldTime = 0;
 
 // -------------------------------
@@ -625,6 +695,12 @@ let sasoiHoldTime = 0;
 // -------------------------------
 
 let sasoiFishOn = false;
+
+
+// 止め成立状態
+
+let sasoiStopReady = false;
+
 
 // 魚が乗った時間
 
@@ -635,13 +711,21 @@ let sasoiFishTime = null;
 
 let sasoiResult = null;
 
+
+// 演出中かどうかのフラグ
+
+let sasoiHitAnimating = false;
+
 // -------------------------------
-// 譜面データ
+// 譜面データ（基準サンプル）
 // -------------------------------
 
 const sasoiScore = [
 
+  // =====================
   // カウントダウン
+  // =====================
+
   {
     id:1,
     time:0,
@@ -665,25 +749,21 @@ const sasoiScore = [
 
 
   // =====================
-  // 誘い開始
+  // 1回目の誘い
+  // ● → ― → ―
   // =====================
 
-
-  // 最初の誘い
   {
     id:4,
     time:3000,
     type:"press"
   },
 
-
-  // 止め
   {
     id:5,
     time:3400,
     type:"hold"
   },
-
 
   {
     id:6,
@@ -692,26 +772,27 @@ const sasoiScore = [
   },
 
 
-  // 食わせ間
+  // ◎ 魚が食う
   {
     id:7,
-    time:4500,
+    time:5000,
     type:"bite"
   },
 
 
-  // 合わせ
+  // ○ アワセ
   {
     id:8,
-    time:5000,
+    time:5500,
     type:"release"
   },
 
 
-  // =====================
-  // 2回目誘い
-  // =====================
 
+  // =====================
+  // 2回目の誘い
+  // ● → ― → ◎ → ○
+  // =====================
 
   {
     id:9,
@@ -719,20 +800,17 @@ const sasoiScore = [
     type:"press"
   },
 
-
   {
     id:10,
     time:7000,
     type:"hold"
   },
 
-
   {
     id:11,
     time:7600,
     type:"bite"
   },
-
 
   {
     id:12,
@@ -741,10 +819,11 @@ const sasoiScore = [
   },
 
 
+
   // =====================
   // 3回目（少し難しい）
+  // ● → ― → ― → ◎ → ○
   // =====================
-
 
   {
     id:13,
@@ -752,13 +831,11 @@ const sasoiScore = [
     type:"press"
   },
 
-
   {
     id:14,
     time:10500,
     type:"hold"
   },
-
 
   {
     id:15,
@@ -766,13 +843,11 @@ const sasoiScore = [
     type:"hold"
   },
 
-
   {
     id:16,
     time:12000,
     type:"bite"
   },
-
 
   {
     id:17,
@@ -910,22 +985,12 @@ sasoiIndex >= sasoiScore.length
 ){
 
 console.log(
-"全音符生成完了"
-);
-
-
-// すぐ終了しない
-// 最後の音符判定時間を待つ
-
-setTimeout(()=>{
-
-
-console.log(
 "譜面終了"
 );
 
 
-// 魚が乗ったままなら逃げる
+// 最終判定
+// 魚が掛かったままなら逃げ
 
 if(sasoiFishOn){
 
@@ -950,10 +1015,25 @@ showSasoiMessage(
 
 
 }
+else{
 
 
-},2000);
+console.log(
+"魚なしで終了"
+);
 
+
+}
+
+
+console.log(
+"誘い判定終了"
+);
+
+
+// 判定停止
+
+stopSasoiCheck();
 
 
 return;
@@ -977,7 +1057,6 @@ sasoiIndex++;
 
 let nextDelay = 500;
 
-
 if(
 sasoiIndex < sasoiScore.length
 ){
@@ -988,7 +1067,12 @@ sasoiScore[sasoiIndex].time
 note.time;
 
 }
+else{
 
+// 最後の音符は画面を流れ切るまで待つ
+nextDelay = 3000;
+
+}
 
 sasoiPlayTimer =
 setTimeout(
@@ -1142,16 +1226,18 @@ let nearestDistance = Infinity;
 
 notes.forEach((note)=>{
 
+  // 成功済みは無視
+  if(note.dataset.done === "1"){
+    return;
+  }
 
   const rect =
   note.getBoundingClientRect();
-
 
   const distance =
   Math.abs(
     rect.left - tipRect.left
   );
-
 
   if(distance < nearestDistance){
 
@@ -1160,7 +1246,6 @@ notes.forEach((note)=>{
     nearestNote = note;
 
   }
-
 
 });
 
@@ -1194,21 +1279,90 @@ if(
   nearestNote.dataset.hit !== "true"
 ){
 
-  // press譜面なのに押していない
+// press譜面なのに押していない
+if(
+  nearestNote.dataset.type==="press" &&
+  sasoiAction!=="press"
+){
+
+  // ★PRESS猶予時間
+  // ノーツ中心を通過して少し待つ
   if(
-    nearestNote.dataset.type==="press" &&
-    sasoiAction!=="press"
+    nearestDistance < 18
   ){
+
+    console.log(
+      "PRESS待機"
+    );
+
     return;
+
   }
 
-  // release譜面なのに離していない
-  if(
-    nearestNote.dataset.type==="release" &&
-    sasoiAction!=="release"
-  ){
-    return;
+
+  console.log(
+    "press失敗（押していない）"
+  );
+
+
+// pressは少し待つ
+if(
+ nearestNote.dataset.type==="press" &&
+ sasoiAction!=="press"
+){
+
+ console.log(
+ "PRESS待機"
+ );
+
+ return;
+
+}
+
+}
+
+// release譜面なのに離していない
+if(
+  nearestNote.dataset.type==="release" &&
+  sasoiAction!=="release"
+){
+
+
+// =================================
+// ルールA
+// 魚が乗った後、合わせ失敗
+// =================================
+
+if(false && sasoiFishOn){
+
+  console.log(
+    "魚が掛かったまま離せませんでした"
+  );
+
+
+  sasoiFishOn = false;
+
+  sasoiFishTime = null;
+
+
+  if(typeof showSasoiMessage === "function"){
+
+    showSasoiMessage(
+      "あっ…魚が逃げてしまいました"
+    );
+
   }
+
+
+  stopSasoiCheck();
+
+
+}
+
+
+return;
+
+}
 
 // biteは魚が乗る判定なので入力不要
 if(
@@ -1221,16 +1375,61 @@ if(
 
 }
 
-  nearestNote.dataset.hit="true";
+console.log(
+ "成功",
+ nearestNote.dataset.type
+);
+
+nearestNote.dataset.done = "1";
+
+nearestNote.dataset.hit="true";
+
+
+// =================================
+// 止め成立判定
+// ●→― が成立した状態
+// ◎を迎える資格
+// =================================
+
+if(
+  nearestNote.dataset.type==="hold"
+){
+
+  // 押しっぱなし中だけ成功
+  if(
+    sasoiAction !== "press"
+  ){
+
+    console.log(
+      "hold失敗（押していない）"
+    );
+
+    return;
+
+  }
+
 
   console.log(
-    "成功",
-    nearestNote.dataset.type
+    "成功 hold"
   );
+
+
+  sasoiStopReady = true;
+
+
+  console.log(
+    "止め成立フラグON"
+  );
+
+
+}
+
 
 if(nearestNote.dataset.type==="press"){
 
   sasoiPressStartTime = Date.now();
+
+  sasoiStopReady = false;
 
   console.log(
     "押し開始時間記録"
@@ -1262,6 +1461,41 @@ if(nearestNote.dataset.type==="release"){
 
   }
 
+
+// =================================
+// ルールA
+// 魚が乗った後、release失敗
+// =================================
+
+if(
+  sasoiFishOn &&
+  sasoiAction !== "release"
+){
+
+  console.log(
+    "魚が掛かった状態で離せませんでした"
+  );
+
+
+  sasoiFishOn = false;
+
+  sasoiFishTime = null;
+
+// ★追加
+sasoiStopReady = false;
+
+  if(typeof showSasoiMessage === "function"){
+
+    showSasoiMessage(
+      "あっ…魚が逃げてしまいました"
+    );
+
+  }
+
+
+  return;
+
+}
 
 
 // 魚判定
@@ -1326,6 +1560,12 @@ sasoiFishOn = false;
 sasoiFishTime = null;
 
 
+// ★追加
+// 次の誘い待ち状態へ戻す
+
+sasoiStopReady = false;
+
+
 }else{
 
 
@@ -1342,30 +1582,43 @@ sasoiFishTime = null;
 
 
 // ◎ 魚が乗る
+// ただし止め成立している場合のみ
 
 if(nearestNote.dataset.type==="bite"){
 
+  if(!sasoiStopReady){
+
+    console.log(
+      "止め未成立のため魚は来ない"
+    );
+
+    return;
+
+  }
 
   sasoiFishOn = true;
-
-
   sasoiFishTime = Date.now();
-
 
   console.log(
     "魚が乗った状態になりました"
   );
 
+  // ブルブル演出中なら重複開始しない
+  if(!sasoiHitAnimating){
 
-  tip.classList.add("hit");
+    sasoiHitAnimating = true;
 
+    tip.classList.add("hit");
 
-  setTimeout(()=>{
+    setTimeout(()=>{
 
-    tip.classList.remove("hit");
+      tip.classList.remove("hit");
 
-  },300);
+      sasoiHitAnimating = false;
 
+    },350);
+
+  }
 
 }
 
@@ -1491,6 +1744,12 @@ sasoiIndex = 0;
 sasoiFishOn = false;
 
 sasoiFishTime = null;
+
+
+// ★追加
+// 止め成立リセット
+
+sasoiStopReady = false;
 
 
 if(sasoiPlayTimer){
