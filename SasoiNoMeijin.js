@@ -302,20 +302,20 @@ clip-path: polygon(
   margin-top:2px;
   margin-bottom:1px;
 
-  /* ★追加：スイッチの基準点にするため設定 */
+  /* スイッチの基準点にするため設定 */
   position: relative;
 }
 
-/* ★追加：ロックフリーレバー（黒の横線スイッチ） */
+/* ロックフリーレバー */
 .sasoi-spool::after {
   content: "";
   position: absolute;
-  bottom: -4px;        /* ★スプール下部からの距離（位置調整） */
+  bottom: -3px;        /* ★スプール下部からの距離（位置調整） */
   left: 50%;
   transform: translateX(-50%);
 
-  width: 10px;          /* ★横線の幅 */
-  height: 2px;       /* ★横線の太さ */
+  width: 9px;          /* ★横線の幅 */
+  height: 1px;       /* ★横線の太さ */
   background: #1a1a1a; /* スイッチの色（黒） */
   border-radius: 1px;  /* 角に少し丸みを持たせる */
   box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.5); /* 立体感用の薄い影 */
@@ -324,18 +324,18 @@ clip-path: polygon(
 
 /* 電動リールの表示盤 */
 .sasoi-display{
-  margin-top:8px;
+  margin-top:6px;
   flex-shrink:0;
 
-  width:4px;
-  height:5px;
+  width:6px;
+  height:6px;
 
   background:#b9ff95;
   border:1px solid #5d8f54;
   border-radius:2px;
 
   color:#1d2b16;
-  font-size:2.5px;
+  font-size:3px;
   font-family:"DSEG7";
   line-height:5px;
 
@@ -351,15 +351,15 @@ clip-path: polygon(
   overflow: visible;
 }
 
-/* ★液晶画面の「後ろ側」に敷く黒い台形 */
+/* 電動リールの表示盤の「後ろ側」台形 */
 .sasoi-display::before {
   content: "";
   position: absolute;
 
-  top: -4px;
-  bottom: -7px;
-  left: -4px;
-  right: -4px;
+  top: -2px;
+  bottom: -6px;
+  left: -2px;
+  right: -2px;
 
   background: #1a1a1a;
   z-index: -1;
@@ -367,21 +367,21 @@ clip-path: polygon(
   clip-path: polygon(
     0% 0%,     /* 左上 */
     100% 0%,   /* 右上 */
-    80% 100%,  /* 右下 */
-    20% 100%   /* 左下 */
+    85% 100%,  /* 右下 */
+    15% 100%   /* 左下 */
   );
 }
 
-/* ★追加：黒い台形の「さらに後ろ」に敷く白縁用台形 */
+/* 電動リールの表示盤の「後ろ側」台形の「さらに後ろ」に敷く白縁用台形 */
 .sasoi-display::after {
   content: "";
   position: absolute;
 
   /* 黒台形より全方向に「0.5px〜1px」大きく広げて白フチにする */
-  top: -4.5px;
-  bottom: -7.5px;
-  left: -4.5px;
-  right: -4.5px;
+  top: -2.5px;
+  bottom: -6.5px;
+  left: -2.5px;
+  right: -2.5px;
 
   background: #ffffff; /* 白縁の色 */
   z-index: -2; /* 黒台形のさらに後ろへ配置 */
@@ -390,15 +390,42 @@ clip-path: polygon(
   clip-path: polygon(
     0% 0%,
     100% 0%,
-    80% 100%,
-    20% 100%
+    85% 100%,
+    15% 100%
   );
 }
 
+/* 電動リールの操作ボタン */
+
+.sasoi-button{
+
+  width:2px;
+  height:2px;
+
+  border-radius:50%;
+
+  margin-top:1px;
+  margin-bottom:1px;
+
+  background:
+  radial-gradient(
+    circle at 30% 30%,
+    #d9ffff,
+    #6fdcff 55%,
+    #1c90d8 100%
+  );
+
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.7),
+    0 0 2px rgba(0,0,0,.45);
+
+  flex-shrink:0;
+
+}
 
 /* Tok.DoT ロゴ（リール用） */
 .sasoi-label {
-  margin-top: -4px; /* ★負の値を大きくすると、さらに上に移動します */
+  margin-top: -8px; /* ★負の値を大きくすると、さらに上に移動します */
   flex-shrink: 0;
 }
 
@@ -679,6 +706,43 @@ clip-path: polygon(
 
 }
 
+/* ==========================================
+   誘いの名人 デバッグ表示
+========================================== */
+
+.sasoi-debug{
+
+  position:absolute;
+
+  top:3px;
+  left:5px;
+
+  width:calc(100% - 10px);
+
+  height:18px;
+
+  background:rgba(0,0,0,0.35);
+
+  border-radius:6px;
+
+  color:white;
+
+  font-size:10px;
+
+  font-family:monospace;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  white-space:nowrap;
+
+  z-index:20;
+
+}
+
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
 `;
@@ -690,6 +754,18 @@ document.head.appendChild(style);
 // 初期表示生成
 // -------------------------------
 function initSasoiNoMeijin(){
+
+// =================================
+// デバッグ表示 ON/OFF
+// true  : 開発表示
+// false : 非表示（完成版）
+// =================================
+
+const SASOI_DEBUG_MODE = true;
+
+
+
+
 
 let sasoiTimer = null;
 
@@ -716,6 +792,22 @@ let sasoiStartTime = null;
 // -------------------------------
 
 let currentSasoiNote = null;
+
+// -------------------------------
+// デバッグ表示
+// -------------------------------
+
+let sasoiDebugText = {
+
+ player:"RELEASE",
+
+ note:"NONE",
+
+ stop:"NO",
+
+ fish:"OFF"
+
+};
 
 // -------------------------------
 // ホールド時間管理
@@ -787,111 +879,98 @@ const sasoiScore = [
 
 
   // =====================
-  // 1回目の誘い
-  // ● → ― → ―
+  // 1セット目
+  // ● ― ○
+  // ● ― ○
+  // ● ― ○
+  // ● ― ◎ ◎
   // =====================
 
-  {
-    id:4,
-    time:3000,
-    type:"press"
-  },
 
-  {
-    id:5,
-    time:3400,
-    type:"hold"
-  },
-
-  {
-    id:6,
-    time:3800,
-    type:"hold"
-  },
+  { id:4,  time:3000,  type:"press" },
+  { id:5,  time:3500,  type:"hold" },
+  { id:6,  time:4200,  type:"release" },
 
 
-  // ◎ 魚が食う
-  {
-    id:7,
-    time:5000,
-    type:"bite"
-  },
+  { id:7,  time:5000,  type:"press" },
+  { id:8,  time:5500,  type:"hold" },
+  { id:9,  time:6200,  type:"release" },
 
 
-  // ○ アワセ
-  {
-    id:8,
-    time:5500,
-    type:"release"
-  },
+  { id:10, time:7000,  type:"press" },
+  { id:11, time:7500,  type:"hold" },
+  { id:12, time:8200,  type:"release" },
+
+
+  // アワセ待ち
+  { id:13, time:9000,  type:"press" },
+  { id:14, time:9500,  type:"hold" },
+
+  { id:15, time:10500, type:"bite" },
+  { id:16, time:11000, type:"bite" },
+
+  { id:17, time:12000, type:"release" },
 
 
 
   // =====================
-  // 2回目の誘い
-  // ● → ― → ◎ → ○
+  // 2セット目
   // =====================
 
-  {
-    id:9,
-    time:6500,
-    type:"press"
-  },
 
-  {
-    id:10,
-    time:7000,
-    type:"hold"
-  },
+  { id:18, time:14000, type:"press" },
+  { id:19, time:14500, type:"hold" },
+  { id:20, time:15200, type:"release" },
 
-  {
-    id:11,
-    time:7600,
-    type:"bite"
-  },
 
-  {
-    id:12,
-    time:8200,
-    type:"release"
-  },
+  { id:21, time:16000, type:"press" },
+  { id:22, time:16500, type:"hold" },
+  { id:23, time:17200, type:"release" },
+
+
+  { id:24, time:18000, type:"press" },
+  { id:25, time:18500, type:"hold" },
+  { id:26, time:19200, type:"release" },
+
+
+  { id:27, time:20000, type:"press" },
+  { id:28, time:20500, type:"hold" },
+
+  { id:29, time:21500, type:"bite" },
+  { id:30, time:22000, type:"bite" },
+
+  { id:31, time:23000, type:"release" },
 
 
 
   // =====================
-  // 3回目（少し難しい）
-  // ● → ― → ― → ◎ → ○
+  // 3セット目
   // =====================
 
-  {
-    id:13,
-    time:10000,
-    type:"press"
-  },
 
-  {
-    id:14,
-    time:10500,
-    type:"hold"
-  },
+  { id:32, time:25000, type:"press" },
+  { id:33, time:25500, type:"hold" },
+  { id:34, time:26200, type:"release" },
 
-  {
-    id:15,
-    time:11000,
-    type:"hold"
-  },
 
-  {
-    id:16,
-    time:12000,
-    type:"bite"
-  },
+  { id:35, time:27000, type:"press" },
+  { id:36, time:27500, type:"hold" },
+  { id:37, time:28200, type:"release" },
 
-  {
-    id:17,
-    time:12500,
-    type:"release"
-  }
+
+  { id:38, time:29000, type:"press" },
+  { id:39, time:29500, type:"hold" },
+  { id:40, time:30200, type:"release" },
+
+
+  // アワセ
+  { id:41, time:31000, type:"press" },
+  { id:42, time:31500, type:"hold" },
+
+  { id:43, time:32500, type:"bite" },
+  { id:44, time:33000, type:"bite" },
+
+  { id:45, time:34000, type:"release" }
 
 
 ];
@@ -936,6 +1015,16 @@ area.innerHTML = `
 
 <div class="sasoi-game" id="sasoiGame">
 
+
+<div 
+class="sasoi-debug"
+id="sasoiDebug">
+
+DEBUG
+
+</div>
+
+
   <button
   class="sasoi-back-btn"
   id="sasoiBackBtn">
@@ -953,20 +1042,22 @@ area.innerHTML = `
 <!-- ドーム船の縁 -->
 <div class="sasoi-edge bottom"></div>
 
-
+<!-- 電動リール周り -->
 <div class="sasoi-black"></div>
 
 <div class="sasoi-rod">
   <div class="sasoi-tip"></div>
   <div class="sasoi-line"></div>
 
-  <!-- 電動リール本体 -->
+  
   <div class="sasoi-weight">
     <div class="sasoi-spool"></div>
 
     <div class="sasoi-display">
-      P01
+      …
     </div>
+
+<div class="sasoi-button"></div>
 
     <div class="sasoi-label">
       <span class="tokdot-name">
@@ -976,7 +1067,7 @@ area.innerHTML = `
   </div>
 </div>
 
-<!-- 電動リール本体 -->
+<!-- 電動リール周り -->
 
 <div class="sasoi-horizontal top"></div>
 
@@ -1032,6 +1123,11 @@ console.log(
 sasoiFishOn = false;
 
 sasoiFishTime = null;
+
+
+sasoiDebugText.fish="OFF";
+
+updateSasoiDebug();
 
 
 if(typeof showSasoiMessage === "function"){
@@ -1114,11 +1210,73 @@ nextDelay
 
 
 // -------------------------------
+// デバッグ表示用
+// -------------------------------
+
+
+
+function updateSasoiDebug(){
+
+
+if(!SASOI_DEBUG_MODE){
+
+  return;
+
+}
+
+
+const debug =
+document.getElementById(
+"sasoiDebug"
+);
+
+
+if(!debug){
+
+  return;
+
+}
+
+
+debug.innerText =
+
+"P:"
++
+sasoiDebugText.player
+
++
+"   N:"
++
+sasoiDebugText.note
+
++
+"   S:"
++
+sasoiDebugText.stop
+
++
+"   F:"
++
+sasoiDebugText.fish;
+
+
+}
+
+
+// -------------------------------
 // 音符生成
 // -------------------------------
 
 function createSasoiNote(note){
 
+if(SASOI_DEBUG_MODE){
+
+  sasoiDebugText.note =
+  note.type.toUpperCase();
+
+  updateSasoiDebug();
+
+}
 
 const flow =
 document.getElementById(
@@ -1260,13 +1418,20 @@ notes.forEach((note)=>{
     return;
   }
 
-  const rect =
-  note.getBoundingClientRect();
+const rect =
+note.getBoundingClientRect();
 
-  const distance =
-  Math.abs(
-    rect.left - tipRect.left
-  );
+// 見た目の中心同士で距離を測る
+const noteCenter =
+rect.left + rect.width / 2;
+
+const tipCenter =
+tipRect.left + tipRect.width / 2;
+
+const distance =
+Math.abs(
+    noteCenter - tipCenter
+);
 
   if(distance < nearestDistance){
 
@@ -1303,9 +1468,35 @@ nearestDistance
 
 
 
+let hitRange = 20;
+
+
+// ● press / hold / release
 if(
-  nearestDistance < 20 &&
-  nearestNote.dataset.hit !== "true"
+nearestNote.dataset.type==="press" ||
+nearestNote.dataset.type==="hold" ||
+nearestNote.dataset.type==="release"
+){
+
+hitRange = 20;
+
+}
+
+
+// ◎ bite
+if(
+nearestNote.dataset.type==="bite"
+){
+
+// ◎は中心精度を上げる
+hitRange = 10;
+
+}
+
+
+if(
+nearestDistance < hitRange &&
+nearestNote.dataset.hit !== "true"
 ){
 
 // press譜面なのに押していない
@@ -1449,6 +1640,11 @@ if(
   console.log(
     "止め成立フラグON"
   );
+
+
+sasoiDebugText.stop="READY";
+
+updateSasoiDebug();
 
 
 }
@@ -1628,6 +1824,12 @@ if(nearestNote.dataset.type==="bite"){
   sasoiFishOn = true;
   sasoiFishTime = Date.now();
 
+
+sasoiDebugText.fish="ON";
+
+updateSasoiDebug();
+
+
   console.log(
     "魚が乗った状態になりました"
   );
@@ -1700,9 +1902,16 @@ if(sasoiTouch){
 
     sasoiTouch.setPointerCapture(e.pointerId);
 
-    sasoiAction="press";
+sasoiAction="press";
 
-    console.log("PRESS");
+
+sasoiDebugText.player="PRESS";
+
+updateSasoiDebug();
+
+
+console.log("PRESS");
+
 
   }
 );
@@ -1718,9 +1927,16 @@ if(sasoiTouch){
     }
 
 
-    sasoiAction="release";
+sasoiAction="release";
 
-    console.log("RELEASE");
+
+sasoiDebugText.player="RELEASE";
+
+updateSasoiDebug();
+
+
+console.log("RELEASE");
+
 
   }
 
