@@ -869,7 +869,7 @@ const SASOI_INTEREST_REQUIRED = 60;
 let sasoiHitAnimating = false;
 
 // -------------------------------
-// 譜面データ（新パターン）
+// 譜面データ（シンプル・ピッチアップ版）
 // -------------------------------
 //
 // 321
@@ -878,15 +878,11 @@ let sasoiHitAnimating = false;
 // ○●○●○●ー
 // ○●○●○●ーー
 //
-// ○●○●○●ー
-// ○●○●○●ー
-// ○●○●○●ーー
-//
-// ○●○●○●ー
-// ○●○●○●ー
-// ○●○●○●ーー
-//
 // ◎
+//
+// ※ 基本パターンは変更せず、
+//    音符間隔を500ms → 400msにして
+//    全体のピッチを上げている。
 //
 // -------------------------------
 
@@ -931,37 +927,37 @@ const sasoiScore = [
 
   {
     id:5,
-    time:3500,
+    time:3400,
     type:"press"
   },
 
   {
     id:6,
-    time:4000,
+    time:3800,
     type:"release"
   },
 
   {
     id:7,
-    time:4500,
+    time:4200,
     type:"press"
   },
 
   {
     id:8,
-    time:5000,
+    time:4600,
     type:"release"
   },
 
   {
     id:9,
-    time:5500,
+    time:5000,
     type:"press"
   },
 
   {
     id:10,
-    time:6000,
+    time:5400,
     type:"hold"
   },
 
@@ -973,43 +969,43 @@ const sasoiScore = [
 
   {
     id:11,
-    time:7000,
+    time:6200,
     type:"release"
   },
 
   {
     id:12,
-    time:7500,
+    time:6600,
     type:"press"
   },
 
   {
     id:13,
-    time:8000,
+    time:7000,
     type:"release"
   },
 
   {
     id:14,
-    time:8500,
+    time:7400,
     type:"press"
   },
 
   {
     id:15,
-    time:9000,
+    time:7800,
     type:"release"
   },
 
   {
     id:16,
-    time:9500,
+    time:8200,
     type:"press"
   },
 
   {
     id:17,
-    time:10000,
+    time:8600,
     type:"hold"
   },
 
@@ -1021,349 +1017,49 @@ const sasoiScore = [
 
   {
     id:18,
-    time:11000,
+    time:9400,
     type:"release"
   },
 
   {
     id:19,
-    time:11500,
+    time:9800,
     type:"press"
   },
 
   {
     id:20,
-    time:12000,
+    time:10200,
     type:"release"
   },
 
   {
     id:21,
-    time:12500,
+    time:10600,
     type:"press"
   },
 
   {
     id:22,
-    time:13000,
+    time:11000,
     type:"release"
   },
 
   {
     id:23,
-    time:13500,
+    time:11400,
     type:"press"
   },
 
   {
     id:24,
-    time:14000,
+    time:11800,
     type:"hold"
   },
 
   {
     id:25,
-    time:14500,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 4セット目
-  // ○●○●○●ー
-  // =====================
-
-  {
-    id:26,
-    time:15500,
-    type:"release"
-  },
-
-  {
-    id:27,
-    time:16000,
-    type:"press"
-  },
-
-  {
-    id:28,
-    time:16500,
-    type:"release"
-  },
-
-  {
-    id:29,
-    time:17000,
-    type:"press"
-  },
-
-  {
-    id:30,
-    time:17500,
-    type:"release"
-  },
-
-  {
-    id:31,
-    time:18000,
-    type:"press"
-  },
-
-  {
-    id:32,
-    time:18500,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 5セット目
-  // ○●○●○●ー
-  // =====================
-
-  {
-    id:33,
-    time:19500,
-    type:"release"
-  },
-
-  {
-    id:34,
-    time:20000,
-    type:"press"
-  },
-
-  {
-    id:35,
-    time:20500,
-    type:"release"
-  },
-
-  {
-    id:36,
-    time:21000,
-    type:"press"
-  },
-
-  {
-    id:37,
-    time:21500,
-    type:"release"
-  },
-
-  {
-    id:38,
-    time:22000,
-    type:"press"
-  },
-
-  {
-    id:39,
-    time:22500,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 6セット目
-  // ○●○●○●ーー
-  // =====================
-
-  {
-    id:40,
-    time:23500,
-    type:"release"
-  },
-
-  {
-    id:41,
-    time:24000,
-    type:"press"
-  },
-
-  {
-    id:42,
-    time:24500,
-    type:"release"
-  },
-
-  {
-    id:43,
-    time:25000,
-    type:"press"
-  },
-
-  {
-    id:44,
-    time:25500,
-    type:"release"
-  },
-
-  {
-    id:45,
-    time:26000,
-    type:"press"
-  },
-
-  {
-    id:46,
-    time:26500,
-    type:"hold"
-  },
-
-  {
-    id:47,
-    time:27000,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 7セット目
-  // ○●○●○●ー
-  // =====================
-
-  {
-    id:48,
-    time:28000,
-    type:"release"
-  },
-
-  {
-    id:49,
-    time:28500,
-    type:"press"
-  },
-
-  {
-    id:50,
-    time:29000,
-    type:"release"
-  },
-
-  {
-    id:51,
-    time:29500,
-    type:"press"
-  },
-
-  {
-    id:52,
-    time:30000,
-    type:"release"
-  },
-
-  {
-    id:53,
-    time:30500,
-    type:"press"
-  },
-
-  {
-    id:54,
-    time:31000,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 8セット目
-  // ○●○●○●ー
-  // =====================
-
-  {
-    id:55,
-    time:32000,
-    type:"release"
-  },
-
-  {
-    id:56,
-    time:32500,
-    type:"press"
-  },
-
-  {
-    id:57,
-    time:33000,
-    type:"release"
-  },
-
-  {
-    id:58,
-    time:33500,
-    type:"press"
-  },
-
-  {
-    id:59,
-    time:34000,
-    type:"release"
-  },
-
-  {
-    id:60,
-    time:34500,
-    type:"press"
-  },
-
-  {
-    id:61,
-    time:35000,
-    type:"hold"
-  },
-
-
-  // =====================
-  // 9セット目
-  // ○●○●○●ーー
-  // =====================
-
-  {
-    id:62,
-    time:36000,
-    type:"release"
-  },
-
-  {
-    id:63,
-    time:36500,
-    type:"press"
-  },
-
-  {
-    id:64,
-    time:37000,
-    type:"release"
-  },
-
-  {
-    id:65,
-    time:37500,
-    type:"press"
-  },
-
-  {
-    id:66,
-    time:38000,
-    type:"release"
-  },
-
-  {
-    id:67,
-    time:38500,
-    type:"press"
-  },
-
-  {
-    id:68,
-    time:39000,
-    type:"hold"
-  },
-
-  {
-    id:69,
-    time:39500,
+    time:12200,
     type:"hold"
   },
 
@@ -1373,8 +1069,8 @@ const sasoiScore = [
   // =====================
 
   {
-    id:70,
-    time:40500,
+    id:26,
+    time:13000,
     type:"bite"
   }
 
@@ -1579,65 +1275,77 @@ return;
 const note =
 sasoiScore[sasoiIndex];
 
+
 // -------------------------------
-// 魚の興味ゲージを増やす
-// -------------------------------
-
-function addSasoiInterest(amount){
-
-  sasoiInterestGauge += amount;
-
-  if(
-    sasoiInterestGauge >
-    SASOI_INTEREST_MAX
-  ){
-
-    sasoiInterestGauge =
-      SASOI_INTEREST_MAX;
-
-  }
-
-  console.log(
-    "魚の興味ゲージ:",
-    sasoiInterestGauge
-  );
-
-}
-
-
 // 現在の譜面を表示
+// -------------------------------
 
 createSasoiNote(note);
-
 
 sasoiIndex++;
 
 
+// -------------------------------
 // 次の音符までの間隔計算
+// -------------------------------
+//
+// 譜面の time を基準にする。
+// 例：
+// 3000 → 3500 = 500ms
+// 3500 → 4000 = 500ms
+// 4000 → 4500 = 500ms
+//
+// これにより、譜面データの time を
+// そのまま音符のピッチ調整に使える。
+//
 
 let nextDelay = 500;
 
+
 if(
-sasoiIndex < sasoiScore.length
+  sasoiIndex < sasoiScore.length
 ){
 
-nextDelay =
-sasoiScore[sasoiIndex].time
--
-note.time;
+  const nextNote =
+    sasoiScore[sasoiIndex];
+
+  nextDelay =
+    nextNote.time -
+    note.time;
+
+
+  // 念のため0以下にはしない
+  if(
+    nextDelay < 1
+  ){
+
+    nextDelay = 1;
+
+  }
 
 }
 else{
 
-// 最後の音符は画面を流れ切るまで待つ
-nextDelay = 3000;
+  // -------------------------------
+  // 最後の音符
+  // -------------------------------
+  //
+  // 最後の音符が画面を流れ切るまで待つ
+  //
+
+  nextDelay = 3000;
 
 }
 
+
+// -------------------------------
+// 次の音符を生成
+// -------------------------------
+
 sasoiPlayTimer =
 setTimeout(
-playNextSasoiNote,
-nextDelay
+  playNextSasoiNote,
+  nextDelay
 );
 
 
@@ -1832,7 +1540,7 @@ function addSasoiInterest(){
   // 1回の誘い成功で増える量
   // ---------------------------------
 
-  const addValue = 1;
+  const addValue = 3;
 
   // ---------------------------------
   // 興味ゲージ加算
@@ -2253,32 +1961,77 @@ if(
   //
   // =================================
 
-  if(
-    !sasoiHitAnimating
-  ){
+if(
+!sasoiHitAnimating
+){
 
-    sasoiHitAnimating =
-      true;
+  console.log(
+    "◎ブルブル開始処理",
+    "ゲージ:",
+    sasoiInterestGauge,
+    "hitAnimating:",
+    sasoiHitAnimating
+  );
 
+  sasoiHitAnimating =
+    true;
 
-    tip.classList.add(
+  console.log(
+    "◎hitクラス追加前",
+    "tip:",
+    tip,
+    "class:",
+    tip.className
+  );
+
+  tip.classList.add(
+    "hit"
+  );
+
+  console.log(
+    "◎hitクラス追加後",
+    "class:",
+    tip.className,
+    "hasHit:",
+    tip.classList.contains("hit")
+  );
+
+  setTimeout(()=>{
+
+    console.log(
+      "◎ブルブル終了",
+      "class削除前:",
+      tip.className
+    );
+
+    tip.classList.remove(
       "hit"
     );
 
+    sasoiHitAnimating =
+      false;
 
-    setTimeout(()=>{
+    console.log(
+      "◎ブルブル終了後",
+      "class:",
+      tip.className,
+      "hitAnimating:",
+      sasoiHitAnimating
+    );
 
-      tip.classList.remove(
-        "hit"
-      );
+  },350);
 
+}
+else{
 
-      sasoiHitAnimating =
-        false;
+  console.log(
+    "◎ブルブル処理スキップ",
+    "理由: sasoiHitAnimating が true",
+    "ゲージ:",
+    sasoiInterestGauge
+  );
 
-    },350);
-
-  }
+}
 
 
   // ---------------------------------
@@ -3113,11 +2866,25 @@ sasoiFishOn = false;
 
 sasoiFishTime = null;
 
-
 // ★追加
 // 止め成立リセット
 
 sasoiStopReady = false;
+
+// ★追加
+// 押し開始時間もリセット
+//
+// 前回プレイのPRESS開始時間が残っていると、
+// 次のプレイ開始後のRELEASEで
+// 「止め時間」が異常に大きくなるため。
+// 
+// 例：12016ms など
+
+sasoiPressStartTime = null;
+
+console.log(
+  "PRESS開始時間リセット"
+);
 
 
 if(sasoiPlayTimer){
