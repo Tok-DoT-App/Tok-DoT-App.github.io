@@ -714,7 +714,7 @@ clip-path: polygon(
 
   position:absolute;
 
-  top:3px;
+  top:5px;
   left:5px;
 
   width:calc(100% - 10px);
@@ -742,6 +742,131 @@ clip-path: polygon(
   z-index:20;
 
 }
+
+
+/* ==========================================
+   誘いの名人 判定表示
+========================================== */
+
+.sasoi-judgement-display{
+
+  position:
+    absolute;
+
+  left:
+    calc(39px + 13px);
+
+  top:
+    8px;
+
+  transform:
+    translateX(-50%);
+
+  z-index:
+    100;
+
+  font-size:
+    13px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    1px;
+
+  line-height:
+    1;
+
+  text-align:
+    center;
+
+  white-space:
+    nowrap;
+
+  pointer-events:
+    none;
+
+  color:
+    white;
+
+  text-shadow:
+    0 1px 2px
+    rgba(0,0,0,0.5);
+
+}
+
+
+/* ==========================================
+   PERFECT
+========================================== */
+
+.sasoi-judgement-display.perfect{
+
+  font-size:
+    13px;
+
+}
+
+
+/* ==========================================
+   GOOD
+========================================== */
+
+.sasoi-judgement-display.good{
+
+  font-size:
+    13px;
+
+}
+
+
+/* ==========================================
+   BAD
+========================================== */
+
+.sasoi-judgement-display.bad{
+
+  font-size:
+    12px;
+
+}
+
+
+/* ==========================================
+   MISS
+========================================== */
+
+.sasoi-judgement-display.miss{
+
+  font-size:
+    12px;
+
+}
+
+
+/* ==========================================
+   ○・ー 成功
+========================================== */
+
+.sasoi-judgement-display.ok{
+
+  font-size:
+    13px;
+
+}
+
+
+/* ==========================================
+   ○・ー 失敗
+========================================== */
+
+.sasoi-judgement-display.ng{
+
+  font-size:
+    13px;
+
+}
+
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -1125,6 +1250,12 @@ DEBUG
 
 </div>
 
+<div
+  id="sasoiJudgementDisplay"
+  class="sasoi-judgement-display"
+>
+  --
+</div>
 
   <button
   class="sasoi-back-btn"
@@ -1575,737 +1706,1261 @@ function addSasoiInterest(){
 
 }
 
-function checkSasoiHit(){
+function getSasoiXJudgement(note){
+
+  if(!note){
+    return null;
+  }
 
   const tip =
-    document.querySelector(".sasoi-tip");
+    document.querySelector(
+      ".sasoi-tip"
+    );
 
-  const flow =
-    document.getElementById("sasoiFlow");
+  if(!tip){
+    return null;
+  }
 
-  if(!tip || !flow) return;
-
+  const noteRect =
+    note.getBoundingClientRect();
 
   const tipRect =
     tip.getBoundingClientRect();
 
 
   // =================================
-  // 流れている音符を取得
+  // X軸中心
   // =================================
 
-  const notes =
-    flow.querySelectorAll("span");
+  const noteCenterX =
+    noteRect.left +
+    noteRect.width / 2;
 
-  let nearestNote = null;
-  let nearestDistance = Infinity;
-
-
-  notes.forEach((note)=>{
-
-    // 成功済みは無視
-    if(note.dataset.done === "1"){
-      return;
-    }
-
-    const rect =
-      note.getBoundingClientRect();
-
-    // 見た目の中心同士で距離を測る
-    const noteCenter =
-      rect.left + rect.width / 2;
-
-    const tipCenter =
-      tipRect.left + tipRect.width / 2;
-
-    const distance =
-      Math.abs(
-        noteCenter - tipCenter
-      );
-
-    if(distance < nearestDistance){
-
-      nearestDistance = distance;
-      nearestNote = note;
-
-    }
-
-  });
+  const tipCenterX =
+    tipRect.left +
+    tipRect.width / 2;
 
 
   // =================================
-  // 音符が無い場合
+  // X方向の差
   // =================================
 
-  if(!nearestNote){
-    return;
-  }
+  const differenceX =
+    noteCenterX -
+    tipCenterX;
 
 
-  // =================================
-  // count は判定対象外
-  // =================================
-
-  if(
-    nearestNote.dataset.type === "count"
-  ){
-    return;
-  }
-
-
-  console.log(
-    "最近音符",
-    nearestNote.dataset.id,
-    nearestNote.dataset.type,
-    "距離",
-    nearestDistance
-  );
-
-
-  // =================================
-  // 判定範囲
-  // =================================
-
-  let hitRange = 20;
-
-
-  // ● press / hold / release
-  if(
-    nearestNote.dataset.type === "press" ||
-    nearestNote.dataset.type === "hold" ||
-    nearestNote.dataset.type === "release"
-  ){
-
-    hitRange = 20;
-
-  }
-
-
-  // ◎ bite
-  if(
-    nearestNote.dataset.type === "bite"
-  ){
-
-    // ◎は中心精度を上げる
-    hitRange = 10;
-
-  }
-
-
-  // =================================
-  // 判定
-  // =================================
-
-  if(
-    nearestDistance < hitRange &&
-    nearestNote.dataset.hit !== "true"
-  ){
-
-
-    // =================================
-    // PRESS
-    // =================================
-
-    if(
-      nearestNote.dataset.type === "press" &&
-      sasoiAction !== "press"
-    ){
-
-      // ノーツ中心付近まで来たら
-      // PRESS待機にする
-      if(
-        nearestDistance < 18
-      ){
-
-        console.log(
-          "PRESS待機"
-        );
-
-        return;
-
-      }
-
-
-      console.log(
-        "press失敗（押していない）"
-      );
-
-      return;
-
-    }
-
-
-    // =================================
-    // RELEASE
-    // =================================
-
-    if(
-      nearestNote.dataset.type === "release" &&
-      sasoiAction !== "release"
-    ){
-
-      // =================================
-      // ルールA
-      // 魚が乗った後、合わせ失敗
-      // =================================
-
-      if(false && sasoiFishOn){
-
-        console.log(
-          "魚が掛かったまま離せませんでした"
-        );
-
-        sasoiFishOn = false;
-
-        sasoiFishTime = null;
-
-        if(
-          typeof showSasoiMessage === "function"
-        ){
-
-          showSasoiMessage(
-            "あっ…魚が逃げてしまいました"
-          );
-
-        }
-
-        stopSasoiCheck();
-
-      }
-
-      return;
-
-    }
-
-
-
-// =================================
-// BITE
-// =================================
-//
-// biteは通常の誘い音符ではない。
-// ユーザー操作による成功判定を行わない。
-//
-// 「◎を発生させる条件」は
-//
-//   ① 誘い成功によって興味ゲージが上昇
-//   ② 興味ゲージが必要値以上
-//   ③ bite音符が判定位置に到達
-//
-// の3条件。
-//
-// =================================
-
-if(
-  nearestNote.dataset.type === "bite"
-){
-
-  console.log(
-    "BITE判定"
-  );
-
-
-  // ---------------------------------
-  // 興味ゲージ不足
-  // ---------------------------------
-
-  if(
-    sasoiInterestGauge <
-    SASOI_INTEREST_REQUIRED
-  ){
-
-    console.log(
-      "BITE：興味ゲージ不足",
-      sasoiInterestGauge,
-      "/",
-      SASOI_INTEREST_REQUIRED
+  const distanceX =
+    Math.abs(
+      differenceX
     );
 
 
-    // bite音符だけ消費する
+  // =================================
+  // 早い・遅い
+  // =================================
+  //
+  // 音符が右側
+  // → まだ穂先に到達していない
+  // → EARLY
+  //
+  // 音符が左側
+  // → 穂先を通り過ぎている
+  // → LATE
+  //
+  // =================================
 
-    nearestNote.dataset.done =
-      "1";
-
-    nearestNote.dataset.hit =
-      "true";
-
-
-    // 魚はつんつんしない
-    // 穂先もブルブルしない
-    // アワセ受付も開始しない
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
+  let timing =
+    "PERFECT";
 
 
-    return;
+  if(
+    differenceX > 0
+  ){
+
+    timing =
+      "EARLY";
+
+  }else if(
+    differenceX < 0
+  ){
+
+    timing =
+      "LATE";
 
   }
 
 
-  // ---------------------------------
-  // 興味ゲージ十分
-  // ---------------------------------
+  // =================================
+  // 3段階判定
+  // =================================
 
-  console.log(
-    "BITE：興味ゲージ十分"
-  );
+  let judgement =
+    "MISS";
+
+
+  if(
+    distanceX <= 8
+  ){
+
+    judgement =
+      "PERFECT";
+
+  }else if(
+    distanceX <= 18
+  ){
+
+    judgement =
+      "GOOD";
+
+  }else if(
+    distanceX <= 30
+  ){
+
+    judgement =
+      "BAD";
+
+  }else{
+
+    judgement =
+      "MISS";
+
+  }
 
 
   // =================================
-  // ◎ つんつん発生
+  // PERFECTの場合
   // =================================
 
-  console.log(
-    "◎ つんつん発生"
-  );
+  if(
+    judgement === "PERFECT"
+  ){
 
+    timing =
+      "";
 
-  // ---------------------------------
-  // 魚はまだ掛かっていない
-  // ---------------------------------
-
-  sasoiFishOn =
-    false;
-
-  sasoiFishTime =
-    null;
+  }
 
 
   // =================================
-  // ◎発生直前の指の状態を記録
-  // =================================
-  //
-  // press  = 指が置かれている
-  // release = 指が離れている
-  //
-  // ここではブルブルの条件には使わない。
-  //
-  // 「◎が発生した瞬間にアワセ準備が
-  // できていたか」を後で判定するために
-  // 記録するだけ。
-  //
+  // 表示用文字列
   // =================================
 
-  sasoiBiteActionAtStart =
-    sasoiAction;
+  let display =
+    judgement;
 
 
-  console.log(
-    "◎発生時の操作状態:",
-    sasoiBiteActionAtStart
-  );
+  if(
+    timing
+  ){
 
+    display +=
+      " " +
+      timing;
 
-  // ---------------------------------
-  // ◎アワセ受付開始
-  // ---------------------------------
-
-  sasoiBiteWaiting =
-    true;
-
-  sasoiBiteStartTime =
-    Date.now();
-
-
-  // ---------------------------------
-  // 新しいrelease待ち
-  // ---------------------------------
-
-  sasoiBiteReleasePending =
-    false;
-
-
-  console.log(
-    "◎アワセ待機開始"
-  );
-
-
-  // ---------------------------------
-  // デバッグ表示
-  // ---------------------------------
-
-  sasoiDebugText.fish =
-    "BITE";
-
-  updateSasoiDebug();
-
-
-  console.log(
-    "魚がつんつんしている状態になりました"
-  );
+  }
 
 
   // =================================
-  // 穂先ブルブル
-  // =================================
-  //
-  // 重要：
-  //
-  // ここでは指の状態を確認しない。
-  //
-  // 興味ゲージが条件を満たして
-  // ◎が発生した時点で、
-  // 魚がつんつんしているため
-  // 穂先は必ずブルブルする。
-  //
+  // デバッグ
   // =================================
 
-if(
-!sasoiHitAnimating
-){
-
   console.log(
-    "◎ブルブル開始処理",
-    "ゲージ:",
-    sasoiInterestGauge,
-    "hitAnimating:",
-    sasoiHitAnimating
+    "X軸判定",
+    display,
+    "X差:",
+    differenceX,
+    "距離:",
+    distanceX
   );
 
-  sasoiHitAnimating =
-    true;
 
-  console.log(
-    "◎hitクラス追加前",
-    "tip:",
-    tip,
-    "class:",
-    tip.className
-  );
+  return {
 
-  tip.classList.add(
-    "hit"
-  );
+    judgement:
+      judgement,
 
-  console.log(
-    "◎hitクラス追加後",
-    "class:",
-    tip.className,
-    "hasHit:",
-    tip.classList.contains("hit")
-  );
+    timing:
+      timing,
 
-  setTimeout(()=>{
+    differenceX:
+      differenceX,
 
-    console.log(
-      "◎ブルブル終了",
-      "class削除前:",
-      tip.className
-    );
+    distanceX:
+      distanceX,
 
-    tip.classList.remove(
-      "hit"
-    );
+    display:
+      display
 
-    sasoiHitAnimating =
-      false;
-
-    console.log(
-      "◎ブルブル終了後",
-      "class:",
-      tip.className,
-      "hitAnimating:",
-      sasoiHitAnimating
-    );
-
-  },350);
-
-}
-else{
-
-  console.log(
-    "◎ブルブル処理スキップ",
-    "理由: sasoiHitAnimating が true",
-    "ゲージ:",
-    sasoiInterestGauge
-  );
+  };
 
 }
 
 
-  // ---------------------------------
-  // bite音符を消費
-  // ---------------------------------
+function showSasoiXJudgement(result){
 
-  nearestNote.dataset.done =
-    "1";
+  const display =
+    document.getElementById(
+      "sasoiJudgementDisplay"
+    );
 
-  nearestNote.dataset.hit =
-    "true";
+  if(
+    !display ||
+    !result
+  ){
 
+    return;
 
-  // ---------------------------------
-  // 興味ゲージリセット
-  // ---------------------------------
-
-  sasoiInterestGauge =
-    0;
+  }
 
 
-  console.log(
-    "興味ゲージリセット"
+  // =================================
+  // ●の判定結果だけ表示
+  // =================================
+
+  display.textContent =
+    result.judgement;
+
+
+  // =================================
+  // 表示クラスをリセット
+  // =================================
+
+  display.className =
+    "sasoi-judgement-display";
+
+
+  // =================================
+  // PERFECT / GOOD / BAD / MISS
+  // =================================
+
+  display.classList.add(
+    result.judgement.toLowerCase()
   );
 
 
-  // ---------------------------------
-  // ★ここで終了
-  // ---------------------------------
+  // =================================
+  // デバッグログ
+  // =================================
+
+  console.log(
+    "画面判定表示:",
+    result.judgement
+  );
+
+
+  // =================================
+  // 前回の消去タイマーを解除
+  // =================================
+
+  clearTimeout(
+    showSasoiXJudgement.timer
+  );
+
+
+  // =================================
+  // 一定時間後に -- に戻す
+  // =================================
+
+  showSasoiXJudgement.timer =
+    setTimeout(()=>{
+
+      display.textContent =
+        "--";
+
+      display.className =
+        "sasoi-judgement-display";
+
+    },800);
+
+}
+
+function showSasoiActionJudgement(result){
+
+  const display =
+    document.getElementById(
+      "sasoiJudgementDisplay"
+    );
+
+  if(
+    !display ||
+    !result
+  ){
+
+    return;
+
+  }
+
+
+  // =================================
+  // ○・ー専用表示
+  // =================================
+
+  display.textContent =
+    result;
+
+
+  // =================================
+  // 表示クラスをリセット
+  // =================================
+
+  display.className =
+    "sasoi-judgement-display";
+
+
+  // =================================
+  // OK / NG
+  // =================================
+
+  display.classList.add(
+    result.toLowerCase()
+  );
+
+
+  // =================================
+  // デバッグログ
+  // =================================
+
+  console.log(
+    "○・ー判定表示:",
+    result
+  );
+
+
+  // =================================
+  // 前回の消去タイマーを解除
+  // =================================
+
+  clearTimeout(
+    showSasoiActionJudgement.timer
+  );
+
+
+  // =================================
+  // 一定時間後に -- に戻す
+  // =================================
+
+  showSasoiActionJudgement.timer =
+    setTimeout(()=>{
+
+      display.textContent =
+        "--";
+
+      display.className =
+        "sasoi-judgement-display";
+
+    },800);
+
+}
+
+function checkSasoiHit(){
+
+const tip =
+document.querySelector(".sasoi-tip");
+
+const flow =
+document.getElementById("sasoiFlow");
+
+if(!tip || !flow) return;
+
+const tipRect =
+tip.getBoundingClientRect();
+
+// =================================
+// 流れている音符を取得
+// =================================
+
+const notes =
+flow.querySelectorAll("span");
+
+let nearestNote = null;
+let nearestDistance = Infinity;
+let nearestDifferenceX = 0;
+
+notes.forEach((note)=>{
+
+// 成功済みは無視
+if(note.dataset.done === "1"){
+return;
+}
+
+const rect =
+note.getBoundingClientRect();
+
+// =================================
+// X軸中心だけで判定
+// =================================
+
+const noteCenter =
+rect.left +
+rect.width / 2;
+
+const tipCenter =
+tipRect.left +
+tipRect.width / 2;
+
+// =================================
+// X方向の差
+// =================================
+//
+// プラス
+// → 音符が右側
+// → EARLY
+//
+// マイナス
+// → 音符が左側
+// → LATE
+//
+// =================================
+
+const differenceX =
+noteCenter -
+tipCenter;
+
+const distance =
+Math.abs(
+differenceX
+);
+
+if(
+distance <
+nearestDistance
+){
+
+nearestDistance =
+distance;
+
+nearestNote =
+note;
+
+nearestDifferenceX =
+differenceX;
+
+}
+
+});
+
+// =================================
+// 音符が無い場合
+// =================================
+
+if(!nearestNote){
+return;
+}
+
+// =================================
+// count は判定対象外
+// =================================
+
+if(
+nearestNote.dataset.type === "count"
+){
+return;
+}
+
+console.log(
+"最近音符",
+nearestNote.dataset.id,
+nearestNote.dataset.type,
+"距離",
+nearestDistance
+);
+
+// =================================
+// 音符種類
+// =================================
+
+const noteType =
+nearestNote.dataset.type;
+
+// =================================
+// ● press / ◎ bite
+// のみ距離判定を使用
+// =================================
+
+const useDistanceJudgement =
+noteType === "press" ||
+noteType === "bite";
+
+// =================================
+// X軸4段階判定
+// =================================
+//
+// 距離判定を使用するのは
+//
+// ● press
+// ◎ bite
+//
+// のみ。
+//
+// 穂先〇の直径 = 26px
+// 穂先〇の半径 = 13px
+//
+// 0～4px
+// PERFECT
+//
+// 4～8px
+// GOOD
+//
+// 8～13px
+// BAD
+//
+// 13px超
+// MISS
+//
+// =================================
+
+let xJudgement =
+  "MISS";
+
+let xTiming =
+  "";
+
+let xJudgementText =
+  "";
+
+// =================================
+// 距離判定対象の場合
+// =================================
+
+if(
+  useDistanceJudgement
+){
+
+if(
+nearestDistance <= 4
+){
+
+  xJudgement =
+    "PERFECT";
+
+}else if(
+nearestDistance <= 8
+){
+
+  xJudgement =
+    "GOOD";
+
+}else if(
+nearestDistance <= 13
+){
+
+  xJudgement =
+    "BAD";
+
+}else{
+
+  xJudgement =
+    "MISS";
+
+}
+
+  // =================================
+  // EARLY / LATE
+  // =================================
+  //
+  // 中心より右側
+  // → EARLY
+  //
+  // 中心より左側
+  // → LATE
+  //
+  // PERFECTでも表示する。
+  //
+  // =================================
+
+  if(
+    nearestDifferenceX > 0
+  ){
+
+    xTiming =
+      "EARLY";
+
+  }else if(
+    nearestDifferenceX < 0
+  ){
+
+    xTiming =
+      "LATE";
+
+  }
+
+  // =================================
+  // 表示文字
+  // =================================
+
+  xJudgementText =
+    xJudgement;
+
+  if(
+    xTiming
+  ){
+
+    xJudgementText +=
+      " " +
+      xTiming;
+
+  }
+
+  // =================================
+  // X軸判定ログ
+  // =================================
+
+  console.log(
+    "X軸判定:",
+    xJudgementText,
+    "差:",
+    nearestDifferenceX.toFixed(1),
+    "px",
+    "距離:",
+    nearestDistance.toFixed(1),
+    "px"
+  );
+
+  // =================================
+  // 画面表示
+  // =================================
+
+  if(
+    typeof showSasoiXJudgement ===
+    "function"
+  ){
+
+    showSasoiXJudgement({
+
+      judgement:
+        xJudgement,
+
+      timing:
+        xTiming,
+
+      differenceX:
+        nearestDifferenceX,
+
+      distanceX:
+        nearestDistance,
+
+      display:
+        xJudgementText
+
+    });
+
+  }
+
+}
+
+// =================================
+// 現在の実際の判定
+// =================================
+//
+// ● press
+// ◎ bite
+//
+// のみ距離を使う。
+//
+// ー hold
+// ○ release
+//
+// は距離による成功判定をしない。
+//
+// =================================
+
+// =================================
+// PRESS
+// =================================
+
+if(
+noteType === "press"
+){
+
+// ---------------------------------
+// ● PRESSの実際の判定範囲
+// ---------------------------------
+//
+// ●だけは中心からの距離を使用。
+//
+// 中心通過前
+// → EARLY
+//
+// 中心通過後
+// → LATE
+//
+// どちら側からでも
+// 20px以内なら操作判定対象。
+//
+// ---------------------------------
+
+if(
+nearestDistance >= 13 ||
+nearestNote.dataset.hit === "true"
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 押していない場合
+// ---------------------------------
+
+if(
+sasoiAction !== "press"
+){
+
+// ノーツ中心付近まで来たら
+// PRESS待機にする
+
+if(
+  nearestDistance < 13
+){
+
+  console.log(
+    "PRESS待機"
+  );
 
   return;
 
 }
 
+console.log(
+  "press失敗（押していない）"
+);
 
-// =================================
-// HOLD
-// =================================
+return;
 
-if(
-  nearestNote.dataset.type === "hold"
-){
+}
 
-  // ---------------------------------
-  // 押しっぱなし中だけ成功
-  // ---------------------------------
+// ---------------------------------
+// PRESS成功
+// ---------------------------------
 
-  if(
-    sasoiAction !== "press"
-  ){
+console.log(
+"成功 press"
+);
 
-    console.log(
-      "hold失敗（押していない）"
-    );
+// ---------------------------------
+// 成功済みにする
+// ---------------------------------
 
-    return;
+nearestNote.dataset.done =
+"1";
 
-  }
+nearestNote.dataset.hit =
+"true";
 
+// ---------------------------------
+// 興味ゲージ加算
+// ---------------------------------
 
-  // ---------------------------------
-  // HOLD成功
-  // ---------------------------------
+addSasoiInterest();
 
-  console.log(
-    "成功 hold"
-  );
+// ---------------------------------
+// 押し開始時間記録
+// ---------------------------------
 
+sasoiPressStartTime =
+Date.now();
 
-  // ---------------------------------
-  // 成功済みにする
-  // ---------------------------------
+sasoiStopReady =
+false;
 
-  nearestNote.dataset.done =
-    "1";
+console.log(
+"押し開始時間記録"
+);
 
-  nearestNote.dataset.hit =
-    "true";
-
-
-  // ---------------------------------
-  // 興味ゲージ加算
-  // ---------------------------------
-
-  addSasoiInterest();
-
-
-  // ---------------------------------
-  // 止め成立
-  // ---------------------------------
-
-  sasoiStopReady =
-    true;
-
-  console.log(
-    "止め成立フラグON"
-  );
-
-
-  sasoiDebugText.stop =
-    "READY";
-
-  updateSasoiDebug();
+return;
 
 }
 
 // =================================
-// PRESS開始時間
+// HOLD
+// =================================
+//
+// ー hold は
+// 「中心から何px離れているか」
+// では判定しない。
+//
+// 押している状態だけを確認する。
+//
 // =================================
 
 if(
-  nearestNote.dataset.type === "press"
+noteType === "hold"
 ){
 
-  // ---------------------------------
-  // PRESS成功
-  // ---------------------------------
+// ---------------------------------
+// すでに処理済みなら終了
+// ---------------------------------
+
+if(
+nearestNote.dataset.hit === "true"
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 押しっぱなし中だけ成功
+// ---------------------------------
+
+if(
+  sasoiAction !== "press"
+){
 
   console.log(
-    "成功 press"
+    "hold失敗（押していない）"
   );
 
 
-  // ---------------------------------
-  // 成功済みにする
-  // ---------------------------------
-
-  nearestNote.dataset.done =
-    "1";
-
-  nearestNote.dataset.hit =
-    "true";
-
-
-  // ---------------------------------
-  // 興味ゲージ加算
-  // ---------------------------------
-
-  addSasoiInterest();
-
-
-  // ---------------------------------
-  // 押し開始時間記録
-  // ---------------------------------
-
-  sasoiPressStartTime =
-    Date.now();
-
-  sasoiStopReady =
-    false;
-
-  console.log(
-    "押し開始時間記録"
+  showSasoiActionJudgement(
+    "NG"
   );
+
+
+  return;
+
+}
+
+// ---------------------------------
+// HOLD成功
+// ---------------------------------
+
+console.log(
+"成功 hold"
+);
+
+showSasoiActionJudgement(
+  "OK"
+);
+
+// ---------------------------------
+// 成功済みにする
+// ---------------------------------
+
+nearestNote.dataset.done =
+"1";
+
+nearestNote.dataset.hit =
+"true";
+
+// ---------------------------------
+// 興味ゲージ加算
+// ---------------------------------
+
+addSasoiInterest();
+
+// ---------------------------------
+// 止め成立
+// ---------------------------------
+
+sasoiStopReady =
+true;
+
+console.log(
+"止め成立フラグON"
+);
+
+sasoiDebugText.stop =
+"READY";
+
+updateSasoiDebug();
+
+return;
 
 }
 
 // =================================
 // RELEASE
 // =================================
+//
+// ○ release は
+// 「中心から何px離れているか」
+// では判定しない。
+//
+// 離している状態を確認する。
+//
+// =================================
 
 if(
-  nearestNote.dataset.type === "release"
+noteType === "release"
 ){
 
-  // ---------------------------------
-  // 魚が掛かった後のrelease失敗
-  // ---------------------------------
+// ---------------------------------
+// すでに処理済みなら終了
+// ---------------------------------
 
-  if(
-    sasoiFishOn &&
-    sasoiAction !== "release"
-  ){
+if(
+nearestNote.dataset.hit === "true"
+){
 
-    console.log(
-      "魚が掛かった状態で離せませんでした"
-    );
+return;
 
-    sasoiFishOn = false;
+}
 
-    sasoiFishTime = null;
+// ---------------------------------
+// 魚が掛かった後のrelease失敗
+// ---------------------------------
 
-    sasoiStopReady = false;
+if(
+sasoiFishOn &&
+sasoiAction !== "release"
+){
 
+console.log(
+  "魚が掛かった状態で離せませんでした"
+);
 
-    if(
-      typeof showSasoiMessage === "function"
-    ){
+sasoiFishOn =
+  false;
 
-      showSasoiMessage(
-        "あっ…魚が逃げてしまいました"
-      );
+sasoiFishTime =
+  null;
 
-    }
+sasoiStopReady =
+  false;
 
-    return;
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
 
-  }
+  showSasoiMessage(
+    "あっ…魚が逃げてしまいました"
+  );
 
+}
 
-  // ---------------------------------
-  // 通常のrelease入力確認
-  // ---------------------------------
+return;
 
-  if(
-    sasoiAction !== "release"
-  ){
+}
 
-    return;
+// ---------------------------------
+// 通常のrelease入力確認
+// ---------------------------------
 
-  }
-
-
-  // ---------------------------------
-  // RELEASE成功
-  // ---------------------------------
+if(
+  sasoiAction !== "release"
+){
 
   console.log(
-    "成功 release"
+    "release失敗（離していない）"
   );
 
 
-  // ---------------------------------
-  // 成功済みにする
-  // ---------------------------------
-
-  nearestNote.dataset.done =
-    "1";
-
-  nearestNote.dataset.hit =
-    "true";
+  showSasoiActionJudgement(
+    "NG"
+  );
 
 
-  // ---------------------------------
-  // 興味ゲージ加算
-  // ---------------------------------
-
-  addSasoiInterest();
-
-
-  // ---------------------------------
-  // 押していた時間を計測
-  // ---------------------------------
-
-  if(
-    sasoiPressStartTime
-  ){
-
-    sasoiHoldTime =
-      Date.now()
-      -
-      sasoiPressStartTime;
-
-
-    console.log(
-      "止め時間:",
-      sasoiHoldTime,
-      "ms"
-    );
-
-
-    sasoiPressStartTime =
-      null;
-
-  }
+  return;
 
 }
 
+// ---------------------------------
+// RELEASE成功
+// ---------------------------------
 
+console.log(
+"成功 release"
+);
 
-  }
+showSasoiActionJudgement(
+  "OK"
+);
+
+// ---------------------------------
+// 成功済みにする
+// ---------------------------------
+
+nearestNote.dataset.done =
+"1";
+
+nearestNote.dataset.hit =
+"true";
+
+// ---------------------------------
+// 興味ゲージ加算
+// ---------------------------------
+
+addSasoiInterest();
+
+// ---------------------------------
+// 押していた時間を計測
+// ---------------------------------
+
+if(
+sasoiPressStartTime
+){
+
+sasoiHoldTime =
+  Date.now()
+  -
+  sasoiPressStartTime;
+
+console.log(
+  "止め時間:",
+  sasoiHoldTime,
+  "ms"
+);
+
+sasoiPressStartTime =
+  null;
 
 }
 
+return;
+
+}
+
+// =================================
+// BITE
+// =================================
+//
+// ◎ bite は今回変更しない。
+//
+// 距離判定は現在どおり使用する。
+// 興味ゲージ → ◎発生 → アワセ待機
+// の流れも維持する。
+//
+// =================================
+
+if(
+noteType === "bite"
+){
+
+// ---------------------------------
+// ◎の判定範囲
+// ---------------------------------
+
+if(
+nearestDistance >= 10 ||
+nearestNote.dataset.hit === "true"
+){
+
+return;
+
+}
+
+console.log(
+"BITE判定"
+);
+
+// ---------------------------------
+// 興味ゲージ不足
+// ---------------------------------
+
+if(
+sasoiInterestGauge <
+SASOI_INTEREST_REQUIRED
+){
+
+console.log(
+  "BITE：興味ゲージ不足",
+  sasoiInterestGauge,
+  "/",
+  SASOI_INTEREST_REQUIRED
+);
+
+nearestNote.dataset.done =
+  "1";
+
+nearestNote.dataset.hit =
+  "true";
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+return;
+
+}
+
+// ---------------------------------
+// 興味ゲージ十分
+// ---------------------------------
+
+console.log(
+"BITE：興味ゲージ十分"
+);
+
+// =================================
+// ◎ つんつん発生
+// =================================
+
+console.log(
+"◎ つんつん発生"
+);
+
+// ---------------------------------
+// 魚はまだ掛かっていない
+// ---------------------------------
+
+sasoiFishOn =
+false;
+
+sasoiFishTime =
+null;
+
+// =================================
+// ◎発生直前の指の状態を記録
+// =================================
+
+sasoiBiteActionAtStart =
+sasoiAction;
+
+console.log(
+"◎発生時の操作状態:",
+sasoiBiteActionAtStart
+);
+
+// ---------------------------------
+// ◎アワセ受付開始
+// ---------------------------------
+
+sasoiBiteWaiting =
+true;
+
+sasoiBiteStartTime =
+Date.now();
+
+// ---------------------------------
+// 新しいrelease待ち
+// ---------------------------------
+
+sasoiBiteReleasePending =
+false;
+
+console.log(
+"◎アワセ待機開始"
+);
+
+// ---------------------------------
+// デバッグ表示
+// ---------------------------------
+
+sasoiDebugText.fish =
+"BITE";
+
+updateSasoiDebug();
+
+console.log(
+"魚がつんつんしている状態になりました"
+);
+
+// =================================
+// 穂先ブルブル
+// =================================
+
+if(
+!sasoiHitAnimating
+){
+
+console.log(
+  "◎ブルブル開始処理",
+  "ゲージ:",
+  sasoiInterestGauge,
+  "hitAnimating:",
+  sasoiHitAnimating
+);
+
+sasoiHitAnimating =
+  true;
+
+console.log(
+  "◎hitクラス追加前",
+  "tip:",
+  tip,
+  "class:",
+  tip.className
+);
+
+tip.classList.add(
+  "hit"
+);
+
+console.log(
+  "◎hitクラス追加後",
+  "class:",
+  tip.className,
+  "hasHit:",
+  tip.classList.contains("hit")
+);
+
+setTimeout(()=>{
+
+  console.log(
+    "◎ブルブル終了",
+    "class削除前:",
+    tip.className
+  );
+
+  tip.classList.remove(
+    "hit"
+  );
+
+  sasoiHitAnimating =
+    false;
+
+  console.log(
+    "◎ブルブル終了後",
+    "class:",
+    tip.className,
+    "hitAnimating:",
+    sasoiHitAnimating
+  );
+
+},350);
+
+}else{
+
+console.log(
+  "◎ブルブル処理スキップ",
+  "理由: sasoiHitAnimating が true",
+  "ゲージ:",
+  sasoiInterestGauge
+);
+
+}
+
+// ---------------------------------
+// bite音符を消費
+// ---------------------------------
+
+nearestNote.dataset.done =
+"1";
+
+nearestNote.dataset.hit =
+"true";
+
+// ---------------------------------
+// 興味ゲージリセット
+// ---------------------------------
+
+sasoiInterestGauge =
+0;
+
+console.log(
+"興味ゲージリセット"
+);
+
+// ---------------------------------
+// ★ここで終了
+// ---------------------------------
+
+return;
+
+}
+
+}
 
 // =================================
 // ◎ アワセ判定
@@ -2854,37 +3509,87 @@ document
 .getElementById("sasoiGame")
 .style.display="block";
 
-sasoiPlaying = true;
 
+// ---------------------------------
+// プレイ状態を完全リセット
+// ---------------------------------
+
+// 譜面・プレイ状態
+
+sasoiPlaying = true;
 
 sasoiIndex = 0;
 
 
-// 魚状態リセット
+// ---------------------------------
+// 魚状態
+// ---------------------------------
 
 sasoiFishOn = false;
 
 sasoiFishTime = null;
 
-// ★追加
-// 止め成立リセット
+
+// ---------------------------------
+// 誘い・止め状態
+// ---------------------------------
 
 sasoiStopReady = false;
 
-// ★追加
-// 押し開始時間もリセット
-//
-// 前回プレイのPRESS開始時間が残っていると、
-// 次のプレイ開始後のRELEASEで
-// 「止め時間」が異常に大きくなるため。
-// 
-// 例：12016ms など
-
 sasoiPressStartTime = null;
+
+sasoiHoldTime = null;
+
+
+// ---------------------------------
+// ◎ BITE状態
+// ---------------------------------
+//
+// 前回プレイで◎が発生していた場合でも、
+// 次のプレイには一切持ち越さない。
+
+sasoiBiteWaiting = false;
+
+sasoiBiteStartTime = null;
+
+sasoiBiteActionAtStart = null;
+
+sasoiBiteReleasePending = false;
+
+
+// ---------------------------------
+// 穂先ブルブル状態
+// ---------------------------------
+
+sasoiHitAnimating = false;
+
+
+// ---------------------------------
+// 指の操作状態
+// ---------------------------------
+//
+// 新しいプレイは指が離れている状態から開始。
+
+sasoiAction = "release";
 
 console.log(
   "PRESS開始時間リセット"
 );
+
+// ---------------------------------
+// デバッグ表示を初期化
+// ---------------------------------
+
+sasoiDebugText.player = "RELEASE";
+
+sasoiDebugText.note = "NONE";
+
+sasoiDebugText.stop = "OFF";
+
+sasoiDebugText.fish = "OFF";
+
+updateSasoiDebug();
+
 
 
 if(sasoiPlayTimer){
