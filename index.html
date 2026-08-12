@@ -2280,36 +2280,74 @@ transform:scaleY(.1);
 
 /* --------------------------------- テンアニメーション用追加 --------------------------------- */
 
-#biteFace{
+/* ---------------------------------
+   テンアニメーション用顔
+--------------------------------- */
 
-position:relative;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-gap:18px;
-
+#biteFace {
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:18px;
 }
 
+
+/* ---------------------------------
+   魚本体
+--------------------------------- */
+
 #bLeft,
-#bRight{
+#bRight {
     display:inline-flex;
     align-items:center;
     gap:0;
 }
 
-#leftEar{
+
+/* ---------------------------------
+   左魚
+   ＞　　　⦿＞
+--------------------------------- */
+
+#leftTail {
     display:inline-block;
-    transform:translateX(-1px);
+    margin-right:75px;
+font-size: 1.8rem;
+    opacity: 0.15;
 }
 
-#rightEar{
+#leftEye {
     display:inline-block;
-    transform:translateX(1px);
 }
+
+#leftMouth {
+    display:inline-block;
+    margin-left:2px;
+}
+
+
+/* ---------------------------------
+   右魚
+   ＜⦿　　　＜
+--------------------------------- */
+
+#rightMouth {
+    display:inline-block;
+    margin-right:2px;
+}
+
+#rightEye {
+    display:inline-block;
+}
+
+#rightTail {
+    display:inline-block;
+    margin-left:75px;
+font-size: 1.8rem;
+    opacity: 0.15;
+}
+
 
 /* --------------------------------- テンアニメーション用 --------------------------------- */
 
@@ -5643,16 +5681,21 @@ function playTitleSequence() {
 
 <div id="biteFace" class="bite-symbols">
 
+  <!-- 左魚：＞　　　⦿＞ -->
   <span id="bLeft" class="bite-mark">
+    <span id="leftTail">＞</span>
     <span id="leftEye" class="eye">⦿</span>
-    <span id="leftEar">＞</span>
+    <span id="leftMouth">＞</span>
   </span>
 
+  <!-- エサ -->
   <span id="bDot" class="bite-dot">・</span>
 
+  <!-- 右魚：＜⦿　　　＜ -->
   <span id="bRight" class="bite-mark">
-    <span id="rightEar">＜</span>
+    <span id="rightMouth">＜</span>
     <span id="rightEye" class="eye">⦿</span>
+    <span id="rightTail">＜</span>
   </span>
 
 </div>
@@ -6401,7 +6444,7 @@ window.addEventListener("DOMContentLoaded", setRandomTitles);
 const ENABLE_TITLE_SKIP = true;
 
 // 起動演出をスキップする時間（分）
-const TITLE_SKIP_MINUTES = 3;
+const TITLE_SKIP_MINUTES = 5;
 
 
 // ★ ここからタイトル演出を追加

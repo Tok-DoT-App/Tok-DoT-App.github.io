@@ -983,15 +983,16 @@ let sasoiResult = null;
 let sasoiInterestGauge = 0;
 
 // ゲージ最大値
-const SASOI_INTEREST_MAX = 100;
+const SASOI_INTEREST_MAX = 120;
 
 // ◎が発生できる最低ゲージ
-const SASOI_INTEREST_REQUIRED = 60;
+const SASOI_INTEREST_REQUIRED = 90;
 
 
 // 演出中かどうかのフラグ
 
 let sasoiHitAnimating = false;
+
 
 // -------------------------------
 // 譜面データ（シンプル・ピッチアップ版）
@@ -1006,7 +1007,8 @@ let sasoiHitAnimating = false;
 // ◎
 //
 // ※ 基本パターンは変更せず、
-//    音符間隔を500ms → 400msにして
+//    音符間隔を400msで統一。
+//    セット間の空白も400ms間隔になるよう補完。
 //    全体のピッチを上げている。
 //
 // -------------------------------
@@ -1041,7 +1043,7 @@ const sasoiScore = [
 
   // =====================
   // 1セット目
-  // ○●○●○●ー
+  // ○●○●○●ーー
   // =====================
 
   {
@@ -1086,51 +1088,65 @@ const sasoiScore = [
     type:"hold"
   },
 
+  // 空白補完
+  {
+    id:11,
+    time:5800,
+    type:"hold"
+  },
+
 
   // =====================
   // 2セット目
-  // ○●○●○●ー
+  // ○●○●○●ーー
   // =====================
 
   {
-    id:11,
+    id:12,
     time:6200,
     type:"release"
   },
 
   {
-    id:12,
+    id:13,
     time:6600,
     type:"press"
   },
 
   {
-    id:13,
+    id:14,
     time:7000,
     type:"release"
   },
 
   {
-    id:14,
+    id:15,
     time:7400,
     type:"press"
   },
 
   {
-    id:15,
+    id:16,
     time:7800,
     type:"release"
   },
 
   {
-    id:16,
+    id:17,
     time:8200,
     type:"press"
   },
 
   {
-    id:17,
+    id:18,
     time:8600,
+    type:"hold"
+  },
+
+  // 空白補完
+  {
+    id:19,
+    time:9000,
     type:"hold"
   },
 
@@ -1141,50 +1157,57 @@ const sasoiScore = [
   // =====================
 
   {
-    id:18,
+    id:20,
     time:9400,
     type:"release"
   },
 
   {
-    id:19,
+    id:21,
     time:9800,
     type:"press"
   },
 
   {
-    id:20,
+    id:22,
     time:10200,
     type:"release"
   },
 
   {
-    id:21,
+    id:23,
     time:10600,
     type:"press"
   },
 
   {
-    id:22,
+    id:24,
     time:11000,
     type:"release"
   },
 
   {
-    id:23,
+    id:25,
     time:11400,
     type:"press"
   },
 
   {
-    id:24,
+    id:26,
     time:11800,
     type:"hold"
   },
 
   {
-    id:25,
+    id:27,
     time:12200,
+    type:"hold"
+  },
+
+  // 空白補完
+  {
+    id:28,
+    time:12600,
     type:"hold"
   },
 
@@ -1194,12 +1217,13 @@ const sasoiScore = [
   // =====================
 
   {
-    id:26,
+    id:29,
     time:13000,
     type:"bite"
   }
 
 ];
+
 
 
 const area =
@@ -1671,7 +1695,7 @@ function addSasoiInterest(){
   // 1回の誘い成功で増える量
   // ---------------------------------
 
-  const addValue = 3;
+  const addValue = 4;
 
   // ---------------------------------
   // 興味ゲージ加算
