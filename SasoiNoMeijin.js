@@ -18,7 +18,7 @@ style.textContent = `
 .sasoi-panel {
 
   width:95%;
-  height:160px;
+  height:190px;
 
   border-radius:12px;
 
@@ -41,13 +41,19 @@ style.textContent = `
 
   z-index:1;
 
+  /* 現在の下端位置を基準に上方向へ拡張 */
+  margin-top:30px;
+  margin-bottom:-30px;
+
 }
 
 
 .sasoi-title {
 
-  font-size:18px;
-  font-weight:bold;
+  font-size:40px;
+  font-weight:400;
+
+  font-family:"Yuji Boku",serif;
 
   margin-bottom:2px;
 
@@ -68,6 +74,9 @@ style.textContent = `
 
   font-size:15px;
 
+  font-family:"Yuji Boku",serif;
+
+
 }
 
 
@@ -77,6 +86,7 @@ style.textContent = `
 
   font-size:13px;
 
+  font-family:"Yuji Boku",serif;
 }
 
 
@@ -87,7 +97,7 @@ style.textContent = `
   position:relative;
 
   width:95%;
-  height:160px;
+  height:190px;
 
   border-radius:12px;
 
@@ -104,14 +114,79 @@ style.textContent = `
 
   box-sizing:border-box;
 
+  /* =================================
+     現在の下端位置を基準に
+     上方向へ30px拡張
+  ================================= */
+
+  margin-top:30px;
+  margin-bottom:-30px;
+
 }
 
+/* リスタートボタン */
+#sasoiRestartBtn{
+
+  position:absolute;
+
+  left:55%;
+  bottom:2px;
+
+  transform:translateX(-50%);
+
+  width:90px;
+  height:20px;
+
+  font-size:14px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #4fa3e3,
+      #2675b5
+    );
+
+  color:#ffffff;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  box-shadow:
+    0 1px 3px
+    rgba(0,0,0,0.35);
+
+  font-family:"Yuji Boku",serif;
+
+}
+
+
+/* リスタート：押した瞬間 */
+#sasoiRestartBtn:active{
+
+  background:
+    linear-gradient(
+      180deg,
+      #2675b5,
+      #1d5d92
+    );
+
+}
+
+
+/* =================================
+   戻るボタン
+================================= */
 
 .sasoi-back-btn{
 
   position:absolute;
 
-  left:35%;
+  left:32%;
   bottom:2px;
 
   transform:translateX(-50%);
@@ -125,14 +200,37 @@ style.textContent = `
 
   border-radius:12px;
 
-  background:#ffffff;
+  background:
+    linear-gradient(
+      180deg,
+      #697681,
+      #4b5660
+    );
 
-  color:#333;
+  color:#ffffff;
 
-  /* ★ 文字を縦横中央に配置 */
   display:flex;
   justify-content:center;
   align-items:center;
+
+  box-shadow:
+    0 1px 3px
+    rgba(0,0,0,0.35);
+
+  font-family:"Yuji Boku",serif;
+
+}
+
+
+/* 戻る：押した瞬間 */
+.sasoi-back-btn:active{
+
+  background:
+    linear-gradient(
+      180deg,
+      #4b5660,
+      #39434b
+    );
 
 }
 
@@ -145,7 +243,7 @@ style.textContent = `
 
   left:39px;
 
-  top:42px;
+  top:72px;
 
   display:flex;
 
@@ -462,7 +560,7 @@ clip-path: polygon(
 
   left:26px;
 
-  top:95px;
+  top:125px;
 
   width:48px;
 
@@ -515,7 +613,7 @@ clip-path: polygon(
 
   left:0px;
 
-  top:40px;
+  top:70px;
 
   font-size:20px;
 
@@ -601,7 +699,7 @@ clip-path: polygon(
 
   right:22px;
 
-  top:72px;
+  top:102px;
 
   width:78px;
 
@@ -692,7 +790,7 @@ clip-path: polygon(
 
   left:0;
 
-  top:30px;
+  top:60px;
 
   width:100%;
 
@@ -756,14 +854,14 @@ clip-path: polygon(
 
 .sasoi-edge.top{
 
-  top:26px;
+  top:56px;
 
 }
 
 
 .sasoi-edge.bottom{
 
-  top:88px;
+  top:118px;
 
 }
 
@@ -781,7 +879,7 @@ clip-path: polygon(
 
 .sasoi-tip.hit{
 
-  animation:sasoiTipShake 0.12s infinite;
+  animation:sasoiTipShake 0.05s infinite;
 
 }
 
@@ -818,7 +916,7 @@ clip-path: polygon(
 
   animation:
     sasoiFishOnShake
-    0.9s
+    0.35s
     ease-in-out
     infinite;
 
@@ -951,7 +1049,7 @@ clip-path: polygon(
 
   position:absolute;
 
-  top:5px;
+  top:35px;
   left:5px;
 
   width:calc(100% - 10px);
@@ -994,7 +1092,7 @@ clip-path: polygon(
     calc(39px + 13px);
 
   top:
-    4px;
+    24px;
 
   transform:
     translateX(-50%);
@@ -1028,33 +1126,25 @@ clip-path: polygon(
     center;
 
   /* ---------------------------------
-     背景
+     通常時は背景なし
   --------------------------------- */
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(35, 45, 55, 0.96),
-      rgba(10, 15, 20, 0.96)
-    );
+    transparent;
 
   border:
     1px solid
-    rgba(255,255,255,0.35);
+    transparent;
 
   border-radius:
     6px;
 
   /* ---------------------------------
-     立体感
+     通常時は影なし
   --------------------------------- */
 
   box-shadow:
-    0 2px 5px
-    rgba(0,0,0,0.45),
-
-    inset 0 1px 0
-    rgba(255,255,255,0.18);
+    none;
 
   /* ---------------------------------
      文字
@@ -1087,6 +1177,38 @@ clip-path: polygon(
   text-shadow:
     0 1px 2px
     rgba(0,0,0,0.7);
+
+}
+
+
+/* ==========================================
+   判定が出たときだけプレートを表示
+========================================== */
+
+.sasoi-judgement-display.perfect,
+.sasoi-judgement-display.good,
+.sasoi-judgement-display.bad,
+.sasoi-judgement-display.miss,
+.sasoi-judgement-display.hit,
+.sasoi-judgement-display.lost{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(35, 45, 55, 0.96),
+      rgba(10, 15, 20, 0.96)
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,0.35);
+
+  box-shadow:
+    0 2px 5px
+    rgba(0,0,0,0.45),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.18);
 
 }
 
@@ -1307,6 +1429,354 @@ clip-path: polygon(
 
 }
 
+/* =================================
+   興味ゲージ
+   デジタル表示風
+================================= */
+
+.sasoi-interest-gauge{
+
+  position:absolute;
+
+  top:26px;
+
+  left:100px;
+
+  width:calc(100% - 120px);
+
+  height:24px;
+
+  border-radius:2px;
+
+  overflow:visible;
+
+  box-sizing:border-box;
+
+  background:transparent;
+
+  border:none;
+
+  box-shadow:none;
+
+  z-index:10;
+
+  /*
+   * 100メモリ
+   * 薄い縦線を等間隔に表示
+   */
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent 0px,
+      transparent calc(10% - 0.5px),
+      rgba(220,245,255,0.18) calc(10% - 0.5px),
+      rgba(220,245,255,0.18) calc(10% + 0.5px),
+      transparent calc(10% + 0.5px),
+      transparent 10%
+    );
+
+}
+
+/* =================================
+   興味ゲージ メモリ
+   1段目・2段目を完全に揃える
+================================= */
+
+.sasoi-interest-gauge-scale{
+
+  position:absolute;
+
+  left:0;
+
+  bottom:0;
+
+  /*
+   * 1段目＋2段目の範囲
+   */
+  width:100%;
+
+  /*
+   * 2段目まで含めて
+   * 同じメモリを表示
+   */
+  height:22px;
+
+  pointer-events:none;
+
+  z-index:4;
+
+  /*
+   * 100段階の縦メモリ
+   *
+   * 1本ごとの位置を
+   * 上下で完全に一致させる
+   */
+  background:
+
+    repeating-linear-gradient(
+      to right,
+
+      transparent 0%,
+
+      transparent calc(1% - 0.4px),
+
+      rgba(
+        220,
+        245,
+        255,
+        0.18
+      )
+      calc(1% - 0.4px),
+
+      rgba(
+        220,
+        245,
+        255,
+        0.18
+      )
+      calc(1% + 0.4px),
+
+      transparent
+      calc(1% + 0.4px),
+
+      transparent 1%
+    );
+
+}
+
+/* =================================
+   興味ゲージ黒背景
+   100の手前で一段高くする
+================================= */
+
+.sasoi-interest-gauge::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+
+  right:0;
+
+  bottom:0;
+
+  /*
+   * 通常部分
+   */
+  height:14px;
+
+  border-radius:2px;
+
+  background:#17252B;
+
+  border:
+    1px solid
+    rgba(220,245,255,0.55);
+
+  box-shadow:
+    inset 0 0 4px
+    rgba(0,0,0,0.8),
+
+    0 0 3px
+    rgba(150,220,240,0.25);
+
+  z-index:0;
+
+}
+
+
+/* =================================
+   100以降だけ黒背景を一段高くする
+   左端を通常部分と完全に揃える
+================================= */
+
+.sasoi-interest-gauge::before{
+
+  content:"";
+
+  position:absolute;
+
+  /*
+   * 通常部分と左端を揃える
+   */
+  left:0;
+
+  bottom:0;
+
+  /*
+   * 2段目の横幅
+   */
+  width:30%;
+
+  /*
+   * 通常14px
+   * → 2段目は22px
+   */
+  height:22px;
+
+  background:#17252B;
+
+  border:
+    1px solid
+    rgba(220,245,255,0.55);
+
+  border-radius:
+    2px 2px 0 0;
+
+  box-shadow:
+    inset 0 0 4px
+    rgba(0,0,0,0.8),
+
+    0 0 3px
+    rgba(150,220,240,0.25);
+
+  z-index:1;
+
+}
+
+/* =================================
+   通常ゲージ
+   0～100
+================================= */
+
+.sasoi-interest-gauge-fill{
+
+  position:absolute;
+
+  right:0;
+
+  bottom:1px;
+
+  width:60%;
+
+  height:12px;
+
+  border-radius:1px;
+
+  background:
+    repeating-linear-gradient(
+      to left,
+
+      #B9FF95 0px,
+      #B9FF95 4px,
+
+      #6FAE62 4px,
+      #6FAE62 5px
+    );
+
+  box-shadow:
+    0 0 5px
+    rgba(185,255,149,0.75),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.5);
+
+  z-index:2;
+
+  transition:
+    width 0.2s ease;
+
+}
+
+
+/* =================================
+   100超過領域
+   MAXを超えた分だけ
+   上方向へ伸びる
+================================= */
+
+.sasoi-interest-gauge-over{
+
+  position:absolute;
+
+  /*
+   * 100の境界位置を基準
+   */
+  right:16.7%;
+
+  bottom:1px;
+
+  /*
+   * 現在はサンプルとして
+   * まだ横幅0
+   */
+  width:0%;
+
+  /*
+   * 通常時は1段目と同じ高さ
+   */
+  height:8px;
+
+  border-radius:
+    2px 2px 0 0;
+
+  background:
+    repeating-linear-gradient(
+      to left,
+
+      #FFE47A 0px,
+      #FFE47A 4px,
+
+      #D99A2E 4px,
+      #D99A2E 5px
+    );
+
+  box-shadow:
+    0 0 6px
+    rgba(255,210,70,0.75);
+
+  z-index:3;
+
+  /*
+   * 将来的に100を超えたとき
+   * 高さを段階的に変更する
+   */
+  transition:
+    width 0.25s ease,
+    height 0.25s ease;
+
+}
+
+/* =================================
+   100メモリ
+   2段目の左端 ～ 1段目の右端
+================================= */
+
+.sasoi-interest-gauge-ticks{
+
+  position:absolute;
+
+  left:0;
+
+  right:0;
+
+  bottom:0;
+
+  height:14px;
+
+  pointer-events:none;
+
+  z-index:1;
+
+  /*
+   * 100分割の薄い縦メモリ
+   */
+  background:
+    repeating-linear-gradient(
+      to right,
+
+      transparent 0%,
+      transparent calc(1% - 1px),
+
+      rgba(220,245,255,0.16)
+        calc(1% - 1px),
+
+      rgba(220,245,255,0.16)
+        1%
+    );
+
+}
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -1739,7 +2209,7 @@ area.innerHTML = `
 
 
   <div class="sasoi-level">
-    レベル ★☆☆☆☆
+    レベル ★★★★☆
   </div>
 
 
@@ -1759,11 +2229,33 @@ area.innerHTML = `
 </div>
 -->
 
+<!-- =================================
+     興味ゲージ
+================================= -->
+
+<div class="sasoi-interest-gauge">
+
+  <div class="sasoi-interest-gauge-fill"></div>
+
+  <div class="sasoi-interest-gauge-over"></div>
+
+  <div class="sasoi-interest-gauge-scale"></div>
+
+</div>
+
+
 <div
   id="sasoiJudgementDisplay"
   class="sasoi-judgement-display"
 >
 </div>
+
+<button
+  id="sasoiRestartBtn"
+  type="button"
+>
+  リスタート
+</button>
 
   <button
   class="sasoi-back-btn"
@@ -2521,15 +3013,42 @@ function showSasoiXJudgement(result){
 
 
   // =================================
-  // 今回は自動的に "--" に戻さない
+  // ●判定は自動消去
   // =================================
   //
-  // ●の判定結果をそのまま表示しておく。
+  // PERFECT / GOOD / BAD / MISS
+  // は一定時間表示した後、
+  // 自然に消す。
   //
-  // 次の判定が発生した場合は、
-  // その判定結果で上書きされる。
+  // HIT!! / LOST は
+  // この関数では扱わない。
   //
   // =================================
+
+  showSasoiXJudgement.timer =
+    setTimeout(()=>{
+
+      // ---------------------------------
+      // 現在表示されているものが
+      // ●判定だった場合だけ消す
+      // ---------------------------------
+
+      if(
+        display.classList.contains("perfect") ||
+        display.classList.contains("good") ||
+        display.classList.contains("bad") ||
+        display.classList.contains("miss")
+      ){
+
+        display.textContent =
+          "";
+
+        display.className =
+          "sasoi-judgement-display";
+
+      }
+
+    }, 700);
 
 }
 
@@ -2591,33 +3110,35 @@ function showSasoiActionJudgement(result){
   // =================================
 
   display.classList.add(
-  result.toLowerCase().replace(
-    "!!",
-    ""
-  )
-);
-
-// =================================
-// HIT!! のときだけブルブル
-// =================================
-
-if(
-  result === "HIT!!"
-){
-
-  // 前回のshakeを一度削除
-  display.classList.remove(
-    "shake"
+    result.toLowerCase().replace(
+      "!!",
+      ""
+    )
   );
 
-  // 再度アニメーションを発生させる
-  void display.offsetWidth;
 
-  display.classList.add(
-    "shake"
-  );
+  // =================================
+  // HIT!! のときだけブルブル
+  // =================================
 
-}
+  if(
+    result === "HIT!!"
+  ){
+
+    // 前回のshakeを一度削除
+    display.classList.remove(
+      "shake"
+    );
+
+    // 再度アニメーションを発生させる
+    void display.offsetWidth;
+
+    display.classList.add(
+      "shake"
+    );
+
+  }
+
 
   // =================================
   // デバッグログ
@@ -2639,13 +3160,46 @@ if(
 
 
   // =================================
-  // 今回は自動的に "--" に戻さない
+  // HIT!! / LOST は残す
   // =================================
-  //
-  // HIT / LOST / GOOD / BAD / PERFECT
-  // の判定結果をそのまま表示しておく。
-  //
+
+  if(
+    result === "HIT!!" ||
+    result === "LOST"
+  ){
+
+    return;
+
+  }
+
+
   // =================================
+  // GOOD / BAD / PERFECT は自動消去
+  // =================================
+
+  showSasoiActionJudgement.timer =
+    setTimeout(()=>{
+
+      // ---------------------------------
+      // 現在表示されているものが
+      // アクション判定だった場合だけ消す
+      // ---------------------------------
+
+      if(
+        display.classList.contains("perfect") ||
+        display.classList.contains("good") ||
+        display.classList.contains("bad")
+      ){
+
+        display.textContent =
+          "";
+
+        display.className =
+          "sasoi-judgement-display";
+
+      }
+
+    }, 700);
 
 }
 
@@ -2754,6 +3308,143 @@ function checkSasoiHit(){
     return;
   }
 
+// =================================
+// ★ 通過済み音符のMISS処理
+// =================================
+//
+// 一番近い音符だけを見ていると、
+// 音符が速く流れた場合に
+// 「判定範囲を通過した音符」が
+// MISSにならないことがある。
+//
+// そのため、現在画面上にある
+// 未処理音符を確認し、
+// 穂先中心を十分左へ通過した
+// 音符をMISSとして処理する。
+//
+// ※ count / bite はここでは対象外
+// ※ 成功判定そのものは変更しない
+// =================================
+
+const tipCenterForMiss =
+  tipRect.left +
+  tipRect.width / 2;
+
+const missLimit =
+  tipRect.width * 0;
+
+
+notes.forEach((note)=>{
+
+  // ---------------------------------
+  // すでに処理済みなら無視
+  // ---------------------------------
+
+  if(
+    note.dataset.done === "1" ||
+    note.dataset.hit === "true"
+  ){
+
+    return;
+
+  }
+
+  // ---------------------------------
+  // 対象となる音符種類
+  // ---------------------------------
+
+  const type =
+    note.dataset.type;
+
+  if(
+    type !== "press" &&
+    type !== "hold" &&
+    type !== "release"
+  ){
+
+    return;
+
+  }
+
+  // ---------------------------------
+  // 音符位置
+  // ---------------------------------
+
+  const rect =
+    note.getBoundingClientRect();
+
+  const noteCenter =
+    rect.left +
+    rect.width / 2;
+
+  // ---------------------------------
+  // 穂先中心より十分左へ
+  // 通過したか確認
+  // ---------------------------------
+
+  if(
+    noteCenter <
+    missLimit
+  ){
+
+    console.log(
+      "★ 通過MISS",
+      "ID:",
+      note.dataset.id,
+      "type:",
+      type,
+      "noteCenter:",
+      noteCenter.toFixed(1)
+    );
+
+    // ---------------------------------
+    // MISS表示
+    // ---------------------------------
+
+    if(
+      typeof showSasoiXJudgement ===
+      "function"
+    ){
+
+      showSasoiXJudgement({
+
+        judgement:
+          "MISS",
+
+        timing:
+          "",
+
+        differenceX:
+          noteCenter -
+          tipCenterForMiss,
+
+        distanceX:
+          Math.abs(
+            noteCenter -
+            tipCenterForMiss
+          ),
+
+        display:
+          "MISS"
+
+      });
+
+    }
+
+    // ---------------------------------
+    // 音符を処理済みにする
+    // ---------------------------------
+
+    note.dataset.done =
+      "1";
+
+    note.dataset.hit =
+      "true";
+
+  }
+
+});
+
   console.log(
     "最近音符",
     nearestNote.dataset.id,
@@ -2768,6 +3459,118 @@ function checkSasoiHit(){
 
   const noteType =
     nearestNote.dataset.type;
+
+  // =================================
+  // PRESS音符の通過MISS判定
+  // =================================
+  //
+  // PRESSが成功しないまま
+  // 穂先中心を通過した場合、
+  // そのPRESSをMISSとして処理する。
+  //
+  // 重要：
+  //
+  // 13px以内
+  // → PRESS受付範囲
+  //
+  // 13pxを超えて右側
+  // → まだMISSにしない
+  //
+  // 穂先中心を通過して
+  // さらに左側へ13px以上進んだ
+  // → MISS
+  //
+  // この処理はPRESSだけ。
+  //
+  // HOLD / RELEASE / BITEには
+  // 影響させない。
+  // =================================
+
+  if(
+    noteType === "press"
+  ){
+
+    // ---------------------------------
+    // まだ処理されていないPRESSだけ対象
+    // ---------------------------------
+
+    if(
+      nearestNote.dataset.hit !== "true"
+    ){
+
+      // ---------------------------------
+      // 音符が穂先中心より左側へ
+      // 13px以上通過したか確認
+      // ---------------------------------
+
+      if(
+        nearestDifferenceX <
+        -13
+      ){
+
+        console.log(
+          "PRESS MISS",
+          "譜面ID:",
+          nearestNote.dataset.id,
+          "X差:",
+          nearestDifferenceX.toFixed(1),
+          "px"
+        );
+
+
+        // ---------------------------------
+        // MISS表示
+        // ---------------------------------
+
+        if(
+          typeof showSasoiXJudgement ===
+          "function"
+        ){
+
+          showSasoiXJudgement({
+
+            judgement:
+              "MISS",
+
+            timing:
+              "LATE",
+
+            differenceX:
+              nearestDifferenceX,
+
+            distanceX:
+              nearestDistance,
+
+            display:
+              "MISS LATE"
+
+          });
+
+        }
+
+
+        // ---------------------------------
+        // 音符を処理済みにする
+        // ---------------------------------
+
+        nearestNote.dataset.done =
+          "1";
+
+        nearestNote.dataset.hit =
+          "true";
+
+
+        // ---------------------------------
+        // MISS処理終了
+        // ---------------------------------
+
+        return;
+
+      }
+
+    }
+
+  }
 
   // =================================
   // ● press / ◎ bite
@@ -2861,26 +3664,26 @@ function checkSasoiHit(){
     // X軸4段階判定
     // =================================
     //
-    // 0～6px
+    // 0～10px
     // PERFECT
     //
-    // 6～10px
+    // 10～12px
     // GOOD
     //
-    // 10～13px
+    // 12～13px
     // BAD
     //
     // =================================
 
     if(
-      nearestDistance <= 6
+      nearestDistance <= 10
     ){
 
       xJudgement =
         "PERFECT";
 
     }else if(
-      nearestDistance <= 10
+      nearestDistance <= 12
     ){
 
       xJudgement =
@@ -5178,6 +5981,81 @@ sasoiAnimationFrame =
   requestAnimationFrame(
     sasoiJudgementLoop
   );
+
+};
+
+// =================================
+// リスタート
+// =================================
+
+document
+.getElementById("sasoiRestartBtn")
+.onclick=function(){
+
+  console.log(
+    "誘いの名人：リスタート"
+  );
+
+
+  // =================================
+  // 現在のプレイを停止
+  // =================================
+
+  stopSasoiCheck();
+
+
+  // =================================
+  // 現在のプレイタイマーを停止
+  // =================================
+
+  if(
+    sasoiPlayTimer
+  ){
+
+    clearTimeout(
+      sasoiPlayTimer
+    );
+
+    sasoiPlayTimer =
+      null;
+
+  }
+
+
+  // =================================
+  // スタート処理を再利用
+  // =================================
+  //
+  // 現在の sasoiStartBtn.onclick には
+  //
+  // ・譜面リセット
+  // ・ゲージリセット
+  // ・PRESS状態リセット
+  // ・◎状態リセット
+  // ・魚状態リセット
+  // ・判定表示リセット
+  // ・譜面再生
+  // ・判定ループ再開
+  //
+  // がすべて入っている。
+  //
+  // そのため、ここでは同じ処理を
+  // 二重に書かない。
+  // =================================
+
+  const startBtn =
+    document.getElementById(
+      "sasoiStartBtn"
+    );
+
+
+  if(
+    startBtn
+  ){
+
+    startBtn.click();
+
+  }
 
 };
 

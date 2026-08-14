@@ -34,6 +34,7 @@ family=Comfortaa:wght@300..700&
 family=Alfa+Slab+One&
 family=M+PLUS+Rounded+1c:wght@400;700&
 family=Zen+Maru+Gothic:wght@400;500;700&
+family=Yuji+Boku&
 display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
@@ -90,7 +91,7 @@ input, textarea {
 .screen {
   padding: 20px;
   max-width: 390px;
-  height:630px;
+  height:660px;
   margin: 0 auto;
   box-sizing: border-box;
   font-family: "Saira", sans-serif;
@@ -107,7 +108,7 @@ input, textarea {
 /* 各画面の下中央に戻るボタンを配置 */
 .screenBackBtn {
   position: fixed;
-  top: 582px;
+  top: 612px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -555,7 +556,7 @@ button.btn-part:active {
 /* ひとりカウンター専用：外側枠サイズ調整 */
 #soloCounterScreen.screen.solo-counter {
   min-height: auto;
-  height: 600px;
+  height: 630px;
   margin-top:30px;
 }
 
@@ -3608,7 +3609,7 @@ iframe {
 .reloadFab {
   position: fixed;
   left: 20px;
-  top: 580px;
+  top: 610px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -3671,7 +3672,7 @@ iframe {
   position: fixed;
 
   /* 画面下 右側 */
-  top: 580px;
+  top: 610px;
   right: 20px;
 
   width: 36px;
@@ -3734,17 +3735,19 @@ iframe {
 
 }
 
+/* -------------------------- インフォメーションボタンCSS -------------------------- */
+
 /* -------------------------- 誘いの名人CSS -------------------------- */
 
 #SasoiNoMeijinArea {
   position:absolute;
-  top:330px;
+  top:310px;
 
   left:50%;
   transform:translateX(-50%);
 
   width:390px;
-  height:180px;
+  height:200px;
 
   display:flex;
   justify-content:center;
@@ -3758,7 +3761,7 @@ iframe {
 
   position:absolute;
 
-  top:510px;
+  top:545px;
 
   left:50%;
 
@@ -3782,6 +3785,8 @@ iframe {
   font-size:13px;
 
   color:#333;
+
+  font-family:"Yuji Boku",serif;
 
 }
 
@@ -3865,8 +3870,6 @@ iframe {
 
 /* -------------------------- 誘いの名人ON・OFF CSS -------------------------- */
 
-
-/* -------------------------- インフォメーションボタンCSS -------------------------- */
 
 </style>
 </head>
