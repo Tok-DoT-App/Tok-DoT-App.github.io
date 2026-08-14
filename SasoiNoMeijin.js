@@ -17,7 +17,7 @@ style.textContent = `
 
 .sasoi-panel {
 
-  width:95%;
+  width:370.5px;
   height:190px;
 
   border-radius:12px;
@@ -96,7 +96,7 @@ style.textContent = `
 
   position:relative;
 
-  width:95%;
+  width:370.5px;
   height:190px;
 
   border-radius:12px;
@@ -1440,9 +1440,9 @@ clip-path: polygon(
 
   top:26px;
 
-  left:100px;
+  left:160px;
 
-  width:calc(100% - 120px);
+  width:180px;
 
   height:24px;
 
@@ -1487,59 +1487,27 @@ clip-path: polygon(
   position:absolute;
 
   left:0;
-
   bottom:0;
 
-  /*
-   * 1段目＋2段目の範囲
-   */
-  width:100%;
-
-  /*
-   * 2段目まで含めて
-   * 同じメモリを表示
-   */
-  height:22px;
+  width:180px;
+  height:14px;
 
   pointer-events:none;
 
   z-index:4;
 
-  /*
-   * 100段階の縦メモリ
-   *
-   * 1本ごとの位置を
-   * 上下で完全に一致させる
-   */
   background:
-
     repeating-linear-gradient(
       to right,
 
-      transparent 0%,
+      transparent 0px,
+      transparent 8px,
 
-      transparent calc(1% - 0.4px),
+      rgba(0,0,0,0.55) 8px,
+      rgba(0,0,0,0.55) 9px,
 
-      rgba(
-        220,
-        245,
-        255,
-        0.18
-      )
-      calc(1% - 0.4px),
-
-      rgba(
-        220,
-        245,
-        255,
-        0.18
-      )
-      calc(1% + 0.4px),
-
-      transparent
-      calc(1% + 0.4px),
-
-      transparent 1%
+      transparent 9px,
+      transparent 18px
     );
 
 }
@@ -1556,30 +1524,22 @@ clip-path: polygon(
   position:absolute;
 
   left:0;
-
   right:0;
-
   bottom:0;
 
-  /*
-   * 通常部分
-   */
   height:14px;
+
+  box-sizing:border-box;
 
   border-radius:2px;
 
   background:#17252B;
 
-  border:
-    1px solid
-    rgba(220,245,255,0.55);
+  border:1px solid #000;
 
   box-shadow:
     inset 0 0 4px
-    rgba(0,0,0,0.8),
-
-    0 0 3px
-    rgba(150,220,240,0.25);
+    rgba(0,0,0,0.8);
 
   z-index:0;
 
@@ -1597,29 +1557,17 @@ clip-path: polygon(
 
   position:absolute;
 
-  /*
-   * 通常部分と左端を揃える
-   */
   left:0;
-
   bottom:0;
 
-  /*
-   * 2段目の横幅
-   */
-  width:30%;
-
-  /*
-   * 通常14px
-   * → 2段目は22px
-   */
+  width:60px;
   height:22px;
+
+  box-sizing:border-box;
 
   background:#17252B;
 
-  border:
-    1px solid
-    rgba(220,245,255,0.55);
+  border:1px solid #000;
 
   border-radius:
     2px 2px 0 0;
@@ -1648,7 +1596,7 @@ clip-path: polygon(
 
   bottom:1px;
 
-  width:60%;
+  width:80px;
 
   height:12px;
 
@@ -1693,7 +1641,7 @@ clip-path: polygon(
   /*
    * 100の境界位置を基準
    */
-  right:16.7%;
+  right:30px;
 
   bottom:1px;
 
@@ -1769,10 +1717,10 @@ clip-path: polygon(
       transparent 0%,
       transparent calc(1% - 1px),
 
-      rgba(220,245,255,0.16)
+      rgba(0,0,0,0.55)
         calc(1% - 1px),
 
-      rgba(220,245,255,0.16)
+      rgba(0,0,0,0.55)
         1%
     );
 
