@@ -91,7 +91,14 @@ style.textContent = `
 
   border-radius:12px;
 
-  background:#D2B24C;
+  /* ★ 黄色い型枠材のような色 */
+  background:
+    linear-gradient(
+      to bottom,
+      #C9A23A 0%,
+      #B9902F 45%,
+      #A77E28 100%
+    );
 
   overflow:hidden;
 
@@ -104,13 +111,13 @@ style.textContent = `
 
   position:absolute;
 
-  left:50%;
+  left:35%;
   bottom:2px;
 
   transform:translateX(-50%);
 
   width:60px;
-  height:18px;
+  height:20px;
 
   font-size:14px;
 
@@ -121,6 +128,11 @@ style.textContent = `
   background:#ffffff;
 
   color:#333;
+
+  /* ★ 文字を縦横中央に配置 */
+  display:flex;
+  justify-content:center;
+  align-items:center;
 
 }
 
@@ -443,12 +455,12 @@ clip-path: polygon(
 }
 
 
-/* たたき台 */
+  /* たたき台 */
 .sasoi-black{
 
   position:absolute;
 
-  left:28px;
+  left:26px;
 
   top:95px;
 
@@ -456,9 +468,39 @@ clip-path: polygon(
 
   height:70px;
 
-  background:#111;
+  /* ★ ベースの黒 */
+  background-color:#111;
+
+  /* ★ 細かい斜めクロス模様 */
+  background-image:
+    linear-gradient(
+      45deg,
+      transparent 43%,
+      rgba(255,255,255,0.16) 44%,
+      rgba(255,255,255,0.16) 56%,
+      transparent 57%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 43%,
+      rgba(255,255,255,0.16) 44%,
+      rgba(255,255,255,0.16) 56%,
+      transparent 57%
+    );
+
+  /* ★ 細かいクロス */
+  background-size:6px 6px;
+
+  /* ★ 外周を黒く */
+  border:2px solid #000;
 
   border-radius:4px;
+
+  /* ★ 黒縁をほんの少しだけ立体的に */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.65),
+    0 1px 2px rgba(0,0,0,0.55);
 
   z-index:0;
 
@@ -479,7 +521,12 @@ clip-path: polygon(
 
   letter-spacing:5px;
 
-  color:white;
+  /* ★ ワカサギの銀色のテカリをイメージした色 */
+  color:#EAF3C2;
+
+  text-shadow:
+  0 0 3px rgba(255,255,220,0.9),
+  0 0 8px rgba(220,235,130,0.45);
 
   white-space:nowrap;
 
@@ -554,11 +601,11 @@ clip-path: polygon(
 
   right:22px;
 
-  top:98px;
+  top:72px;
 
-  width:50px;
+  width:78px;
 
-  height:50px;
+  height:78px;
 
   border-radius:50%;
 
@@ -566,7 +613,8 @@ clip-path: polygon(
 
   color:white;
 
-  background:#1D3E70;
+  /* 通常時：明るめの青 */
+  background:#4FA3D1;
 
   display:flex;
 
@@ -574,7 +622,7 @@ clip-path: polygon(
 
   align-items:center;
 
-  font-size:22px;
+  font-size:26px;
 
   z-index:4;
 
@@ -585,13 +633,36 @@ clip-path: polygon(
 
   -webkit-touch-callout:none;
 
-
-  /* ★追加 */
   -webkit-user-drag:none;
   user-drag:none;
 
+  /* ★ 色をなめらかに変化させる */
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.15s ease;
+
 }
 
+
+/* =================================
+   指を置いている間
+   ================================= */
+
+.sasoi-touch.active{
+
+  /* 押している間：明るいオレンジ系 */
+  background:#F4B942;
+
+  /* 少し光らせる */
+  box-shadow:
+    0 0 10px rgba(255,213,79,0.75),
+    0 0 20px rgba(255,213,79,0.45);
+
+  /* 少しだけ沈む */
+  transform:scale(0.96);
+
+}
 
 /* 穂先横ライン */
 
@@ -611,27 +682,45 @@ clip-path: polygon(
 
 }
 
-/* 中央の釣り穴ライン */
+/* =================================
+   中央の釣り穴ライン
+   ================================= */
 
 .sasoi-center-line{
 
   position:absolute;
 
   left:0;
+
   top:30px;
 
   width:100%;
 
   height:60px;
 
-  background:#1D3E70;
+  /* ★ 深めの水色＋青緑グラデーション */
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(52,108,140,0.96),
+      rgba(38,91,119,0.93) 35%,
+      rgba(28,78,99,0.92) 60%,
+      rgba(14,53,75,0.96)
+    );
+
+  /* ★ 水中の柔らかい光 */
+  box-shadow:
+    inset 0 6px 12px rgba(150,220,235,0.13),
+    inset 0 -7px 12px rgba(0,25,45,0.23);
 
   z-index:1;
 
 }
 
 
-/* 中央ライン上下の縁 */
+/* =================================
+   中央ライン上下のステンレス縁
+   ================================= */
 
 .sasoi-edge{
 
@@ -643,7 +732,22 @@ clip-path: polygon(
 
   height:4px;
 
-  background:#9A9A9A;
+  /* ★ ステンレス風の金属グラデーション */
+  background:
+    linear-gradient(
+      to bottom,
+      #F2F4F5 0%,
+      #BFC5C8 25%,
+      #8E969B 50%,
+      #D9DDDF 75%,
+      #F5F6F7 100%
+    );
+
+  /* ★ 金属の反射感 */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(40,50,55,0.45),
+    0 0 2px rgba(220,230,235,0.45);
 
   z-index:2;
 
@@ -890,7 +994,7 @@ clip-path: polygon(
     calc(39px + 13px);
 
   top:
-    5px;
+    4px;
 
   transform:
     translateX(-50%);
@@ -1062,31 +1166,131 @@ clip-path: polygon(
 }
 
 
-/* ==========================================
-   HIT
-========================================== */
+ /* ==========================================
+    HIT
+ ========================================== */
 
 .sasoi-judgement-display.hit{
 
+  /* ★ ヒットした瞬間の金色～オレンジ */
   background:
     linear-gradient(
       180deg,
-      rgba(245, 190, 55, 0.98),
-      rgba(165, 105, 15, 0.98)
+      rgba(255, 215, 85, 0.99),
+      rgba(235, 155, 25, 0.99) 55%,
+      rgba(170, 90, 10, 0.99)
     );
 
+  /* ★ 金色の縁 */
   border-color:
-    rgba(255, 235, 150, 0.8);
+    rgba(255, 245, 180, 0.95);
 
+  /* ★ ヒット時の光 */
   box-shadow:
     0 2px 7px
     rgba(0,0,0,0.5),
 
+    0 0 8px
+    rgba(255,190,45,0.55),
+
+    0 0 16px
+    rgba(255,170,20,0.30),
+
     inset 0 1px 0
-    rgba(255,255,255,0.35);
+    rgba(255,255,255,0.55);
+
+  /* ★ 文字をよりヒットらしく */
+  color:
+    #FFFBE8;
+
+  text-shadow:
+    0 1px 2px
+    rgba(90,45,0,0.75),
+
+    0 0 5px
+    rgba(255,245,180,0.55);
 
 }
 
+/* ==========================================
+   HIT!! 文字ブルブル
+========================================== */
+
+.sasoi-judgement-display.hit.shake{
+
+  animation:
+    sasoiHitTextShake 0.3s ease-out;
+
+}
+
+
+@keyframes sasoiHitTextShake{
+
+  0%{
+
+    transform:
+      translateX(-50%)
+      translate(0,0);
+
+  }
+
+  15%{
+
+    transform:
+      translateX(-50%)
+      translate(-2px,1px);
+
+  }
+
+  30%{
+
+    transform:
+      translateX(-50%)
+      translate(2px,-1px);
+
+  }
+
+  45%{
+
+    transform:
+      translateX(-50%)
+      translate(-2px,-1px);
+
+  }
+
+  60%{
+
+    transform:
+      translateX(-50%)
+      translate(2px,1px);
+
+  }
+
+  75%{
+
+    transform:
+      translateX(-50%)
+      translate(-1px,0);
+
+  }
+
+  90%{
+
+    transform:
+      translateX(-50%)
+      translate(1px,0);
+
+  }
+
+  100%{
+
+    transform:
+      translateX(-50%)
+      translate(0,0);
+
+  }
+
+}
 
 /* ==========================================
    LOST
@@ -1129,6 +1333,9 @@ const SASOI_DEBUG_MODE = true;
 
 
 let sasoiTimer = null;
+
+let sasoiAnimationFrame =
+  null;
 
 let sasoiPlaying = false;
 
@@ -1180,6 +1387,13 @@ let sasoiPressStartTime = null;
 let sasoiPressWaiting = false;
 
 let sasoiHoldTime = 0;
+
+
+// -------------------------------
+// 新しいpress操作が発生した変数
+// -------------------------------
+
+let sasoiPressPending = false;
 
 // -------------------------------
 // 魚状態管理
@@ -1868,6 +2082,9 @@ note.id;
 span.dataset.type =
 note.type;
 
+span.dataset.time =
+note.time;
+
 
 // 種類判定
 
@@ -2374,9 +2591,33 @@ function showSasoiActionJudgement(result){
   // =================================
 
   display.classList.add(
-    result.toLowerCase()
+  result.toLowerCase().replace(
+    "!!",
+    ""
+  )
+);
+
+// =================================
+// HIT!! のときだけブルブル
+// =================================
+
+if(
+  result === "HIT!!"
+){
+
+  // 前回のshakeを一度削除
+  display.classList.remove(
+    "shake"
   );
 
+  // 再度アニメーションを発生させる
+  void display.offsetWidth;
+
+  display.classList.add(
+    "shake"
+  );
+
+}
 
   // =================================
   // デバッグログ
@@ -2620,26 +2861,26 @@ function checkSasoiHit(){
     // X軸4段階判定
     // =================================
     //
-    // 0～4px
+    // 0～6px
     // PERFECT
     //
-    // 4～8px
+    // 6～10px
     // GOOD
     //
-    // 8～13px
+    // 10～13px
     // BAD
     //
     // =================================
 
     if(
-      nearestDistance <= 4
+      nearestDistance <= 6
     ){
 
       xJudgement =
         "PERFECT";
 
     }else if(
-      nearestDistance <= 8
+      nearestDistance <= 10
     ){
 
       xJudgement =
@@ -2773,43 +3014,145 @@ function checkSasoiHit(){
 
     }
 
-    // ---------------------------------
-    // PRESS受付範囲内
-    // ---------------------------------
-    //
-    // ここまで来たら
-    // ●はPRESS受付範囲に入っている。
-    //
-    // まだ押していない
-    // → PRESS待機
-    //
-    // 押した
-    // → PRESS成功
-    //
-    // ---------------------------------
+// ---------------------------------
+// PRESS受付範囲内
+// ---------------------------------
+//
+// ここまで来たら
+// ●はPRESS受付範囲に入っている。
+//
+// 重要：
+//
+// sasoiAction === "press"
+// だけでは成功させない。
+//
+// sasoiAction は
+// 「現在指が押されている状態」なので、
+//
+// 指を押しっぱなしにしていると
+// 次の●でも press のままになる。
+//
+// そこで、
+//
+// sasoiPressPending === true
+//
+// のときだけ
+// 「新しいPRESS操作が発生した」
+// と判断する。
+//
+// ---------------------------------
 
-    if(
-      sasoiAction !== "press"
-    ){
+if(
+  !sasoiPressPending
+){
 
-      console.log(
-        "PRESS待機",
-        "距離:",
-        nearestDistance.toFixed(1),
-        "px"
-      );
+  console.log(
+    "PRESS待機（新しいPRESS操作なし）",
+    "距離:",
+    nearestDistance.toFixed(1),
+    "px"
+  );
 
-      return;
+  return;
 
-    }
+}
 
-    // ---------------------------------
-    // PRESS成功
-    // ---------------------------------
 
-    console.log(
-      "成功 press"
-    );
+// ---------------------------------
+// PRESS成功
+// ---------------------------------
+
+console.log(
+  "成功 press"
+);
+
+
+// =================================
+// ★ 3回目PRESS詳細デバッグ
+// =================================
+//
+// 3セット目のPRESSだけ、
+// 実際の判定位置・距離・時刻を記録する。
+// 判定ロジック自体は変更しない。
+// =================================
+
+if(
+  nearestNote.dataset.id === "21" ||
+  nearestNote.dataset.id === "23" ||
+  nearestNote.dataset.id === "25"
+){
+
+  const now =
+    Date.now();
+
+
+  console.log(
+    "================================="
+  );
+
+  console.log(
+    "★ 3回目PRESS詳細"
+  );
+
+  console.log(
+    "譜面ID:",
+    nearestNote.dataset.id
+  );
+
+  console.log(
+    "譜面予定時刻:",
+    nearestNote.dataset.time ||
+    "time情報なし"
+  );
+
+  console.log(
+    "現在時刻:",
+    now
+  );
+
+  console.log(
+    "最近音符距離:",
+    nearestDistance.toFixed(2),
+    "px"
+  );
+
+  console.log(
+    "X差:",
+    nearestDifferenceX.toFixed(2),
+    "px"
+  );
+
+  console.log(
+    "判定:",
+    xJudgement
+  );
+
+  console.log(
+    "タイミング:",
+    xTiming
+  );
+
+  console.log(
+    "判定表示:",
+    xJudgementText
+  );
+
+  console.log(
+    "sasoiAction:",
+    sasoiAction
+  );
+
+  console.log(
+    "sasoiPressPending:",
+    sasoiPressPending
+  );
+
+  console.log(
+    "================================="
+  );
+
+}
+
 
 // ---------------------------------
 // 実際にPRESSした瞬間の判定表示
@@ -2819,9 +3162,6 @@ function checkSasoiHit(){
 // PERFECT / GOOD / BAD
 // を画面に表示する。
 //
-// これにより、指を離したまま
-// 音符が判定位置を通過しただけでは
-// PERFECT表示されない。
 // ---------------------------------
 
 if(
@@ -2851,39 +3191,49 @@ if(
 }
 
 
-    // ---------------------------------
-    // 成功済みにする
-    // ---------------------------------
+// ---------------------------------
+// 新しいPRESS操作を消費
+// ---------------------------------
 
-    nearestNote.dataset.done =
-      "1";
+sasoiPressPending =
+  false;
 
-    nearestNote.dataset.hit =
-      "true";
 
-    // ---------------------------------
-    // 興味ゲージ加算
-    // ---------------------------------
+// ---------------------------------
+// 成功済みにする
+// ---------------------------------
 
-    addSasoiInterest(
-      xJudgement
-    );
+nearestNote.dataset.done =
+  "1";
 
-    // ---------------------------------
-    // 押し開始時間記録
-    // ---------------------------------
+nearestNote.dataset.hit =
+  "true";
 
-    sasoiPressStartTime =
-      Date.now();
 
-    sasoiStopReady =
-      false;
+// ---------------------------------
+// 興味ゲージ加算
+// ---------------------------------
 
-    console.log(
-      "押し開始時間記録"
-    );
+addSasoiInterest(
+  xJudgement
+);
 
-    return;
+
+// ---------------------------------
+// 押し開始時間記録
+// ---------------------------------
+
+sasoiPressStartTime =
+  Date.now();
+
+sasoiStopReady =
+  false;
+
+console.log(
+  "押し開始時間記録"
+);
+
+return;
 
   }
 
@@ -4303,22 +4653,71 @@ playSasoiFishOnShake();
 function stopSasoiCheck(){
 
 
-  sasoiPlaying = false;
+  // =================================
+  // プレイ状態終了
+  // =================================
+
+  sasoiPlaying =
+    false;
 
 
-  if(sasoiTimer){
+  // =================================
+  // 旧 setInterval 停止
+  // =================================
+  //
+  // 念のため残しておく。
+  // 現在はrequestAnimationFrame()が
+  // メイン判定ループ。
+  //
+  // =================================
+
+  if(
+    sasoiTimer
+  ){
+
+    clearInterval(
+      sasoiTimer
+    );
 
 
-    clearInterval(sasoiTimer);
-
-
-    sasoiTimer = null;
-
-
-    console.log("誘い判定終了");
+    sasoiTimer =
+      null;
 
   }
 
+
+  // =================================
+  // requestAnimationFrame 停止
+  // =================================
+  //
+  // ③で判定ループを
+  // requestAnimationFrame()に変更したため、
+  // stop時はこちらも必ず停止する。
+  //
+  // =================================
+
+  if(
+    sasoiAnimationFrame !== null
+  ){
+
+    cancelAnimationFrame(
+      sasoiAnimationFrame
+    );
+
+
+    sasoiAnimationFrame =
+      null;
+
+  }
+
+
+  // =================================
+  // デバッグ
+  // =================================
+
+  console.log(
+    "誘い判定終了"
+  );
 
 }
 
@@ -4334,49 +4733,79 @@ const sasoiTouch =
 
 if(sasoiTouch){
 
-  sasoiTouch.addEventListener(
-    "pointerdown",
-    (e)=>{
+sasoiTouch.addEventListener(
+  "pointerdown",
+  (e)=>{
 
-      e.preventDefault();
+    e.preventDefault();
 
-      sasoiTouch.setPointerCapture(
-        e.pointerId
-      );
+    sasoiTouch.setPointerCapture(
+      e.pointerId
+    );
+
+    // =================================
+    // ボタン色変更
+    // =================================
+
+    sasoiTouch.classList.add(
+      "active"
+    );
+
+    // =================================
+    // 通常の誘い
+    // =================================
+    //
+    // pointerdownでは
+    // 「指が押された」という状態を更新する。
+    //
+    // さらに、
+    // 「新しいPRESS操作が発生した」
+    // ことを記録する。
+    //
+    // ◎アワセ成功判定はここでは行わない。
+    //
+    // 実際のアワセは、
+    // ◎発生後のpointerup/releaseで
+    // checkSasoiBiteAction() が行う。
+    //
+    // =================================
+
+    sasoiAction =
+      "press";
 
 
-      // =================================
-      // 通常の誘い
-      // =================================
-      //
-      // pointerdownでは
-      // 「指が押された」という状態だけ
-      // 更新する。
-      //
-      // ◎アワセ成功判定はここでは行わない。
-      //
-      // 実際のアワセは、
-      // ◎発生後のpointerup/releaseで
-      // checkSasoiBiteAction() が行う。
-      //
-      // =================================
+    // =================================
+    // 新しいPRESS操作を記録
+    // =================================
+    //
+    // pointerdownが発生した瞬間だけ
+    // trueにする。
+    //
+    // これにより、
+    //
+    // 1回目の●を押したあと
+    // 指を押しっぱなしにして
+    // 2回目の●が来ても、
+    // 2回目を新しく押したことにはしない。
+    //
+    // =================================
 
-      sasoiAction =
-        "press";
-
-
-      sasoiDebugText.player =
-        "PRESS";
-
-      updateSasoiDebug();
+    sasoiPressPending =
+      true;
 
 
-      console.log(
-        "PRESS"
-      );
+    sasoiDebugText.player =
+      "PRESS";
 
-    }
-  );
+    updateSasoiDebug();
+
+
+    console.log(
+      "PRESS"
+    );
+
+  }
+);
 
 
 function releaseAction(e){
@@ -4386,6 +4815,20 @@ function releaseAction(e){
     e.preventDefault();
 
   }
+
+
+  // =================================
+  // ボタン色を通常状態へ戻す
+  // =================================
+  //
+  // CSSのtransitionによって、
+  // 黄色 → 青へフェードして戻る。
+  //
+  // =================================
+
+  sasoiTouch.classList.remove(
+    "active"
+  );
 
 
   // =================================
@@ -4555,6 +4998,20 @@ sasoiHoldTime = null;
 
 
 // ---------------------------------
+// 興味ゲージ
+// ---------------------------------
+//
+// 新しいプレイは必ず0から開始。
+// 前回プレイのゲージを持ち越さない。
+// ---------------------------------
+
+sasoiInterestGauge = 0;
+
+console.log(
+  "興味ゲージリセット：新しいプレイ開始"
+);
+
+// ---------------------------------
 // ◎ BITE状態
 // ---------------------------------
 //
@@ -4583,7 +5040,18 @@ sasoiHitAnimating = false;
 //
 // 新しいプレイは指が離れている状態から開始。
 
-sasoiAction = "release";
+sasoiAction =
+  "release";
+
+// ---------------------------------
+// 新しいPRESS操作フラグ
+// ---------------------------------
+//
+// 新しいプレイ開始時には
+// まだ新しいPRESS操作は発生していない。
+
+sasoiPressPending =
+  false;
 
 console.log(
   "PRESS開始時間リセット"
@@ -4634,19 +5102,84 @@ setTimeout(()=>{
 },300);
 
 
-sasoiTimer =
-setInterval(()=>{
+// =================================
+// 高頻度判定ループ開始
+// =================================
+//
+// setInterval(100ms) は使用しない。
+//
+// 音符の移動はCSSアニメーションなので、
+// 約16msごとに位置を確認する。
+// =================================
+
+if(
+  sasoiAnimationFrame !== null
+){
+
+  cancelAnimationFrame(
+    sasoiAnimationFrame
+  );
+
+  sasoiAnimationFrame =
+    null;
+
+}
+
+
+function sasoiJudgementLoop(){
+
+  // ---------------------------------
+  // プレイ中でなければ終了
+  // ---------------------------------
+
+  if(
+    !sasoiPlaying
+  ){
+
+    sasoiAnimationFrame =
+      null;
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // 誘い判定
+  // ---------------------------------
 
   checkSasoiHit();
 
+
+  // ---------------------------------
+  // ◎アワセ判定
+  // ---------------------------------
+
   checkSasoiBiteAction();
 
-},100);
+
+  // ---------------------------------
+  // 次フレーム
+  // ---------------------------------
+
+  sasoiAnimationFrame =
+    requestAnimationFrame(
+      sasoiJudgementLoop
+    );
+
+}
 
 
+// ---------------------------------
+// 判定ループ開始
+// ---------------------------------
+
+sasoiAnimationFrame =
+  requestAnimationFrame(
+    sasoiJudgementLoop
+  );
 
 };
-
 
 
 // 戻る
