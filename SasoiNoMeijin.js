@@ -1429,6 +1429,69 @@ clip-path: polygon(
 
 }
 
+
+/* =================================
+   譜面名
+   ゲージ右上
+================================= */
+
+.sasoi-score-name{
+
+  position:absolute;
+
+  right:0px;
+
+  bottom:18px;
+
+  text-align:left;
+
+  pointer-events:none;
+
+  z-index:20;
+
+  line-height:1.1;
+
+}
+
+
+/* =================================
+   譜面番号
+================================= */
+
+.sasoi-score-number{
+
+  text-align:left;
+  
+  font-size:10px;
+
+  font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
+
+  color:#17252B;
+
+}
+
+
+/* =================================
+   譜面タイトル
+================================= */
+
+.sasoi-score-title{
+
+  font-size:14px;
+
+  font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
+
+  color:#17252B;
+
+  white-space:nowrap;
+
+}
+
+
 /* =================================
    興味ゲージ
    デジタル表示風
@@ -1446,75 +1509,32 @@ clip-path: polygon(
 
   height:24px;
 
-  border-radius:2px;
-
   overflow:visible;
 
   box-sizing:border-box;
 
   background:transparent;
 
-  border:none;
-
-  box-shadow:none;
-
   z-index:10;
-
-  /*
-   * 100メモリ
-   * 薄い縦線を等間隔に表示
-   */
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      transparent 0px,
-      transparent calc(10% - 0.5px),
-      rgba(220,245,255,0.18) calc(10% - 0.5px),
-      rgba(220,245,255,0.18) calc(10% + 0.5px),
-      transparent calc(10% + 0.5px),
-      transparent 10%
-    );
 
 }
 
+
 /* =================================
    興味ゲージ メモリ
-   1段目・2段目を完全に揃える
+   現在は使用しない
 ================================= */
 
 .sasoi-interest-gauge-scale{
 
-  position:absolute;
-
-  left:0;
-  bottom:0;
-
-  width:180px;
-  height:14px;
-
-  pointer-events:none;
-
-  z-index:4;
-
-  background:
-    repeating-linear-gradient(
-      to right,
-
-      transparent 0px,
-      transparent 8px,
-
-      rgba(0,0,0,0.55) 8px,
-      rgba(0,0,0,0.55) 9px,
-
-      transparent 9px,
-      transparent 18px
-    );
+  display:none;
 
 }
 
+
 /* =================================
-   興味ゲージ黒背景
-   100の手前で一段高くする
+   興味ゲージ
+   通常の黒背景
 ================================= */
 
 .sasoi-interest-gauge::after{
@@ -1524,22 +1544,14 @@ clip-path: polygon(
   position:absolute;
 
   left:0;
-  right:0;
-  bottom:0;
+
+  bottom:-1px;
+
+  width:180px;
 
   height:14px;
 
-  box-sizing:border-box;
-
-  border-radius:2px;
-
   background:#17252B;
-
-  border:1px solid #000;
-
-  box-shadow:
-    inset 0 0 4px
-    rgba(0,0,0,0.8);
 
   z-index:0;
 
@@ -1547,8 +1559,8 @@ clip-path: polygon(
 
 
 /* =================================
-   100以降だけ黒背景を一段高くする
-   左端を通常部分と完全に揃える
+   100以降
+   一段高くなる黒背景
 ================================= */
 
 .sasoi-interest-gauge::before{
@@ -1558,34 +1570,26 @@ clip-path: polygon(
   position:absolute;
 
   left:0;
+
   bottom:0;
 
   width:60px;
+
   height:22px;
 
-  box-sizing:border-box;
-
   background:#17252B;
-
-  border:1px solid #000;
-
-  border-radius:
-    2px 2px 0 0;
-
-  box-shadow:
-    inset 0 0 4px
-    rgba(0,0,0,0.8),
-
-    0 0 3px
-    rgba(150,220,240,0.25);
 
   z-index:1;
 
 }
 
+
 /* =================================
    通常ゲージ
    0～100
+
+   1ブロック = 10px
+   12ブロック = 120px
 ================================= */
 
 .sasoi-interest-gauge-fill{
@@ -1596,29 +1600,28 @@ clip-path: polygon(
 
   bottom:1px;
 
-  width:80px;
+  width:120px;
 
-  height:12px;
+  height:10px;
 
-  border-radius:1px;
+  border-radius:0;
 
   background:
     repeating-linear-gradient(
       to left,
 
-      #B9FF95 0px,
-      #B9FF95 4px,
+      #000000 0px,
+      #000000 1px,
 
-      #6FAE62 4px,
-      #6FAE62 5px
+      #B9FF95 1px,
+      #B9FF95 5px,
+
+      #6FAE62 5px,
+      #6FAE62 9px,
+
+      #000000 9px,
+      #000000 10px
     );
-
-  box-shadow:
-    0 0 5px
-    rgba(185,255,149,0.75),
-
-    inset 0 1px 0
-    rgba(255,255,255,0.5);
 
   z-index:2;
 
@@ -1630,56 +1633,46 @@ clip-path: polygon(
 
 /* =================================
    100超過領域
-   MAXを超えた分だけ
-   上方向へ伸びる
+   2段目
+
+   1ブロック = 10px
+   6ブロック = 60px
 ================================= */
 
 .sasoi-interest-gauge-over{
 
   position:absolute;
 
-  /*
-   * 100の境界位置を基準
-   */
-  right:30px;
+  left:0;
+  right:auto;
 
   bottom:1px;
 
-  /*
-   * 現在はサンプルとして
-   * まだ横幅0
-   */
-  width:0%;
+  width:60px;
 
-  /*
-   * 通常時は1段目と同じ高さ
-   */
-  height:8px;
+  height:19px;
 
-  border-radius:
-    2px 2px 0 0;
+  border-radius:0;
 
   background:
     repeating-linear-gradient(
       to left,
 
-      #FFE47A 0px,
-      #FFE47A 4px,
+      #000000 0px,
+      #000000 1px,
 
-      #D99A2E 4px,
-      #D99A2E 5px
+      #FFE47A 1px,
+      #FFE47A 5px,
+
+      #D99A2E 5px,
+      #D99A2E 9px,
+
+      #000000 9px,
+      #000000 10px
     );
-
-  box-shadow:
-    0 0 6px
-    rgba(255,210,70,0.75);
 
   z-index:3;
 
-  /*
-   * 将来的に100を超えたとき
-   * 高さを段階的に変更する
-   */
   transition:
     width 0.25s ease,
     height 0.25s ease;
@@ -1688,43 +1681,16 @@ clip-path: polygon(
 
 /* =================================
    100メモリ
-   2段目の左端 ～ 1段目の右端
+   現在は使用しない
 ================================= */
 
 .sasoi-interest-gauge-ticks{
 
-  position:absolute;
-
-  left:0;
-
-  right:0;
-
-  bottom:0;
-
-  height:14px;
-
-  pointer-events:none;
-
-  z-index:1;
-
-  /*
-   * 100分割の薄い縦メモリ
-   */
-  background:
-    repeating-linear-gradient(
-      to right,
-
-      transparent 0%,
-      transparent calc(1% - 1px),
-
-      rgba(0,0,0,0.55)
-        calc(1% - 1px),
-
-      rgba(0,0,0,0.55)
-        1%
-    );
+  display:none;
 
 }
+
+
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -2182,6 +2148,11 @@ area.innerHTML = `
 ================================= -->
 
 <div class="sasoi-interest-gauge">
+
+  <div class="sasoi-score-name">
+    <div class="sasoi-score-number">第壱譜</div>
+    <div class="sasoi-score-title">三誘一間・三段重</div>
+  </div>
 
   <div class="sasoi-interest-gauge-fill"></div>
 
