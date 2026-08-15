@@ -1439,9 +1439,9 @@ clip-path: polygon(
 
   position:absolute;
 
-  right:0px;
+  right:2px;
 
-  bottom:18px;
+  bottom:16px;
 
   text-align:left;
 
@@ -1503,7 +1503,7 @@ clip-path: polygon(
 
   top:26px;
 
-  left:160px;
+  left:180px;
 
   width:180px;
 
@@ -1531,6 +1531,47 @@ clip-path: polygon(
 
 }
 
+/* =================================
+   興味ゲージ
+   の白背景
+================================= */
+
+.sasoi-interest-gauge-white-main{
+
+  position:absolute;
+
+  left:-2px;
+  bottom:-3px;
+
+  width:184px;
+  height:18px;
+
+  background:#FFFFFF;
+
+  z-index:-2;
+
+border-radius: 3px
+
+}
+
+
+.sasoi-interest-gauge-white-over{
+
+  position:absolute;
+
+  left:-2px;
+  bottom:-2px;
+
+  width:64px;
+  height:26px;
+
+  background:#FFFFFF;
+
+  z-index:-2;
+
+border-radius: 3px
+
+}
 
 /* =================================
    興味ゲージ
@@ -1607,21 +1648,28 @@ clip-path: polygon(
   border-radius:0;
 
   background:
-    repeating-linear-gradient(
-      to left,
+  linear-gradient(
+    to right,
+    #000000 0px,
+    #000000 1px,
+    transparent 1px,
+    transparent 100%
+  ),
+  repeating-linear-gradient(
+    to left,
 
-      #000000 0px,
-      #000000 1px,
+    #000000 0px,
+    #000000 1px,
 
-      #B9FF95 1px,
-      #B9FF95 5px,
+    #B9FF95 1px,
+    #B9FF95 5px,
 
-      #6FAE62 5px,
-      #6FAE62 9px,
+    #6FAE62 5px,
+    #6FAE62 9px,
 
-      #000000 9px,
-      #000000 10px
-    );
+    #000000 9px,
+    #000000 10px
+  );
 
   z-index:2;
 
@@ -1689,6 +1737,7 @@ clip-path: polygon(
   display:none;
 
 }
+
 
 
 
@@ -2148,6 +2197,12 @@ area.innerHTML = `
 ================================= -->
 
 <div class="sasoi-interest-gauge">
+
+  <!-- 白背景：1段目 -->
+  <div class="sasoi-interest-gauge-white-main"></div>
+
+  <!-- 白背景：2段目 -->
+  <div class="sasoi-interest-gauge-white-over"></div>
 
   <div class="sasoi-score-name">
     <div class="sasoi-score-number">第壱譜</div>
