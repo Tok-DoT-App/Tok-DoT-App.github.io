@@ -1092,7 +1092,7 @@ clip-path: polygon(
     calc(39px + 13px);
 
   top:
-    24px;
+    29px;
 
   transform:
     translateX(-50%);
@@ -1519,6 +1519,154 @@ clip-path: polygon(
 
 }
 
+/* =================================
+   興味ゲージ数値表示
+   ゲージの左側
+================================= */
+
+.sasoi-gauge-values{
+
+  position:absolute;
+
+  right:202px;
+
+  top:4px;
+
+  width:82px;
+
+  height:18px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:flex-end;
+
+  gap:6px;
+
+  pointer-events:none;
+
+  white-space:nowrap;
+
+  z-index:30;
+
+}
+
+
+/* =================================
+   今回の加算値
+   例：+10 / +7 / +6
+================================= */
+
+.sasoi-gauge-add{
+
+  display:inline-block;
+
+  font-size:11px;
+
+  font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
+
+  opacity:0;
+
+  transform:translateX(0);
+
+}
+
+
+/* =================================
+   加算値表示中
+================================= */
+
+.sasoi-gauge-add.show{
+
+  animation:
+    sasoiGaugeAddFade 0.75s ease-out
+    forwards;
+
+}
+
+
+/* =================================
+   加算値
+   右へ移動しながら消える
+================================= */
+
+@keyframes sasoiGaugeAddFade{
+
+  0%{
+
+    opacity:1;
+
+    transform:
+      translateX(0);
+
+  }
+
+  35%{
+
+    opacity:1;
+
+    transform:
+      translateX(3px);
+
+  }
+
+  100%{
+
+    opacity:0;
+
+    transform:
+      translateX(10px);
+
+  }
+
+}
+
+
+/* =================================
+   現在の合計値
+   固定幅・R付きボックス
+================================= */
+
+.sasoi-gauge-total{
+
+  display:flex;
+
+  width:38px;
+
+  height:22px;
+
+  box-sizing:border-box;
+
+  align-items:center;
+
+  justify-content:center;
+
+  text-align:center;
+
+  font-size:12px;
+
+  font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
+
+  color:#17252B;
+
+  background:#FFFFFF;
+
+  border:1px solid #17252B;
+
+  border-radius:5px;
+
+  line-height:22px;
+
+  position:relative;
+
+  top:0px;
+
+}
 
 /* =================================
    通常メモリ
@@ -1631,6 +1779,17 @@ clip-path: polygon(
 
   transition:
     background 0.15s ease;
+
+}
+
+/* =================================
+   赤ゲージ用
+   最後の4メモリだけ高さをアップ
+================================= */
+
+.sasoi-gauge-high span:nth-child(n+5){
+
+  height:20px;
 
 }
 
@@ -1958,10 +2117,10 @@ let sasoiResult = null;
 let sasoiInterestGauge = 0;
 
 // ゲージ最大値
-const SASOI_INTEREST_MAX = 120;
+const SASOI_INTEREST_MAX = 200;
 
 // ◎が発生できる最低ゲージ
-const SASOI_INTEREST_REQUIRED = 100;
+const SASOI_INTEREST_REQUIRED = 160;
 
 
 // 演出中かどうかのフラグ
@@ -2256,6 +2415,26 @@ area.innerHTML = `
 ================================= -->
 
 <div class="sasoi-interest-gauge">
+
+  <!-- =================================
+       興味ゲージ数値表示
+  ================================= -->
+
+  <div class="sasoi-gauge-values">
+
+    <!-- 今回の加算値 -->
+    <span
+      id="sasoiGaugeAdd"
+      class="sasoi-gauge-add"
+    ></span>
+
+    <!-- 現在の合計値 -->
+    <span
+      id="sasoiGaugeTotal"
+      class="sasoi-gauge-total"
+    >0</span>
+
+  </div>
 
   <!-- 譜面名 -->
 
@@ -2767,21 +2946,21 @@ function addSasoiInterest(judgement){
   ){
 
     addValue =
-      7;
+      10;
 
   }else if(
     judgement === "GOOD"
   ){
 
     addValue =
-      5;
+      7;
 
   }else if(
     judgement === "BAD"
   ){
 
     addValue =
-      3;
+      6;
 
   }else{
 
@@ -2839,18 +3018,76 @@ function addSasoiInterest(judgement){
   // 1メモリ = 10ポイント
   //
   // 例：
-  // 0～9   → 0個
-  // 10～19 → 1個
-  // 20～29 → 2個
+  // 0～9      → 0個
+  // 10～19    → 1個
+  // 20～29    → 2個
   // ・・・
-  // 190～199 → 19個
-  // 200      → 20個
+  // 190～199  → 19個
+  // 200       → 20個
   // ---------------------------------
 
   const gaugeLevel =
     Math.floor(
       sasoiInterestGauge / 10
     );
+
+
+  // ---------------------------------
+  // 加算値・合計値の表示
+  // ---------------------------------
+
+  const addDisplay =
+    document.getElementById(
+      "sasoiGaugeAdd"
+    );
+
+  const totalDisplay =
+    document.getElementById(
+      "sasoiGaugeTotal"
+    );
+
+
+  // ---------------------------------
+  // 合計値は常時表示
+  // ---------------------------------
+
+  if(
+    totalDisplay
+  ){
+
+    totalDisplay.textContent =
+      sasoiInterestGauge;
+
+  }
+
+
+  // ---------------------------------
+  // 今回の加算値を表示
+  // ---------------------------------
+
+  if(
+    addDisplay
+  ){
+
+    addDisplay.textContent =
+      "+" + addValue;
+
+
+    // 前回のアニメーションを解除
+    addDisplay.classList.remove(
+      "show"
+    );
+
+
+    // アニメーションを再スタート
+    void addDisplay.offsetWidth;
+
+
+    addDisplay.classList.add(
+      "show"
+    );
+
+  }
 
 
   // ---------------------------------
@@ -3064,6 +3301,61 @@ function resetSasoiInterestGauge(){
   setSasoiGaugeLevel(
     0
   );
+
+
+  // ---------------------------------
+  // 合計値表示をリセット
+  // ---------------------------------
+
+  const totalDisplay =
+    document.getElementById(
+      "sasoiGaugeTotal"
+    );
+
+
+  if(
+    totalDisplay
+  ){
+
+    totalDisplay.textContent =
+      "";
+
+  }
+
+
+  // ---------------------------------
+  // 前回の加算値表示をリセット
+  // ---------------------------------
+
+  const addDisplay =
+    document.getElementById(
+      "sasoiGaugeAdd"
+    );
+
+
+  if(
+    addDisplay
+  ){
+
+    // 前回のアニメーションを停止
+    addDisplay.classList.remove(
+      "show"
+    );
+
+
+    // 表示文字そのものを消す
+    addDisplay.textContent =
+      "";
+
+
+    // 初期位置・透明状態へ戻す
+    addDisplay.style.opacity =
+      "0";
+
+    addDisplay.style.transform =
+      "translateX(0)";
+
+  }
 
 
   console.log(
@@ -3979,26 +4271,26 @@ notes.forEach((note)=>{
     // X軸4段階判定
     // =================================
     //
-    // 0～10px
+    // 0～9px
     // PERFECT
     //
-    // 10～12px
+    // 9～11px
     // GOOD
     //
-    // 12～13px
+    // 11～13px
     // BAD
     //
     // =================================
 
     if(
-      nearestDistance <= 10
+      nearestDistance <= 9
     ){
 
       xJudgement =
         "PERFECT";
 
     }else if(
-      nearestDistance <= 12
+      nearestDistance <= 11
     ){
 
       xJudgement =
