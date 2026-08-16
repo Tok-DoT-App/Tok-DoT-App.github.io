@@ -1461,7 +1461,7 @@ clip-path: polygon(
 .sasoi-score-number{
 
   text-align:left;
-  
+
   font-size:10px;
 
   font-family:"Yuji Boku",serif;
@@ -1494,7 +1494,7 @@ clip-path: polygon(
 
 /* =================================
    興味ゲージ
-   デジタル表示風
+   新規作成用ベース
 ================================= */
 
 .sasoi-interest-gauge{
@@ -1521,119 +1521,13 @@ clip-path: polygon(
 
 
 /* =================================
-   興味ゲージ メモリ
-   現在は使用しない
+   通常メモリ
+   8px × 12px
+   12個
+   右端から左へ並べる
 ================================= */
 
-.sasoi-interest-gauge-scale{
-
-  display:none;
-
-}
-
-/* =================================
-   興味ゲージ
-   の白背景
-================================= */
-
-.sasoi-interest-gauge-white-main{
-
-  position:absolute;
-
-  left:-2px;
-  bottom:-3px;
-
-  width:184px;
-  height:18px;
-
-  background:#FFFFFF;
-
-  z-index:-2;
-
-border-radius: 3px
-
-}
-
-
-.sasoi-interest-gauge-white-over{
-
-  position:absolute;
-
-  left:-2px;
-  bottom:-2px;
-
-  width:64px;
-  height:26px;
-
-  background:#FFFFFF;
-
-  z-index:-2;
-
-border-radius: 3px
-
-}
-
-/* =================================
-   興味ゲージ
-   通常の黒背景
-================================= */
-
-.sasoi-interest-gauge::after{
-
-  content:"";
-
-  position:absolute;
-
-  left:0;
-
-  bottom:-1px;
-
-  width:180px;
-
-  height:14px;
-
-  background:#17252B;
-
-  z-index:0;
-
-}
-
-
-/* =================================
-   100以降
-   一段高くなる黒背景
-================================= */
-
-.sasoi-interest-gauge::before{
-
-  content:"";
-
-  position:absolute;
-
-  left:0;
-
-  bottom:0;
-
-  width:60px;
-
-  height:22px;
-
-  background:#17252B;
-
-  z-index:1;
-
-}
-
-
-/* =================================
-   通常ゲージ
-   0～100
-
-   1ブロック = 10px
-   12ブロック = 120px
-================================= */
-
-.sasoi-interest-gauge-fill{
+.sasoi-gauge-normal{
 
   position:absolute;
 
@@ -1641,105 +1535,270 @@ border-radius: 3px
 
   bottom:1px;
 
-  width:120px;
+  display:flex;
 
-  height:10px;
+  flex-direction:row-reverse;
 
-  border-radius:0;
+  gap:2px;
 
-  background:
-  linear-gradient(
-    to right,
-    #000000 0px,
-    #000000 1px,
-    transparent 1px,
-    transparent 100%
-  ),
-  repeating-linear-gradient(
-    to left,
-
-    #000000 0px,
-    #000000 1px,
-
-    #B9FF95 1px,
-    #B9FF95 5px,
-
-    #6FAE62 5px,
-    #6FAE62 9px,
-
-    #000000 9px,
-    #000000 10px
-  );
-
-  z-index:2;
-
-  transition:
-    width 0.2s ease;
+  align-items:flex-end;
 
 }
 
 
 /* =================================
-   100超過領域
-   2段目
-
-   1ブロック = 10px
-   6ブロック = 60px
+   通常メモリ本体
 ================================= */
 
-.sasoi-interest-gauge-over{
+.sasoi-gauge-normal span{
+
+  width:8px;
+
+  height:12px;
+
+  flex:none;
+
+  box-sizing:border-box;
+
+  background:#000000;
+
+  border-radius:1px;
+
+  clip-path:polygon(
+    0 0,
+    88% 0,
+    100% 100%,
+    12% 100%
+  );
+
+  transition:
+    background 0.15s ease;
+
+}
+
+
+
+/* =================================
+   高さ16pxメモリ
+   8px × 16px
+   8個
+   通常メモリの左側
+================================= */
+
+.sasoi-gauge-high{
 
   position:absolute;
 
-  left:0;
-  right:auto;
+  right:120px;
 
   bottom:1px;
 
-  width:60px;
+  display:flex;
 
-  height:19px;
+  flex-direction:row-reverse;
 
-  border-radius:0;
+  gap:2px;
 
-  background:
-    repeating-linear-gradient(
-      to left,
+  align-items:flex-end;
 
-      #000000 0px,
-      #000000 1px,
+}
 
-      #FFE47A 1px,
-      #FFE47A 5px,
 
-      #D99A2E 5px,
-      #D99A2E 9px,
+/* =================================
+   高さ16pxメモリ本体
+================================= */
 
-      #000000 9px,
-      #000000 10px
-    );
+.sasoi-gauge-high span{
 
-  z-index:3;
+  width:8px;
+
+  height:16px;
+
+  flex:none;
+
+  box-sizing:border-box;
+
+  background:#000000;
+
+  border-radius:1px;
+
+  clip-path:polygon(
+    0 0,
+    88% 0,
+    100% 100%,
+    12% 100%
+  );
 
   transition:
-    width 0.25s ease,
-    height 0.25s ease;
+    background 0.15s ease;
+
+}
+
+
+/* =================================
+   メモリON色
+   右 → 左
+================================= */
+
+
+/* 青 */
+
+.sasoi-gauge-normal span.gauge-on-blue{
+
+  background:#3B82F6;
+
+}
+
+
+/* 緑 */
+
+.sasoi-gauge-normal span.gauge-on-green{
+
+  background:#4CAF50;
+
+}
+
+
+/* 黄色 */
+
+.sasoi-gauge-normal span.gauge-on-yellow{
+
+  background:#FFD54A;
+
+}
+
+
+/* オレンジ */
+
+.sasoi-gauge-high span.gauge-on-orange{
+
+  background:#FF9800;
+
+}
+
+
+/* 赤 */
+
+.sasoi-gauge-high span.gauge-on-red{
+
+  background:#F44336;
+
+}
+
+
+/* =================================
+   メモリ ON
+================================= */
+
+.sasoi-memory.active .sasoi-memory-fill{
+
+  opacity:1;
 
 }
 
 /* =================================
-   100メモリ
-   現在は使用しない
+   ゲージ ON メモリ
+   LED発光＋内部ハイライト
 ================================= */
 
-.sasoi-interest-gauge-ticks{
+.sasoi-gauge-normal span.gauge-on-blue{
 
-  display:none;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.08) 25%,
+      transparent 45%
+    ),
+    #4DA6FF;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(77,166,255,0.65)
+    );
 
 }
 
 
+.sasoi-gauge-normal span.gauge-on-green{
 
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.32) 0%,
+      rgba(255,255,255,0.08) 25%,
+      transparent 45%
+    ),
+    #63D66B;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(99,214,107,0.65)
+    );
+
+}
+
+
+.sasoi-gauge-normal span.gauge-on-yellow{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.34) 0%,
+      rgba(255,255,255,0.08) 25%,
+      transparent 45%
+    ),
+    #FFE45C;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(255,228,92,0.7)
+    );
+
+}
+
+
+.sasoi-gauge-high span.gauge-on-orange{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.34) 0%,
+      rgba(255,255,255,0.08) 25%,
+      transparent 45%
+    ),
+    #FF9D3D;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(255,157,61,0.75)
+    );
+
+}
+
+
+.sasoi-gauge-high span.gauge-on-red{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.36) 0%,
+      rgba(255,255,255,0.08) 25%,
+      transparent 45%
+    ),
+    #FF4D4D;
+
+  filter:
+    drop-shadow(
+      0 0 2px
+      rgba(255,77,77,0.8)
+    );
+
+}
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -2198,25 +2257,77 @@ area.innerHTML = `
 
 <div class="sasoi-interest-gauge">
 
-  <!-- 白背景：1段目 -->
-  <div class="sasoi-interest-gauge-white-main"></div>
-
-  <!-- 白背景：2段目 -->
-  <div class="sasoi-interest-gauge-white-over"></div>
+  <!-- 譜面名 -->
 
   <div class="sasoi-score-name">
-    <div class="sasoi-score-number">第壱譜</div>
-    <div class="sasoi-score-title">三誘一間・三段重</div>
+
+    <div class="sasoi-score-number">
+      第壱譜
+    </div>
+
+    <div class="sasoi-score-title">
+      三誘一間・三段重
+    </div>
+
   </div>
 
-  <div class="sasoi-interest-gauge-fill"></div>
 
-  <div class="sasoi-interest-gauge-over"></div>
+  <!-- =================================
+       通常メモリ
+       8px × 12px
+       12個
 
-  <div class="sasoi-interest-gauge-scale"></div>
+       右 → 左
+       青4 → 緑4 → 黄4
+  ================================= -->
+
+<!-- =================================
+     通常メモリ
+     8px × 12px
+     12個
+================================= -->
+
+<div class="sasoi-gauge-normal">
+
+  <span data-gauge-index="0"></span>
+  <span data-gauge-index="1"></span>
+  <span data-gauge-index="2"></span>
+  <span data-gauge-index="3"></span>
+
+  <span data-gauge-index="4"></span>
+  <span data-gauge-index="5"></span>
+  <span data-gauge-index="6"></span>
+  <span data-gauge-index="7"></span>
+
+  <span data-gauge-index="8"></span>
+  <span data-gauge-index="9"></span>
+  <span data-gauge-index="10"></span>
+  <span data-gauge-index="11"></span>
 
 </div>
 
+
+<!-- =================================
+     高さ16pxメモリ
+     8px × 16px
+     8個
+================================= -->
+
+<div class="sasoi-gauge-high">
+
+  <span data-gauge-index="12"></span>
+  <span data-gauge-index="13"></span>
+  <span data-gauge-index="14"></span>
+  <span data-gauge-index="15"></span>
+
+  <span data-gauge-index="16"></span>
+  <span data-gauge-index="17"></span>
+  <span data-gauge-index="18"></span>
+  <span data-gauge-index="19"></span>
+
+</div>
+
+</div>
 
 <div
   id="sasoiJudgementDisplay"
@@ -2679,6 +2790,7 @@ function addSasoiInterest(judgement){
 
   }
 
+
   // ---------------------------------
   // MISSなどは加算しない
   // ---------------------------------
@@ -2696,12 +2808,14 @@ function addSasoiInterest(judgement){
 
   }
 
+
   // ---------------------------------
   // 興味ゲージ加算
   // ---------------------------------
 
   sasoiInterestGauge +=
     addValue;
+
 
   // ---------------------------------
   // 最大値制限
@@ -2717,6 +2831,37 @@ function addSasoiInterest(judgement){
 
   }
 
+
+  // ---------------------------------
+  // 20メモリへ反映
+  // ---------------------------------
+  //
+  // 1メモリ = 10ポイント
+  //
+  // 例：
+  // 0～9   → 0個
+  // 10～19 → 1個
+  // 20～29 → 2個
+  // ・・・
+  // 190～199 → 19個
+  // 200      → 20個
+  // ---------------------------------
+
+  const gaugeLevel =
+    Math.floor(
+      sasoiInterestGauge / 10
+    );
+
+
+  // ---------------------------------
+  // メモリ表示更新
+  // ---------------------------------
+
+  setSasoiGaugeLevel(
+    gaugeLevel
+  );
+
+
   // ---------------------------------
   // デバッグログ
   // ---------------------------------
@@ -2728,10 +2873,206 @@ function addSasoiInterest(judgement){
     "→",
     sasoiInterestGauge,
     "/",
-    SASOI_INTEREST_MAX
+    SASOI_INTEREST_MAX,
+    "メモリ",
+    gaugeLevel,
+    "/ 20"
   );
 
 }
+
+
+
+// =================================
+// 興味ゲージ
+// メモリON/OFF制御
+// =================================
+
+function setSasoiGaugeLevel(level){
+
+  /* ---------------------------------
+     値を0～20に制限
+  --------------------------------- */
+
+  level =
+    Math.max(
+      0,
+      Math.min(
+        20,
+        Math.floor(level)
+      )
+    );
+
+
+  /* ---------------------------------
+     通常12個を取得
+  --------------------------------- */
+
+  const normalTicks =
+    Array.from(
+      document.querySelectorAll(
+        ".sasoi-gauge-normal span"
+      )
+    );
+
+
+  /* ---------------------------------
+     高さ16pxメモリ8個を取得
+  --------------------------------- */
+
+  const highTicks =
+    Array.from(
+      document.querySelectorAll(
+        ".sasoi-gauge-high span"
+      )
+    );
+
+
+  /* ---------------------------------
+     20個を1つの配列にまとめる
+  --------------------------------- */
+
+  const allTicks =
+    [
+      ...normalTicks,
+      ...highTicks
+    ];
+
+
+  /* ---------------------------------
+     全メモリをOFF
+  --------------------------------- */
+
+  allTicks.forEach(
+    tick => {
+
+      tick.classList.remove(
+        "gauge-on-blue",
+        "gauge-on-green",
+        "gauge-on-yellow",
+        "gauge-on-orange",
+        "gauge-on-red"
+      );
+
+    }
+  );
+
+
+  /* ---------------------------------
+     右 → 左へON
+  --------------------------------- */
+
+  for(
+    let i = 0;
+    i < level;
+    i++
+  ){
+
+    const tick =
+      allTicks[i];
+
+
+    if(!tick){
+      continue;
+    }
+
+
+    /* -------------------------------
+       1～4
+       青
+    ------------------------------- */
+
+    if(i < 4){
+
+      tick.classList.add(
+        "gauge-on-blue"
+      );
+
+    }
+
+
+    /* -------------------------------
+       5～8
+       緑
+    ------------------------------- */
+
+    else if(i < 8){
+
+      tick.classList.add(
+        "gauge-on-green"
+      );
+
+    }
+
+
+    /* -------------------------------
+       9～12
+       黄色
+    ------------------------------- */
+
+    else if(i < 12){
+
+      tick.classList.add(
+        "gauge-on-yellow"
+      );
+
+    }
+
+
+    /* -------------------------------
+       13～16
+       オレンジ
+    ------------------------------- */
+
+    else if(i < 16){
+
+      tick.classList.add(
+        "gauge-on-orange"
+      );
+
+    }
+
+
+    /* -------------------------------
+       17～20
+       赤
+    ------------------------------- */
+
+    else{
+
+      tick.classList.add(
+        "gauge-on-red"
+      );
+
+    }
+
+  }
+
+}
+
+
+// =================================
+// 興味ゲージ リセット
+// =================================
+
+function resetSasoiInterestGauge(){
+
+  sasoiInterestGauge =
+    0;
+
+
+  setSasoiGaugeLevel(
+    0
+  );
+
+
+  console.log(
+    "興味ゲージリセット",
+    sasoiInterestGauge
+  );
+
+}
+
 
 function getSasoiXJudgement(note){
 
@@ -5722,6 +6063,24 @@ document
 // ---------------------------------
 
 // ---------------------------------
+// 前回の判定表示タイマーを停止
+// ---------------------------------
+
+clearTimeout(
+  showSasoiXJudgement.timer
+);
+
+clearTimeout(
+  showSasoiActionJudgement.timer
+);
+
+showSasoiXJudgement.timer =
+  null;
+
+showSasoiActionJudgement.timer =
+  null;
+
+// ---------------------------------
 // 判定表示を初期化
 // ---------------------------------
 
@@ -5782,7 +6141,7 @@ sasoiHoldTime = null;
 // 前回プレイのゲージを持ち越さない。
 // ---------------------------------
 
-sasoiInterestGauge = 0;
+resetSasoiInterestGauge();
 
 console.log(
   "興味ゲージリセット：新しいプレイ開始"
@@ -5807,8 +6166,38 @@ sasoiBiteReleasePending = false;
 // ---------------------------------
 // 穂先ブルブル状態
 // ---------------------------------
+//
+// JavaScript側の状態をリセットし、
+// 前回プレイで残っている
+// 「hit」「fish-on」クラスも解除する。
+// ---------------------------------
 
-sasoiHitAnimating = false;
+sasoiHitAnimating =
+  false;
+
+
+const sasoiTip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(
+  sasoiTip
+){
+
+  // ◎発生時のブルブル
+  sasoiTip.classList.remove(
+    "hit"
+  );
+
+
+  // 魚が掛かったときの大ブルブル
+  sasoiTip.classList.remove(
+    "fish-on"
+  );
+
+}
 
 
 // ---------------------------------
@@ -6180,6 +6569,5 @@ document.addEventListener(
 
   }
 );
-
 
 })();
