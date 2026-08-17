@@ -15,22 +15,139 @@ const style = document.createElement("style");
 
 style.textContent = `
 
-.sasoi-panel {
+/* =================================
+   初期画面
+   「誘いの名人」
+   和紙 × 深い水面 × 釣り糸 × 波紋
+================================= */
+
+.sasoi-panel{
 
   width:370.5px;
   height:190px;
 
   border-radius:12px;
 
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.15);
+  /* =================================
+     ベース
+  ================================= */
 
-  color:#333;
+  background:
+
+    /* ---------------------------------
+       和紙の細かな繊維
+    --------------------------------- */
+
+    repeating-linear-gradient(
+      93deg,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.10) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+
+    repeating-linear-gradient(
+      176deg,
+      rgba(80,72,55,0.045) 0px,
+      rgba(80,72,55,0.045) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+
+    /* ---------------------------------
+       和紙の大きな柔らかいシワ
+    --------------------------------- */
+
+    linear-gradient(
+      122deg,
+      transparent 0%,
+      rgba(255,255,255,0.22) 12%,
+      rgba(90,80,60,0.08) 17%,
+      transparent 24%,
+      transparent 100%
+    ),
+
+    linear-gradient(
+      62deg,
+      transparent 0%,
+      rgba(90,80,60,0.07) 28%,
+      rgba(255,255,255,0.20) 34%,
+      transparent 41%,
+      transparent 100%
+    ),
+
+    linear-gradient(
+      148deg,
+      transparent 0%,
+      rgba(255,255,255,0.18) 55%,
+      rgba(90,80,60,0.07) 61%,
+      transparent 68%,
+      transparent 100%
+    ),
+
+    /* ---------------------------------
+       和紙の柔らかな濃淡
+    --------------------------------- */
+
+    radial-gradient(
+      ellipse at 18% 18%,
+      rgba(255,255,255,0.34) 0%,
+      rgba(255,255,255,0.08) 18%,
+      transparent 38%
+    ),
+
+    radial-gradient(
+      ellipse at 82% 28%,
+      rgba(90,80,60,0.10) 0%,
+      rgba(90,80,60,0.03) 20%,
+      transparent 40%
+    ),
+
+    radial-gradient(
+      ellipse at 28% 78%,
+      rgba(255,255,255,0.25) 0%,
+      rgba(255,255,255,0.05) 18%,
+      transparent 38%
+    ),
+
+    /* ---------------------------------
+       和紙ベース
+    --------------------------------- */
+
+    linear-gradient(
+      to bottom,
+      #F4F0E1 0%,
+      #EAE4D1 52%,
+      #D8D1BA 100%
+    );
+
+
+  /* =================================
+     紙の立体感
+  ================================= */
+
+  box-shadow:
+
+    0 4px 9px
+    rgba(35,40,35,0.22),
+
+    inset
+    0 2px 0
+    rgba(255,255,255,0.55),
+
+    inset
+    0 -4px 8px
+    rgba(65,70,60,0.14);
+
+
+  color:#263A38;
 
   display:flex;
+
   flex-direction:column;
 
   justify-content:center;
+
   align-items:center;
 
   box-sizing:border-box;
@@ -39,11 +156,143 @@ style.textContent = `
 
   position:relative;
 
+  overflow:hidden;
+
   z-index:1;
 
-  /* 現在の下端位置を基準に上方向へ拡張 */
   margin-top:30px;
+
   margin-bottom:-30px;
+
+}
+
+
+/* =================================
+   水面
+   下側に深い青緑を薄く入れる
+================================= */
+
+.sasoi-panel::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+
+  bottom:0;
+
+  width:100%;
+
+  height:72px;
+
+  pointer-events:none;
+
+  background:
+
+    /* ---------------------------------
+       水面の薄い光
+    --------------------------------- */
+
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(108,190,174,0.25) 0%,
+      rgba(108,190,174,0.08) 28%,
+      transparent 62%
+    ),
+
+    /* ---------------------------------
+       深い水の色
+    --------------------------------- */
+
+    linear-gradient(
+      to bottom,
+      rgba(38,115,105,0.05) 0%,
+      rgba(27,91,84,0.14) 45%,
+      rgba(17,67,64,0.28) 100%
+    );
+
+  opacity:0.95;
+
+  z-index:0;
+
+}
+
+
+/* =================================
+   水面の細かな波
+================================= */
+
+.sasoi-panel::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+
+  bottom:22px;
+
+  width:100%;
+
+  height:46px;
+
+  pointer-events:none;
+
+  background:
+
+    /* ---------------------------------
+       奥の波
+    --------------------------------- */
+
+    radial-gradient(
+      ellipse 90px 10px at 50% 70%,
+      transparent 54%,
+      rgba(76,155,145,0.16) 55%,
+      rgba(76,155,145,0.16) 57%,
+      transparent 59%
+    ),
+
+    /* ---------------------------------
+       中央の波
+    --------------------------------- */
+
+    radial-gradient(
+      ellipse 62px 7px at 50% 70%,
+      transparent 54%,
+      rgba(105,185,169,0.22) 55%,
+      rgba(105,185,169,0.22) 58%,
+      transparent 60%
+    ),
+
+    /* ---------------------------------
+       手前の小さな波
+    --------------------------------- */
+
+    radial-gradient(
+      ellipse 35px 5px at 50% 70%,
+      transparent 54%,
+      rgba(135,205,187,0.28) 55%,
+      rgba(135,205,187,0.28) 58%,
+      transparent 60%
+    );
+
+  opacity:0.8;
+
+  z-index:1;
+
+}
+
+
+/* =================================
+   初期画面の中身を前面へ
+================================= */
+
+.sasoi-panel > *{
+
+  position:relative;
+
+  z-index:5;
 
 }
 
@@ -90,6 +339,11 @@ style.textContent = `
 }
 
 
+/* =================================
+   ゲーム画面
+   金箔・金屏風風
+================================= */
+
 .sasoi-game {
 
   display:none;
@@ -101,18 +355,65 @@ style.textContent = `
 
   border-radius:12px;
 
-  /* ★ 黄色い型枠材のような色 */
+  /* =================================
+     金箔のような深い金色
+  ================================= */
+
   background:
+
+    /* ---------------------------------
+       金箔の細かな光
+    --------------------------------- */
+
+    repeating-linear-gradient(
+      92deg,
+      rgba(255,245,180,0.10) 0px,
+      rgba(255,245,180,0.10) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+
+    /* ---------------------------------
+       金の濃淡
+    --------------------------------- */
+
     linear-gradient(
       to bottom,
-      #C9A23A 0%,
-      #B9902F 45%,
-      #A77E28 100%
-    );
+      #E7C65A 0%,
+      #C99A2E 38%,
+      #A87518 70%,
+      #80500B 100%
+    ),
+
+    /* ---------------------------------
+       ベース
+    --------------------------------- */
+
+    #C99A2E;
+
+
+  /* =================================
+     金属・金箔の立体感
+  ================================= */
+
+  box-shadow:
+
+    0 4px 10px
+    rgba(45,30,5,0.32),
+
+    inset
+    0 2px 0
+    rgba(255,245,190,0.55),
+
+    inset
+    0 -4px 8px
+    rgba(70,40,0,0.28);
+
 
   overflow:hidden;
 
   box-sizing:border-box;
+
 
   /* =================================
      現在の下端位置を基準に
@@ -120,6 +421,7 @@ style.textContent = `
   ================================= */
 
   margin-top:30px;
+
   margin-bottom:-30px;
 
 }
@@ -782,7 +1084,8 @@ clip-path: polygon(
 
 /* =================================
    中央の釣り穴ライン
-   ================================= */
+   深めのエメラルドグリーン
+================================= */
 
 .sasoi-center-line{
 
@@ -796,20 +1099,25 @@ clip-path: polygon(
 
   height:60px;
 
-  /* ★ 深めの水色＋青緑グラデーション */
+  /* ★ 深めのエメラルドグリーングラデーション */
+
   background:
     linear-gradient(
       to bottom,
-      rgba(52,108,140,0.96),
-      rgba(38,91,119,0.93) 35%,
-      rgba(28,78,99,0.92) 60%,
-      rgba(14,53,75,0.96)
+      rgba(34,112,101,0.96),
+      rgba(28,96,87,0.94) 35%,
+      rgba(20,79,72,0.93) 60%,
+      rgba(10,55,52,0.97)
     );
 
   /* ★ 水中の柔らかい光 */
+
   box-shadow:
-    inset 0 6px 12px rgba(150,220,235,0.13),
-    inset 0 -7px 12px rgba(0,25,45,0.23);
+    inset 0 6px 12px
+    rgba(150,235,220,0.13),
+
+    inset 0 -7px 12px
+    rgba(0,30,28,0.25);
 
   z-index:1;
 
@@ -1528,13 +1836,13 @@ clip-path: polygon(
 
   position:absolute;
 
-  right:202px;
+  right:204px;
 
-  top:4px;
+  top:6px;
 
   width:82px;
 
-  height:18px;
+  height:14px;
 
   display:flex;
 
@@ -1590,7 +1898,7 @@ clip-path: polygon(
 
 /* =================================
    加算値
-   右へ移動しながら消える
+   右へ少し大きく移動しながら消える
 ================================= */
 
 @keyframes sasoiGaugeAddFade{
@@ -1609,7 +1917,7 @@ clip-path: polygon(
     opacity:1;
 
     transform:
-      translateX(3px);
+      translateX(5px);
 
   }
 
@@ -1618,7 +1926,7 @@ clip-path: polygon(
     opacity:0;
 
     transform:
-      translateX(10px);
+      translateX(16px);
 
   }
 
@@ -1627,7 +1935,7 @@ clip-path: polygon(
 
 /* =================================
    現在の合計値
-   固定幅・R付きボックス
+   半透明背景・影付き・少し左寄せ
 ================================= */
 
 .sasoi-gauge-total{
@@ -1642,9 +1950,11 @@ clip-path: polygon(
 
   align-items:center;
 
-  justify-content:center;
+  justify-content:flex-end;
 
-  text-align:center;
+  text-align:right;
+
+  padding-right:4px;
 
   font-size:12px;
 
@@ -1654,19 +1964,55 @@ clip-path: polygon(
 
   color:#17252B;
 
-  background:#FFFFFF;
+  /* ---------------------------------
+     半透明背景
+  --------------------------------- */
 
-  border:1px solid #17252B;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.55
+    );
+
+  /* ---------------------------------
+     枠線なし
+  --------------------------------- */
+
+  border:none;
+
+  /* ---------------------------------
+     角丸
+  --------------------------------- */
 
   border-radius:5px;
 
+  /* ---------------------------------
+     文字位置
+  --------------------------------- */
+
   line-height:22px;
+
+  /* ---------------------------------
+     ほんのり影
+  --------------------------------- */
+
+  box-shadow:
+    0 1px 3px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
 
   position:relative;
 
   top:0px;
 
 }
+
 
 /* =================================
    通常メモリ
@@ -3018,16 +3364,16 @@ function addSasoiInterest(judgement){
   // 1メモリ = 10ポイント
   //
   // 例：
-  // 0～9      → 0個
-  // 10～19    → 1個
-  // 20～29    → 2個
+  // 0～9      → 1個
+  // 10～19    → 2個
+  // 20～29    → 3個
   // ・・・
-  // 190～199  → 19個
+  // 190～199  → 20個
   // 200       → 20個
   // ---------------------------------
 
   const gaugeLevel =
-    Math.floor(
+    Math.ceil(
       sasoiInterestGauge / 10
     );
 
@@ -3318,7 +3664,7 @@ function resetSasoiInterestGauge(){
   ){
 
     totalDisplay.textContent =
-      "";
+      "0";
 
   }
 
