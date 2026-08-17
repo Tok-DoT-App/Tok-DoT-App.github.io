@@ -4133,8 +4133,49 @@ iframe {
   </div>
   <!---------------------- /誘いの名人 ---------------------->
 
-  <!-- 戻るボタンは wrapper の外 -->
-  <button class="screenBackBtn" onclick="showScreen('entryScreen')">ホーム画面へ</button>
+<!-- 戻るボタンは wrapper の外 -->
+<button
+  id="doubleCounterBackBtn"
+  class="screenBackBtn"
+  type="button"
+>
+  ホーム画面へ
+</button>
+</div>
+
+
+<!-- ダブルカウンター ホーム画面戻り確認モーダル -->
+<div id="doubleCounterBackModal" class="ac-solo-modal">
+
+  <div class="ac-solo-modal-content">
+
+    <p>
+      ダブルカウンターを終了して<br>
+      ホーム画面へ戻りますか？
+    </p>
+
+    <div class="ac-solo-modal-buttons">
+
+      <button
+        id="doubleCounterBackCancel"
+        class="ac-solo-btn-cancel"
+        type="button"
+      >
+        キャンセル
+      </button>
+
+      <button
+        id="doubleCounterBackOk"
+        class="ac-solo-btn-ok"
+        type="button"
+      >
+        OK
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
 <!---------------------- ダブルカウンター（アプリ内：ひとりカウンター） ---------------------->
@@ -10025,6 +10066,179 @@ document.addEventListener(
 
 });
 
+/* =========================================
+   ダブルカウンター
+   ホーム画面へ戻る確認モーダル
+========================================= */
+
+const doubleCounterBackBtn =
+  document.getElementById("doubleCounterBackBtn");
+
+const doubleCounterBackModal =
+  document.getElementById("doubleCounterBackModal");
+
+const doubleCounterBackCancel =
+  document.getElementById("doubleCounterBackCancel");
+
+const doubleCounterBackOk =
+  document.getElementById("doubleCounterBackOk");
+
+
+/* -----------------------------------------
+   ホーム画面ボタン
+----------------------------------------- */
+
+if (
+  doubleCounterBackBtn &&
+  doubleCounterBackModal
+) {
+
+  doubleCounterBackBtn.addEventListener(
+    "click",
+    function(event){
+
+      /* ---------------------------------
+         既存のクリック処理を止める
+      --------------------------------- */
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+      event.stopImmediatePropagation();
+
+
+      /* ---------------------------------
+         初期画面へ移動せず
+         モーダルだけ表示
+      --------------------------------- */
+
+      doubleCounterBackModal.classList.add(
+        "active"
+      );
+
+    },
+    true
+  );
+
+}
+
+
+/* -----------------------------------------
+   キャンセル
+----------------------------------------- */
+
+if (
+  doubleCounterBackCancel &&
+  doubleCounterBackModal
+) {
+
+  doubleCounterBackCancel.addEventListener(
+    "click",
+    function(event){
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+      doubleCounterBackModal.classList.remove(
+        "active"
+      );
+
+    }
+  );
+
+}
+
+
+/* -----------------------------------------
+   OK
+----------------------------------------- */
+
+if (
+  doubleCounterBackOk &&
+  doubleCounterBackModal
+) {
+
+ doubleCounterBackOk.addEventListener(
+  "click",
+  function(event){
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    /* -------------------------------
+       モーダルを閉じる
+    ------------------------------- */
+
+    doubleCounterBackModal.classList.remove(
+      "active"
+    );
+
+
+    /* -------------------------------
+       誘いの名人側も
+       「戻る」と同じ処理を実行
+    ------------------------------- */
+
+    const sasoiBackBtn =
+      document.getElementById("sasoiBackBtn");
+
+
+    if(
+      sasoiBackBtn
+    ){
+
+      sasoiBackBtn.click();
+
+    }
+
+
+    /* -------------------------------
+       ダブルカウンターを
+       初期画面へ戻す
+    ------------------------------- */
+
+    showScreen(
+      "entryScreen"
+    );
+
+  }
+);
+
+}
+
+
+/* -----------------------------------------
+   モーダル背景クリック
+----------------------------------------- */
+
+if (
+  doubleCounterBackModal
+) {
+
+  doubleCounterBackModal.addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target ===
+        doubleCounterBackModal
+      ){
+
+        doubleCounterBackModal.classList.remove(
+          "active"
+        );
+
+      }
+
+    }
+  );
+
+}
+
 
 /* ==================================================
    PartnerMind Ver2
@@ -10081,6 +10295,7 @@ console.log("PartnerMind.js を読み込みました");
   </div>
 
 </div>
+
 
 
 
