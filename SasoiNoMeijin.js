@@ -4402,7 +4402,7 @@ function showSasoiXJudgement(result){
 
       }
 
-    }, 300);
+    }, 200);
 
 }
 
@@ -4553,7 +4553,7 @@ function showSasoiActionJudgement(result){
 
       }
 
-    }, 300);
+    }, 200);
 
 }
 
@@ -7304,7 +7304,7 @@ setTimeout(()=>{
 
   playNextSasoiNote();
 
-},300);
+},200);
 
 
 // =================================
