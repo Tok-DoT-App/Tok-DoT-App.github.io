@@ -558,6 +558,7 @@ style.textContent = `
 }
 
 /* 穂先〇 */
+
 .sasoi-tip{
 
   width:26px;
@@ -568,9 +569,11 @@ style.textContent = `
 
   border:4px solid white;
 
-  background:rgba(255,255,255,0.15);
+  background:
+    rgba(255,255,255,0.15);
 
-  box-shadow:0 0 0 1px rgba(255,255,255,0.45);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.45);
 
   display:flex;
 
@@ -579,6 +582,147 @@ style.textContent = `
   align-items:center;
 
   box-sizing:border-box;
+
+
+  /* ★ 波紋の基準位置 */
+  position:relative;
+
+}
+
+/* =================================
+   PERFECT専用・穂先○から広がる波紋
+================================= */
+
+.sasoi-perfect-ripple{
+
+  position:absolute;
+
+  /* ★ 穂先○の中心 */
+  left:50%;
+  top:50%;
+
+  /* ★ 穂先○そのものと同じ大きさから開始 */
+  width:26px;
+  height:26px;
+
+  border:
+    2px solid
+    rgba(255,255,255,0.95);
+
+  border-radius:50%;
+
+  box-sizing:border-box;
+
+  pointer-events:none;
+
+  /* ★ 必ず穂先○の中心を基準にする */
+  transform:
+    translate(-50%,-50%)
+    scale(0.35);
+
+  opacity:1;
+
+  z-index:20;
+
+  box-shadow:
+
+    0 0 4px
+    rgba(255,255,255,0.95),
+
+    0 0 10px
+    rgba(255,255,255,0.70),
+
+    0 0 18px
+    rgba(255,255,255,0.35);
+
+  animation:
+    sasoiPerfectRipple
+    0.3s
+    ease-out
+    forwards;
+
+}
+
+
+/* =================================
+   外側へパーッと広がる
+================================= */
+
+@keyframes sasoiPerfectRipple{
+
+  /* -----------------------------
+     発生
+  ----------------------------- */
+
+  0%{
+
+    transform:
+      translate(-50%,-50%)
+      scale(0.35);
+
+    opacity:1;
+
+  }
+
+
+  /* -----------------------------
+     穂先○を一度包む
+  ----------------------------- */
+
+  25%{
+
+    transform:
+      translate(-50%,-50%)
+      scale(0.8);
+
+    opacity:0.95;
+
+  }
+
+
+  /* -----------------------------
+     外側へ広がる
+  ----------------------------- */
+
+  55%{
+
+    transform:
+      translate(-50%,-50%)
+      scale(1.6);
+
+    opacity:0.70;
+
+  }
+
+
+  /* -----------------------------
+     花火のように大きく広がる
+  ----------------------------- */
+
+  80%{
+
+    transform:
+      translate(-50%,-50%)
+      scale(2.3);
+
+    opacity:0.35;
+
+  }
+
+
+  /* -----------------------------
+     消える
+  ----------------------------- */
+
+  100%{
+
+    transform:
+      translate(-50%,-50%)
+      scale(3.0);
+
+    opacity:0;
+
+  }
 
 }
 
@@ -1276,8 +1420,8 @@ style.textContent = `
 
   color:white;
 
-  /* 通常時：明るめの青 */
-  background:#4FA3D1;
+  /* 通常時：侍ブルー */
+  background:#1E5AA8;
 
   display:flex;
 
@@ -1299,7 +1443,7 @@ style.textContent = `
   -webkit-user-drag:none;
   user-drag:none;
 
-  /* ★ 色をなめらかに変化させる */
+  /* 色をなめらかに変化させる */
   transition:
     background-color 0.25s ease,
     box-shadow 0.25s ease,
@@ -2745,13 +2889,15 @@ let sasoiHitAnimating = false;
 //
 // ○●○●○●ー
 // ○●○●○●ー
-// ○●○●○●ーー
+// ○●○●○●ー
 //
 // ◎
 //
 // ※ 基本パターンは変更せず、
 //    音符間隔を400msで統一。
-//    セット間の空白も400ms間隔になるよう補完。
+//    ●の直後に「― ―」が続く場合は、
+//    最初の「―」を譜面から省略して、
+//    判定表示が重ならないようにする。
 //    全体のピッチを上げている。
 //
 // -------------------------------
@@ -2786,7 +2932,7 @@ const sasoiScore = [
 
   // =====================
   // 1セット目
-  // ○●○●○●ーー
+  // ○●○●○●ー
   // =====================
 
   {
@@ -2825,15 +2971,9 @@ const sasoiScore = [
     type:"press"
   },
 
+  // ●の直後の最初の―を省略
   {
     id:10,
-    time:5400,
-    type:"hold"
-  },
-
-  // 空白補完
-  {
-    id:11,
     time:5800,
     type:"hold"
   },
@@ -2841,54 +2981,48 @@ const sasoiScore = [
 
   // =====================
   // 2セット目
-  // ○●○●○●ーー
+  // ○●○●○●ー
   // =====================
 
   {
-    id:12,
+    id:11,
     time:6200,
     type:"release"
   },
 
   {
-    id:13,
+    id:12,
     time:6600,
     type:"press"
   },
 
   {
-    id:14,
+    id:13,
     time:7000,
     type:"release"
   },
 
   {
-    id:15,
+    id:14,
     time:7400,
     type:"press"
   },
 
   {
-    id:16,
+    id:15,
     time:7800,
     type:"release"
   },
 
   {
-    id:17,
+    id:16,
     time:8200,
     type:"press"
   },
 
+  // ●の直後の最初の―を省略
   {
-    id:18,
-    time:8600,
-    type:"hold"
-  },
-
-  // 空白補完
-  {
-    id:19,
+    id:17,
     time:9000,
     type:"hold"
   },
@@ -2896,61 +3030,49 @@ const sasoiScore = [
 
   // =====================
   // 3セット目
-  // ○●○●○●ーー
+  // ○●○●○●ー
   // =====================
 
   {
-    id:20,
+    id:18,
     time:9400,
     type:"release"
   },
 
   {
-    id:21,
+    id:19,
     time:9800,
     type:"press"
   },
 
   {
-    id:22,
+    id:20,
     time:10200,
     type:"release"
   },
 
   {
-    id:23,
+    id:21,
     time:10600,
     type:"press"
   },
 
   {
-    id:24,
+    id:22,
     time:11000,
     type:"release"
   },
 
   {
-    id:25,
+    id:23,
     time:11400,
     type:"press"
   },
 
+  // ●の直後の最初の―を省略
   {
-    id:26,
-    time:11800,
-    type:"hold"
-  },
-
-  {
-    id:27,
+    id:24,
     time:12200,
-    type:"hold"
-  },
-
-  // 空白補完
-  {
-    id:28,
-    time:12600,
     type:"hold"
   },
 
@@ -2960,7 +3082,7 @@ const sasoiScore = [
   // =====================
 
   {
-    id:29,
+    id:25,
     time:13000,
     type:"bite"
   }
@@ -3192,7 +3314,7 @@ id="sasoiFlow">
 class="sasoi-touch"
 id="sasoiTouch">
 
-  ❄
+  ○
 
 </div>
 
@@ -3559,14 +3681,14 @@ function addSasoiInterest(judgement){
   ){
 
     addValue =
-      10;
+      12;
 
   }else if(
     judgement === "GOOD"
   ){
 
     addValue =
-      7;
+      9;
 
   }else if(
     judgement === "BAD"
@@ -4195,6 +4317,18 @@ function showSasoiXJudgement(result){
   display.textContent =
     result.judgement;
 
+  // =================================
+  // PERFECT演出
+  // =================================
+
+  if(
+    result.judgement === "PERFECT"
+  ){
+
+    showSasoiPerfectRipple();
+
+  }
+
 
   // =================================
   // 表示クラスをリセット
@@ -4268,7 +4402,7 @@ function showSasoiXJudgement(result){
 
       }
 
-    }, 700);
+    }, 300);
 
 }
 
@@ -4419,7 +4553,7 @@ function showSasoiActionJudgement(result){
 
       }
 
-    }, 700);
+    }, 300);
 
 }
 
@@ -7474,5 +7608,85 @@ document.addEventListener(
 
   }
 );
+
+// =================================
+// PERFECT専用・穂先波紋演出
+// =================================
+
+function showSasoiPerfectRipple(){
+
+  const tip =
+    document.querySelector(
+      ".sasoi-tip"
+    );
+
+
+  if(
+    !tip
+  ){
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // 前回の波紋を削除
+  // ---------------------------------
+
+  const oldRipple =
+    tip.querySelector(
+      ".sasoi-perfect-ripple"
+    );
+
+
+  if(
+    oldRipple
+  ){
+
+    oldRipple.remove();
+
+  }
+
+
+  // ---------------------------------
+  // 新しい波紋を生成
+  // ---------------------------------
+
+  const ripple =
+    document.createElement(
+      "div"
+    );
+
+
+  ripple.className =
+    "sasoi-perfect-ripple";
+
+
+  // ---------------------------------
+  // 穂先○の中を基準に配置
+  // ---------------------------------
+
+  tip.appendChild(
+    ripple
+  );
+
+
+  // ---------------------------------
+  // アニメーション終了後に削除
+  // ---------------------------------
+
+  ripple.addEventListener(
+    "animationend",
+    () => {
+
+      ripple.remove();
+
+    }
+  );
+
+}
+
+// ---------------------------------　JS終了地点　---------------------------------
 
 })();
