@@ -2797,7 +2797,22 @@ let sasoiHoldTime = 0;
 // 新しいpress操作が発生した変数
 // -------------------------------
 
-let sasoiPressPending = false;
+let sasoiPressPending =
+  false;
+
+
+// =================================
+// ★ PRESS操作時の判定情報
+// =================================
+
+let sasoiPressPendingDistance =
+  null;
+
+let sasoiPressPendingDifferenceX =
+  null;
+
+let sasoiPressPendingNoteId =
+  null;
 
 // -------------------------------
 // 魚状態管理
@@ -2887,17 +2902,19 @@ let sasoiHitAnimating = false;
 //
 // 321
 //
-// ○●○●○●ー
-// ○●○●○●ー
-// ○●○●○●ー
+// ○　●　○　●　○　●　ー
+// ○　●　○　●　○　●　ー
+// ○　●　○　●　○　●　ー
 //
 // ◎
 //
 // ※ 基本パターンは変更せず、
-//    音符間隔を400msで統一。
+//    音符間隔を300msで統一。
 //    ●の直後に「― ―」が続く場合は、
 //    最初の「―」を譜面から省略して、
 //    判定表示が重ならないようにする。
+//    1セット目の最初の○だけは3000ms。
+//    その後の譜面を300ms間隔で配置。
 //    全体のピッチを上げている。
 //
 // -------------------------------
@@ -2943,13 +2960,13 @@ const sasoiScore = [
 
   {
     id:5,
-    time:3400,
+    time:3600,
     type:"press"
   },
 
   {
     id:6,
-    time:3800,
+    time:3900,
     type:"release"
   },
 
@@ -2961,20 +2978,20 @@ const sasoiScore = [
 
   {
     id:8,
-    time:4600,
+    time:4500,
     type:"release"
   },
 
   {
     id:9,
-    time:5000,
+    time:4800,
     type:"press"
   },
 
   // ●の直後の最初の―を省略
   {
     id:10,
-    time:5800,
+    time:5400,
     type:"hold"
   },
 
@@ -2986,44 +3003,44 @@ const sasoiScore = [
 
   {
     id:11,
-    time:6200,
+    time:5700,
     type:"release"
   },
 
   {
     id:12,
-    time:6600,
+    time:6000,
     type:"press"
   },
 
   {
     id:13,
-    time:7000,
+    time:6300,
     type:"release"
   },
 
   {
     id:14,
-    time:7400,
+    time:6600,
     type:"press"
   },
 
   {
     id:15,
-    time:7800,
+    time:6900,
     type:"release"
   },
 
   {
     id:16,
-    time:8200,
+    time:7200,
     type:"press"
   },
 
   // ●の直後の最初の―を省略
   {
     id:17,
-    time:9000,
+    time:7800,
     type:"hold"
   },
 
@@ -3035,44 +3052,44 @@ const sasoiScore = [
 
   {
     id:18,
-    time:9400,
+    time:8100,
     type:"release"
   },
 
   {
     id:19,
-    time:9800,
+    time:8400,
     type:"press"
   },
 
   {
     id:20,
-    time:10200,
+    time:8700,
     type:"release"
   },
 
   {
     id:21,
-    time:10600,
+    time:9000,
     type:"press"
   },
 
   {
     id:22,
-    time:11000,
+    time:9300,
     type:"release"
   },
 
   {
     id:23,
-    time:11400,
+    time:9600,
     type:"press"
   },
 
   // ●の直後の最初の―を省略
   {
     id:24,
-    time:12200,
+    time:10200,
     type:"hold"
   },
 
@@ -3083,12 +3100,11 @@ const sasoiScore = [
 
   {
     id:25,
-    time:13000,
+    time:10500,
     type:"bite"
   }
 
 ];
-
 
 
 const area =
@@ -3723,48 +3739,33 @@ function addSasoiInterest(judgement){
   }
 
 
-  // ---------------------------------
-  // 興味ゲージ加算
-  // ---------------------------------
+// ---------------------------------
+// 興味ゲージ加算
+// ---------------------------------
 
-  sasoiInterestGauge +=
-    addValue;
+sasoiInterestGauge +=
+  addValue;
 
 
-  // ---------------------------------
-  // 最大値制限
-  // ---------------------------------
+// ---------------------------------
+// 20メモリ表示用の値
+// ---------------------------------
+//
+// 内部合計は200を超えてOK。
+// 画面上のゲージだけ200で止める。
+// ---------------------------------
 
-  if(
-    sasoiInterestGauge >
+const gaugeDisplayValue =
+  Math.min(
+    sasoiInterestGauge,
     SASOI_INTEREST_MAX
-  ){
-
-    sasoiInterestGauge =
-      SASOI_INTEREST_MAX;
-
-  }
+  );
 
 
-  // ---------------------------------
-  // 20メモリへ反映
-  // ---------------------------------
-  //
-  // 1メモリ = 10ポイント
-  //
-  // 例：
-  // 0～9      → 1個
-  // 10～19    → 2個
-  // 20～29    → 3個
-  // ・・・
-  // 190～199  → 20個
-  // 200       → 20個
-  // ---------------------------------
-
-  const gaugeLevel =
-    Math.ceil(
-      sasoiInterestGauge / 10
-    );
+const gaugeLevel =
+  Math.ceil(
+    gaugeDisplayValue / 10
+  );
 
 
   // ---------------------------------
@@ -4317,6 +4318,7 @@ function showSasoiXJudgement(result){
   display.textContent =
     result.judgement;
 
+
   // =================================
   // PERFECT演出
   // =================================
@@ -4358,7 +4360,7 @@ function showSasoiXJudgement(result){
 
 
   // =================================
-  // 前回の消去タイマーを解除
+  // 前回の●判定消去タイマーを解除
   // =================================
 
   clearTimeout(
@@ -4426,6 +4428,44 @@ function showSasoiActionJudgement(result){
 
 
   // =================================
+  // ●のPERFECT表示を保護
+  // =================================
+  //
+  // ●をPERFECTで成功した直後に、
+  // 次の「―」のGOOD判定が来る場合がある。
+  //
+  // 「―」自体のGOOD判定は正常に成立させるが、
+  // 画面上では●のPERFECTをGOODで上書きしない。
+  //
+  // これにより、
+  //
+  // ● → PERFECT
+  // ― → GOOD
+  //
+  // のとき、
+  //
+  // 画面表示：
+  // PERFECT
+  //
+  // とする。
+  //
+  // =================================
+
+  if(
+    result === "GOOD" &&
+    display.classList.contains("perfect")
+  ){
+
+    console.log(
+      "― GOOD表示をスキップ：●のPERFECT表示を保護"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
   // 判定結果表示
   // =================================
 
@@ -4451,15 +4491,13 @@ function showSasoiActionJudgement(result){
   // HIT
   // LOST
   //
-  // それぞれ
+  // ↓
   //
   // good
   // bad
   // perfect
   // hit
   // lost
-  //
-  // のCSSクラスになる。
   //
   // =================================
 
@@ -4505,7 +4543,7 @@ function showSasoiActionJudgement(result){
 
 
   // =================================
-  // 前回の消去タイマーを解除
+  // 前回のアクション判定消去タイマーを解除
   // =================================
 
   clearTimeout(
@@ -4556,6 +4594,203 @@ function showSasoiActionJudgement(result){
     }, 200);
 
 }
+
+
+// =================================
+// ★ PRESS操作時の判定情報を保存
+// =================================
+//
+// 実際にPRESSされた瞬間の
+// 最近音符との距離を取得する。
+//
+// ここで保存した値を、
+// 後の checkSasoiHit() で使用する。
+//
+// =================================
+
+function captureSasoiPressPosition(){
+
+  const tip =
+    document.querySelector(
+      ".sasoi-tip"
+    );
+
+  const flow =
+    document.getElementById(
+      "sasoiFlow"
+    );
+
+
+  if(
+    !tip ||
+    !flow
+  ){
+
+    return;
+
+  }
+
+
+  const tipRect =
+    tip.getBoundingClientRect();
+
+
+  const tipCenter =
+    tipRect.left +
+    tipRect.width / 2;
+
+
+  const notes =
+    flow.querySelectorAll(
+      "span"
+    );
+
+
+  let nearestNote =
+    null;
+
+  let nearestDistance =
+    Infinity;
+
+  let nearestDifferenceX =
+    0;
+
+
+  notes.forEach((note)=>{
+
+    // ---------------------------------
+    // 処理済み音符は無視
+    // ---------------------------------
+
+    if(
+      note.dataset.done === "1" ||
+      note.dataset.hit === "true"
+    ){
+
+      return;
+
+    }
+
+
+    // ---------------------------------
+    // count / bite は
+    // PRESS保存対象外
+    // ---------------------------------
+
+    const type =
+      note.dataset.type;
+
+
+    if(
+      type !== "press"
+    ){
+
+      return;
+
+    }
+
+
+    // ---------------------------------
+    // 音符位置
+    // ---------------------------------
+
+    const rect =
+      note.getBoundingClientRect();
+
+
+    const noteCenter =
+      rect.left +
+      rect.width / 2;
+
+
+    // ---------------------------------
+    // X方向差
+    // ---------------------------------
+
+    const differenceX =
+      noteCenter -
+      tipCenter;
+
+
+    const distance =
+      Math.abs(
+        differenceX
+      );
+
+
+    // ---------------------------------
+    // 一番近いPRESSを取得
+    // ---------------------------------
+
+    if(
+      distance <
+      nearestDistance
+    ){
+
+      nearestDistance =
+        distance;
+
+      nearestNote =
+        note;
+
+      nearestDifferenceX =
+        differenceX;
+
+    }
+
+  });
+
+
+  // =================================
+  // PRESS音符が存在しない
+  // =================================
+
+  if(
+    !nearestNote
+  ){
+
+    sasoiPressPendingDistance =
+      null;
+
+    sasoiPressPendingDifferenceX =
+      null;
+
+    sasoiPressPendingNoteId =
+      null;
+
+    return;
+
+  }
+
+
+  // =================================
+  // ★ 実際に押した瞬間の値を保存
+  // =================================
+
+  sasoiPressPendingDistance =
+    nearestDistance;
+
+  sasoiPressPendingDifferenceX =
+    nearestDifferenceX;
+
+  sasoiPressPendingNoteId =
+    nearestNote.dataset.id;
+
+
+  console.log(
+    "★ PRESS瞬間位置保存",
+    "ID:",
+    sasoiPressPendingNoteId,
+    "距離:",
+    sasoiPressPendingDistance.toFixed(2),
+    "px",
+    "X差:",
+    sasoiPressPendingDifferenceX.toFixed(2),
+    "px"
+  );
+
+}
+
 
 function checkSasoiHit(){
 
@@ -5130,269 +5365,516 @@ notes.forEach((note)=>{
   //
   // =================================
 
+
+// =================================
+// PRESS
+// =================================
+
+if(
+  noteType === "press"
+){
+
+  // ---------------------------------
+  // すでに処理済みなら終了
+  // ---------------------------------
+
+  if(
+    nearestNote.dataset.hit === "true"
+  ){
+
+    return;
+
+  }
+
+
   // =================================
-  // PRESS
+  // ★ 新しいPRESS操作があるか確認
   // =================================
 
   if(
-    noteType === "press"
+    !sasoiPressPending
+  ){
+
+    console.log(
+      "PRESS待機（新しいPRESS操作なし）",
+      "現在距離:",
+      nearestDistance.toFixed(1),
+      "px"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // ★ 実際にPRESSした瞬間の距離を使用
+  // =================================
+
+  let pressDistance =
+    sasoiPressPendingDistance;
+
+  let pressDifferenceX =
+    sasoiPressPendingDifferenceX;
+
+
+  // =================================
+  // 保存値がない場合
+  // =================================
+  //
+  // 念のため現在位置を使用する。
+  // 通常はこちらには入らない。
+  //
+  // =================================
+
+  if(
+    pressDistance === null ||
+    pressDifferenceX === null
+  ){
+
+    pressDistance =
+      nearestDistance;
+
+    pressDifferenceX =
+      nearestDifferenceX;
+
+
+    console.log(
+      "PRESS保存値なし → 現在位置を使用"
+    );
+
+  }
+
+
+  // =================================
+  // ★ 保存した音符IDと
+  // 現在の音符IDが違う場合
+  // =================================
+  //
+  // PRESSした後に別の音符が
+  // 一番近い音符になった場合、
+  // 別の音符を誤判定しない。
+  //
+  // =================================
+
+  if(
+    sasoiPressPendingNoteId !== null &&
+    nearestNote.dataset.id !==
+      String(
+        sasoiPressPendingNoteId
+      )
+  ){
+
+    console.log(
+      "PRESS対象音符が変更されたため待機",
+      "保存ID:",
+      sasoiPressPendingNoteId,
+      "現在ID:",
+      nearestNote.dataset.id
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // ★ PRESS瞬間の判定ログ
+  // =================================
+
+  console.log(
+    "★ PRESS瞬間判定",
+    "ID:",
+    nearestNote.dataset.id,
+    "距離:",
+    pressDistance.toFixed(2),
+    "px",
+    "X差:",
+    pressDifferenceX.toFixed(2),
+    "px"
+  );
+
+
+  // =================================
+  // X軸判定
+  // =================================
+  //
+  // 0～9px
+  // → PERFECT
+  //
+  // 9～11px
+  // → GOOD
+  //
+  // 11～13px
+  // → BAD
+  //
+  // 13px超
+  // → 判定範囲外
+  //
+  // =================================
+
+  let pressJudgement =
+    "MISS";
+
+  let pressTiming =
+    "";
+
+  let pressJudgementText =
+    "";
+
+
+  // =================================
+  // 判定範囲外
+  // =================================
+
+  if(
+    pressDistance >
+    13
   ){
 
     // ---------------------------------
-    // すでに処理済みなら終了
+    // 早すぎ / 遅すぎ
     // ---------------------------------
 
     if(
-      nearestNote.dataset.hit === "true"
+      pressDifferenceX > 0
     ){
 
-      return;
+      pressTiming =
+        "EARLY";
+
+    }else if(
+      pressDifferenceX < 0
+    ){
+
+      pressTiming =
+        "LATE";
 
     }
 
+
+    console.log(
+      "PRESS判定範囲外",
+      pressTiming,
+      "距離:",
+      pressDistance.toFixed(1),
+      "px"
+    );
+
+
     // ---------------------------------
-    // PRESS受付範囲外
+    // ★ PRESS操作は消費する
     // ---------------------------------
     //
-    // ● PRESSは
-    // 穂先中心から13px以内に入ったら
-    // 操作受付状態になる。
+    // 13pxより外で押した場合、
+    // そのPRESSを後から成功扱いにはしない。
     //
-    // 13pxを超えている間は
-    // まだPRESS待機には入らない。
+    // これが今回の重要な変更。
     //
     // ---------------------------------
 
-    if(
-      nearestDistance > 13
-    ){
+    sasoiPressPending =
+      false;
 
-      return;
+    sasoiPressPendingDistance =
+      null;
 
-    }
+    sasoiPressPendingDifferenceX =
+      null;
 
-// ---------------------------------
-// PRESS受付範囲内
-// ---------------------------------
-//
-// ここまで来たら
-// ●はPRESS受付範囲に入っている。
-//
-// 重要：
-//
-// sasoiAction === "press"
-// だけでは成功させない。
-//
-// sasoiAction は
-// 「現在指が押されている状態」なので、
-//
-// 指を押しっぱなしにしていると
-// 次の●でも press のままになる。
-//
-// そこで、
-//
-// sasoiPressPending === true
-//
-// のときだけ
-// 「新しいPRESS操作が発生した」
-// と判断する。
-//
-// ---------------------------------
+    sasoiPressPendingNoteId =
+      null;
 
-if(
-  !sasoiPressPending
-){
+
+    return;
+
+  }
+
+
+  // =================================
+  // PERFECT
+  // =================================
+
+  if(
+    pressDistance <= 9
+  ){
+
+    pressJudgement =
+      "PERFECT";
+
+  }
+
+
+  // =================================
+  // GOOD
+  // =================================
+
+  else if(
+    pressDistance <= 11
+  ){
+
+    pressJudgement =
+      "GOOD";
+
+  }
+
+
+  // =================================
+  // BAD
+  // =================================
+
+  else{
+
+    pressJudgement =
+      "BAD";
+
+  }
+
+
+  // =================================
+  // EARLY / LATE
+  // =================================
+
+  if(
+    pressDifferenceX > 0
+  ){
+
+    pressTiming =
+      "EARLY";
+
+  }
+
+  else if(
+    pressDifferenceX < 0
+  ){
+
+    pressTiming =
+      "LATE";
+
+  }
+
+
+  // =================================
+  // 表示文字
+  // =================================
+
+  pressJudgementText =
+    pressJudgement;
+
+
+  if(
+    pressTiming
+  ){
+
+    pressJudgementText +=
+      " " +
+      pressTiming;
+
+  }
+
+
+  // =================================
+  // 判定ログ
+  // =================================
 
   console.log(
-    "PRESS待機（新しいPRESS操作なし）",
+    "X軸判定:",
+    pressJudgementText,
+    "差:",
+    pressDifferenceX.toFixed(1),
+    "px",
     "距離:",
-    nearestDistance.toFixed(1),
+    pressDistance.toFixed(1),
     "px"
   );
+
+
+  // =================================
+  // ★ 3回目PRESS詳細デバッグ
+  // =================================
+
+  if(
+    nearestNote.dataset.id === "21" ||
+    nearestNote.dataset.id === "23" ||
+    nearestNote.dataset.id === "25"
+  ){
+
+    const now =
+      Date.now();
+
+
+    console.log(
+      "================================="
+    );
+
+
+    console.log(
+      "★ PRESS瞬間判定詳細"
+    );
+
+
+    console.log(
+      "譜面ID:",
+      nearestNote.dataset.id
+    );
+
+
+    console.log(
+      "譜面予定時刻:",
+      nearestNote.dataset.time ||
+      "time情報なし"
+    );
+
+
+    console.log(
+      "現在時刻:",
+      now
+    );
+
+
+    console.log(
+      "PRESS瞬間距離:",
+      pressDistance.toFixed(2),
+      "px"
+    );
+
+
+    console.log(
+      "PRESS瞬間X差:",
+      pressDifferenceX.toFixed(2),
+      "px"
+    );
+
+
+    console.log(
+      "判定:",
+      pressJudgement
+    );
+
+
+    console.log(
+      "タイミング:",
+      pressTiming
+    );
+
+
+    console.log(
+      "判定表示:",
+      pressJudgementText
+    );
+
+
+    console.log(
+      "sasoiAction:",
+      sasoiAction
+    );
+
+
+    console.log(
+      "sasoiPressPending:",
+      sasoiPressPending
+    );
+
+
+    console.log(
+      "================================="
+    );
+
+  }
+
+
+  // =================================
+  // 実際の判定表示
+  // =================================
+
+  if(
+    typeof showSasoiXJudgement ===
+    "function"
+  ){
+
+    showSasoiXJudgement({
+
+      judgement:
+        pressJudgement,
+
+      timing:
+        pressTiming,
+
+      differenceX:
+        pressDifferenceX,
+
+      distanceX:
+        pressDistance,
+
+      display:
+        pressJudgementText
+
+    });
+
+  }
+
+
+  // =================================
+  // PRESS操作を消費
+  // =================================
+
+  sasoiPressPending =
+    false;
+
+
+  sasoiPressPendingDistance =
+    null;
+
+
+  sasoiPressPendingDifferenceX =
+    null;
+
+
+  sasoiPressPendingNoteId =
+    null;
+
+
+  // =================================
+  // 成功済みにする
+  // =================================
+
+  nearestNote.dataset.done =
+    "1";
+
+
+  nearestNote.dataset.hit =
+    "true";
+
+
+  // =================================
+  // 興味ゲージ加算
+  // =================================
+
+  addSasoiInterest(
+    pressJudgement
+  );
+
+
+  // =================================
+  // 押し開始時間記録
+  // =================================
+
+  sasoiPressStartTime =
+    Date.now();
+
+
+  sasoiStopReady =
+    false;
+
+
+  console.log(
+    "押し開始時間記録"
+  );
+
 
   return;
 
 }
-
-
-// ---------------------------------
-// PRESS成功
-// ---------------------------------
-
-console.log(
-  "成功 press"
-);
-
-
-// =================================
-// ★ 3回目PRESS詳細デバッグ
-// =================================
-//
-// 3セット目のPRESSだけ、
-// 実際の判定位置・距離・時刻を記録する。
-// 判定ロジック自体は変更しない。
-// =================================
-
-if(
-  nearestNote.dataset.id === "21" ||
-  nearestNote.dataset.id === "23" ||
-  nearestNote.dataset.id === "25"
-){
-
-  const now =
-    Date.now();
-
-
-  console.log(
-    "================================="
-  );
-
-  console.log(
-    "★ 3回目PRESS詳細"
-  );
-
-  console.log(
-    "譜面ID:",
-    nearestNote.dataset.id
-  );
-
-  console.log(
-    "譜面予定時刻:",
-    nearestNote.dataset.time ||
-    "time情報なし"
-  );
-
-  console.log(
-    "現在時刻:",
-    now
-  );
-
-  console.log(
-    "最近音符距離:",
-    nearestDistance.toFixed(2),
-    "px"
-  );
-
-  console.log(
-    "X差:",
-    nearestDifferenceX.toFixed(2),
-    "px"
-  );
-
-  console.log(
-    "判定:",
-    xJudgement
-  );
-
-  console.log(
-    "タイミング:",
-    xTiming
-  );
-
-  console.log(
-    "判定表示:",
-    xJudgementText
-  );
-
-  console.log(
-    "sasoiAction:",
-    sasoiAction
-  );
-
-  console.log(
-    "sasoiPressPending:",
-    sasoiPressPending
-  );
-
-  console.log(
-    "================================="
-  );
-
-}
-
-
-// ---------------------------------
-// 実際にPRESSした瞬間の判定表示
-// ---------------------------------
-//
-// ここで初めて
-// PERFECT / GOOD / BAD
-// を画面に表示する。
-//
-// ---------------------------------
-
-if(
-  typeof showSasoiXJudgement ===
-  "function"
-){
-
-  showSasoiXJudgement({
-
-    judgement:
-      xJudgement,
-
-    timing:
-      xTiming,
-
-    differenceX:
-      nearestDifferenceX,
-
-    distanceX:
-      nearestDistance,
-
-    display:
-      xJudgementText
-
-  });
-
-}
-
-
-// ---------------------------------
-// 新しいPRESS操作を消費
-// ---------------------------------
-
-sasoiPressPending =
-  false;
-
-
-// ---------------------------------
-// 成功済みにする
-// ---------------------------------
-
-nearestNote.dataset.done =
-  "1";
-
-nearestNote.dataset.hit =
-  "true";
-
-
-// ---------------------------------
-// 興味ゲージ加算
-// ---------------------------------
-
-addSasoiInterest(
-  xJudgement
-);
-
-
-// ---------------------------------
-// 押し開始時間記録
-// ---------------------------------
-
-sasoiPressStartTime =
-  Date.now();
-
-sasoiStopReady =
-  false;
-
-console.log(
-  "押し開始時間記録"
-);
-
-return;
-
-  }
 
   // =================================
   // HOLD
@@ -6807,6 +7289,405 @@ playSasoiFishOnShake();
 
 }
 
+
+
+
+// =================================
+// PRESS判定用
+// =================================
+//
+// pointerdownした瞬間のPRESSを
+// 判定するための関数。
+// =================================
+
+function checkSasoiPress(){
+
+  const tip =
+    document.querySelector(
+      ".sasoi-tip"
+    );
+
+  const flow =
+    document.getElementById(
+      "sasoiFlow"
+    );
+
+
+  if(
+    !tip ||
+    !flow
+  ){
+
+    return;
+
+  }
+
+
+  const tipRect =
+    tip.getBoundingClientRect();
+
+
+  const tipCenter =
+    tipRect.left +
+    tipRect.width / 2;
+
+
+  // =================================
+  // 流れている未処理PRESSを取得
+  // =================================
+
+  const notes =
+    flow.querySelectorAll(
+      "span"
+    );
+
+
+  let nearestNote =
+    null;
+
+  let nearestDistance =
+    Infinity;
+
+  let nearestDifferenceX =
+    0;
+
+
+  notes.forEach(
+    (note)=>{
+
+      // ---------------------------------
+      // 処理済みは無視
+      // ---------------------------------
+
+      if(
+        note.dataset.done === "1" ||
+        note.dataset.hit === "true"
+      ){
+
+        return;
+
+      }
+
+
+      // ---------------------------------
+      // PRESSだけ対象
+      // ---------------------------------
+
+      if(
+        note.dataset.type !== "press"
+      ){
+
+        return;
+
+      }
+
+
+      const rect =
+        note.getBoundingClientRect();
+
+
+      const noteCenter =
+        rect.left +
+        rect.width / 2;
+
+
+      const differenceX =
+        noteCenter -
+        tipCenter;
+
+
+      const distance =
+        Math.abs(
+          differenceX
+        );
+
+
+      if(
+        distance <
+        nearestDistance
+      ){
+
+        nearestDistance =
+          distance;
+
+        nearestNote =
+          note;
+
+        nearestDifferenceX =
+          differenceX;
+
+      }
+
+    }
+  );
+
+
+  // =================================
+  // PRESS音符がない
+  // =================================
+
+  if(
+    !nearestNote
+  ){
+
+    console.log(
+      "PRESS判定対象なし"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // 13pxより外なら判定しない
+  // =================================
+
+  if(
+    nearestDistance >
+    13
+  ){
+
+    console.log(
+      "PRESS判定範囲外",
+      "ID:",
+      nearestNote.dataset.id,
+      "距離:",
+      nearestDistance.toFixed(2),
+      "px"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // X軸判定
+  // =================================
+
+  let xJudgement =
+    "MISS";
+
+  let xTiming =
+    "";
+
+
+  // ---------------------------------
+  // PERFECT
+  // 0～9px
+  // ---------------------------------
+
+  if(
+    nearestDistance <=
+    9
+  ){
+
+    xJudgement =
+      "PERFECT";
+
+  }
+
+  // ---------------------------------
+  // GOOD
+  // 9～11px
+  // ---------------------------------
+
+  else if(
+    nearestDistance <=
+    11
+  ){
+
+    xJudgement =
+      "GOOD";
+
+  }
+
+  // ---------------------------------
+  // BAD
+  // 11～13px
+  // ---------------------------------
+
+  else{
+
+    xJudgement =
+      "BAD";
+
+  }
+
+
+  // =================================
+  // EARLY / LATE
+  // =================================
+
+  if(
+    nearestDifferenceX >
+    0
+  ){
+
+    xTiming =
+      "EARLY";
+
+  }
+
+  else if(
+    nearestDifferenceX <
+    0
+  ){
+
+    xTiming =
+      "LATE";
+
+  }
+
+
+  // =================================
+  // 表示文字
+  // =================================
+
+  let xJudgementText =
+    xJudgement;
+
+
+  if(
+    xTiming
+  ){
+
+    xJudgementText +=
+      " " +
+      xTiming;
+
+  }
+
+
+  // =================================
+  // ログ
+  // =================================
+
+  console.log(
+    "================================="
+  );
+
+  console.log(
+    "PRESS実操作判定"
+  );
+
+  console.log(
+    "譜面ID:",
+    nearestNote.dataset.id
+  );
+
+  console.log(
+    "距離:",
+    nearestDistance.toFixed(2),
+    "px"
+  );
+
+  console.log(
+    "X差:",
+    nearestDifferenceX.toFixed(2),
+    "px"
+  );
+
+  console.log(
+    "判定:",
+    xJudgement
+  );
+
+  console.log(
+    "タイミング:",
+    xTiming
+  );
+
+  console.log(
+    "表示:",
+    xJudgementText
+  );
+
+  console.log(
+    "================================="
+  );
+
+
+  // =================================
+  // 判定表示
+  // =================================
+
+  if(
+    typeof showSasoiXJudgement ===
+    "function"
+  ){
+
+    showSasoiXJudgement({
+
+      judgement:
+        xJudgement,
+
+      timing:
+        xTiming,
+
+      differenceX:
+        nearestDifferenceX,
+
+      distanceX:
+        nearestDistance,
+
+      display:
+        xJudgementText
+
+    });
+
+  }
+
+
+  // =================================
+  // 興味ゲージ
+  // =================================
+
+  addSasoiInterest(
+    xJudgement
+  );
+
+
+  // =================================
+  // PRESS成功
+  // =================================
+
+  nearestNote.dataset.done =
+    "1";
+
+  nearestNote.dataset.hit =
+    "true";
+
+
+  // =================================
+  // 押し開始時間
+  // =================================
+
+  sasoiPressStartTime =
+    Date.now();
+
+
+  sasoiStopReady =
+    false;
+
+
+  // =================================
+  // PRESS操作を消費
+  // =================================
+
+  sasoiPressPending =
+    false;
+
+
+  console.log(
+    "押し開始時間記録"
+  );
+
+}
+
+
+
 function stopSasoiCheck(){
 
 
@@ -6896,9 +7777,11 @@ sasoiTouch.addEventListener(
 
     e.preventDefault();
 
+
     sasoiTouch.setPointerCapture(
       e.pointerId
     );
+
 
     // =================================
     // ボタン色変更
@@ -6908,23 +7791,9 @@ sasoiTouch.addEventListener(
       "active"
     );
 
+
     // =================================
-    // 通常の誘い
-    // =================================
-    //
-    // pointerdownでは
-    // 「指が押された」という状態を更新する。
-    //
-    // さらに、
-    // 「新しいPRESS操作が発生した」
-    // ことを記録する。
-    //
-    // ◎アワセ成功判定はここでは行わない。
-    //
-    // 実際のアワセは、
-    // ◎発生後のpointerup/releaseで
-    // checkSasoiBiteAction() が行う。
-    //
+    // PRESS状態
     // =================================
 
     sasoiAction =
@@ -6935,21 +7804,26 @@ sasoiTouch.addEventListener(
     // 新しいPRESS操作を記録
     // =================================
     //
-    // pointerdownが発生した瞬間だけ
-    // trueにする。
+    // pointerdownした瞬間だけtrue。
     //
-    // これにより、
-    //
-    // 1回目の●を押したあと
-    // 指を押しっぱなしにして
-    // 2回目の●が来ても、
-    // 2回目を新しく押したことにはしない。
+    // これをcheckSasoiPress()で消費する。
     //
     // =================================
 
-    sasoiPressPending =
-      true;
 
+sasoiPressPending =
+  true;
+
+
+// =================================
+// ★ PRESSした瞬間の位置を保存
+// =================================
+
+captureSasoiPressPosition();
+
+    // =================================
+    // デバッグ表示
+    // =================================
 
     sasoiDebugText.player =
       "PRESS";
@@ -6960,6 +7834,30 @@ sasoiTouch.addEventListener(
     console.log(
       "PRESS"
     );
+
+
+    // =================================
+    // ★ PRESS実操作判定
+    // =================================
+    //
+    // ここでpointerdownした瞬間の
+    // 音符位置を判定する。
+    //
+    // 以前のように
+    //
+    // PRESS
+    // ↓
+    // sasoiPressPending=true
+    // ↓
+    // 音符が13px以内まで来る
+    // ↓
+    // 成功
+    //
+    // という遅延判定にはしない。
+    //
+    // =================================
+
+    checkSasoiPress();
 
   }
 );
@@ -7258,9 +8156,34 @@ sasoiAction =
 sasoiPressPending =
   false;
 
+
+// =================================
+// ★ PRESS操作時の判定情報
+// =================================
+//
+// 実際にPRESSした瞬間の
+// 音符との距離を保存する。
+//
+// checkSasoiHit() が後から呼ばれても、
+// 現在位置ではなく
+// 「実際に押した瞬間」の位置で
+// PERFECT / GOOD / BAD を判定する。
+//
+// =================================
+
+sasoiPressPendingDistance =
+  null;
+
+sasoiPressPendingDifferenceX =
+  null;
+
+sasoiPressPendingNoteId =
+  null;
+
 console.log(
   "PRESS開始時間リセット"
 );
+
 
 // ---------------------------------
 // デバッグ表示を初期化
@@ -7300,11 +8223,8 @@ flow.classList.remove("show");
 
 
 // ポンポン表示＋同時移動
-setTimeout(()=>{
-
   playNextSasoiNote();
 
-},200);
 
 
 // =================================
