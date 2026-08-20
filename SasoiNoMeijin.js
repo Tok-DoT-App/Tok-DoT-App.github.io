@@ -18,127 +18,21 @@ style.textContent = `
 /* =================================
    初期画面
    「誘いの名人」
-   和紙 × 深い水面 × 釣り糸 × 波紋
+
+   シンプル白背景
 ================================= */
 
 .sasoi-panel{
 
   width:370.5px;
+
   height:190px;
 
   border-radius:12px;
 
-  /* =================================
-     ベース
-  ================================= */
+  box-sizing:border-box;
 
-  background:
-
-    /* ---------------------------------
-       和紙の細かな繊維
-    --------------------------------- */
-
-    repeating-linear-gradient(
-      93deg,
-      rgba(255,255,255,0.10) 0px,
-      rgba(255,255,255,0.10) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-
-    repeating-linear-gradient(
-      176deg,
-      rgba(80,72,55,0.045) 0px,
-      rgba(80,72,55,0.045) 1px,
-      transparent 1px,
-      transparent 5px
-    ),
-
-    /* ---------------------------------
-       和紙の大きな柔らかいシワ
-    --------------------------------- */
-
-    linear-gradient(
-      122deg,
-      transparent 0%,
-      rgba(255,255,255,0.22) 12%,
-      rgba(90,80,60,0.08) 17%,
-      transparent 24%,
-      transparent 100%
-    ),
-
-    linear-gradient(
-      62deg,
-      transparent 0%,
-      rgba(90,80,60,0.07) 28%,
-      rgba(255,255,255,0.20) 34%,
-      transparent 41%,
-      transparent 100%
-    ),
-
-    linear-gradient(
-      148deg,
-      transparent 0%,
-      rgba(255,255,255,0.18) 55%,
-      rgba(90,80,60,0.07) 61%,
-      transparent 68%,
-      transparent 100%
-    ),
-
-    /* ---------------------------------
-       和紙の柔らかな濃淡
-    --------------------------------- */
-
-    radial-gradient(
-      ellipse at 18% 18%,
-      rgba(255,255,255,0.34) 0%,
-      rgba(255,255,255,0.08) 18%,
-      transparent 38%
-    ),
-
-    radial-gradient(
-      ellipse at 82% 28%,
-      rgba(90,80,60,0.10) 0%,
-      rgba(90,80,60,0.03) 20%,
-      transparent 40%
-    ),
-
-    radial-gradient(
-      ellipse at 28% 78%,
-      rgba(255,255,255,0.25) 0%,
-      rgba(255,255,255,0.05) 18%,
-      transparent 38%
-    ),
-
-    /* ---------------------------------
-       和紙ベース
-    --------------------------------- */
-
-    linear-gradient(
-      to bottom,
-      #F4F0E1 0%,
-      #EAE4D1 52%,
-      #D8D1BA 100%
-    );
-
-
-  /* =================================
-     紙の立体感
-  ================================= */
-
-  box-shadow:
-
-    0 4px 9px
-    rgba(35,40,35,0.22),
-
-    inset
-    0 2px 0
-    rgba(255,255,255,0.55),
-
-    inset
-    0 -4px 8px
-    rgba(65,70,60,0.14);
-
+  background:#FFFFFF;
 
   color:#263A38;
 
@@ -149,8 +43,6 @@ style.textContent = `
   justify-content:center;
 
   align-items:center;
-
-  box-sizing:border-box;
 
   font-family:sans-serif;
 
@@ -164,125 +56,56 @@ style.textContent = `
 
   margin-bottom:-30px;
 
-}
+  box-shadow:
 
-
-/* =================================
-   水面
-   下側に深い青緑を薄く入れる
-================================= */
-
-.sasoi-panel::before{
-
-  content:"";
-
-  position:absolute;
-
-  left:0;
-
-  bottom:0;
-
-  width:100%;
-
-  height:72px;
-
-  pointer-events:none;
-
-  background:
-
-    /* ---------------------------------
-       水面の薄い光
-    --------------------------------- */
-
-    radial-gradient(
-      ellipse at 50% 0%,
-      rgba(108,190,174,0.25) 0%,
-      rgba(108,190,174,0.08) 28%,
-      transparent 62%
-    ),
-
-    /* ---------------------------------
-       深い水の色
-    --------------------------------- */
-
-    linear-gradient(
-      to bottom,
-      rgba(38,115,105,0.05) 0%,
-      rgba(27,91,84,0.14) 45%,
-      rgba(17,67,64,0.28) 100%
+    0 4px 9px
+    rgba(
+      35,
+      40,
+      35,
+      0.18
     );
-
-  opacity:0.95;
-
-  z-index:0;
 
 }
 
 
 /* =================================
-   水面の細かな波
+   タイトル
 ================================= */
 
-.sasoi-panel::after{
+.sasoi-title{
 
-  content:"";
+  position:relative;
 
-  position:absolute;
-
-  left:0;
-
-  bottom:22px;
-
-  width:100%;
-
-  height:46px;
-
-  pointer-events:none;
-
-  background:
-
-    /* ---------------------------------
-       奥の波
-    --------------------------------- */
-
-    radial-gradient(
-      ellipse 90px 10px at 50% 70%,
-      transparent 54%,
-      rgba(76,155,145,0.16) 55%,
-      rgba(76,155,145,0.16) 57%,
-      transparent 59%
-    ),
-
-    /* ---------------------------------
-       中央の波
-    --------------------------------- */
-
-    radial-gradient(
-      ellipse 62px 7px at 50% 70%,
-      transparent 54%,
-      rgba(105,185,169,0.22) 55%,
-      rgba(105,185,169,0.22) 58%,
-      transparent 60%
-    ),
-
-    /* ---------------------------------
-       手前の小さな波
-    --------------------------------- */
-
-    radial-gradient(
-      ellipse 35px 5px at 50% 70%,
-      transparent 54%,
-      rgba(135,205,187,0.28) 55%,
-      rgba(135,205,187,0.28) 58%,
-      transparent 60%
-    );
-
-  opacity:0.8;
-
-  z-index:1;
+  z-index:2;
 
 }
 
+
+/* =================================
+   スタートボタン
+================================= */
+
+.sasoi-start-btn{
+
+  position:relative;
+
+  z-index:2;
+
+}
+
+
+/* =================================
+   レベル
+================================= */
+
+.sasoi-level{
+
+  position:relative;
+
+  z-index:2;
+
+}
 
 /* =================================
    初期画面の中身を前面へ
@@ -2896,6 +2719,56 @@ style.textContent = `
 
 }
 
+/* =================================
+   興味ゲージ 魚アイコン
+   メモリ中央配置
+================================= */
+
+.sasoi-gauge-fish{
+
+  position:absolute;
+
+  left:0;
+
+  top:0;
+
+  /* ---------------------------------
+     魚を少し小さく
+  --------------------------------- */
+
+  font-size:14px;
+
+  line-height:1;
+
+  white-space:nowrap;
+
+  pointer-events:none;
+
+  user-select:none;
+
+  z-index:50;
+
+  /* ---------------------------------
+     魚自身の中心を
+     メモリ中央へ合わせる
+  --------------------------------- */
+
+  transform:
+    translate(
+      -55%,
+      -50%
+    );
+
+  /* ---------------------------------
+     メモリからメモリへ移動
+  --------------------------------- */
+
+  transition:
+    left 0.60s ease-out,
+    top 0.60s ease-out;
+
+}
+
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
 `;
@@ -3333,7 +3206,7 @@ const sasoiScore = [
 
 const area =
 document.getElementById(
-"SasoiNoMeijinArea"
+  "SasoiNoMeijinArea"
 );
 
 
@@ -3344,7 +3217,10 @@ if(!area) return;
 
 area.innerHTML = `
 
-<div class="sasoi-panel" id="sasoiMenu">
+<div
+  class="sasoi-panel"
+  id="sasoiMenu"
+>
 
   <div class="sasoi-title">
     誘いの名人
@@ -3352,10 +3228,11 @@ area.innerHTML = `
 
 
   <button
-  class="sasoi-start-btn"
-  id="sasoiStartBtn">
+    class="sasoi-start-btn"
+    id="sasoiStartBtn"
+  >
 
-  スタート
+    スタート
 
   </button>
 
@@ -3368,8 +3245,14 @@ area.innerHTML = `
 </div>
 
 
-<div class="sasoi-game" id="sasoiGame">
+<!-- =================================
+     ゲーム画面
+================================= -->
 
+<div
+  class="sasoi-game"
+  id="sasoiGame"
+>
 
 <!--
 <div 
@@ -3386,6 +3269,18 @@ area.innerHTML = `
 ================================= -->
 
 <div class="sasoi-interest-gauge">
+
+  <!-- =================================
+       魚アイコン
+       点灯しているメモリの中央を移動
+  ================================= -->
+
+  <div
+    id="sasoiGaugeFish"
+    class="sasoi-gauge-fish"
+    aria-hidden="true"
+  >🐟</div>
+
 
   <!-- =================================
        興味ゲージ数値表示
@@ -3407,7 +3302,10 @@ area.innerHTML = `
 
   </div>
 
-  <!-- 譜面名 -->
+
+  <!-- =================================
+       譜面名
+  ================================= -->
 
   <div class="sasoi-score-name">
 
@@ -3431,51 +3329,45 @@ area.innerHTML = `
        青4 → 緑4 → 黄4
   ================================= -->
 
-<!-- =================================
-     通常メモリ
-     8px × 12px
-     12個
-================================= -->
+  <div class="sasoi-gauge-normal">
 
-<div class="sasoi-gauge-normal">
+    <span data-gauge-index="0"></span>
+    <span data-gauge-index="1"></span>
+    <span data-gauge-index="2"></span>
+    <span data-gauge-index="3"></span>
 
-  <span data-gauge-index="0"></span>
-  <span data-gauge-index="1"></span>
-  <span data-gauge-index="2"></span>
-  <span data-gauge-index="3"></span>
+    <span data-gauge-index="4"></span>
+    <span data-gauge-index="5"></span>
+    <span data-gauge-index="6"></span>
+    <span data-gauge-index="7"></span>
 
-  <span data-gauge-index="4"></span>
-  <span data-gauge-index="5"></span>
-  <span data-gauge-index="6"></span>
-  <span data-gauge-index="7"></span>
+    <span data-gauge-index="8"></span>
+    <span data-gauge-index="9"></span>
+    <span data-gauge-index="10"></span>
+    <span data-gauge-index="11"></span>
 
-  <span data-gauge-index="8"></span>
-  <span data-gauge-index="9"></span>
-  <span data-gauge-index="10"></span>
-  <span data-gauge-index="11"></span>
-
-</div>
+  </div>
 
 
-<!-- =================================
-     高さ16pxメモリ
-     8px × 16px
-     8個
-================================= -->
+  <!-- =================================
+       高さ16pxメモリ
+       8px × 16px
+       8個
+  ================================= -->
 
-<div class="sasoi-gauge-high">
+  <div class="sasoi-gauge-high">
 
-  <span data-gauge-index="12"></span>
-  <span data-gauge-index="13"></span>
-  <span data-gauge-index="14"></span>
-  <span data-gauge-index="15"></span>
+    <span data-gauge-index="12"></span>
+    <span data-gauge-index="13"></span>
+    <span data-gauge-index="14"></span>
+    <span data-gauge-index="15"></span>
 
-  <span data-gauge-index="16"></span>
-  <span data-gauge-index="17"></span>
-  <span data-gauge-index="18"></span>
-  <span data-gauge-index="19"></span>
+    <span data-gauge-index="16"></span>
+    <span data-gauge-index="17"></span>
+    <span data-gauge-index="18"></span>
+    <span data-gauge-index="19"></span>
 
-</div>
+  </div>
 
 </div>
 
@@ -3963,33 +3855,33 @@ function addSasoiInterest(judgement){
   }
 
 
-// ---------------------------------
-// 興味ゲージ加算
-// ---------------------------------
+  // ---------------------------------
+  // 興味ゲージ加算
+  // ---------------------------------
 
-sasoiInterestGauge +=
-  addValue;
-
-
-// ---------------------------------
-// 20メモリ表示用の値
-// ---------------------------------
-//
-// 内部合計は200を超えてOK。
-// 画面上のゲージだけ200で止める。
-// ---------------------------------
-
-const gaugeDisplayValue =
-  Math.min(
-    sasoiInterestGauge,
-    SASOI_INTEREST_MAX
-  );
+  sasoiInterestGauge +=
+    addValue;
 
 
-const gaugeLevel =
-  Math.ceil(
-    gaugeDisplayValue / 10
-  );
+  // ---------------------------------
+  // 20メモリ表示用の値
+  // ---------------------------------
+  //
+  // 内部合計は200を超えてOK。
+  // 画面上のゲージだけ200で止める。
+  // ---------------------------------
+
+  const gaugeDisplayValue =
+    Math.min(
+      sasoiInterestGauge,
+      SASOI_INTEREST_MAX
+    );
+
+
+  const gaugeLevel =
+    Math.ceil(
+      gaugeDisplayValue / 10
+    );
 
 
   // ---------------------------------
@@ -4245,7 +4137,178 @@ function setSasoiGaugeLevel(level){
 
   }
 
+
+  /* ---------------------------------
+     魚の位置を更新
+  --------------------------------- */
+
+  updateSasoiGaugeFishPosition(
+    allTicks,
+    level
+  );
+
 }
+
+
+
+// =================================
+// 興味ゲージ
+// 魚アイコン位置更新
+// =================================
+//
+// 魚は「現在点灯している最後のメモリ」の
+// 中央に配置する。
+//
+// メモリは右 → 左へ進むため、
+//
+// level 1
+// → allTicks[0]
+//
+// level 2
+// → allTicks[1]
+//
+// ...
+//
+// level 20
+// → allTicks[19]
+//
+// となる。
+// =================================
+
+function updateSasoiGaugeFishPosition(
+  allTicks,
+  level
+){
+
+  const fish =
+    document.getElementById(
+      "sasoiGaugeFish"
+    );
+
+
+  const gauge =
+    document.querySelector(
+      ".sasoi-interest-gauge"
+    );
+
+
+  if(
+    !fish ||
+    !gauge ||
+    !allTicks ||
+    allTicks.length === 0
+  ){
+
+    return;
+
+  }
+
+
+  /* ---------------------------------
+     魚の位置に使用するメモリ
+  --------------------------------- */
+
+  let targetTick;
+
+
+  if(
+    level <= 0
+  ){
+
+    /*
+       0の場合は右端の最初のメモリを
+       魚の初期位置として使用する。
+
+       まだメモリは点灯していないが、
+       「ここから左へ進む」という
+       スタート位置になる。
+    */
+
+    targetTick =
+      allTicks[0];
+
+  }else{
+
+    /*
+       点灯している最後のメモリ
+
+       level 1 → index 0
+       level 2 → index 1
+       ...
+       level 20 → index 19
+    */
+
+    targetTick =
+      allTicks[
+        Math.min(
+          level - 1,
+          allTicks.length - 1
+        )
+      ];
+
+  }
+
+
+  if(
+    !targetTick
+  ){
+
+    return;
+
+  }
+
+
+  /* ---------------------------------
+     ゲージとメモリの位置を取得
+  --------------------------------- */
+
+  const gaugeRect =
+    gauge.getBoundingClientRect();
+
+  const tickRect =
+    targetTick.getBoundingClientRect();
+
+
+  /* ---------------------------------
+     メモリ中央座標
+  --------------------------------- */
+
+  const tickCenterX =
+    tickRect.left +
+    tickRect.width / 2;
+
+
+  const tickCenterY =
+    tickRect.top +
+    tickRect.height / 2;
+
+
+  /* ---------------------------------
+     ゲージ基準の座標へ変換
+  --------------------------------- */
+
+  const fishLeft =
+    tickCenterX -
+    gaugeRect.left;
+
+
+  const fishTop =
+    tickCenterY -
+    gaugeRect.top;
+
+
+  /* ---------------------------------
+     魚をメモリ中央へ移動
+  --------------------------------- */
+
+  fish.style.left =
+    fishLeft + "px";
+
+  fish.style.top =
+    fishTop + "px";
+
+}
+
 
 
 // =================================
@@ -4311,6 +4374,7 @@ function resetSasoiInterestGauge(){
     // 初期位置・透明状態へ戻す
     addDisplay.style.opacity =
       "0";
+
 
     addDisplay.style.transform =
       "translateX(0)";
