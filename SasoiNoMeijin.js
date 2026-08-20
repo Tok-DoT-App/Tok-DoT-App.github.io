@@ -4420,7 +4420,7 @@ function getSasoiXJudgement(note){
 
 
   if(
-    distanceX <= 2
+    distanceX <= 4
   ){
 
     judgement =
@@ -5489,7 +5489,7 @@ notes.forEach((note)=>{
     // =================================
 
     if(
-      nearestDistance <= 2
+      nearestDistance <= 4
     ){
 
       xJudgement =
@@ -5820,7 +5820,7 @@ if(
   // =================================
 
   if(
-    pressDistance <= 2
+    pressDistance <= 4
   ){
 
     pressJudgement =
@@ -7704,7 +7704,7 @@ function checkSasoiPress(){
 
   if(
     nearestDistance <=
-    2
+    4
   ){
 
     xJudgement =
