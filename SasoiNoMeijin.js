@@ -3347,7 +3347,7 @@ area.innerHTML = `
 <div class="sasoi-panel" id="sasoiMenu">
 
   <div class="sasoi-title">
-    誘いの名人
+    誘いの達人
   </div>
 
 
@@ -4420,14 +4420,14 @@ function getSasoiXJudgement(note){
 
 
   if(
-    distanceX <= 4
+    distanceX <= 6
   ){
 
     judgement =
       "PERFECT";
 
   }else if(
-    distanceX <= 7
+    distanceX <= 10
   ){
 
     judgement =
@@ -5489,14 +5489,14 @@ notes.forEach((note)=>{
     // =================================
 
     if(
-      nearestDistance <= 4
+      nearestDistance <= 6
     ){
 
       xJudgement =
         "PERFECT";
 
     }else if(
-      nearestDistance <= 7
+      nearestDistance <= 10
     ){
 
       xJudgement =
@@ -5820,7 +5820,7 @@ if(
   // =================================
 
   if(
-    pressDistance <= 4
+    pressDistance <= 6
   ){
 
     pressJudgement =
@@ -5834,7 +5834,7 @@ if(
   // =================================
 
   else if(
-    pressDistance <= 7
+    pressDistance <= 10
   ){
 
     pressJudgement =
@@ -7704,7 +7704,7 @@ function checkSasoiPress(){
 
   if(
     nearestDistance <=
-    4
+    6
   ){
 
     xJudgement =
@@ -7719,7 +7719,7 @@ function checkSasoiPress(){
 
   else if(
     nearestDistance <=
-    7
+    10
   ){
 
     xJudgement =
