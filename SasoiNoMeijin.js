@@ -2287,6 +2287,14 @@ style.textContent = `
 
   transform:translateX(0);
 
+  /* ---------------------------------
+     合計値背景より前面に表示
+  --------------------------------- */
+
+  position:relative;
+
+  z-index:2;
+
 }
 
 
@@ -2373,6 +2381,7 @@ style.textContent = `
 
   /* ---------------------------------
      半透明背景
+     初期状態
   --------------------------------- */
 
   background:
@@ -2417,6 +2426,181 @@ style.textContent = `
   position:relative;
 
   top:0px;
+
+  /* ---------------------------------
+     色変化
+  --------------------------------- */
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+/* =================================
+   合計値背景
+   興味ゲージの現在色と連動
+   光沢・LED風
+================================= */
+
+
+/* =================================
+   青
+================================= */
+
+.sasoi-interest-gauge:has(
+  .sasoi-gauge-normal span.gauge-on-blue
+)
+.sasoi-gauge-total{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.42) 0%,
+      rgba(255,255,255,0.16) 22%,
+      rgba(255,255,255,0.00) 48%
+    ),
+    #4DA6FF;
+
+  color:#17252B;
+
+  box-shadow:
+    0 1px 4px
+    rgba(
+      77,
+      166,
+      255,
+      0.50
+    );
+
+}
+
+
+/* =================================
+   緑
+================================= */
+
+.sasoi-interest-gauge:has(
+  .sasoi-gauge-normal span.gauge-on-green
+)
+.sasoi-gauge-total{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.42) 0%,
+      rgba(255,255,255,0.16) 22%,
+      rgba(255,255,255,0.00) 48%
+    ),
+    #63D66B;
+
+  color:#17252B;
+
+  box-shadow:
+    0 1px 4px
+    rgba(
+      99,
+      214,
+      107,
+      0.50
+    );
+
+}
+
+
+/* =================================
+   黄色
+================================= */
+
+.sasoi-interest-gauge:has(
+  .sasoi-gauge-normal span.gauge-on-yellow
+)
+.sasoi-gauge-total{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.48) 0%,
+      rgba(255,255,255,0.18) 22%,
+      rgba(255,255,255,0.00) 48%
+    ),
+    #FFE45C;
+
+  color:#17252B;
+
+  box-shadow:
+    0 1px 4px
+    rgba(
+      255,
+      228,
+      92,
+      0.55
+    );
+
+}
+
+
+/* =================================
+   オレンジ
+================================= */
+
+.sasoi-interest-gauge:has(
+  .sasoi-gauge-high span.gauge-on-orange
+)
+.sasoi-gauge-total{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.46) 0%,
+      rgba(255,255,255,0.17) 22%,
+      rgba(255,255,255,0.00) 48%
+    ),
+    #FF9D3D;
+
+  color:#17252B;
+
+  box-shadow:
+    0 1px 4px
+    rgba(
+      255,
+      157,
+      61,
+      0.55
+    );
+
+}
+
+
+/* =================================
+   赤
+   白文字
+================================= */
+
+.sasoi-interest-gauge:has(
+  .sasoi-gauge-high span.gauge-on-red
+)
+.sasoi-gauge-total{
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.50) 0%,
+      rgba(255,255,255,0.18) 22%,
+      rgba(255,255,255,0.00) 48%
+    ),
+    #FF4D4D;
+
+  color:#FFFFFF;
+
+  box-shadow:
+    0 1px 5px
+    rgba(
+      255,
+      77,
+      77,
+      0.65
+    );
 
 }
 
@@ -2896,26 +3080,30 @@ const SASOI_INTEREST_REQUIRED = 160;
 let sasoiHitAnimating = false;
 
 
+// ========================================== 楽譜データ ==========================================
+
 // -------------------------------
-// 譜面データ（シンプル・ピッチアップ版）
+// 譜面データ（●－－ 検証版）
 // -------------------------------
 //
 // 321
 //
-// ○　●　○　●　○　●　ー
-// ○　●　○　●　○　●　ー
-// ○　●　○　●　○　●　ー
+// ●　－　－
+// ○　●　○　●　○　●　－　－
+//
+// ○　●　○　●　○　●　－　－
+//
+// ○　●　○　●　○　●　－　－
 //
 // ◎
 //
-// ※ 基本パターンは変更せず、
-//    音符間隔を300msで統一。
-//    ●の直後に「― ―」が続く場合は、
-//    最初の「―」を譜面から省略して、
-//    判定表示が重ならないようにする。
-//    1セット目の最初の○だけは3000ms。
-//    その後の譜面を300ms間隔で配置。
-//    全体のピッチを上げている。
+// ※ 今回の検証では、
+//    ●の後ろの「－」を省略しない。
+// ※ ● → － → － をすべて300ms間隔で配置。
+// ※ 以前問題になっていた「●のPERFECT表示が
+//    後続の－のGOOD表示で上書きされる問題」が
+//    現在のコードで解消されているかを確認する。
+// ※ コード側は変更せず、譜面データだけで検証する。
 //
 // -------------------------------
 
@@ -2949,147 +3137,181 @@ const sasoiScore = [
 
   // =====================
   // 1セット目
-  // ○●○●○●ー
+  // ●－－
+  // ○●○●○●－－
   // =====================
 
   {
     id:4,
     time:3000,
-    type:"release"
-  },
-
-  {
-    id:5,
-    time:3600,
     type:"press"
   },
 
   {
+    id:5,
+    time:3300,
+    type:"hold"
+  },
+
+  {
     id:6,
+    time:3600,
+    type:"hold"
+  },
+
+  {
+    id:7,
     time:3900,
     type:"release"
   },
 
   {
-    id:7,
+    id:8,
     time:4200,
     type:"press"
   },
 
   {
-    id:8,
+    id:9,
     time:4500,
     type:"release"
   },
 
   {
-    id:9,
+    id:10,
     time:4800,
     type:"press"
   },
 
-  // ●の直後の最初の―を省略
   {
-    id:10,
+    id:11,
+    time:5100,
+    type:"release"
+  },
+
+  {
+    id:12,
     time:5400,
+    type:"press"
+  },
+
+  {
+    id:13,
+    time:5700,
+    type:"hold"
+  },
+
+  {
+    id:14,
+    time:6000,
     type:"hold"
   },
 
 
   // =====================
   // 2セット目
-  // ○●○●○●ー
+  // ○●○●○●－－
   // =====================
 
   {
-    id:11,
-    time:5700,
-    type:"release"
-  },
-
-  {
-    id:12,
-    time:6000,
-    type:"press"
-  },
-
-  {
-    id:13,
+    id:15,
     time:6300,
     type:"release"
   },
 
   {
-    id:14,
+    id:16,
     time:6600,
     type:"press"
   },
 
   {
-    id:15,
+    id:17,
     time:6900,
     type:"release"
   },
 
   {
-    id:16,
+    id:18,
     time:7200,
     type:"press"
   },
 
-  // ●の直後の最初の―を省略
   {
-    id:17,
+    id:19,
+    time:7500,
+    type:"release"
+  },
+
+  {
+    id:20,
     time:7800,
+    type:"press"
+  },
+
+  {
+    id:21,
+    time:8100,
+    type:"hold"
+  },
+
+  {
+    id:22,
+    time:8400,
     type:"hold"
   },
 
 
   // =====================
   // 3セット目
-  // ○●○●○●ー
+  // ○●○●○●－－
   // =====================
 
   {
-    id:18,
-    time:8100,
-    type:"release"
-  },
-
-  {
-    id:19,
-    time:8400,
-    type:"press"
-  },
-
-  {
-    id:20,
+    id:23,
     time:8700,
     type:"release"
   },
 
   {
-    id:21,
+    id:24,
     time:9000,
     type:"press"
   },
 
   {
-    id:22,
+    id:25,
     time:9300,
     type:"release"
   },
 
   {
-    id:23,
+    id:26,
     time:9600,
     type:"press"
   },
 
-  // ●の直後の最初の―を省略
   {
-    id:24,
+    id:27,
+    time:9900,
+    type:"release"
+  },
+
+  {
+    id:28,
     time:10200,
+    type:"press"
+  },
+
+  {
+    id:29,
+    time:10500,
+    type:"hold"
+  },
+
+  {
+    id:30,
+    time:10800,
     type:"hold"
   },
 
@@ -3099,12 +3321,14 @@ const sasoiScore = [
   // =====================
 
   {
-    id:25,
-    time:10500,
+    id:31,
+    time:11100,
     type:"bite"
   }
 
 ];
+
+// ========================================== 楽譜データ ==========================================
 
 
 const area =
@@ -3697,21 +3921,21 @@ function addSasoiInterest(judgement){
   ){
 
     addValue =
-      12;
+      10;
 
   }else if(
     judgement === "GOOD"
   ){
 
     addValue =
-      9;
+      6;
 
   }else if(
     judgement === "BAD"
   ){
 
     addValue =
-      6;
+      4;
 
   }else{
 
@@ -4196,21 +4420,21 @@ function getSasoiXJudgement(note){
 
 
   if(
-    distanceX <= 8
+    distanceX <= 2
   ){
 
     judgement =
       "PERFECT";
 
   }else if(
-    distanceX <= 18
+    distanceX <= 7
   ){
 
     judgement =
       "GOOD";
 
   }else if(
-    distanceX <= 30
+    distanceX <= 13
   ){
 
     judgement =
@@ -5253,26 +5477,26 @@ notes.forEach((note)=>{
     // X軸4段階判定
     // =================================
     //
-    // 0～9px
+    // 0～2px
     // PERFECT
     //
-    // 9～11px
+    // 2～7px
     // GOOD
     //
-    // 11～13px
+    // 7～13px
     // BAD
     //
     // =================================
 
     if(
-      nearestDistance <= 9
+      nearestDistance <= 2
     ){
 
       xJudgement =
         "PERFECT";
 
     }else if(
-      nearestDistance <= 11
+      nearestDistance <= 7
     ){
 
       xJudgement =
@@ -5596,7 +5820,7 @@ if(
   // =================================
 
   if(
-    pressDistance <= 9
+    pressDistance <= 2
   ){
 
     pressJudgement =
@@ -5610,7 +5834,7 @@ if(
   // =================================
 
   else if(
-    pressDistance <= 11
+    pressDistance <= 7
   ){
 
     pressJudgement =
@@ -7475,12 +7699,12 @@ function checkSasoiPress(){
 
   // ---------------------------------
   // PERFECT
-  // 0～9px
+  // 0～2px
   // ---------------------------------
 
   if(
     nearestDistance <=
-    9
+    2
   ){
 
     xJudgement =
@@ -7490,12 +7714,12 @@ function checkSasoiPress(){
 
   // ---------------------------------
   // GOOD
-  // 9～11px
+  // 2～7px
   // ---------------------------------
 
   else if(
     nearestDistance <=
-    11
+    7
   ){
 
     xJudgement =
@@ -7505,7 +7729,7 @@ function checkSasoiPress(){
 
   // ---------------------------------
   // BAD
-  // 11～13px
+  // 7～13px
   // ---------------------------------
 
   else{
