@@ -19,7 +19,7 @@ style.textContent = `
    初期画面
    「誘いの名人」
 
-   シンプル白背景
+   青海波背景
 ================================= */
 
 .sasoi-panel{
@@ -32,7 +32,17 @@ style.textContent = `
 
   box-sizing:border-box;
 
-  background:#FFFFFF;
+  background-color:#FFFFFF;
+
+  background-image:
+    url("images/sasoi-seigaiha.png");
+
+  background-repeat:repeat;
+
+  background-position:center;
+
+  /* ここで1タイルの大きさを調整 */
+  background-size:90px auto;
 
   color:#263A38;
 
@@ -68,97 +78,1083 @@ style.textContent = `
 
 }
 
+/* =================================
+   青海波を少し薄くする
+   白い和紙を薄く重ねる
+================================= */
+
+.sasoi-panel::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+
+  top:0;
+
+  width:100%;
+
+  height:100%;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.28
+    );
+
+  pointer-events:none;
+
+  z-index:1;
+
+}
+
+
+.sasoi-title,
+.sasoi-start-btn,
+.sasoi-score-select{
+
+  position:relative;
+
+  z-index:2;
+
+}
 
 /* =================================
    タイトル
+   「誘いの名人」
+   タイトル画面用・強調版
 ================================= */
 
 .sasoi-title{
 
   position:relative;
 
-  z-index:2;
+  font-size:42px;
+
+  font-weight:700;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  color:#163D39;
+
+  line-height:1.05;
+
+  letter-spacing:2px;
+
+  margin-bottom:8px;
+
+  /*
+     青海波の上に
+     和紙の光があるように見せる
+  */
+
+  text-shadow:
+
+    -2px -2px 0
+    rgba(255,255,255,0.95),
+
+     2px -2px 0
+    rgba(255,255,255,0.95),
+
+    -2px  2px 0
+    rgba(255,255,255,0.95),
+
+     2px  2px 0
+    rgba(255,255,255,0.95),
+
+     0 3px 0
+    rgba(255,255,255,0.70),
+
+     0 5px 7px
+    rgba(10,45,42,0.40);
+
+}
+
+
+/* =================================
+   タイトル周囲の淡い光
+================================= */
+
+.sasoi-title::before{
+
+  content:none;
+
+  position:absolute;
+
+  left:50%;
+
+  top:50%;
+
+  width:300px;
+
+  height:72px;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  border-radius:50%;
+
+  background:
+
+    radial-gradient(
+      ellipse,
+
+      rgba(255,255,255,0.78)
+      0%,
+
+      rgba(255,255,255,0.45)
+      38%,
+
+      rgba(255,255,255,0.16)
+      60%,
+
+      transparent
+      78%
+    );
+
+  filter:
+    blur(4px);
+
+  z-index:-1;
+
+  pointer-events:none;
+
+}
+
+
+/* =================================
+   タイトル下の装飾線
+================================= */
+
+.sasoi-title::after{
+
+  content:"";
+
+  display:block;
+
+  width:190px;
+
+  height:3px;
+
+  margin:
+
+    9px auto
+    0;
+
+  border-radius:50%;
+
+  background:
+
+    linear-gradient(
+      to right,
+
+      transparent 0%,
+
+      rgba(255,255,255,0.20) 5%,
+
+      #315F5A 18%,
+
+      #163F3B 50%,
+
+      #315F5A 82%,
+
+      rgba(255,255,255,0.20) 95%,
+
+      transparent 100%
+    );
+
+  box-shadow:
+
+    0 1px 0
+    rgba(255,255,255,0.85),
+
+    0 2px 3px
+    rgba(20,55,50,0.25);
 
 }
 
 
 /* =================================
    スタートボタン
+   タイトル画面の主役
 ================================= */
 
 .sasoi-start-btn{
 
   position:relative;
 
-  z-index:2;
+  width:136px;
+
+  height:42px;
+
+  margin-top:7px;
+
+  border-radius:22px;
+
+  box-sizing:border-box;
+
+  border:
+
+    2px solid
+    #FFFFFF;
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      #477A75 0%,
+
+      #315F5A 42%,
+
+      #214B47 100%
+    );
+
+  color:#FFFFFF;
+
+  font-size:17px;
+
+  font-weight:700;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  letter-spacing:2px;
+
+  cursor:pointer;
+
+  /*
+     ボタンを青海波から
+     完全に切り離す
+  */
+
+  box-shadow:
+
+    0 0 0 1px
+    rgba(18,58,53,0.85),
+
+    0 3px 0
+    rgba(9,35,32,0.60),
+
+    0 6px 12px
+    rgba(10,45,40,0.35),
+
+    inset
+    0 1px 0
+    rgba(255,255,255,0.48),
+
+    inset
+    0 -2px 3px
+    rgba(0,0,0,0.18);
+
+  text-shadow:
+
+    0 1px 2px
+    rgba(0,0,0,0.55);
+
+  transition:
+
+    transform 0.12s ease,
+
+    box-shadow 0.12s ease,
+
+    background 0.12s ease;
 
 }
 
 
 /* =================================
-   レベル
+   ボタン外側の和紙光
 ================================= */
 
-.sasoi-level{
+.sasoi-start-btn::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:-7px;
+
+  right:-7px;
+
+  top:-7px;
+
+  bottom:-7px;
+
+  border-radius:26px;
+
+  border:
+
+    1px solid
+    rgba(255,255,255,0.50);
+
+  box-shadow:
+
+    0 0 8px
+    rgba(255,255,255,0.35);
+
+  pointer-events:none;
+
+}
+
+
+/* =================================
+   ボタン上部の光沢
+================================= */
+
+.sasoi-start-btn::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:14px;
+
+  right:14px;
+
+  top:5px;
+
+  height:11px;
+
+  border-radius:12px;
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      rgba(255,255,255,0.48)
+      0%,
+
+      rgba(255,255,255,0.18)
+      45%,
+
+      transparent
+      100%
+    );
+
+  pointer-events:none;
+
+}
+
+
+/* =================================
+   hover
+================================= */
+
+.sasoi-start-btn:hover{
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      #548984 0%,
+
+      #396C66 42%,
+
+      #28534E 100%
+    );
+
+  box-shadow:
+
+    0 0 0 1px
+    rgba(18,58,53,0.85),
+
+    0 3px 0
+    rgba(9,35,32,0.60),
+
+    0 7px 15px
+    rgba(10,45,40,0.42),
+
+    inset
+    0 1px 0
+    rgba(255,255,255,0.55),
+
+    inset
+    0 -2px 3px
+    rgba(0,0,0,0.15);
+
+}
+
+
+/* =================================
+   press
+================================= */
+
+.sasoi-start-btn:active{
+
+  transform:
+    translateY(2px);
+
+  box-shadow:
+
+    0 0 0 1px
+    rgba(18,58,53,0.85),
+
+    0 1px 0
+    rgba(9,35,32,0.60),
+
+    0 3px 6px
+    rgba(10,45,40,0.28),
+
+    inset
+    0 2px 5px
+    rgba(0,0,0,0.22);
+
+}
+
+
+/* =================================
+   譜面選択
+   1行表示
+================================= */
+
+.sasoi-score-select{
 
   position:relative;
 
-  z-index:2;
+  width:310px;
+
+  height:38px;
+
+  margin-top:4px;
+
+  padding:
+    0 42px 0 12px;
+
+  box-sizing:border-box;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:19px;
+
+
+  /* =================================
+     譜面ごとのテーマカラー
+
+     JavaScriptから変更される
+
+     第壱譜 → 藍
+     第弐譜 → 深緑
+     第参譜 → えんじ
+  ================================= */
+
+  --sasoi-score-color:#294C60;
+
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      rgba(255,255,255,0.96) 0%,
+
+      rgba(244,240,225,0.92) 100%
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,0.98);
+
+  box-shadow:
+
+    0 1px 0
+    rgba(255,255,255,0.90),
+
+    0 2px 5px
+    rgba(20,55,50,0.20);
+
+  color:
+    var(--sasoi-score-color);
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  z-index:10;
+
+}
+
+
+/* =================================
+   譜面文字
+================================= */
+
+.sasoi-score-select-text{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:6px;
+
+  width:100%;
+
+  min-width:0;
+
+  white-space:nowrap;
 
 }
 
 /* =================================
-   初期画面の中身を前面へ
+   選択中
+   譜面名を少し拡大
 ================================= */
 
-.sasoi-panel > *{
+.sasoi-score-select-text.is-selected{
 
-  position:relative;
+  transform:
+    scale(1.06);
 
-  z-index:5;
+  opacity:1;
+
+}
+
+/* =================================
+   譜面切り替えアニメーション
+================================= */
+
+.sasoi-score-select-text{
+
+  transition:
+    transform 0.22s ease,
+    opacity 0.22s ease;
 
 }
 
 
-.sasoi-title {
+/* =================================
+   上へ抜ける
+================================= */
 
-  font-size:40px;
-  font-weight:400;
+.sasoi-score-select-text.slide-out-up{
 
-  font-family:"Yuji Boku",serif;
-
-  margin-bottom:2px;
-
-}
-
-
-.sasoi-start-btn {
-
-  width:120px;
-  height:34px;
-
-  border-radius:18px;
-
-  border:none;
-
-  background:#333;
-  color:white;
-
-  font-size:15px;
-
-  font-family:"Yuji Boku",serif;
-
+  animation:
+    sasoiScoreSlideOutUp
+    0.22s
+    ease-in
+    forwards;
 
 }
 
 
-.sasoi-level {
+/* =================================
+   下から入る
+================================= */
 
-  margin-top:0px;
+.sasoi-score-select-text.slide-in-from-down{
+
+  animation:
+    sasoiScoreSlideInFromDown
+    0.25s
+    ease-out
+    forwards;
+
+}
+
+
+/* =================================
+   下へ抜ける
+================================= */
+
+.sasoi-score-select-text.slide-out-down{
+
+  animation:
+    sasoiScoreSlideOutDown
+    0.22s
+    ease-in
+    forwards;
+
+}
+
+
+/* =================================
+   上から入る
+================================= */
+
+.sasoi-score-select-text.slide-in-from-up{
+
+  animation:
+    sasoiScoreSlideInFromUp
+    0.25s
+    ease-out
+    forwards;
+
+}
+
+
+/* =================================
+   上へ抜ける
+================================= */
+
+@keyframes sasoiScoreSlideOutUp{
+
+  0%{
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    transform:
+      translateY(-18px)
+      scale(0.98);
+
+    opacity:0;
+
+  }
+
+}
+
+
+/* =================================
+   下から入る
+================================= */
+
+@keyframes sasoiScoreSlideInFromDown{
+
+  0%{
+
+    transform:
+      translateY(18px)
+      scale(0.98);
+
+    opacity:0;
+
+  }
+
+  100%{
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+    opacity:1;
+
+  }
+
+}
+
+
+/* =================================
+   下へ抜ける
+================================= */
+
+@keyframes sasoiScoreSlideOutDown{
+
+  0%{
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    transform:
+      translateY(18px)
+      scale(0.98);
+
+    opacity:0;
+
+  }
+
+}
+
+
+/* =================================
+   上から入る
+================================= */
+
+@keyframes sasoiScoreSlideInFromUp{
+
+  0%{
+
+    transform:
+      translateY(-18px)
+      scale(0.98);
+
+    opacity:0;
+
+  }
+
+  100%{
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+    opacity:1;
+
+  }
+
+}
+
+
+/* =================================
+   譜面切り替えアニメーション
+================================= */
+
+.sasoi-score-select-text.slide-from-bottom{
+
+  animation:
+    sasoiScoreSlideFromBottom
+    0.30s
+    ease-out;
+
+}
+
+
+.sasoi-score-select-text.slide-from-top{
+
+  animation:
+    sasoiScoreSlideFromTop
+    0.30s
+    ease-out;
+
+}
+
+
+/* =================================
+   下から上へ
+================================= */
+
+@keyframes sasoiScoreSlideFromBottom{
+
+  0%{
+
+    opacity:0;
+
+    transform:
+      translateY(20px)
+      scale(1.06);
+
+  }
+
+  100%{
+
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+  }
+
+}
+
+
+/* =================================
+   上から下へ
+================================= */
+
+@keyframes sasoiScoreSlideFromTop{
+
+  0%{
+
+    opacity:0;
+
+    transform:
+      translateY(-20px)
+      scale(1.06);
+
+  }
+
+  100%{
+
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1.06);
+
+  }
+
+}
+
+
+/* =================================
+   譜面番号
+================================= */
+
+.sasoi-score-select-name{
 
   font-size:13px;
 
-  font-family:"Yuji Boku",serif;
+  font-weight:700;
+
+  color:
+    var(--sasoi-score-color);
+
+  flex-shrink:0;
+
+}
+
+
+/* =================================
+   譜面タイトル
+================================= */
+
+.sasoi-score-select-title{
+
+  font-size:14px;
+
+  font-weight:700;
+
+  color:
+    var(--sasoi-score-color);
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+  min-width:0;
+
+  flex:1;
+
+}
+
+
+/* =================================
+   難易度
+================================= */
+
+.sasoi-score-select-difficulty{
+
+  font-size:11px;
+
+  font-weight:700;
+
+  color:
+    var(--sasoi-score-color);
+
+  white-space:nowrap;
+
+  flex-shrink:0;
+
+  letter-spacing:0.5px;
+
+  text-shadow:
+
+    0 1px 0
+    rgba(255,255,255,0.95);
+
+}
+
+
+/* =================================
+   ▲▼
+================================= */
+
+.sasoi-score-select-arrows{
+
+  position:absolute;
+
+  right:5px;
+
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:0;
+
+  z-index:20;
+
+}
+
+
+/* =================================
+   ▲▼ボタン
+================================= */
+
+.sasoi-score-select-arrow{
+
+  width:22px;
+
+  height:15px;
+
+  padding:0;
+
+  margin:0;
+
+  border:0;
+
+  background:transparent;
+
+  color:
+    var(--sasoi-score-color);
+
+  font-size:11px;
+
+  font-weight:bold;
+
+  font-family:sans-serif;
+
+  line-height:15px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  cursor:pointer;
+
+}
+
+
+.sasoi-score-select-arrow:hover{
+
+  color:
+    var(--sasoi-score-color);
+
+}
+
+
+.sasoi-score-select-arrow:active{
+
+  transform:
+    scale(0.88);
+
+}
+
+/* =================================
+   譜面選択
+   スライドアニメーション
+================================= */
+
+
+/* ---------------------------------
+   スライド準備状態
+--------------------------------- */
+
+.sasoi-score-select-text.is-sliding{
+
+  transition:none;
+
+}
+
+
+/* ---------------------------------
+   下から入ってくる
+   ▲を押したとき
+--------------------------------- */
+
+.sasoi-score-select-text.slide-from-bottom{
+
+  animation:
+    sasoiScoreSlideFromBottom
+    0.28s
+    ease-out;
+
+}
+
+
+/* ---------------------------------
+   上から入ってくる
+   ▼を押したとき
+--------------------------------- */
+
+.sasoi-score-select-text.slide-from-top{
+
+  animation:
+    sasoiScoreSlideFromTop
+    0.28s
+    ease-out;
+
+}
+
+
+/* =================================
+   下 → 上
+================================= */
+
+@keyframes sasoiScoreSlideFromBottom{
+
+  0%{
+
+    opacity:0;
+
+    transform:
+      translateY(18px)
+      scale(1.02);
+
+  }
+
+  100%{
+
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1.02);
+
+  }
+
+}
+
+
+/* =================================
+   上 → 下
+================================= */
+
+@keyframes sasoiScoreSlideFromTop{
+
+  0%{
+
+    opacity:0;
+
+    transform:
+      translateY(-18px)
+      scale(1.02);
+
+  }
+
+  100%{
+
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1.02);
+
+  }
+
 }
 
 
@@ -2733,14 +3729,14 @@ style.textContent = `
   top:0;
 
   /* ---------------------------------
-     魚を少し小さく
+     魚の大きさ
   --------------------------------- */
 
-  font-size:14px;
+  width:18px;
 
-  line-height:1;
+  height:18px;
 
-  white-space:nowrap;
+  display:block;
 
   pointer-events:none;
 
@@ -2755,7 +3751,7 @@ style.textContent = `
 
   transform:
     translate(
-      -55%,
+      -12%,
       -50%
     );
 
@@ -2766,6 +3762,31 @@ style.textContent = `
   transition:
     left 0.60s ease-out,
     top 0.60s ease-out;
+
+}
+
+
+/* =================================
+   ワカサギ画像
+================================= */
+
+.sasoi-gauge-fish img{
+
+  display:block;
+
+  width:100%;
+
+  height:100%;
+
+  object-fit:contain;
+
+  transform:scaleY(1.5);
+
+  transform-origin:center;
+
+  pointer-events:none;
+
+  user-select:none;
 
 }
 
@@ -3203,6 +4224,469 @@ const sasoiScore = [
 
 // ========================================== 楽譜データ ==========================================
 
+// ========================================== 譜面一覧 ==========================================
+
+// ==========================================
+// 譜面一覧
+// ==========================================
+
+const sasoiScoreList = [
+
+  // ==========================================
+  // 第壱譜
+  // ==========================================
+
+  {
+    id:"score01",
+
+    number:"第壱譜",
+
+    numberKana:"だいいっぷ",
+
+    title:"三誘一間・三段重",
+
+    titleKana:"さんゆういっかん・さんだんがさね",
+
+    difficulty:"★☆☆☆☆",
+
+    score:sasoiScore
+  },
+
+
+  // ==========================================
+  // 第弐譜
+  // ==========================================
+
+  {
+    id:"score02",
+
+    number:"第弐譜",
+
+    numberKana:"だいにふ",
+
+    title:"二誘一間・三段重",
+
+    titleKana:"にゆういっかん・さんだんがさね",
+
+    difficulty:"★☆☆☆☆",
+
+    score:sasoiScore
+  },
+
+
+  // ==========================================
+  // 第参譜
+  // ==========================================
+
+  {
+    id:"score03",
+
+    number:"第参譜",
+
+    numberKana:"だいさんぷ",
+
+    title:"一誘一間・三段重",
+
+    titleKana:"いちゆういっかん・さんだんがさね",
+
+    difficulty:"★☆☆☆☆",
+
+    score:sasoiScore
+  }
+
+];
+
+
+// ==========================================
+// 現在選択中の譜面
+// ==========================================
+
+let sasoiSelectedScoreIndex = 0;
+
+
+// ==========================================
+// 現在選択中の譜面を取得
+// ==========================================
+
+function getSelectedSasoiScore(){
+
+  return sasoiScoreList[
+    sasoiSelectedScoreIndex
+  ];
+
+}
+
+
+// ==========================================
+// 譜面選択
+// スライドアニメーション
+// ==========================================
+
+function animateSasoiScoreSelect(
+  direction
+){
+
+  const selectText =
+    document.querySelector(
+      ".sasoi-score-select-text"
+    );
+
+
+  if(!selectText){
+
+    return;
+
+  }
+
+
+  // ------------------------------------------
+  // 現在のアニメーションを解除
+  // ------------------------------------------
+
+  selectText.classList.remove(
+    "slide-from-bottom",
+    "slide-from-top"
+  );
+
+
+  // ------------------------------------------
+  // ブラウザに一度描画させる
+  //
+  // これが重要
+  // 同じアニメーションを連続して
+  // 再生できるようにする
+  // ------------------------------------------
+
+  void selectText.offsetWidth;
+
+
+  // ------------------------------------------
+  // 選択中状態
+  // ------------------------------------------
+
+  selectText.classList.add(
+    "is-selected"
+  );
+
+
+  // ------------------------------------------
+  // スライド方向
+  // ------------------------------------------
+
+  if(
+    direction === "up"
+  ){
+
+    selectText.classList.add(
+      "slide-from-bottom"
+    );
+
+  }
+
+  else if(
+    direction === "down"
+  ){
+
+    selectText.classList.add(
+      "slide-from-top"
+    );
+
+  }
+
+}
+
+// ==========================================
+// 初期画面
+// 譜面選択表示更新
+// ふりがな対応
+// 譜面ごとの色変更対応
+// ==========================================
+
+function updateSasoiScoreSelectDisplay(){
+
+  const selectedScore =
+    getSelectedSasoiScore();
+
+
+  if(!selectedScore){
+
+    return;
+
+  }
+
+
+  // ==========================================
+  // 譜面番号
+  // ==========================================
+
+  const numberDisplay =
+    document.getElementById(
+      "sasoiScoreSelectNumber"
+    );
+
+
+  if(numberDisplay){
+
+    numberDisplay.innerHTML = `
+
+      <ruby>
+
+        ${selectedScore.number}
+
+        <rt>
+          ${selectedScore.numberKana || ""}
+        </rt>
+
+      </ruby>
+
+    `;
+
+  }
+
+
+  // ==========================================
+  // 譜面タイトル
+  // ==========================================
+
+  const titleDisplay =
+    document.getElementById(
+      "sasoiScoreSelectTitle"
+    );
+
+
+  if(titleDisplay){
+
+    titleDisplay.innerHTML = `
+
+      <ruby>
+
+        ${selectedScore.title}
+
+        <rt>
+          ${selectedScore.titleKana || ""}
+        </rt>
+
+      </ruby>
+
+    `;
+
+  }
+
+  // ------------------------------------------
+  // 選択中の譜面を強調
+  // ------------------------------------------
+
+  const selectText =
+    document.querySelector(
+      ".sasoi-score-select-text"
+    );
+
+
+  if(selectText){
+
+    selectText.classList.add(
+      "is-selected"
+    );
+
+  }
+
+
+  // ==========================================
+  // 難易度
+  // ==========================================
+
+  const difficultyDisplay =
+    document.getElementById(
+      "sasoiScoreSelectDifficulty"
+    );
+
+
+  if(difficultyDisplay){
+
+    difficultyDisplay.textContent =
+      selectedScore.difficulty || "";
+
+  }
+
+
+  // ==========================================
+  // 譜面ごとのテーマカラー
+  // ==========================================
+
+  let scoreColor =
+    "#294C60";
+
+
+  // ------------------------------------------
+  // 第壱譜
+  // 藍
+  // ------------------------------------------
+
+  if(
+    selectedScore.id === "score01"
+  ){
+
+    scoreColor =
+      "#294C60";
+
+  }
+
+
+  // ------------------------------------------
+  // 第弐譜
+  // 深緑
+  // ------------------------------------------
+
+  else if(
+    selectedScore.id === "score02"
+  ){
+
+    scoreColor =
+      "#3F6254";
+
+  }
+
+
+  // ------------------------------------------
+  // 第参譜
+  // えんじ
+  // ------------------------------------------
+
+  else if(
+    selectedScore.id === "score03"
+  ){
+
+    scoreColor =
+      "#7A3E3E";
+
+  }
+
+
+  // ==========================================
+  // 譜面選択部分へ色を反映
+  // ==========================================
+
+  const scoreSelect =
+    document.getElementById(
+      "sasoiScoreSelect"
+    );
+
+
+  if(scoreSelect){
+
+    scoreSelect.style.setProperty(
+      "--sasoi-score-color",
+      scoreColor
+    );
+
+  }
+
+
+  // ==========================================
+  // 個別表示にも色を反映
+  // ==========================================
+
+  if(numberDisplay){
+
+    numberDisplay.style.color =
+      scoreColor;
+
+  }
+
+
+  if(titleDisplay){
+
+    titleDisplay.style.color =
+      scoreColor;
+
+  }
+
+
+  if(difficultyDisplay){
+
+    difficultyDisplay.style.color =
+      scoreColor;
+
+  }
+
+}
+
+
+
+// ==========================================
+// ゲーム画面
+// 選択中の譜面名を表示
+// ==========================================
+
+function updateSasoiGameScoreDisplay(){
+
+  // ----------------------------------------
+  // 現在選択されている譜面を取得
+  // ----------------------------------------
+
+  const selectedScore =
+    getSelectedSasoiScore();
+
+
+  // ----------------------------------------
+  // 譜面が取得できなければ終了
+  // ----------------------------------------
+
+  if(!selectedScore){
+
+    return;
+
+  }
+
+
+  // ----------------------------------------
+  // ゲーム画面
+  // 譜面番号表示
+  // ----------------------------------------
+
+  const numberDisplay =
+    document.getElementById(
+      "sasoiGameScoreNumber"
+    );
+
+
+  // ----------------------------------------
+  // ゲーム画面
+  // 譜面タイトル表示
+  // ----------------------------------------
+
+  const titleDisplay =
+    document.getElementById(
+      "sasoiGameScoreTitle"
+    );
+
+
+  // ----------------------------------------
+  // 譜面番号を反映
+  // ----------------------------------------
+
+  if(numberDisplay){
+
+    numberDisplay.textContent =
+      selectedScore.number;
+
+  }
+
+
+  // ----------------------------------------
+  // 譜面タイトルを反映
+  // ----------------------------------------
+
+  if(titleDisplay){
+
+    titleDisplay.textContent =
+      selectedScore.title;
+
+  }
+
+}
+
+// ========================================== 譜面一覧 ==========================================
 
 const area =
 document.getElementById(
@@ -3227,6 +4711,66 @@ area.innerHTML = `
   </div>
 
 
+<!-- =================================
+     譜面選択
+================================= -->
+
+<div
+  class="sasoi-score-select"
+  id="sasoiScoreSelect"
+>
+
+  <div
+    class="sasoi-score-select-text"
+  >
+
+    <span
+      class="sasoi-score-select-name"
+      id="sasoiScoreSelectNumber"
+    ></span>
+
+    <span
+      class="sasoi-score-select-title"
+      id="sasoiScoreSelectTitle"
+    ></span>
+
+    <span
+      class="sasoi-score-select-difficulty"
+      id="sasoiScoreSelectDifficulty"
+    ></span>
+
+  </div>
+
+
+  <div
+    class="sasoi-score-select-arrows"
+  >
+
+    <button
+      type="button"
+      class="sasoi-score-select-arrow up"
+      id="sasoiScoreSelectUp"
+    >
+      ▲
+    </button>
+
+    <button
+      type="button"
+      class="sasoi-score-select-arrow down"
+      id="sasoiScoreSelectDown"
+    >
+      ▼
+    </button>
+
+  </div>
+
+</div>
+
+
+  <!-- =================================
+       スタート
+  ================================= -->
+
   <button
     class="sasoi-start-btn"
     id="sasoiStartBtn"
@@ -3237,13 +4781,7 @@ area.innerHTML = `
   </button>
 
 
-  <div class="sasoi-level">
-    レベル ★★★★☆
-  </div>
-
-
 </div>
-
 
 <!-- =================================
      ゲーム画面
@@ -3275,11 +4813,16 @@ area.innerHTML = `
        点灯しているメモリの中央を移動
   ================================= -->
 
-  <div
-    id="sasoiGaugeFish"
-    class="sasoi-gauge-fish"
-    aria-hidden="true"
-  >🐟</div>
+<div
+  id="sasoiGaugeFish"
+  class="sasoi-gauge-fish"
+  aria-hidden="true"
+>
+  <img
+    src="images/wakasagi.png"
+    alt=""
+  >
+</div>
 
 
   <!-- =================================
@@ -3303,22 +4846,28 @@ area.innerHTML = `
   </div>
 
 
-  <!-- =================================
-       譜面名
-  ================================= -->
+<!-- =================================
+     譜面名
+     選択中の譜面を表示
+================================= -->
 
-  <div class="sasoi-score-name">
+<div class="sasoi-score-name">
 
-    <div class="sasoi-score-number">
-      第壱譜
-    </div>
-
-    <div class="sasoi-score-title">
-      三誘一間・三段重
-    </div>
-
+  <div
+    class="sasoi-score-number"
+    id="sasoiGameScoreNumber"
+  >
+    第壱譜
   </div>
 
+  <div
+    class="sasoi-score-title"
+    id="sasoiGameScoreTitle"
+  >
+    三誘一間・三段重
+  </div>
+
+</div>
 
   <!-- =================================
        通常メモリ
@@ -3454,6 +5003,404 @@ id="sasoiTouch">
 </div>
 
 `;
+
+// ------------------------------------
+// メニューの譜面名を更新
+// ------------------------------------
+
+updateSasoiScoreSelectDisplay();
+
+// ==========================================
+// ゲーム画面
+// 選択中の譜面表示を反映
+// ==========================================
+
+updateSasoiGameScoreDisplay();
+
+
+// ==========================================
+// 譜面選択
+// ▲▼による上下スライド
+// ==========================================
+
+
+// ==========================================
+// 譜面を変更する共通処理
+// ==========================================
+//
+// direction
+//
+// "up"
+//   ▲を押したとき
+//   現在の譜面が下へ抜け、
+//   前の譜面が上から入る
+//
+// "down"
+//   ▼を押したとき
+//   現在の譜面が上へ抜け、
+//   次の譜面が下から入る
+//
+// ==========================================
+
+function changeSasoiScore(
+  direction
+){
+
+  // ----------------------------------------
+  // 譜面が1つしかない場合
+  // ----------------------------------------
+
+  if(
+    sasoiScoreList.length <= 1
+  ){
+
+    return;
+
+  }
+
+
+  // ----------------------------------------
+  // アニメーション対象
+  // ----------------------------------------
+
+  const selectText =
+    document.querySelector(
+      ".sasoi-score-select-text"
+    );
+
+
+  if(!selectText){
+
+    return;
+
+  }
+
+
+  // ----------------------------------------
+  // 現在位置を保存
+  // ----------------------------------------
+
+  const currentIndex =
+    sasoiSelectedScoreIndex;
+
+
+  // ----------------------------------------
+  // 次の位置を計算
+  // ----------------------------------------
+
+  let nextIndex;
+
+
+  if(
+    direction === "up"
+  ){
+
+    nextIndex =
+      currentIndex - 1;
+
+
+    // --------------------------------------
+    // 先頭より上へ行ったら最後へ
+    // --------------------------------------
+
+    if(
+      nextIndex < 0
+    ){
+
+      nextIndex =
+        sasoiScoreList.length - 1;
+
+    }
+
+  }else{
+
+    nextIndex =
+      currentIndex + 1;
+
+
+    // --------------------------------------
+    // 最後より下へ行ったら最初へ
+    // --------------------------------------
+
+    if(
+      nextIndex >=
+      sasoiScoreList.length
+    ){
+
+      nextIndex = 0;
+
+    }
+
+  }
+
+
+  // ----------------------------------------
+  // 現在のアニメーションを解除
+  // ----------------------------------------
+
+  selectText.classList.remove(
+    "is-selected",
+    "slide-out-up",
+    "slide-in-from-down",
+    "slide-out-down",
+    "slide-in-from-up"
+  );
+
+
+  // ----------------------------------------
+  // ブラウザに状態を反映
+  // ----------------------------------------
+
+  void selectText.offsetWidth;
+
+
+  // ----------------------------------------
+  // 現在の譜面を抜けさせる
+  // ----------------------------------------
+
+  if(
+    direction === "down"
+  ){
+
+    // ▼
+    // 現在の譜面 → 上へ
+
+    selectText.classList.add(
+      "slide-out-up"
+    );
+
+  }else{
+
+    // ▲
+    // 現在の譜面 → 下へ
+
+    selectText.classList.add(
+      "slide-out-down"
+    );
+
+  }
+
+
+  // ----------------------------------------
+  // アニメーション終了後
+  // 新しい譜面へ変更
+  // ----------------------------------------
+
+  setTimeout(
+    function(){
+
+      // ------------------------------------
+      // 譜面番号を変更
+      // ------------------------------------
+
+      sasoiSelectedScoreIndex =
+        nextIndex;
+
+
+      // ------------------------------------
+      // 表示更新
+      // ------------------------------------
+
+      updateSasoiScoreSelectDisplay();
+
+
+      // ------------------------------------
+      // ゲーム画面も更新
+      // ------------------------------------
+      //
+      // 現在はゲーム開始前なので
+      // 表示だけ更新しておく。
+      //
+      // ------------------------------------
+
+      updateSasoiGameScoreDisplay();
+
+
+      // ------------------------------------
+      // 新しい譜面を
+      // 反対側から入れる
+      // ------------------------------------
+
+      selectText.classList.remove(
+        "slide-out-up",
+        "slide-out-down",
+        "slide-in-from-down",
+        "slide-in-from-up",
+        "is-selected"
+      );
+
+
+      void selectText.offsetWidth;
+
+
+      if(
+        direction === "down"
+      ){
+
+        // ▼
+        // 下から新しい譜面が入る
+
+        selectText.classList.add(
+          "slide-in-from-down"
+        );
+
+      }else{
+
+        // ▲
+        // 上から新しい譜面が入る
+
+        selectText.classList.add(
+          "slide-in-from-up"
+        );
+
+      }
+
+
+      // ------------------------------------
+      // 選択中状態
+      // ------------------------------------
+
+      selectText.classList.add(
+        "is-selected"
+      );
+
+
+      // ------------------------------------
+      // デバッグ
+      // ------------------------------------
+
+      const selectedScore =
+        getSelectedSasoiScore();
+
+
+      console.log(
+        "譜面選択変更",
+        selectedScore.number,
+        selectedScore.title
+      );
+
+    },
+    220
+  );
+
+}
+
+
+// ==========================================
+// ▲ボタン
+// 前の譜面へ
+// ==========================================
+
+const scoreSelectUp =
+  document.getElementById(
+    "sasoiScoreSelectUp"
+  );
+
+
+if(scoreSelectUp){
+
+  scoreSelectUp.addEventListener(
+    "click",
+    function(event){
+
+      // ------------------------------------
+      // 親要素へのクリック伝播を停止
+      // ------------------------------------
+
+      event.stopPropagation();
+
+
+      // ------------------------------------
+      // 前の譜面へ
+      // ------------------------------------
+
+      changeSasoiScore(
+        "up"
+      );
+
+    }
+  );
+
+}
+
+
+// ==========================================
+// ▼ボタン
+// 次の譜面へ
+// ==========================================
+
+const scoreSelectDown =
+  document.getElementById(
+    "sasoiScoreSelectDown"
+  );
+
+
+if(scoreSelectDown){
+
+  scoreSelectDown.addEventListener(
+    "click",
+    function(event){
+
+      // ------------------------------------
+      // 親要素へのクリック伝播を停止
+      // ------------------------------------
+
+      event.stopPropagation();
+
+
+      // ------------------------------------
+      // 次の譜面へ
+      // ------------------------------------
+
+      changeSasoiScore(
+        "down"
+      );
+
+    }
+  );
+
+}
+
+
+// ==========================================
+// 譜面選択部分
+// タップでも次の譜面へ
+// ==========================================
+//
+// ▲▼だけでなく、従来の
+// 「譜面部分をタップして切り替える」
+// 操作も残しておく。
+// ==========================================
+
+const scoreSelectElement =
+  document.getElementById(
+    "sasoiScoreSelect"
+  );
+
+
+if(scoreSelectElement){
+
+  scoreSelectElement.addEventListener(
+    "click",
+    function(){
+
+      // ------------------------------------
+      // 譜面文字部分をタップした場合
+      // ------------------------------------
+      //
+      // ▲▼ボタンは stopPropagation() しているため
+      // ここには到達しない。
+      //
+      // ------------------------------------
+
+      changeSasoiScore(
+        "down"
+      );
+
+    }
+  );
+
+}
 
 
 // -------------------------------
@@ -4287,25 +6234,48 @@ function updateSasoiGaugeFishPosition(
      ゲージ基準の座標へ変換
   --------------------------------- */
 
-  const fishLeft =
-    tickCenterX -
-    gaugeRect.left;
+const fishLeft =
+  tickCenterX -
+  gaugeRect.left -
+  11;
 
 
-  const fishTop =
-    tickCenterY -
-    gaugeRect.top;
+const fishTop =
+  tickCenterY -
+  gaugeRect.top;
 
 
-  /* ---------------------------------
-     魚をメモリ中央へ移動
-  --------------------------------- */
+/* ---------------------------------
+   デバッグ
+--------------------------------- */
 
-  fish.style.left =
-    fishLeft + "px";
+console.log(
+  "魚位置",
+  fishLeft,
+  fishTop
+);
 
-  fish.style.top =
-    fishTop + "px";
+console.log(
+  "魚位置確認",
+  {
+    gaugeLeft: gaugeRect.left,
+    gaugeWidth: gaugeRect.width,
+    tickLeft: tickRect.left,
+    tickWidth: tickRect.width,
+    tickCenterX: tickCenterX,
+    fishLeft: fishLeft
+  }
+);
+
+/* ---------------------------------
+   魚をメモリ中央へ移動
+--------------------------------- */
+
+fish.style.left =
+  fishLeft + "px";
+
+fish.style.top =
+  fishTop + "px";
 
 }
 
