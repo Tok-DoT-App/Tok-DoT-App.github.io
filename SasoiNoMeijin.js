@@ -530,7 +530,7 @@ style.textContent = `
   margin-top:4px;
 
   padding:
-    0 42px 0 12px;
+    0 42px 0 20px;
 
   box-sizing:border-box;
 
@@ -1245,7 +1245,7 @@ style.textContent = `
 
 }
 
-/* リスタートボタン */
+/* リトライボタン */
 #sasoiRestartBtn{
 
   position:absolute;
@@ -1286,7 +1286,7 @@ style.textContent = `
 }
 
 
-/* リスタート：押した瞬間 */
+/* リトライ：押した瞬間 */
 #sasoiRestartBtn:active{
 
   background:
@@ -3780,7 +3780,7 @@ style.textContent = `
 
   object-fit:contain;
 
-  transform:scaleY(1.5);
+  transform:scaleY(2.0);
 
   transform-origin:center;
 
@@ -4571,6 +4571,64 @@ function updateSasoiScoreSelectDisplay(){
       "sasoiScoreSelect"
     );
 
+// ==========================================
+// 譜面選択
+// マウスホイールでも切り替え
+// ==========================================
+
+if(
+  scoreSelectElement
+){
+
+  scoreSelectElement.addEventListener(
+    "wheel",
+    function(event){
+
+      // ------------------------------------
+      // 通常のページスクロールを止める
+      // ------------------------------------
+
+      event.preventDefault();
+
+
+      // ------------------------------------
+      // 上方向へスクロール
+      // → 前の譜面
+      // ------------------------------------
+
+      if(
+        event.deltaY < 0
+      ){
+
+        changeSasoiScore(
+          "up"
+        );
+
+      }
+
+
+      // ------------------------------------
+      // 下方向へスクロール
+      // → 次の譜面
+      // ------------------------------------
+
+      else if(
+        event.deltaY > 0
+      ){
+
+        changeSasoiScore(
+          "down"
+        );
+
+      }
+
+    },
+    {
+      passive:false
+    }
+  );
+
+}
 
   if(scoreSelect){
 
@@ -4930,7 +4988,7 @@ area.innerHTML = `
   id="sasoiRestartBtn"
   type="button"
 >
-  リスタート
+  リトライ
 </button>
 
   <button
@@ -5364,12 +5422,19 @@ if(scoreSelectDown){
 
 // ==========================================
 // 譜面選択部分
-// タップでも次の譜面へ
+// タップ＋上下スワイプ対応
 // ==========================================
 //
-// ▲▼だけでなく、従来の
-// 「譜面部分をタップして切り替える」
-// 操作も残しておく。
+// タップ
+//   → 次の譜面
+//
+// 上へスワイプ
+//   → 次の譜面
+//
+// 下へスワイプ
+//   → 前の譜面
+//
+// ▲▼ボタンは既存処理をそのまま使用
 // ==========================================
 
 const scoreSelectElement =
@@ -5380,18 +5445,222 @@ const scoreSelectElement =
 
 if(scoreSelectElement){
 
+  // ----------------------------------------
+  // スワイプ判定用
+  // ----------------------------------------
+
+  let sasoiTouchStartX =
+    0;
+
+  let sasoiTouchStartY =
+    0;
+
+  let sasoiTouchEndX =
+    0;
+
+  let sasoiTouchEndY =
+    0;
+
+
+  // ----------------------------------------
+  // スワイプと判定する最低移動距離
+  // ----------------------------------------
+
+  const SASOI_SWIPE_THRESHOLD =
+    30;
+
+
+  // ----------------------------------------
+  // 指を置いた瞬間
+  // ----------------------------------------
+
+  scoreSelectElement.addEventListener(
+    "touchstart",
+    function(event){
+
+      const touch =
+        event.changedTouches[0];
+
+
+      sasoiTouchStartX =
+        touch.clientX;
+
+      sasoiTouchStartY =
+        touch.clientY;
+
+      sasoiTouchEndX =
+        touch.clientX;
+
+      sasoiTouchEndY =
+        touch.clientY;
+
+    },
+    {
+      passive:true
+    }
+  );
+
+
+  // ----------------------------------------
+  // 指を離した瞬間
+  // ----------------------------------------
+
+  scoreSelectElement.addEventListener(
+    "touchend",
+    function(event){
+
+      const touch =
+        event.changedTouches[0];
+
+
+      sasoiTouchEndX =
+        touch.clientX;
+
+      sasoiTouchEndY =
+        touch.clientY;
+
+
+      // --------------------------------------
+      // X方向・Y方向の移動量
+      // --------------------------------------
+
+      const differenceX =
+        sasoiTouchEndX -
+        sasoiTouchStartX;
+
+
+      const differenceY =
+        sasoiTouchEndY -
+        sasoiTouchStartY;
+
+
+      const absX =
+        Math.abs(
+          differenceX
+        );
+
+
+      const absY =
+        Math.abs(
+          differenceY
+        );
+
+
+      // --------------------------------------
+      // 上下スワイプ判定
+      //
+      // 横移動より縦移動が大きい場合だけ
+      // 上下スワイプとして扱う
+      // --------------------------------------
+
+      if(
+        absY >=
+        SASOI_SWIPE_THRESHOLD &&
+        absY >
+        absX
+      ){
+
+        // ------------------------------------
+        // 上へスワイプ
+        // ------------------------------------
+
+        if(
+          differenceY < 0
+        ){
+
+          console.log(
+            "譜面スワイプ：上"
+          );
+
+
+          changeSasoiScore(
+            "down"
+          );
+
+        }
+
+
+        // ------------------------------------
+        // 下へスワイプ
+        // ------------------------------------
+
+        else{
+
+          console.log(
+            "譜面スワイプ：下"
+          );
+
+
+          changeSasoiScore(
+            "up"
+          );
+
+        }
+
+
+        // ------------------------------------
+        // スワイプとして処理したので
+        // クリックイベントを抑制
+        // ------------------------------------
+
+        scoreSelectElement.dataset.swiped =
+          "1";
+
+
+        setTimeout(
+          function(){
+
+            scoreSelectElement.dataset.swiped =
+              "0";
+
+          },
+          50
+        );
+
+
+        return;
+
+      }
+
+    },
+    {
+      passive:true
+    }
+  );
+
+
+  // ----------------------------------------
+  // タップ
+  // ----------------------------------------
+
   scoreSelectElement.addEventListener(
     "click",
     function(){
 
-      // ------------------------------------
-      // 譜面文字部分をタップした場合
-      // ------------------------------------
-      //
-      // ▲▼ボタンは stopPropagation() しているため
-      // ここには到達しない。
-      //
-      // ------------------------------------
+      // --------------------------------------
+      // スワイプ直後なら
+      // タップ処理を行わない
+      // --------------------------------------
+
+      if(
+        scoreSelectElement.dataset.swiped ===
+        "1"
+      ){
+
+        return;
+
+      }
+
+
+      // --------------------------------------
+      // 通常タップ
+      // 次の譜面へ
+      // --------------------------------------
+
+      console.log(
+        "譜面タップ：次の譜面"
+      );
+
 
       changeSasoiScore(
         "down"
@@ -10565,7 +10834,7 @@ sasoiAnimationFrame =
 };
 
 // =================================
-// リスタート
+// リトライ
 // =================================
 
 document
@@ -10573,7 +10842,7 @@ document
 .onclick=function(){
 
   console.log(
-    "誘いの名人：リスタート"
+    "誘いの名人：リトライ"
   );
 
 
