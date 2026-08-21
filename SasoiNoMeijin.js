@@ -3751,7 +3751,7 @@ style.textContent = `
 
   transform:
     translate(
-      -12%,
+      -5%,
       -50%
     );
 
@@ -3780,13 +3780,232 @@ style.textContent = `
 
   object-fit:contain;
 
-  transform:scaleY(2.0);
+  transform:scaleY(1.5);
 
   transform-origin:center;
 
   pointer-events:none;
 
   user-select:none;
+
+}
+
+/* =================================
+   譜面選択へ戻る確認モーダル
+   ゲーム画面内だけを覆う
+================================= */
+
+.sasoi-back-confirm-modal{
+
+  position:absolute;
+
+  top:40px;
+
+  left:0;
+
+  width:100%;
+
+  height:180px;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:
+    rgba(
+      20,
+      30,
+      28,
+      0.42
+    );
+
+  z-index:9999;
+
+}
+
+
+/* =================================
+   モーダル本体
+================================= */
+
+.sasoi-back-confirm-panel{
+
+  width:240px;
+
+  box-sizing:border-box;
+
+  padding:
+    15px
+    14px
+    13px;
+
+  border-radius:12px;
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      rgba(255,255,255,0.98) 0%,
+
+      rgba(244,240,225,0.96) 100%
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,0.95);
+
+  box-shadow:
+
+    0 3px 14px
+    rgba(
+      20,
+      40,
+      35,
+      0.30
+    );
+
+  text-align:center;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+}
+
+
+/* =================================
+   タイトル
+================================= */
+
+.sasoi-back-confirm-title{
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  color:#294C60;
+
+  margin-bottom:7px;
+
+}
+
+
+/* =================================
+   説明
+================================= */
+
+.sasoi-back-confirm-message{
+
+  font-size:11px;
+
+  line-height:1.5;
+
+  color:#17252B;
+
+  margin-bottom:12px;
+
+}
+
+
+/* =================================
+   ボタンエリア
+================================= */
+
+.sasoi-back-confirm-buttons{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:8px;
+
+}
+
+
+/* =================================
+   ボタン共通
+================================= */
+
+.sasoi-back-confirm-button{
+
+  width:82px;
+
+  height:30px;
+
+  padding:0;
+
+  border:none;
+
+  border-radius:15px;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+/* =================================
+   続ける
+================================= */
+
+.sasoi-back-confirm-button.cancel{
+
+  background:#E8E4D8;
+
+  color:#294C60;
+
+  box-shadow:
+    0 1px 3px
+    rgba(
+      20,
+      55,
+      50,
+      0.16
+    );
+
+}
+
+
+/* =================================
+   戻る
+================================= */
+
+.sasoi-back-confirm-button.ok{
+
+  background:#294C60;
+
+  color:#FFFFFF;
+
+  box-shadow:
+    0 1px 3px
+    rgba(
+      20,
+      55,
+      50,
+      0.22
+    );
+
+}
+
+
+/* =================================
+   押したとき
+================================= */
+
+.sasoi-back-confirm-button:active{
+
+  transform:
+    scale(0.94);
 
 }
 
@@ -4571,64 +4790,6 @@ function updateSasoiScoreSelectDisplay(){
       "sasoiScoreSelect"
     );
 
-// ==========================================
-// 譜面選択
-// マウスホイールでも切り替え
-// ==========================================
-
-if(
-  scoreSelectElement
-){
-
-  scoreSelectElement.addEventListener(
-    "wheel",
-    function(event){
-
-      // ------------------------------------
-      // 通常のページスクロールを止める
-      // ------------------------------------
-
-      event.preventDefault();
-
-
-      // ------------------------------------
-      // 上方向へスクロール
-      // → 前の譜面
-      // ------------------------------------
-
-      if(
-        event.deltaY < 0
-      ){
-
-        changeSasoiScore(
-          "up"
-        );
-
-      }
-
-
-      // ------------------------------------
-      // 下方向へスクロール
-      // → 次の譜面
-      // ------------------------------------
-
-      else if(
-        event.deltaY > 0
-      ){
-
-        changeSasoiScore(
-          "down"
-        );
-
-      }
-
-    },
-    {
-      passive:false
-    }
-  );
-
-}
 
   if(scoreSelect){
 
@@ -4840,6 +5001,61 @@ area.innerHTML = `
 
 
 </div>
+
+
+<!-- ======================= 譜面選択画面へ戻る確認モーダル　======================= -->
+
+<div
+  id="sasoiBackConfirmModal"
+  class="sasoi-back-confirm-modal"
+>
+
+  <div
+    class="sasoi-back-confirm-panel"
+  >
+
+    <div
+      class="sasoi-back-confirm-title"
+    >
+      譜面選択へ戻りますか？
+    </div>
+
+
+    <div
+      class="sasoi-back-confirm-message"
+    >
+      現在のプレイは終了します。
+    </div>
+
+
+    <div
+      class="sasoi-back-confirm-buttons"
+    >
+
+      <button
+        type="button"
+        id="sasoiBackConfirmCancel"
+        class="sasoi-back-confirm-button cancel"
+      >
+        続ける
+      </button>
+
+
+      <button
+        type="button"
+        id="sasoiBackConfirmOK"
+        class="sasoi-back-confirm-button ok"
+      >
+        戻る
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================= 譜面選択画面へ戻る確認モーダル　======================= -->
 
 <!-- =================================
      ゲーム画面
@@ -5461,6 +5677,8 @@ if(scoreSelectElement){
   let sasoiTouchEndY =
     0;
 
+let sasoiWheelLock =
+  false;
 
   // ----------------------------------------
   // スワイプと判定する最低移動距離
@@ -5668,6 +5886,101 @@ if(scoreSelectElement){
 
     }
   );
+
+  // ========================================
+  // マウスホイール
+  // 上下スクロールで譜面切り替え
+  // ========================================
+
+scoreSelectElement.addEventListener(
+  "wheel",
+  function(event){
+
+    event.preventDefault();
+
+
+    // --------------------------------------
+    // アニメーション中は無視
+    // --------------------------------------
+
+    if(
+      sasoiWheelLock
+    ){
+
+      return;
+
+    }
+
+
+    // --------------------------------------
+    // ホイール操作をロック
+    // --------------------------------------
+
+    sasoiWheelLock =
+      true;
+
+
+    // --------------------------------------
+    // 下へスクロール
+    // → 次の譜面
+    // --------------------------------------
+
+    if(
+      event.deltaY > 0
+    ){
+
+      console.log(
+        "譜面ホイール：下"
+      );
+
+
+      changeSasoiScore(
+        "down"
+      );
+
+    }
+
+
+    // --------------------------------------
+    // 上へスクロール
+    // → 前の譜面
+    // --------------------------------------
+
+    else if(
+      event.deltaY < 0
+    ){
+
+      console.log(
+        "譜面ホイール：上"
+      );
+
+
+      changeSasoiScore(
+        "up"
+      );
+
+    }
+
+
+    // --------------------------------------
+    // 譜面切り替えアニメーションに合わせて解除
+    // --------------------------------------
+
+    setTimeout(
+      function(){
+
+        sasoiWheelLock =
+          false;
+
+      },
+      250
+    );
+
+  },
+  {
+    passive:false
+  }
+);
 
 }
 
@@ -10909,34 +11222,254 @@ document
 };
 
 
-// 戻る
+// ==========================================
+// 戻るボタン
+// 譜面選択画面へ戻る確認モーダルを表示
+// ==========================================
 
 document
 .getElementById("sasoiBackBtn")
 .onclick=function(){
 
+  // ----------------------------------------
+  // 確認モーダルを取得
+  // ----------------------------------------
 
-stopSasoiCheck();
+  const modal =
+    document.getElementById(
+      "sasoiBackConfirmModal"
+    );
 
-if(sasoiPlayTimer){
 
- clearTimeout(sasoiPlayTimer);
+  if(
+    !modal
+  ){
 
- sasoiPlayTimer=null;
+    return;
+
+  }
+
+
+  // ----------------------------------------
+  // モーダルを表示
+  // ----------------------------------------
+
+  modal.style.display =
+    "flex";
+
+};
+
+
+
+// ==========================================
+// 戻る確認モーダル
+// 「続ける」
+// ==========================================
+
+const sasoiBackConfirmCancel =
+  document.getElementById(
+    "sasoiBackConfirmCancel"
+  );
+
+
+if(
+  sasoiBackConfirmCancel
+){
+
+  sasoiBackConfirmCancel.onclick =
+    function(){
+
+      // --------------------------------------
+      // モーダルを閉じる
+      // --------------------------------------
+
+      const modal =
+        document.getElementById(
+          "sasoiBackConfirmModal"
+        );
+
+
+      if(
+        modal
+      ){
+
+        modal.style.display =
+          "none";
+
+      }
+
+    };
 
 }
 
-document
-.getElementById("sasoiGame")
-.style.display="none";
 
 
-document
-.getElementById("sasoiMenu")
-.style.display="flex";
+// ==========================================
+// 戻る確認モーダル
+// 「戻る」
+// ==========================================
+
+const sasoiBackConfirmOK =
+  document.getElementById(
+    "sasoiBackConfirmOK"
+  );
 
 
-};
+if(
+  sasoiBackConfirmOK
+){
+
+  sasoiBackConfirmOK.onclick =
+    function(){
+
+      // --------------------------------------
+      // モーダルを閉じる
+      // --------------------------------------
+
+      const modal =
+        document.getElementById(
+          "sasoiBackConfirmModal"
+        );
+
+
+      if(
+        modal
+      ){
+
+        modal.style.display =
+          "none";
+
+      }
+
+
+      // --------------------------------------
+      // 現在のプレイを停止
+      // --------------------------------------
+
+      stopSasoiCheck();
+
+
+      // --------------------------------------
+      // 現在のプレイタイマーを停止
+      // --------------------------------------
+
+      if(
+        sasoiPlayTimer
+      ){
+
+        clearTimeout(
+          sasoiPlayTimer
+        );
+
+
+        sasoiPlayTimer =
+          null;
+
+      }
+
+
+      // --------------------------------------
+      // ゲーム画面を非表示
+      // --------------------------------------
+
+      const game =
+        document.getElementById(
+          "sasoiGame"
+        );
+
+
+      if(
+        game
+      ){
+
+        game.style.display =
+          "none";
+
+      }
+
+
+      // --------------------------------------
+      // 初期画面を表示
+      // --------------------------------------
+
+      const menu =
+        document.getElementById(
+          "sasoiMenu"
+        );
+
+
+      if(
+        menu
+      ){
+
+        menu.style.display =
+          "flex";
+
+      }
+
+    };
+
+}
+
+
+
+// ==========================================
+// 戻る確認モーダル
+// モーダル外をタップしたら閉じる
+// ==========================================
+
+const sasoiBackConfirmModal =
+  document.getElementById(
+    "sasoiBackConfirmModal"
+  );
+
+
+const sasoiBackConfirmPanel =
+  document.querySelector(
+    ".sasoi-back-confirm-panel"
+  );
+
+
+if(
+  sasoiBackConfirmModal
+){
+
+  sasoiBackConfirmModal.addEventListener(
+    "click",
+    function(event){
+
+      // --------------------------------------
+      // モーダル本体をタップした場合
+      // --------------------------------------
+      //
+      // モーダル本体では閉じない
+      //
+      // --------------------------------------
+
+      if(
+        sasoiBackConfirmPanel &&
+        sasoiBackConfirmPanel.contains(
+          event.target
+        )
+      ){
+
+        return;
+
+      }
+
+
+      // --------------------------------------
+      // モーダル外
+      // 黒透明部分をタップ
+      // --------------------------------------
+
+      sasoiBackConfirmModal.style.display =
+        "none";
+
+    }
+  );
+
+}
 
 
 }
