@@ -3055,7 +3055,6 @@ style.textContent = `
 
 /* =================================
    興味ゲージ数値表示
-   ゲージの左側
 ================================= */
 
 .sasoi-gauge-values{
@@ -3077,8 +3076,6 @@ style.textContent = `
   justify-content:flex-end;
 
   gap:6px;
-
-  pointer-events:none;
 
   white-space:nowrap;
 
@@ -3423,6 +3420,54 @@ style.textContent = `
 
 }
 
+
+/* =================================
+   ハイスコア
+   合計値の上
+================================= */
+
+.sasoi-gauge-highscore{
+
+  display:block;
+
+  width:38px;
+
+  height:12px;
+
+  box-sizing:border-box;
+
+  text-align:right;
+
+  padding-right:4px;
+
+  font-size:10px;
+
+  font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
+
+  line-height:12px;
+
+  color:#17252B;
+
+  white-space:nowrap;
+
+  position:absolute;
+
+  right:0;
+
+  bottom:21px;
+
+  transform:
+    translateX(-10px);
+
+  opacity:0.75;
+
+  pointer-events:auto;
+
+  z-index:100;
+
+}
 
 /* =================================
    通常メモリ
@@ -4003,6 +4048,225 @@ style.textContent = `
 ================================= */
 
 .sasoi-back-confirm-button:active{
+
+  transform:
+    scale(0.94);
+
+}
+
+/* =================================
+   ハイスコアリセット確認モーダル
+   ゲーム画面内だけを覆う
+================================= */
+
+.sasoi-highscore-reset-modal{
+
+  position:absolute;
+
+  top:40px;
+
+  left:0;
+
+  width:100%;
+
+  height:180px;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:
+    rgba(
+      20,
+      30,
+      28,
+      0.42
+    );
+
+  z-index:9999;
+
+}
+
+
+/* =================================
+   モーダル本体
+================================= */
+
+.sasoi-highscore-reset-panel{
+
+  width:240px;
+
+  box-sizing:border-box;
+
+  padding:
+    15px
+    14px
+    13px;
+
+  border-radius:12px;
+
+  background:
+
+    linear-gradient(
+      to bottom,
+
+      rgba(255,255,255,0.98) 0%,
+
+      rgba(244,240,225,0.96) 100%
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,0.95);
+
+  box-shadow:
+
+    0 3px 14px
+    rgba(
+      20,
+      40,
+      35,
+      0.30
+    );
+
+  text-align:center;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+}
+
+
+/* =================================
+   タイトル
+================================= */
+
+.sasoi-highscore-reset-title{
+
+  font-size:15px;
+
+  font-weight:bold;
+
+  color:#294C60;
+
+  margin-bottom:7px;
+
+}
+
+
+/* =================================
+   説明
+================================= */
+
+.sasoi-highscore-reset-message{
+
+  font-size:11px;
+
+  line-height:1.5;
+
+  color:#17252B;
+
+  margin-bottom:12px;
+
+}
+
+
+/* =================================
+   ボタンエリア
+================================= */
+
+.sasoi-highscore-reset-buttons{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:8px;
+
+}
+
+
+/* =================================
+   ボタン共通
+================================= */
+
+.sasoi-highscore-reset-button{
+
+  width:82px;
+
+  height:30px;
+
+  padding:0;
+
+  border:none;
+
+  border-radius:15px;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+/* =================================
+   続ける
+================================= */
+
+.sasoi-highscore-reset-button.cancel{
+
+  background:#E8E4D8;
+
+  color:#294C60;
+
+  box-shadow:
+    0 1px 3px
+    rgba(
+      20,
+      55,
+      50,
+      0.16
+    );
+
+}
+
+
+/* =================================
+   リセット
+================================= */
+
+.sasoi-highscore-reset-button.ok{
+
+  background:#294C60;
+
+  color:#FFFFFF;
+
+  box-shadow:
+    0 1px 3px
+    rgba(
+      20,
+      55,
+      50,
+      0.22
+    );
+
+}
+
+
+/* =================================
+   押したとき
+================================= */
+
+.sasoi-highscore-reset-button:active{
 
   transform:
     scale(0.94);
@@ -5057,6 +5321,68 @@ area.innerHTML = `
 
 <!-- ======================= 譜面選択画面へ戻る確認モーダル　======================= -->
 
+<!-- ======================= ハイスコアリセット確認モーダル　======================= -->
+
+<div
+  id="sasoiHighScoreResetModal"
+  class="sasoi-highscore-reset-modal"
+>
+
+  <div
+    class="sasoi-highscore-reset-panel"
+  >
+
+    <!-- タイトル -->
+
+    <div
+      class="sasoi-highscore-reset-title"
+    >
+      ハイスコアをリセット
+    </div>
+
+
+    <!-- 説明 -->
+
+    <div
+      class="sasoi-highscore-reset-message"
+    >
+      ハイスコアを0に戻しますか？
+    </div>
+
+
+    <!-- ボタン -->
+
+    <div
+      class="sasoi-highscore-reset-buttons"
+    >
+
+      <!-- 続ける -->
+
+      <button
+        id="sasoiHighScoreResetCancel"
+        class="sasoi-highscore-reset-button cancel"
+      >
+        続ける
+      </button>
+
+
+      <!-- リセット -->
+
+      <button
+        id="sasoiHighScoreResetOK"
+        class="sasoi-highscore-reset-button ok"
+      >
+        リセット
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ======================= ハイスコアリセット確認モーダル　======================= -->
+
 <!-- =================================
      ゲーム画面
 ================================= -->
@@ -5099,26 +5425,31 @@ area.innerHTML = `
 </div>
 
 
-  <!-- =================================
-       興味ゲージ数値表示
-  ================================= -->
+<!-- =================================
+     興味ゲージ数値表示
+================================= -->
 
-  <div class="sasoi-gauge-values">
+<div class="sasoi-gauge-values">
 
-    <!-- 今回の加算値 -->
-    <span
-      id="sasoiGaugeAdd"
-      class="sasoi-gauge-add"
-    ></span>
+  <!-- ハイスコア -->
+  <span
+    id="sasoiGaugeHighScore"
+    class="sasoi-gauge-highscore"
+  >HIGH 0</span>
 
-    <!-- 現在の合計値 -->
-    <span
-      id="sasoiGaugeTotal"
-      class="sasoi-gauge-total"
-    >0</span>
+  <!-- 今回の加算値 -->
+  <span
+    id="sasoiGaugeAdd"
+    class="sasoi-gauge-add"
+  ></span>
 
-  </div>
+  <!-- 現在の合計値 -->
+  <span
+    id="sasoiGaugeTotal"
+    class="sasoi-gauge-total"
+  >0</span>
 
+</div>
 
 <!-- =================================
      譜面名
@@ -5291,6 +5622,12 @@ updateSasoiScoreSelectDisplay();
 
 updateSasoiGameScoreDisplay();
 
+
+// ------------------------------------
+// ハイスコアを更新
+// ------------------------------------
+
+updateSasoiGaugeHighScoreDisplay();
 
 // ==========================================
 // 譜面選択
@@ -6316,6 +6653,469 @@ console.log(
 
 }
 
+// ==========================================
+// 興味ゲージ
+// ハイスコア取得
+// ==========================================
+
+function getSasoiGaugeHighScore(){
+
+  const savedHighScore =
+    localStorage.getItem(
+      "sasoiGaugeHighScore"
+    );
+
+
+  const highScore =
+    Number(savedHighScore);
+
+
+  if(
+    Number.isFinite(highScore) &&
+    highScore > 0
+  ){
+
+    return highScore;
+
+  }
+
+
+  return 0;
+
+}
+
+
+
+// ==========================================
+// 興味ゲージ
+// ハイスコア表示更新
+// ==========================================
+
+function updateSasoiGaugeHighScoreDisplay(){
+
+  const highScoreDisplay =
+    document.getElementById(
+      "sasoiGaugeHighScore"
+    );
+
+
+  if(
+    !highScoreDisplay
+  ){
+
+    return;
+
+  }
+
+
+  const highScore =
+    getSasoiGaugeHighScore();
+
+
+  highScoreDisplay.textContent =
+    "HIGH " + highScore;
+
+}
+
+
+
+// ==========================================
+// 興味ゲージ
+// ハイスコア更新
+// ==========================================
+
+function updateSasoiGaugeHighScore(
+  currentScore
+){
+
+  const score =
+    Number(currentScore);
+
+
+  if(
+    !Number.isFinite(score)
+  ){
+
+    return;
+
+  }
+
+
+  const highScore =
+    getSasoiGaugeHighScore();
+
+
+  // ----------------------------------------
+  // ハイスコア更新
+  // ----------------------------------------
+
+  if(
+    score > highScore
+  ){
+
+    localStorage.setItem(
+      "sasoiGaugeHighScore",
+      String(score)
+    );
+
+  }
+
+
+  // ----------------------------------------
+  // 表示更新
+  // ----------------------------------------
+
+  updateSasoiGaugeHighScoreDisplay();
+
+}
+
+
+// ==========================================
+// ハイスコア
+// ダブルクリックで0にリセット
+// ==========================================
+
+function initSasoiGaugeHighScoreReset(){
+
+  const highScoreDisplay =
+    document.getElementById(
+      "sasoiGaugeHighScore"
+    );
+
+
+  if(
+    !highScoreDisplay
+  ){
+
+    console.log(
+      "ハイスコア表示が見つかりません"
+    );
+
+    return;
+
+  }
+
+
+  // ----------------------------------------
+  // 二重登録防止
+  // ----------------------------------------
+
+  if(
+    highScoreDisplay.dataset.resetReady ===
+    "true"
+  ){
+
+    return;
+
+  }
+
+
+  highScoreDisplay.dataset.resetReady =
+    "true";
+
+
+// ==========================================
+// ハイスコア
+// ダブルクリックで0にリセット
+// ==========================================
+
+let sasoiGaugeHighScoreClickTime =
+  0;
+
+
+// ----------------------------------------
+// ハイスコア表示
+// ----------------------------------------
+
+highScoreDisplay.addEventListener(
+  "click",
+  function(event){
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    // --------------------------------------
+    // 現在時刻
+    // --------------------------------------
+
+    const now =
+      Date.now();
+
+
+    // --------------------------------------
+    // 前回クリックからの時間
+    // --------------------------------------
+
+    const clickInterval =
+      now -
+      sasoiGaugeHighScoreClickTime;
+
+
+    console.log(
+      "★ ハイスコアをクリックしました",
+      "間隔:",
+      clickInterval,
+      "ms"
+    );
+
+
+    // --------------------------------------
+    // ダブルクリック判定
+    // --------------------------------------
+    //
+    // 500ms以内に2回クリックされたら
+    // ダブルクリックと判定する。
+    //
+    // --------------------------------------
+
+if(
+  clickInterval > 0 &&
+  clickInterval <= 500
+){
+
+  console.log(
+    "★ ハイスコアのダブルクリックを検出"
+  );
+
+
+  // --------------------------------------
+  // ハイスコアリセット確認モーダルを表示
+  // --------------------------------------
+
+  const modal =
+    document.getElementById(
+      "sasoiHighScoreResetModal"
+    );
+
+
+  if(
+    modal
+  ){
+
+    modal.style.display =
+      "flex";
+
+  }
+
+
+  // --------------------------------------
+  // 次回クリック用にリセット
+  // --------------------------------------
+
+  sasoiGaugeHighScoreClickTime =
+    0;
+
+
+  return;
+
+}
+
+
+    // --------------------------------------
+    // 今回のクリック時刻を保存
+    // --------------------------------------
+
+    sasoiGaugeHighScoreClickTime =
+      now;
+
+  }
+);
+
+}
+
+// ==========================================
+// ハイスコアリセット確認モーダル
+// 「続ける」
+// ==========================================
+
+const sasoiHighScoreResetCancel =
+  document.getElementById(
+    "sasoiHighScoreResetCancel"
+  );
+
+
+if(
+  sasoiHighScoreResetCancel
+){
+
+  sasoiHighScoreResetCancel.onclick =
+    function(event){
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+
+      const modal =
+        document.getElementById(
+          "sasoiHighScoreResetModal"
+        );
+
+
+      if(
+        modal
+      ){
+
+        modal.style.display =
+          "none";
+
+      }
+
+
+      console.log(
+        "★ ハイスコアリセットをキャンセルしました"
+      );
+
+    };
+
+}
+
+
+
+// ==========================================
+// ハイスコアリセット確認モーダル
+// 「リセット」
+// ==========================================
+
+const sasoiHighScoreResetOK =
+  document.getElementById(
+    "sasoiHighScoreResetOK"
+  );
+
+
+if(
+  sasoiHighScoreResetOK
+){
+
+  sasoiHighScoreResetOK.onclick =
+    function(event){
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+
+      // --------------------------------------
+      // ハイスコアを0にする
+      // --------------------------------------
+
+      localStorage.setItem(
+        "sasoiGaugeHighScore",
+        "0"
+      );
+
+
+      // --------------------------------------
+      // 表示を0にする
+      // --------------------------------------
+
+      const highScoreDisplay =
+        document.getElementById(
+          "sasoiGaugeHighScore"
+        );
+
+
+      if(
+        highScoreDisplay
+      ){
+
+        highScoreDisplay.textContent =
+          "HIGH 0";
+
+      }
+
+
+      // --------------------------------------
+      // モーダルを閉じる
+      // --------------------------------------
+
+      const modal =
+        document.getElementById(
+          "sasoiHighScoreResetModal"
+        );
+
+
+      if(
+        modal
+      ){
+
+        modal.style.display =
+          "none";
+
+      }
+
+
+      // --------------------------------------
+      // 確認ログ
+      // --------------------------------------
+
+      console.log(
+        "★ ハイスコアを0にリセットしました"
+      );
+
+    };
+
+}
+
+// ==========================================
+// ハイスコアリセット確認モーダル
+// モーダル外をタップしたら閉じる
+// ==========================================
+
+const sasoiHighScoreResetModal =
+  document.getElementById(
+    "sasoiHighScoreResetModal"
+  );
+
+
+const sasoiHighScoreResetPanel =
+  document.querySelector(
+    ".sasoi-highscore-reset-panel"
+  );
+
+
+if(
+  sasoiHighScoreResetModal
+){
+
+  sasoiHighScoreResetModal.addEventListener(
+    "click",
+    function(event){
+
+      // --------------------------------------
+      // モーダル本体をタップした場合
+      // --------------------------------------
+
+      if(
+        sasoiHighScoreResetPanel &&
+        sasoiHighScoreResetPanel.contains(
+          event.target
+        )
+      ){
+
+        return;
+
+      }
+
+
+      // --------------------------------------
+      // モーダル外
+      // --------------------------------------
+
+      sasoiHighScoreResetModal.style.display =
+        "none";
+
+
+      console.log(
+        "★ ハイスコアリセットモーダルを閉じました"
+      );
+
+    }
+  );
+
+}
 
 // =================================
 // 誘い成功による興味ゲージ加算
@@ -6390,6 +7190,15 @@ function addSasoiInterest(judgement){
 
   sasoiInterestGauge +=
     addValue;
+
+
+  // ---------------------------------
+  // ハイスコア更新
+  // ---------------------------------
+
+  updateSasoiGaugeHighScore(
+    sasoiInterestGauge
+  );
 
 
   // ---------------------------------
@@ -10834,6 +11643,12 @@ document
 .getElementById("sasoiGame")
 .style.display="block";
 
+// ---------------------------------
+// ハイスコア
+// ダブルクリックリセットを準備
+// ---------------------------------
+
+initSasoiGaugeHighScoreReset();
 
 // ---------------------------------
 // プレイ状態を完全リセット
@@ -11368,6 +12183,56 @@ if(
       }
 
 
+      // ======================================
+      // 譜面選択アニメーションを完全リセット
+      // ======================================
+
+      const selectText =
+        document.querySelector(
+          ".sasoi-score-select-text"
+        );
+
+
+      if(
+        selectText
+      ){
+
+        // ------------------------------------
+        // アニメーション用クラスをすべて削除
+        // ------------------------------------
+
+        selectText.classList.remove(
+          "is-sliding",
+          "slide-out-up",
+          "slide-in-from-down",
+          "slide-out-down",
+          "slide-in-from-up",
+          "slide-from-bottom",
+          "slide-from-top"
+        );
+
+
+        // ------------------------------------
+        // animation状態も解除
+        // ------------------------------------
+
+        selectText.style.animation =
+          "none";
+
+
+        // ------------------------------------
+        // 次回の譜面選択時に
+        // アニメーションできる状態へ戻す
+        // ------------------------------------
+
+        void selectText.offsetWidth;
+
+        selectText.style.animation =
+          "";
+
+      }
+
+
       // --------------------------------------
       // ゲーム画面を非表示
       // --------------------------------------
@@ -11441,10 +12306,6 @@ if(
       // --------------------------------------
       // モーダル本体をタップした場合
       // --------------------------------------
-      //
-      // モーダル本体では閉じない
-      //
-      // --------------------------------------
 
       if(
         sasoiBackConfirmPanel &&
@@ -11471,9 +12332,7 @@ if(
 
 }
 
-
 }
-
 
 // -------------------------------
 // 起動
