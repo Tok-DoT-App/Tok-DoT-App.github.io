@@ -2626,7 +2626,7 @@ style.textContent = `
     calc(39px + 13px);
 
   top:
-    29px;
+    31px;
 
   transform:
     translateX(-50%);
@@ -2963,6 +2963,190 @@ style.textContent = `
 
 }
 
+/* ==========================================
+   HIT時 釣果表示
+========================================== */
+
+.sasoi-catch-result{
+
+  position:
+    absolute;
+
+  left:
+    calc(39px + 13px);
+
+  top:
+    7px;
+
+  transform:
+    translateX(-50%);
+
+  z-index:
+    110;
+
+  min-width:
+    80px;
+
+  height:
+    21px;
+
+  padding:
+    0 9px;
+
+  box-sizing:
+    border-box;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 220, 100, 0.99),
+      rgba(220, 135, 15, 0.99)
+    );
+
+  border:
+    1px solid
+    rgba(255, 245, 190, 0.95);
+
+  border-radius:
+    6px;
+
+  box-shadow:
+    0 2px 6px
+    rgba(0,0,0,0.45),
+
+    0 0 8px
+    rgba(255,190,45,0.45),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.55);
+
+  color:
+    #FFFBE8;
+
+  font-size:
+    13px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    0.5px;
+
+  line-height:
+    1;
+
+  text-align:
+    center;
+
+  white-space:
+    nowrap;
+
+  pointer-events:
+    none;
+
+  text-shadow:
+    0 1px 2px
+    rgba(90,45,0,0.8);
+
+}
+
+/* ==========================================
+   1匹ゲット!
+========================================== */
+
+.sasoi-catch-result.single{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(80, 190, 110, 0.99),
+      rgba(25, 110, 55, 0.99)
+    );
+
+  border-color:
+    rgba(190, 255, 205, 0.95);
+
+  box-shadow:
+    0 2px 6px
+    rgba(0,0,0,0.45),
+
+    0 0 8px
+    rgba(70,220,110,0.45),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.55);
+
+}
+
+
+/* ==========================================
+   ダブル!!
+========================================== */
+
+.sasoi-catch-result.double{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(70, 150, 235, 0.99),
+      rgba(25, 75, 165, 0.99)
+    );
+
+  border-color:
+    rgba(190, 225, 255, 0.95);
+
+  box-shadow:
+    0 2px 6px
+    rgba(0,0,0,0.45),
+
+    0 0 8px
+    rgba(70,160,255,0.50),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.55);
+
+}
+
+
+/* ==========================================
+   トリプル!!!
+========================================== */
+
+.sasoi-catch-result.triple{
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(190, 90, 235, 0.99),
+      rgba(105, 35, 155, 0.99)
+    );
+
+  border-color:
+    rgba(240, 205, 255, 0.98);
+
+  box-shadow:
+    0 2px 6px
+    rgba(0,0,0,0.45),
+
+    0 0 9px
+    rgba(200,100,255,0.60),
+
+    0 0 16px
+    rgba(180,70,255,0.30),
+
+    inset 0 1px 0
+    rgba(255,255,255,0.60);
+
+}
 
 /* =================================
    譜面名
@@ -4445,6 +4629,17 @@ let sasoiResult = null;
 // 誘いが成功するほど上昇
 let sasoiInterestGauge = 0;
 
+// =================================
+// ◎ 釣果合計
+// =================================
+//
+// 現在のプレイで釣れた魚の合計匹数。
+// 1匹 / 2匹 / 3匹を内部的に加算する。
+// =================================
+
+let sasoiCatchCount =
+  0;
+
 // ゲージ最大値
 const SASOI_INTEREST_MAX = 200;
 
@@ -5524,6 +5719,11 @@ area.innerHTML = `
   </div>
 
 </div>
+
+<div
+  id="sasoiActionMessage"
+  class="sasoi-action-message"
+></div>
 
 <div
   id="sasoiJudgementDisplay"
@@ -10559,6 +10759,8 @@ function checkSasoiBiteAction(){
       "HIT!!"
     );
 
+showSasoiCatchResult();
+
 playSasoiFishOnShake();
 
     console.log(
@@ -10661,6 +10863,8 @@ playSasoiFishOnShake();
       "HIT!!"
     );
 
+showSasoiCatchResult();
+
 playSasoiFishOnShake();
 
     console.log(
@@ -10762,6 +10966,8 @@ playSasoiFishOnShake();
     showSasoiActionJudgement(
       "HIT!!"
     );
+
+showSasoiCatchResult();
 
 playSasoiFishOnShake();
 
@@ -11694,6 +11900,29 @@ if(
 
 }
 
+// ---------------------------------
+// 前回の釣果表示をリセット
+// ---------------------------------
+
+const oldCatchResult =
+  document.querySelector(
+    ".sasoi-catch-result"
+  );
+
+
+if(
+  oldCatchResult
+){
+
+  oldCatchResult.remove();
+
+}
+
+
+
+hideSasoiActionMessage();
+
+
 
 // ---------------------------------
 // 譜面・プレイ状態
@@ -11737,6 +11966,19 @@ resetSasoiInterestGauge();
 
 console.log(
   "興味ゲージリセット：新しいプレイ開始"
+);
+
+// ---------------------------------
+// 釣果合計リセット
+// ---------------------------------
+
+sasoiCatchCount =
+  0;
+
+console.log(
+  "釣果合計リセット：新しいプレイ開始",
+  sasoiCatchCount,
+  "匹"
 );
 
 // ---------------------------------
@@ -12525,6 +12767,475 @@ function showSasoiPerfectRipple(){
   );
 
 }
+
+// ------------------　ワカサギゲット!!表示共通関数　------------------
+
+function showSasoiActionMessage(message){
+
+  const display =
+    document.getElementById(
+      "sasoiActionMessage"
+    );
+
+
+  if(
+    !display
+  ){
+
+    return;
+
+  }
+
+
+  display.textContent =
+    message;
+
+
+  display.style.display =
+    "flex";
+
+}
+
+// ------------------　ワカサギゲット!!表示を消す共通関数　------------------
+
+function hideSasoiActionMessage(){
+
+  const display =
+    document.getElementById(
+      "sasoiActionMessage"
+    );
+
+
+  if(
+    !display
+  ){
+
+    return;
+
+  }
+
+
+  display.textContent =
+    "";
+
+  display.style.display =
+    "none";
+
+}
+
+// =================================
+// ◎ HIT時の釣果表示
+// =================================
+//
+// 興味ゲージ合計値に応じて
+//
+// 200以上 → トリプル!!!
+// 190以上 → ダブル!!
+// 160以上 → 1匹ゲット!
+//
+// を判定表示の真上に表示する。
+//
+// LOSTではこの関数を呼ばない。
+// =================================
+
+function showSasoiCatchResult(){
+
+  // =================================
+  // 興味ゲージ合計表示を取得
+  // =================================
+
+  const totalDisplay =
+    document.getElementById(
+      "sasoiGaugeTotal"
+    );
+
+
+  // =================================
+  // ゲージ合計が存在しない
+  // =================================
+
+  if(
+    !totalDisplay
+  ){
+
+    console.log(
+      "🎣 釣果表示失敗：sasoiGaugeTotalが見つかりません"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // 画面に表示されている合計値を取得
+  // =================================
+
+  const gauge =
+    parseInt(
+      totalDisplay.textContent,
+      10
+    ) || 0;
+
+
+  console.log(
+    "🎣 HIT釣果表示判定",
+    "sasoiGaugeTotal:",
+    gauge,
+    "表示内容:",
+    totalDisplay.textContent
+  );
+
+
+  // =================================
+  // 160未満
+  // =================================
+
+  if(
+    gauge <
+    160
+  ){
+
+    console.log(
+      "🎣 釣果表示なし：ゲージ160未満",
+      gauge
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // 表示文字
+  // =================================
+
+  let resultText =
+    "";
+
+
+  // =================================
+  // 200以上
+  // =================================
+
+  if(
+    gauge >=
+    200
+  ){
+
+    resultText =
+      "トリプル!!!";
+
+  }
+
+
+  // =================================
+  // 190以上
+  // =================================
+
+  else if(
+    gauge >=
+    190
+  ){
+
+    resultText =
+      "ダブル!!";
+
+  }
+
+
+  // =================================
+  // 160以上
+  // =================================
+
+  else if(
+    gauge >=
+    160
+  ){
+
+    resultText =
+      "1匹ゲット!";
+
+  }
+
+
+  // =================================
+  // 判定表示を取得
+  // =================================
+
+  const judgement =
+    document.getElementById(
+      "sasoiJudgementDisplay"
+    );
+
+
+  if(
+    !judgement
+  ){
+
+    console.log(
+      "🎣 釣果表示失敗：sasoiJudgementDisplayが見つかりません"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // 既存の釣果表示を削除
+  // =================================
+
+  const oldResult =
+    document.querySelector(
+      ".sasoi-catch-result"
+    );
+
+
+  if(
+    oldResult
+  ){
+
+    oldResult.remove();
+
+  }
+
+
+  // =================================
+  // 新しい表示を作成
+  // =================================
+
+  const result =
+    document.createElement(
+      "div"
+    );
+
+
+// =================================
+// ◎ 釣果結果ごとのクラスを設定
+// =================================
+
+result.className =
+  "sasoi-catch-result";
+
+
+if(
+  resultText ===
+  "1匹ゲット!"
+){
+
+  result.classList.add(
+    "single"
+  );
+
+}
+else if(
+  resultText ===
+  "ダブル!!"
+){
+
+  result.classList.add(
+    "double"
+  );
+
+}
+else if(
+  resultText ===
+  "トリプル!!!"
+){
+
+  result.classList.add(
+    "triple"
+  );
+
+}
+
+
+  result.textContent =
+    resultText;
+
+
+  // =================================
+  // 判定表示と同じ親へ追加
+  // =================================
+
+  judgement.parentElement.appendChild(
+    result
+  );
+
+
+  // =================================
+  // デバッグ
+  // =================================
+
+  console.log(
+    "🎣 釣果表示:",
+    resultText,
+    "ゲージ合計:",
+    gauge
+  );
+
+// =================================
+// ◎ 今回の釣果数ログ
+// =================================
+//
+// まだ sasoiCatchCount への加算は行わない。
+// 今回のHITが何匹相当なのかだけ確認する。
+// =================================
+
+let currentCatchCount =
+  0;
+
+
+if(
+  gauge >=
+  200
+){
+
+  currentCatchCount =
+    3;
+
+}
+else if(
+  gauge >=
+  190
+){
+
+  currentCatchCount =
+    2;
+
+}
+else if(
+  gauge >=
+  160
+){
+
+  currentCatchCount =
+    1;
+
+}
+
+
+console.log(
+  "🎣 今回の釣果:",
+  currentCatchCount,
+  "匹"
+);
+
+
+}
+
+// ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
+
+function resetSasoiToMenu(){
+
+  // --------------------------------------
+  // 現在のプレイを停止
+  // --------------------------------------
+
+  stopSasoiCheck();
+
+
+  // --------------------------------------
+  // プレイタイマーを停止
+  // --------------------------------------
+
+  if(
+    sasoiPlayTimer
+  ){
+
+    clearTimeout(
+      sasoiPlayTimer
+    );
+
+    sasoiPlayTimer =
+      null;
+
+  }
+
+
+  // --------------------------------------
+  // 譜面選択アニメーションを完全リセット
+  // --------------------------------------
+
+  const selectText =
+    document.querySelector(
+      ".sasoi-score-select-text"
+    );
+
+
+  if(
+    selectText
+  ){
+
+    selectText.classList.remove(
+      "is-sliding",
+      "slide-out-up",
+      "slide-in-from-down",
+      "slide-out-down",
+      "slide-in-from-up",
+      "slide-from-bottom",
+      "slide-from-top"
+    );
+
+
+    selectText.style.animation =
+      "none";
+
+
+    void selectText.offsetWidth;
+
+
+    selectText.style.animation =
+      "";
+
+  }
+
+
+  // --------------------------------------
+  // 誘いの名人ゲーム画面を非表示
+  // --------------------------------------
+
+  const game =
+    document.getElementById(
+      "sasoiGame"
+    );
+
+
+  if(
+    game
+  ){
+
+    game.style.display =
+      "none";
+
+  }
+
+
+  // --------------------------------------
+  // 誘いの名人初期画面を表示
+  // --------------------------------------
+
+  const menu =
+    document.getElementById(
+      "sasoiMenu"
+    );
+
+
+  if(
+    menu
+  ){
+
+    menu.style.display =
+      "flex";
+
+  }
+
+}
+
+// ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
+
+
 
 // ---------------------------------　JS終了地点　---------------------------------
 

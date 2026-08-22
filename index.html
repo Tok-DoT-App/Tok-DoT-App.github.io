@@ -10160,53 +10160,187 @@ if (
   doubleCounterBackModal
 ) {
 
- doubleCounterBackOk.addEventListener(
-  "click",
-  function(event){
+  doubleCounterBackOk.addEventListener(
+    "click",
+    function(event){
 
-    event.preventDefault();
+      event.preventDefault();
 
-    event.stopPropagation();
-
-
-    /* -------------------------------
-       モーダルを閉じる
-    ------------------------------- */
-
-    doubleCounterBackModal.classList.remove(
-      "active"
-    );
+      event.stopPropagation();
 
 
-    /* -------------------------------
-       誘いの名人側も
-       「戻る」と同じ処理を実行
-    ------------------------------- */
+      /* -------------------------------
+         ホーム確認モーダルを閉じる
+      ------------------------------- */
 
-    const sasoiBackBtn =
-      document.getElementById("sasoiBackBtn");
+      doubleCounterBackModal.classList.remove(
+        "active"
+      );
 
 
-    if(
-      sasoiBackBtn
-    ){
+      /* =================================
+         誘いの名人を完全終了
+         ※戻るモーダルは表示しない
+      ================================= */
 
-      sasoiBackBtn.click();
+// ---------------------------------
+// 誘いの名人の戻る確認モーダルを閉じる
+// ---------------------------------
+
+const sasoiBackConfirmModal =
+  document.getElementById(
+    "sasoiBackConfirmModal"
+  );
+
+
+if(
+  sasoiBackConfirmModal
+){
+
+  sasoiBackConfirmModal.style.display =
+    "none";
+
+}
+
+// ---------------------------------
+// 誘いの名人
+// ハイスコアリセット確認モーダルを閉じる
+// ---------------------------------
+
+const sasoiHighScoreResetModal =
+  document.getElementById(
+    "sasoiHighScoreResetModal"
+  );
+
+
+if(
+  sasoiHighScoreResetModal
+){
+
+  sasoiHighScoreResetModal.style.display =
+    "none";
+
+}
+
+      // ---------------------------------
+      // プレイ停止
+      // ---------------------------------
+
+      if(
+        typeof stopSasoiCheck ===
+        "function"
+      ){
+
+        stopSasoiCheck();
+
+      }
+
+
+      // ---------------------------------
+      // プレイタイマー停止
+      // ---------------------------------
+
+      if(
+        typeof sasoiPlayTimer !==
+        "undefined" &&
+        sasoiPlayTimer
+      ){
+
+        clearTimeout(
+          sasoiPlayTimer
+        );
+
+        sasoiPlayTimer =
+          null;
+
+      }
+
+
+      // ---------------------------------
+      // 判定アニメーションループ停止
+      // ---------------------------------
+
+      if(
+        typeof sasoiAnimationFrame !==
+        "undefined" &&
+        sasoiAnimationFrame !== null
+      ){
+
+        cancelAnimationFrame(
+          sasoiAnimationFrame
+        );
+
+        sasoiAnimationFrame =
+          null;
+
+      }
+
+
+      // ---------------------------------
+      // 誘いの名人をプレイ中ではない状態へ
+      // ---------------------------------
+
+      if(
+        typeof sasoiPlaying !==
+        "undefined"
+      ){
+
+        sasoiPlaying =
+          false;
+
+      }
+
+
+      // ---------------------------------
+      // 誘いの名人のゲーム画面を非表示
+      // ---------------------------------
+
+      const sasoiGame =
+        document.getElementById(
+          "sasoiGame"
+        );
+
+
+      if(
+        sasoiGame
+      ){
+
+        sasoiGame.style.display =
+          "none";
+
+      }
+
+
+      // ---------------------------------
+      // 誘いの名人の初期画面を表示
+      // ---------------------------------
+
+      const sasoiMenu =
+        document.getElementById(
+          "sasoiMenu"
+        );
+
+
+      if(
+        sasoiMenu
+      ){
+
+        sasoiMenu.style.display =
+          "flex";
+
+      }
+
+
+      // =================================
+      // ホーム画面へ戻る
+      // =================================
+
+      showScreen(
+        "entryScreen"
+      );
 
     }
-
-
-    /* -------------------------------
-       ダブルカウンターを
-       初期画面へ戻す
-    ------------------------------- */
-
-    showScreen(
-      "entryScreen"
-    );
-
-  }
-);
+  );
 
 }
 
