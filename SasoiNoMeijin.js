@@ -1251,7 +1251,7 @@ style.textContent = `
   position:absolute;
 
   left:55%;
-  bottom:2px;
+  bottom:1px;
 
   transform:translateX(-50%);
 
@@ -1308,7 +1308,7 @@ style.textContent = `
   position:absolute;
 
   left:32%;
-  bottom:2px;
+  bottom:1px;
 
   transform:translateX(-50%);
 
@@ -3057,6 +3057,63 @@ style.textContent = `
     0 1px 2px
     rgba(90,45,0,0.8);
 
+
+  /* =================================
+     ★ 5秒待ってからフェードイン
+  ================================= */
+
+  opacity:
+    0;
+
+  animation:
+    sasoiCatchResultFadeIn
+    0.6s
+    ease-out
+    2.4s
+    forwards;
+
+}
+
+
+/* ==========================================
+   釣果表示 フェードイン
+========================================== */
+
+@keyframes sasoiCatchResultFadeIn{
+
+  0%{
+
+    opacity:
+      0;
+
+    transform:
+      translateX(-50%)
+      scale(0.45);
+
+  }
+
+  60%{
+
+    opacity:
+      1;
+
+    transform:
+      translateX(-50%)
+      scale(1.08);
+
+  }
+
+  100%{
+
+    opacity:
+      1;
+
+    transform:
+      translateX(-50%)
+      scale(1);
+
+  }
+
 }
 
 /* ==========================================
@@ -4020,6 +4077,690 @@ style.textContent = `
 }
 
 /* =================================
+   累計釣果ケース
+================================= */
+
+.sasoi-total-catch-display{
+
+  position:
+    absolute;
+
+  left:
+    35%;
+
+  bottom:
+    35px;
+
+  transform:
+    translateX(-50%);
+
+  width:
+    86px;
+
+  height:
+    28px;
+
+  box-sizing:
+    border-box;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    2px;
+
+  /* ---------------------------------
+     水を張ったような内部
+  --------------------------------- */
+
+  background:
+    linear-gradient(
+      180deg,
+      #d9f7ff 0%,
+      #b9e8f2 45%,
+      #9bd3df 100%
+    );
+
+  /* ---------------------------------
+     ケースの縁
+  --------------------------------- */
+
+  border:
+    1px solid
+    rgba(255,255,255,0.65);
+
+  border-radius:
+    9px;
+
+  /* ---------------------------------
+     外側の影＋
+     上から水面へ落ち込む凹み影
+  --------------------------------- */
+
+  box-shadow:
+
+    /* 外側 */
+    0 2px 4px
+    rgba(0,0,0,0.35),
+
+    /* 上端から内側へ入る影 */
+    inset 0 5px 5px
+    rgba(55,105,120,0.32),
+
+    /* 下側の水の明るさ */
+    inset 0 -2px 2px
+    rgba(255,255,255,0.28),
+
+    /* 左右の内側 */
+    inset 2px 0 3px
+    rgba(255,255,255,0.18),
+
+    inset -2px 0 3px
+    rgba(70,120,135,0.12);
+
+  color:
+    #ffffff;
+
+  font-family:
+    "Yuji Boku",
+    serif;
+
+  pointer-events:
+    none;
+
+
+}
+
+
+/* =================================
+   釣果数
+================================= */
+
+.sasoi-total-catch-count{
+
+  min-width:
+    22px;
+
+  text-align:
+    right;
+
+  font-size:
+    16px;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+
+  color:
+    #26343a;
+
+  text-shadow:
+    0 1px 1px
+    rgba(255,255,255,0.65);
+
+  position:
+    relative;
+
+  left:
+    16px;
+
+}
+
+
+/* =================================
+   匹
+================================= */
+
+.sasoi-total-catch-unit{
+
+  font-size:
+    8px;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+
+  color:
+    #26343a;
+
+  text-shadow:
+    0 1px 1px
+    rgba(255,255,255,0.55);
+
+  position:
+    relative;
+
+  top:
+    4px;
+
+  left:
+    16px;
+
+}
+
+/* =================================
+   ワカサギ外し
+   ケース左上から内側へ
+================================= */
+
+.sasoi-wakasagi-hazushi{
+
+  position:
+    absolute;
+
+  left:
+    8px;
+
+  top:
+    -5px;
+
+  width:
+    18px;
+
+  height:
+    22px;
+
+  z-index:
+    5;
+
+  pointer-events:
+    none;
+
+}
+
+
+/* =================================
+   ワカサギ外し
+   根元
+================================= */
+
+.sasoi-wakasagi-hazushi-base{
+
+  position:
+    absolute;
+
+  left:
+    0;
+
+  top:
+    0;
+
+  width:
+    16px;
+
+  height:
+    5px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #4a4f52,
+      #1f2325
+    );
+
+  border:
+    1px solid
+    rgba(20,25,28,0.9);
+
+  border-radius:
+    2px;
+
+  box-shadow:
+    0 1px 2px
+    rgba(0,0,0,0.5);
+
+}
+
+
+/* =================================
+   ワカサギ外し
+   下方向へ伸びる3本アーム
+================================= */
+
+.sasoi-wakasagi-hazushi-arm{
+
+  position:
+    absolute;
+
+  left:
+    1px;
+
+  top:
+    3px;
+
+  width:
+    4px;
+
+  height:
+    19px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #707a7f,
+      #e8edef,
+      #788287
+    );
+
+  border-radius:
+    2px;
+
+  box-shadow:
+    1px 1px 2px
+    rgba(0,0,0,0.4);
+
+}
+
+
+/* =================================
+   2本目
+================================= */
+
+.sasoi-wakasagi-hazushi-arm::before{
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    5px;
+
+  top:
+    0;
+
+  width:
+    4px;
+
+  height:
+    19px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #707a7f,
+      #e8edef,
+      #788287
+    );
+
+  border-radius:
+    2px;
+
+  box-shadow:
+    1px 1px 2px
+    rgba(0,0,0,0.4);
+
+}
+
+
+/* =================================
+   3本目
+================================= */
+
+.sasoi-wakasagi-hazushi-arm::after{
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  left:
+    11px;
+
+  top:
+    0;
+
+  width:
+    4px;
+
+  height:
+    19px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #707a7f,
+      #e8edef,
+      #788287
+    );
+
+  border-radius:
+    2px;
+
+  box-shadow:
+    1px 1px 2px
+    rgba(0,0,0,0.4);
+
+}
+
+/* =================================
+   釣果ケース内
+   ワカサギ投入アニメーション
+================================= */
+
+.sasoi-catch-fish{
+
+  position:
+    absolute;
+
+  width:
+    28px;
+
+  height:
+    auto;
+
+  left:
+    50%;
+
+  top:
+    -22px;
+
+  transform:
+    translateX(-50%)
+    rotate(-20deg);
+
+  z-index:
+    5;
+
+  pointer-events:
+    none;
+
+  filter:
+    drop-shadow(
+      1px 2px 2px
+      rgba(0,0,0,0.35)
+    );
+
+  animation:
+    sasoiFishPichipichi
+    900ms
+    ease-out
+    forwards;
+
+}
+
+
+/* =================================
+   ワカサギ
+   頭をほぼ固定して
+   尻尾を手前・奥へピチピチ
+================================= */
+
+@keyframes sasoiFishPichipichi{
+
+  0%{
+
+    top:
+      -24px;
+
+    transform:
+      translateX(-50%)
+      rotate(0deg)
+      scaleX(1);
+
+    opacity:
+      0;
+
+  }
+
+
+  8%{
+
+    opacity:
+      1;
+
+  }
+
+
+  /* -----------------------------
+     着水直前
+  ----------------------------- */
+
+  15%{
+
+    top:
+      -4px;
+
+    transform:
+      translateX(-50%)
+      rotate(4deg)
+      scaleX(1.02);
+
+  }
+
+
+  21%{
+
+    top:
+      0;
+
+    transform:
+      translateX(-50%)
+      rotate(-5deg)
+      scaleX(0.98);
+
+  }
+
+
+  /* -----------------------------
+     ピチピチ
+  ----------------------------- */
+
+  27%{
+
+    top:
+      1px;
+
+    transform:
+      translateX(-50%)
+      rotate(6deg)
+      scaleX(1.03);
+
+  }
+
+
+  33%{
+
+    top:
+      2px;
+
+    transform:
+      translateX(-50%)
+      rotate(-6deg)
+      scaleX(0.97);
+
+  }
+
+
+  39%{
+
+    top:
+      3px;
+
+    transform:
+      translateX(-50%)
+      rotate(5deg)
+      scaleX(1.03);
+
+  }
+
+
+  45%{
+
+    top:
+      4px;
+
+    transform:
+      translateX(-50%)
+      rotate(-5deg)
+      scaleX(0.98);
+
+  }
+
+
+  51%{
+
+    top:
+      5px;
+
+    transform:
+      translateX(-50%)
+      rotate(4deg)
+      scaleX(1.02);
+
+  }
+
+
+  57%{
+
+    top:
+      6px;
+
+    transform:
+      translateX(-50%)
+      rotate(-4deg)
+      scaleX(0.98);
+
+  }
+
+
+  63%{
+
+    top:
+      7px;
+
+    transform:
+      translateX(-50%)
+      rotate(3deg)
+      scaleX(1.02);
+
+  }
+
+
+  70%{
+
+    top:
+      8px;
+
+    transform:
+      translateX(-50%)
+      rotate(-3deg)
+      scaleX(0.99);
+
+  }
+
+
+  77%{
+
+    top:
+      9px;
+
+    transform:
+      translateX(-50%)
+      rotate(2deg)
+      scaleX(1.01);
+
+  }
+
+
+  /* -----------------------------
+     徐々に落ち着く
+  ----------------------------- */
+
+  84%{
+
+    top:
+      11px;
+
+    transform:
+      translateX(-50%)
+      rotate(-2deg)
+      scaleX(1);
+
+  }
+
+
+  91%{
+
+    top:
+      13px;
+
+    transform:
+      translateX(-50%)
+      rotate(1deg)
+      scaleX(1);
+
+  }
+
+
+  96%{
+
+    top:
+      14px;
+
+    transform:
+      translateX(-50%)
+      rotate(-1deg)
+      scaleX(1);
+
+  }
+
+
+  100%{
+
+    top:
+      15px;
+
+    transform:
+      translateX(-50%)
+      rotate(0deg)
+      scaleX(1);
+
+    opacity:
+      1;
+
+  }
+
+}
+
+
+/* =================================
+   頭側を支点にする
+   → 右側（尻尾）が大きく動く
+================================= */
+
+.sasoi-catch-fish{
+
+  transform-origin:
+    10% 50%;
+
+}
+
+
+/* =================================
+   頭側を支点にする
+   → 尻尾側が大きく動く
+================================= */
+
+.sasoi-catch-fish{
+
+  transform-origin:
+    15% 50%;
+
+}
+/* =================================
    譜面選択へ戻る確認モーダル
    ゲーム画面内だけを覆う
 ================================= */
@@ -4463,6 +5204,28 @@ style.textContent = `
 
 document.head.appendChild(style);
 
+// =================================
+// ◎ 現在のプレイの累計釣果
+// =================================
+//
+// 現在はゲーム開始時に0へリセット。
+// HITするたびに
+// 1匹 / 2匹 / 3匹を加算する。
+// =================================
+
+let sasoiTotalCatchCount =
+  0;
+
+// =================================
+// ◎ 累計釣果表示用タイマー
+// =================================
+//
+// HIT表示とは別に、
+// HITから4秒後に累計釣果を反映する。
+// =================================
+
+let sasoiCatchCountTimer =
+  null;
 
 // -------------------------------
 // 初期表示生成
@@ -4476,9 +5239,6 @@ function initSasoiNoMeijin(){
 // =================================
 
 const SASOI_DEBUG_MODE = true;
-
-
-
 
 
 let sasoiTimer = null;
@@ -4622,6 +5382,7 @@ const SASOI_BITE_TOO_LATE = 300;
 let sasoiResult = null;
 
 
+
 // -------------------------------
 // 魚の興味ゲージ
 // -------------------------------
@@ -4629,16 +5390,7 @@ let sasoiResult = null;
 // 誘いが成功するほど上昇
 let sasoiInterestGauge = 0;
 
-// =================================
-// ◎ 釣果合計
-// =================================
-//
-// 現在のプレイで釣れた魚の合計匹数。
-// 1匹 / 2匹 / 3匹を内部的に加算する。
-// =================================
 
-let sasoiCatchCount =
-  0;
 
 // ゲージ最大値
 const SASOI_INTEREST_MAX = 200;
@@ -5737,6 +6489,49 @@ area.innerHTML = `
 >
   リトライ
 </button>
+
+<!-- =================================
+     累計釣果表示
+================================= -->
+
+<div
+  id="sasoiTotalCatchDisplay"
+  class="sasoi-total-catch-display"
+>
+
+  <!-- =================================
+       ワカサギ外し
+  ================================= -->
+
+<div
+  class="sasoi-wakasagi-hazushi"
+>
+
+  <div
+    class="sasoi-wakasagi-hazushi-arm"
+  ></div>
+
+  <div
+    class="sasoi-wakasagi-hazushi-base"
+  ></div>
+
+</div>
+
+
+  <span
+    id="sasoiTotalCatchCount"
+    class="sasoi-total-catch-count"
+  >
+    0
+  </span>
+
+  <span
+    class="sasoi-total-catch-unit"
+  >
+    匹
+  </span>
+
+</div>
 
   <button
   class="sasoi-back-btn"
@@ -11879,6 +12674,27 @@ showSasoiActionJudgement.timer =
   null;
 
 // ---------------------------------
+// 前回の累計釣果反映タイマーを停止
+// ---------------------------------
+//
+// 前回のHITが残っていても、
+// 新しいゲーム開始時には持ち越さない。
+// ---------------------------------
+
+if(
+  sasoiCatchCountTimer
+){
+
+  clearTimeout(
+    sasoiCatchCountTimer
+  );
+
+  sasoiCatchCountTimer =
+    null;
+
+}
+
+// ---------------------------------
 // 判定表示を初期化
 // ---------------------------------
 
@@ -11971,15 +12787,41 @@ console.log(
 // ---------------------------------
 // 釣果合計リセット
 // ---------------------------------
+//
+// 新しいゲーム開始時は0匹から開始。
+// ---------------------------------
 
-sasoiCatchCount =
+sasoiTotalCatchCount =
   0;
 
+
+// ---------------------------------
+// 画面の累計釣果表示もリセット
+// ---------------------------------
+
+const totalCatchCountDisplay =
+  document.getElementById(
+    "sasoiTotalCatchCount"
+  );
+
+
+if(
+  totalCatchCountDisplay
+){
+
+  totalCatchCountDisplay.textContent =
+    "0";
+
+}
+
+
 console.log(
-  "釣果合計リセット：新しいプレイ開始",
-  sasoiCatchCount,
+  "🎣 釣果合計リセット：新しいプレイ開始",
+  sasoiTotalCatchCount,
   "匹"
 );
+
+
 
 // ---------------------------------
 // ◎ BITE状態
@@ -12824,6 +13666,207 @@ function hideSasoiActionMessage(){
 }
 
 // =================================
+// ◎ ワカサギ投入アニメーション
+// =================================
+//
+// 釣果ケースの中へ
+// images/wakasagi.png を
+// 1匹ずつぴちぴち跳ねながら投入する。
+//
+// 魚がケースに入った後に
+// 累計釣果を1匹加算する。
+// =================================
+
+function showSasoiCatchFishAnimation(
+  remainingFishCount
+){
+
+  // ---------------------------------
+  // 釣果ケースを取得
+  // ---------------------------------
+
+  const catchDisplay =
+    document.getElementById(
+      "sasoiTotalCatchDisplay"
+    );
+
+
+  if(
+    !catchDisplay
+  ){
+
+    console.log(
+      "🎣 ワカサギ投入失敗：釣果ケースが見つかりません"
+    );
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // まだ投入する魚がない場合
+  // ---------------------------------
+
+  if(
+    remainingFishCount <=
+    0
+  ){
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // 前回の投入中ワカサギを削除
+  // ---------------------------------
+
+  const oldFish =
+    catchDisplay.querySelector(
+      ".sasoi-catch-fish"
+    );
+
+
+  if(
+    oldFish
+  ){
+
+    oldFish.remove();
+
+  }
+
+
+  // ---------------------------------
+  // ワカサギ画像を作成
+  // ---------------------------------
+
+  const fish =
+    document.createElement(
+      "img"
+    );
+
+
+  fish.className =
+    "sasoi-catch-fish";
+
+
+  fish.src =
+    "images/wakasagi.png";
+
+
+  fish.alt =
+    "";
+
+
+  // ---------------------------------
+  // ケース内へ追加
+  // ---------------------------------
+
+  catchDisplay.appendChild(
+    fish
+  );
+
+
+  // ---------------------------------
+  // アニメーション終了後
+  // ---------------------------------
+
+  fish.addEventListener(
+    "animationend",
+    function(){
+
+      // ---------------------------------
+      // 今回の1匹を累計へ加算
+      // ---------------------------------
+
+      sasoiTotalCatchCount +=
+        1;
+
+
+      // ---------------------------------
+      // 累計釣果表示を取得
+      // ---------------------------------
+
+      const totalCatchCountDisplay =
+        document.getElementById(
+          "sasoiTotalCatchCount"
+        );
+
+
+      // ---------------------------------
+      // 累計釣果表示を更新
+      // ---------------------------------
+
+      if(
+        totalCatchCountDisplay
+      ){
+
+        totalCatchCountDisplay.textContent =
+          sasoiTotalCatchCount;
+
+      }
+
+
+      // ---------------------------------
+      // 累計釣果ログ
+      // ---------------------------------
+
+      console.log(
+        "🎣 ワカサギ投入完了：",
+        sasoiTotalCatchCount,
+        "匹"
+      );
+
+
+      // ---------------------------------
+      // 今回の投入が終了
+      // ---------------------------------
+
+      fish.remove();
+
+
+      // ---------------------------------
+      // 残りの魚がある場合
+      // 少し間を空けて次の魚を投入
+      // ---------------------------------
+
+      const nextRemaining =
+        remainingFishCount -
+        1;
+
+
+      if(
+        nextRemaining >
+        0
+      ){
+
+        setTimeout(
+          function(){
+
+            showSasoiCatchFishAnimation(
+              nextRemaining
+            );
+
+          },
+          120
+        );
+
+      }
+
+    }
+  );
+
+
+  console.log(
+    "🐟 ワカサギ投入開始：残り",
+    remainingFishCount,
+    "匹"
+  );
+
+}
+
+// =================================
 // ◎ HIT時の釣果表示
 // =================================
 //
@@ -12834,6 +13877,16 @@ function hideSasoiActionMessage(){
 // 160以上 → 1匹ゲット!
 //
 // を判定表示の真上に表示する。
+//
+// ---------------------------------
+//
+// ゲット表示
+// → HIT時に表示
+//
+// 累計釣果
+// → HITから4秒後に加算・表示
+//
+// ---------------------------------
 //
 // LOSTではこの関数を呼ばない。
 // =================================
@@ -12915,6 +13968,14 @@ function showSasoiCatchResult(){
 
 
   // =================================
+  // ◎ 今回の釣果数
+  // =================================
+
+  let currentCatchCount =
+    0;
+
+
+  // =================================
   // 200以上
   // =================================
 
@@ -12925,6 +13986,9 @@ function showSasoiCatchResult(){
 
     resultText =
       "トリプル!!!";
+
+    currentCatchCount =
+      3;
 
   }
 
@@ -12941,6 +14005,9 @@ function showSasoiCatchResult(){
     resultText =
       "ダブル!!";
 
+    currentCatchCount =
+      2;
+
   }
 
 
@@ -12955,6 +14022,9 @@ function showSasoiCatchResult(){
 
     resultText =
       "1匹ゲット!";
+
+    currentCatchCount =
+      1;
 
   }
 
@@ -13011,44 +14081,46 @@ function showSasoiCatchResult(){
     );
 
 
-// =================================
-// ◎ 釣果結果ごとのクラスを設定
-// =================================
+  // =================================
+  // ◎ 釣果結果ごとのクラスを設定
+  // =================================
 
-result.className =
-  "sasoi-catch-result";
+  result.className =
+    "sasoi-catch-result";
 
 
-if(
-  resultText ===
-  "1匹ゲット!"
-){
+  if(
+    resultText ===
+    "1匹ゲット!"
+  ){
 
-  result.classList.add(
-    "single"
-  );
+    result.classList.add(
+      "single"
+    );
 
-}
-else if(
-  resultText ===
-  "ダブル!!"
-){
+  }
 
-  result.classList.add(
-    "double"
-  );
+  else if(
+    resultText ===
+    "ダブル!!"
+  ){
 
-}
-else if(
-  resultText ===
-  "トリプル!!!"
-){
+    result.classList.add(
+      "double"
+    );
 
-  result.classList.add(
-    "triple"
-  );
+  }
 
-}
+  else if(
+    resultText ===
+    "トリプル!!!"
+  ){
+
+    result.classList.add(
+      "triple"
+    );
+
+  }
 
 
   result.textContent =
@@ -13075,53 +14147,112 @@ else if(
     gauge
   );
 
+
+  // =================================
+  // ◎ 今回の釣果をログ表示
+  // =================================
+
+  console.log(
+    "🎣 今回の釣果:",
+    currentCatchCount,
+    "匹"
+  );
+
+
+  // =================================
+  // ◎ 前回の累計釣果反映タイマーを停止
+  // =================================
+
+  if(
+    sasoiCatchCountTimer
+  ){
+
+    clearTimeout(
+      sasoiCatchCountTimer
+    );
+
+    sasoiCatchCountTimer =
+      null;
+
+  }
+
+
+  // =================================
+  // ◎ 4秒後に累計釣果を反映
+  // =================================
+  //
+  // ゲット表示はこの時点ですでに表示済み。
+  //
+  // 4秒後にだけ、
+  // ・累計へ加算
+  // ・ケースの数字を更新
+  //
+  // を行う。
+  // =================================
+
+  sasoiCatchCountTimer =
+    setTimeout(
+      function(){
+
 // =================================
-// ◎ 今回の釣果数ログ
+// ◎ ワカサギ投入開始
 // =================================
 //
-// まだ sasoiCatchCount への加算は行わない。
-// 今回のHITが何匹相当なのかだけ確認する。
+// 今回の釣果数を一気に加算せず、
+// 1匹ずつケースへ投入する。
+// 魚がケースに入ったタイミングで
+// 累計釣果を1匹ずつ +1 する。
 // =================================
 
-let currentCatchCount =
-  0;
-
-
-if(
-  gauge >=
-  200
-){
-
-  currentCatchCount =
-    3;
-
-}
-else if(
-  gauge >=
-  190
-){
-
-  currentCatchCount =
-    2;
-
-}
-else if(
-  gauge >=
-  160
-){
-
-  currentCatchCount =
-    1;
-
-}
-
-
-console.log(
-  "🎣 今回の釣果:",
-  currentCatchCount,
-  "匹"
+showSasoiCatchFishAnimation(
+  currentCatchCount
 );
 
+        // ---------------------------------
+        // 累計釣果表示を取得
+        // ---------------------------------
+
+        const totalCatchCountDisplay =
+          document.getElementById(
+            "sasoiTotalCatchCount"
+          );
+
+
+        // ---------------------------------
+        // 累計釣果表示を更新
+        // ---------------------------------
+
+        if(
+          totalCatchCountDisplay
+        ){
+
+          totalCatchCountDisplay.textContent =
+            sasoiTotalCatchCount;
+
+        }
+
+
+        // ---------------------------------
+        // 累計釣果ログ
+        // ---------------------------------
+
+        console.log(
+          "🎣 4秒経過：現在の累計釣果:",
+          sasoiTotalCatchCount,
+          "匹"
+        );
+
+
+        // ---------------------------------
+        // タイマー終了
+        // ---------------------------------
+
+        sasoiCatchCountTimer =
+          null;
+
+      },
+      3500
+    );
 
 }
 
