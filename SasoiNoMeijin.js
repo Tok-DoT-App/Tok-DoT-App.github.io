@@ -134,7 +134,7 @@ style.textContent = `
 
   font-size:42px;
 
-  font-weight:700;
+  font-weight:500;
 
   font-family:
     "Yuji Boku",
@@ -905,7 +905,7 @@ style.textContent = `
 
   font-size:13px;
 
-  font-weight:700;
+  font-weight:600;
 
   color:
     var(--sasoi-score-color);
@@ -923,7 +923,7 @@ style.textContent = `
 
   font-size:14px;
 
-  font-weight:700;
+  font-weight:600;
 
   color:
     var(--sasoi-score-color);
@@ -949,7 +949,7 @@ style.textContent = `
 
   font-size:11px;
 
-  font-weight:700;
+  font-weight:600;
 
   color:
     var(--sasoi-score-color);
@@ -3230,7 +3230,7 @@ style.textContent = `
 
 
 /* =================================
-   譜面番号
+   右上 譜面番号
 ================================= */
 
 .sasoi-score-number{
@@ -3241,15 +3241,15 @@ style.textContent = `
 
   font-family:"Yuji Boku",serif;
 
-  font-weight:bold;
-
   color:#17252B;
+
+  opacity:0;
 
 }
 
 
 /* =================================
-   譜面タイトル
+   右上 譜面タイトル
 ================================= */
 
 .sasoi-score-title{
@@ -3258,46 +3258,9 @@ style.textContent = `
 
   font-family:"Yuji Boku",serif;
 
-  font-weight:bold;
-
   color:#17252B;
 
   white-space:nowrap;
-
-}
-
-/* =================================
-   譜面タイトル
-   中央表示 → 右上移動用
-================================= */
-
-.sasoi-score-title-animation{
-
-  position:absolute;
-
-  left:50%;
-
-  top:90px;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
-
-  font-size:14px;
-
-  font-family:"Yuji Boku",serif;
-
-  font-weight:bold;
-
-  color:#17252B;
-
-  white-space:nowrap;
-
-  pointer-events:none;
-
-  z-index:30;
 
   opacity:0;
 
@@ -3305,14 +3268,20 @@ style.textContent = `
 
 
 /* =================================
-   中央表示フェードイン
+   右上
+   譜面番号＋タイトル
+   同時フェードイン
 ================================= */
 
-.sasoi-score-title-animation{
+.sasoi-score-name.is-visible
+.sasoi-score-number,
+
+.sasoi-score-name.is-visible
+.sasoi-score-title{
 
   animation:
-    sasoiScoreTitleFadeIn
-    0.5s
+    sasoiScoreCornerFadeIn
+    700ms
     ease-out
     forwards;
 
@@ -3320,25 +3289,11 @@ style.textContent = `
 
 
 /* =================================
-   中央 → 右上
+   右上フェードイン
+   一度表示したらそのまま
 ================================= */
 
-.sasoi-score-title-animation.is-moving{
-
-  animation:
-    sasoiScoreTitleMoveToCorner
-    0.8s
-    ease-in-out
-    forwards;
-
-}
-
-
-/* =================================
-   中央表示
-================================= */
-
-@keyframes sasoiScoreTitleFadeIn{
+@keyframes sasoiScoreCornerFadeIn{
 
   from{
 
@@ -3356,38 +3311,159 @@ style.textContent = `
 
 
 /* =================================
-   中央 → 右上移動
+   中央表示
+   譜面番号
 ================================= */
 
-@keyframes sasoiScoreTitleMoveToCorner{
+.sasoi-score-number-animation{
 
-  from{
+  position:absolute;
 
-    opacity:1;
+  left:50%;
 
-    transform:
-      translate(
-        -50%,
-        -50%
-      );
+  top:90px;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  font-size:20px;
+
+  font-family:"Yuji Boku",serif;
+
+  color:#FFFFFF;
+
+  white-space:nowrap;
+
+  pointer-events:none;
+
+  z-index:30;
+
+  opacity:0;
+
+  animation:
+    sasoiScoreNumberCenterShow
+    4000ms
+    ease-in-out
+    forwards;
+
+}
+
+
+/* =================================
+   中央 譜面番号
+   フェードイン
+   ↓
+   表示維持
+   ↓
+   フェードアウト
+================================= */
+
+@keyframes sasoiScoreNumberCenterShow{
+
+  0%{
+
+    opacity:0;
 
   }
 
-  to{
+  33.33%{
 
     opacity:1;
 
-    transform:
-      translate(
-        calc(
-          -50% +
-          var(--sasoi-title-move-x)
-        ),
-        calc(
-          -50% +
-          var(--sasoi-title-move-y)
-        )
-      );
+  }
+
+  66.67%{
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    opacity:0;
+
+  }
+
+}
+
+
+/* =================================
+   中央表示
+   譜面タイトル
+================================= */
+
+.sasoi-score-title-animation{
+
+  position:absolute;
+
+  left:50%;
+
+  top:90px;
+
+  transform:
+    translate(
+      -50%,
+      -50%
+    );
+
+  font-size:20px;
+
+  font-family:"Yuji Boku",serif;
+
+  color:#FFFFFF;
+
+  white-space:nowrap;
+
+  pointer-events:none;
+
+  z-index:30;
+
+  opacity:0;
+
+  animation:
+    sasoiScoreTitleCenterShow
+    6000ms
+    ease-in-out
+    forwards;
+
+}
+
+
+/* =================================
+   中央タイトル
+   ゆっくりフェードイン
+   ↓
+   2秒表示
+   ↓
+   フェードアウト
+================================= */
+
+@keyframes sasoiScoreTitleCenterShow{
+
+  0%{
+
+    opacity:0;
+
+  }
+
+  33.33%{
+
+    opacity:1;
+
+  }
+
+  66.67%{
+
+    opacity:1;
+
+  }
+
+  100%{
+
+    opacity:0;
 
   }
 
@@ -4895,13 +4971,13 @@ style.textContent = `
 
   position:absolute;
 
-  top:40px;
+  top:0px;
 
   left:0;
 
   width:100%;
 
-  height:180px;
+  height:190px;
 
   display:none;
 
@@ -5114,13 +5190,13 @@ style.textContent = `
 
   position:absolute;
 
-  top:40px;
+  top:0px;
 
   left:0;
 
   width:100%;
 
-  height:180px;
+  height:190px;
 
   display:none;
 
@@ -5325,106 +5401,24 @@ style.textContent = `
 }
 
 
-/* =================================
-   譜面タイトル
-   中央表示テスト
-================================= */
-
-.sasoi-score-title-animation{
-
-  position:absolute;
-
-  left:50%;
-
-  top:90px;
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    );
-
-  font-size:18px;
-
-  font-family:"Yuji Boku",serif;
-
-  font-weight:bold;
-
-  color:#17252B;
-
-  white-space:nowrap;
-
-  pointer-events:none;
-
-  z-index:21;
-
-  opacity:1;
-
-  line-height:1.1;
-
-  text-align:center;
-
-}
-
-/* =================================
-   譜面タイトル
-   中央 → 右上
-================================= */
-
-.sasoi-score-title-animation.is-moving{
-
-  animation:
-    sasoiScoreTitleToRight
-    1800ms
-    cubic-bezier(
-      0.22,
-      0.75,
-      0.25,
-      1
-    )
-    forwards;
-
-}
-
-
-/* =================================
-   中央から右上へ移動
-================================= */
-
-@keyframes sasoiScoreTitleToRight{
-
-  0%{
-
-    transform:
-      translate(
-        -50%,
-        -50%
-      );
-
-    opacity:1;
-
-  }
-
-
-  100%{
-
-    transform:
-      translate(
-        112px,
-        -112px
-      );
-
-    opacity:0;
-
-  }
-
-}
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
 `;
 
 document.head.appendChild(style);
+
+// =================================
+// ◎ 釣果投入アニメーション管理
+// =================================
+//
+// プレイごとに番号を更新する。
+// リトライした場合、前回の魚アニメーションを
+// 次のプレイへ持ち越さないために使用する。
+// =================================
+
+let sasoiCatchAnimationSessionId =
+  0;
 
 // =================================
 // ◎ 現在のプレイの累計釣果
@@ -12959,6 +12953,36 @@ document
 .style.display="block";
 
 // ---------------------------------
+// 右上の譜面番号＋タイトル表示をリセット
+// ---------------------------------
+//
+// リトライ時に前回の
+// .is-visible が残らないようにする。
+// 中央タイトル演出が終わるまで
+// 右上は非表示に戻す。
+// ---------------------------------
+
+const sasoiCornerName =
+  document.querySelector(
+    ".sasoi-score-name"
+  );
+
+
+if(
+  sasoiCornerName
+){
+
+  sasoiCornerName.classList.remove(
+    "is-visible"
+  );
+
+  console.log(
+    "🎣 右上の譜面番号＋タイトル表示をリセット"
+  );
+
+}
+
+// ---------------------------------
 // ハイスコア
 // ダブルクリックリセットを準備
 // ---------------------------------
@@ -13049,8 +13073,48 @@ if(
 }
 
 
+// ---------------------------------
+// 前回プレイ途中の
+// ワカサギ投入アニメーションを削除
+// ---------------------------------
+
+const catchDisplay =
+  document.getElementById(
+    "sasoiTotalCatchDisplay"
+  );
+
+
+if(
+  catchDisplay
+){
+
+  const oldCatchFish =
+    catchDisplay.querySelectorAll(
+      ".sasoi-catch-fish"
+    );
+
+
+  oldCatchFish.forEach(
+    function(fish){
+
+      fish.remove();
+
+    }
+  );
+
+
+  console.log(
+    "🎣 前回プレイのワカサギ投入アニメーションをリセット"
+  );
+
+}
+
+
+
 
 hideSasoiActionMessage();
+
+
 
 
 
@@ -13064,6 +13128,17 @@ sasoiPlaySessionId++;
 
 sasoiIndex = 0;
 
+// =================================
+// ◎ 釣果投入アニメーションを
+//    新しいプレイとして開始
+// =================================
+
+sasoiCatchAnimationSessionId++;
+
+console.log(
+  "🎣 釣果投入セッション更新:",
+  sasoiCatchAnimationSessionId
+);
 
 // =================================
 // ◎ 譜面タイトル中央表示テスト
@@ -13287,112 +13362,77 @@ flow.classList.remove("show");
 // ◎ 譜面開始
 // =================================
 //
-// ゲーム開始直後には流さない。
+// 中央タイトルのアニメーションが
+// 実際に終了した瞬間に、
 //
-// タイトルが
-// 中央 → 右上
-// と移動している途中で
-// 譜面を開始する。
+// ・右上の譜面番号＋タイトル表示
+// ・譜面開始
 //
-// タイトル移動開始：800ms
-// 譜面開始：1700ms
-//
-// → タイトル移動開始から900ms後
+// を行う。
 // =================================
 
+showSasoiScoreTitleAnimation(
+  function(){
 
-// ---------------------------------
-// 前回の譜面開始予約を停止
-// ---------------------------------
+    // ---------------------------------
+    // プレイ中でなければ開始しない
+    // ---------------------------------
 
-if(
-  sasoiScoreStartTimer
-){
+    if(
+      !sasoiPlaying
+    ){
 
-  clearTimeout(
-    sasoiScoreStartTimer
-  );
+      return;
 
-  sasoiScoreStartTimer =
-    null;
-
-}
+    }
 
 
-// ---------------------------------
-// 現在のプレイセッションを保存
-// ---------------------------------
+    // ---------------------------------
+    // 右上の譜面番号＋タイトルを表示
+    // ---------------------------------
 
-const scoreStartSessionId =
-  sasoiPlaySessionId;
-
-
-// ---------------------------------
-// 譜面開始予約
-// ---------------------------------
-
-sasoiScoreStartTimer =
-  setTimeout(
-    function(){
-
-      // ---------------------------------
-      // この予約が古いプレイのものなら
-      // 実行しない
-      // ---------------------------------
-
-      if(
-        scoreStartSessionId !==
-        sasoiPlaySessionId
-      ){
-
-        console.log(
-          "🎵 古い譜面開始予約を無効化"
-        );
+    const cornerName =
+      document.querySelector(
+        ".sasoi-score-name"
+      );
 
 
-        return;
+    if(
+      cornerName
+    ){
 
-      }
-
-
-      // ---------------------------------
-      // タイマーをクリア
-      // ---------------------------------
-
-      sasoiScoreStartTimer =
-        null;
-
-
-      // ---------------------------------
-      // プレイ中でなければ開始しない
-      // ---------------------------------
-
-      if(
-        !sasoiPlaying
-      ){
-
-        return;
-
-      }
+      cornerName.classList.add(
+        "is-visible"
+      );
 
 
       console.log(
-        "🎵 譜面開始：タイトル右上移動中"
+        "🎣 譜面番号＋タイトル：右上表示開始"
       );
 
+    }
+    else{
 
-      // ---------------------------------
-      // 最初の譜面を開始
-      // ---------------------------------
-
-      playNextSasoiNote(
-        scoreStartSessionId
+      console.log(
+        "🎣 右上表示失敗：.sasoi-score-nameが見つかりません"
       );
 
-    },
-    1600
-  );
+    }
 
+
+    // ---------------------------------
+    // 譜面開始
+    // ---------------------------------
+
+    console.log(
+      "🎵 譜面開始：中央タイトルアニメーション終了"
+    );
+
+
+    playNextSasoiNote();
+
+  }
+);
 
 // =================================
 // 高頻度判定ループ開始
@@ -13933,37 +13973,442 @@ document.addEventListener(
 
 
 
-      btn.onchange=function(){
+btn.onchange=function(){
+
+  // =================================
+  // ON
+  // =================================
+
+  if(
+    this.checked
+  ){
+
+    // ---------------------------------
+    // 誘いの名人表示
+    // ---------------------------------
+
+    area.style.display =
+      "flex";
 
 
-        if(this.checked){
+    // ---------------------------------
+    // ON状態を保存
+    // ---------------------------------
+
+    localStorage.setItem(
+      "sasoiNoMeijinEnabled",
+      "true"
+    );
 
 
-          area.style.display="flex";
+    console.log(
+      "🎣 誘いの名人：ON"
+    );
 
 
-          localStorage.setItem(
-            "sasoiNoMeijinEnabled",
-            "true"
-          );
+    return;
+
+  }
 
 
-        }else{
+  // =================================
+  // OFF
+  // =================================
+  //
+  // 表示を消すだけではなく、
+  // 現在動いている誘いの名人を
+  // 完全に停止して初期画面へ戻す。
+  // =================================
 
 
-          area.style.display="none";
+  console.log(
+    "🎣 誘いの名人：OFF → プレイ完全停止"
+  );
 
 
-          localStorage.setItem(
-            "sasoiNoMeijinEnabled",
-            "false"
-          );
+  // ---------------------------------
+  // OFF状態を保存
+  // ---------------------------------
+
+  localStorage.setItem(
+    "sasoiNoMeijinEnabled",
+    "false"
+  );
 
 
-        }
+  // =================================
+  // 現在のプレイを停止
+  // =================================
+
+  if(
+    typeof stopSasoiCheck ===
+    "function"
+  ){
+
+    stopSasoiCheck();
+
+  }
 
 
-      };
+  // =================================
+  // プレイタイマー停止
+  // =================================
+
+  if(
+    typeof sasoiPlayTimer !==
+      "undefined" &&
+    sasoiPlayTimer
+  ){
+
+    clearTimeout(
+      sasoiPlayTimer
+    );
+
+    sasoiPlayTimer =
+      null;
+
+  }
+
+
+  // =================================
+  // 譜面開始タイマー停止
+  // =================================
+
+  if(
+    typeof sasoiScoreStartTimer !==
+      "undefined" &&
+    sasoiScoreStartTimer
+  ){
+
+    clearTimeout(
+      sasoiScoreStartTimer
+    );
+
+    sasoiScoreStartTimer =
+      null;
+
+  }
+
+
+  // =================================
+  // 釣果加算タイマー停止
+  // =================================
+
+  if(
+    typeof sasoiCatchCountTimer !==
+      "undefined" &&
+    sasoiCatchCountTimer
+  ){
+
+    clearTimeout(
+      sasoiCatchCountTimer
+    );
+
+    sasoiCatchCountTimer =
+      null;
+
+  }
+
+
+  // =================================
+  // 判定アニメーションループ停止
+  // =================================
+
+  if(
+    typeof sasoiAnimationFrame !==
+      "undefined" &&
+    sasoiAnimationFrame !==
+      null
+  ){
+
+    cancelAnimationFrame(
+      sasoiAnimationFrame
+    );
+
+    sasoiAnimationFrame =
+      null;
+
+  }
+
+// =================================
+// 誘いの名人関連モーダルをすべて閉じる
+// =================================
+
+// ---------------------------------
+// 戻る確認モーダル
+// ---------------------------------
+
+const sasoiBackConfirmModal =
+  document.getElementById(
+    "sasoiBackConfirmModal"
+  );
+
+
+if(
+  sasoiBackConfirmModal
+){
+
+  sasoiBackConfirmModal.style.display =
+    "none";
+
+}
+
+
+// ---------------------------------
+// ハイスコアリセット確認モーダル
+// ---------------------------------
+
+const sasoiHighScoreResetModal =
+  document.getElementById(
+    "sasoiHighScoreResetModal"
+  );
+
+
+if(
+  sasoiHighScoreResetModal
+){
+
+  sasoiHighScoreResetModal.style.display =
+    "none";
+
+}
+
+
+  // =================================
+  // プレイ状態を完全停止
+  // =================================
+
+  if(
+    typeof sasoiPlaying !==
+      "undefined"
+  ){
+
+    sasoiPlaying =
+      false;
+
+  }
+
+
+  // =================================
+  // 中央タイトルアニメーション削除
+  // =================================
+
+  const sasoiGame =
+    document.getElementById(
+      "sasoiGame"
+    );
+
+
+  if(
+    sasoiGame
+  ){
+
+    const centerTitle =
+      sasoiGame.querySelector(
+        ".sasoi-score-title-animation"
+      );
+
+
+    if(
+      centerTitle
+    ){
+
+      centerTitle.remove();
+
+    }
+
+
+    // ---------------------------------
+    // 中央譜面番号も削除
+    // ---------------------------------
+
+    const centerNumber =
+      sasoiGame.querySelector(
+        ".sasoi-score-number-animation"
+      );
+
+
+    if(
+      centerNumber
+    ){
+
+      centerNumber.remove();
+
+    }
+
+  }
+
+
+  // =================================
+  // 右上タイトル表示をリセット
+  // =================================
+
+  const titleElement =
+    document.getElementById(
+      "sasoiGameScoreTitle"
+    );
+
+
+  if(
+    titleElement
+  ){
+
+    titleElement.classList.remove(
+      "is-visible"
+    );
+
+  }
+
+
+  // =================================
+  // 右上譜面番号表示をリセット
+  // =================================
+
+  const numberElement =
+    document.getElementById(
+      "sasoiGameScoreNumber"
+    );
+
+
+  if(
+    numberElement
+  ){
+
+    numberElement.classList.remove(
+      "is-visible"
+    );
+
+  }
+
+
+  // =================================
+  // 譜面を停止
+  // =================================
+
+  const sasoiFlow =
+    document.getElementById(
+      "sasoiFlow"
+    );
+
+
+  if(
+    sasoiFlow
+  ){
+
+    sasoiFlow.innerHTML =
+      "";
+
+    sasoiFlow.classList.remove(
+      "show"
+    );
+
+  }
+
+
+  // =================================
+  // ゲーム画面を非表示
+  // =================================
+
+  if(
+    sasoiGame
+  ){
+
+    sasoiGame.style.display =
+      "none";
+
+  }
+
+// =================================
+// 譜面選択メニューアニメーションを完全リセット
+// =================================
+
+const selectText =
+  document.querySelector(
+    ".sasoi-score-select-text"
+  );
+
+
+if(
+  selectText
+){
+
+  // ---------------------------------
+  // アニメーション用クラスをすべて削除
+  // ---------------------------------
+
+  selectText.classList.remove(
+    "is-sliding",
+    "slide-out-up",
+    "slide-in-from-down",
+    "slide-out-down",
+    "slide-in-from-up",
+    "slide-from-bottom",
+    "slide-from-top"
+  );
+
+
+  // ---------------------------------
+  // 現在実行中のCSSアニメーションを停止
+  // ---------------------------------
+
+  selectText.style.animation =
+    "none";
+
+
+  // ---------------------------------
+  // レイアウトを再計算
+  // ---------------------------------
+  //
+  // 次回ONにしたとき、
+  // 同じアニメーションを
+  // もう一度正常に開始できるようにする。
+  // ---------------------------------
+
+  void selectText.offsetWidth;
+
+
+  // ---------------------------------
+  // animation指定を元に戻す
+  // ---------------------------------
+
+  selectText.style.animation =
+    "";
+
+}
+
+  // =================================
+  // 誘いの名人初期画面を表示
+  // =================================
+
+  const sasoiMenu =
+    document.getElementById(
+      "sasoiMenu"
+    );
+
+
+  if(
+    sasoiMenu
+  ){
+
+    sasoiMenu.style.display =
+      "flex";
+
+  }
+
+
+  // =================================
+  // 誘いの名人表示エリアを非表示
+  // =================================
+
+  area.style.display =
+    "none";
+
+
+  console.log(
+    "🎣 誘いの名人：完全停止 → 初期画面へ戻りました"
+  );
+
+};
 
 
     }
@@ -14111,15 +14556,30 @@ function hideSasoiActionMessage(){
 //
 // 釣果ケースの中へ
 // images/wakasagi.png を
-// 1匹ずつぴちぴち跳ねながら投入する。
+// 1匹ずつ投入する。
 //
-// 魚がケースに入った後に
-// 累計釣果を1匹加算する。
+// 魚がケースに入った瞬間に
+// sasoiTotalCatchCount を +1 する。
+//
+// ---------------------------------
+//
+// リトライされた場合は、
+// その前のプレイで開始した魚アニメーションを
+// 次のプレイへ持ち越さない。
+//
 // =================================
 
 function showSasoiCatchFishAnimation(
   remainingFishCount
 ){
+
+  // ---------------------------------
+  // 今回のプレイ番号を取得
+  // ---------------------------------
+
+  const currentSessionId =
+    sasoiCatchAnimationSessionId;
+
 
   // ---------------------------------
   // 釣果ケースを取得
@@ -14145,13 +14605,32 @@ function showSasoiCatchFishAnimation(
 
 
   // ---------------------------------
-  // まだ投入する魚がない場合
+  // 投入する魚がない場合
   // ---------------------------------
 
   if(
     remainingFishCount <=
     0
   ){
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // この魚アニメーションが
+  // 現在のプレイのものか確認
+  // ---------------------------------
+
+  if(
+    currentSessionId !==
+    sasoiCatchAnimationSessionId
+  ){
+
+    console.log(
+      "🎣 ワカサギ投入中止：古いプレイのアニメーションです"
+    );
 
     return;
 
@@ -14200,6 +14679,16 @@ function showSasoiCatchFishAnimation(
 
 
   // ---------------------------------
+  // 今回の魚がどのプレイのものか記録
+  // ---------------------------------
+
+  fish.dataset.sasoiCatchSessionId =
+    String(
+      currentSessionId
+    );
+
+
+  // ---------------------------------
   // ケース内へ追加
   // ---------------------------------
 
@@ -14208,16 +14697,57 @@ function showSasoiCatchFishAnimation(
   );
 
 
-  // ---------------------------------
-  // アニメーション終了後
-  // ---------------------------------
+  console.log(
+    "🐟 ワカサギ投入開始：残り",
+    remainingFishCount,
+    "匹",
+    "session:",
+    currentSessionId
+  );
+
+
+  // =================================
+  // ◎ アニメーション終了
+  // =================================
 
   fish.addEventListener(
     "animationend",
     function(){
 
       // ---------------------------------
-      // 今回の1匹を累計へ加算
+      // リトライされていた場合
+      // ---------------------------------
+      //
+      // 古いプレイの魚なので、
+      // 釣果へ加算しない。
+      // ---------------------------------
+
+      if(
+        currentSessionId !==
+        sasoiCatchAnimationSessionId
+      ){
+
+        console.log(
+          "🎣 古いワカサギアニメーション終了：加算しません"
+        );
+
+
+        if(
+          fish &&
+          fish.isConnected
+        ){
+
+          fish.remove();
+
+        }
+
+        return;
+
+      }
+
+
+      // ---------------------------------
+      // 現在のプレイなら1匹加算
       // ---------------------------------
 
       sasoiTotalCatchCount +=
@@ -14260,15 +14790,21 @@ function showSasoiCatchFishAnimation(
 
 
       // ---------------------------------
-      // 今回の投入が終了
+      // 今回の魚を削除
       // ---------------------------------
 
-      fish.remove();
+      if(
+        fish &&
+        fish.isConnected
+      ){
+
+        fish.remove();
+
+      }
 
 
       // ---------------------------------
-      // 残りの魚がある場合
-      // 少し間を空けて次の魚を投入
+      // 次の魚があるか確認
       // ---------------------------------
 
       const nextRemaining =
@@ -14277,31 +14813,50 @@ function showSasoiCatchFishAnimation(
 
 
       if(
-        nextRemaining >
+        nextRemaining <=
         0
       ){
 
-        setTimeout(
-          function(){
-
-            showSasoiCatchFishAnimation(
-              nextRemaining
-            );
-
-          },
-          120
-        );
+        return;
 
       }
 
+
+      // ---------------------------------
+      // 少し間を空けて次の魚
+      // ---------------------------------
+
+      setTimeout(
+        function(){
+
+          // ---------------------------------
+          // リトライされていた場合は
+          // 次の魚を投入しない
+          // ---------------------------------
+
+          if(
+            currentSessionId !==
+            sasoiCatchAnimationSessionId
+          ){
+
+            console.log(
+              "🎣 次のワカサギ投入を中止：新しいプレイが開始されています"
+            );
+
+            return;
+
+          }
+
+
+          showSasoiCatchFishAnimation(
+            nextRemaining
+          );
+
+        },
+        120
+      );
+
     }
-  );
-
-
-  console.log(
-    "🐟 ワカサギ投入開始：残り",
-    remainingFishCount,
-    "匹"
   );
 
 }
@@ -14783,6 +15338,7 @@ function resetSasoiToMenu(){
   }
 
 
+
   // --------------------------------------
   // 誘いの名人初期画面を表示
   // --------------------------------------
@@ -14807,23 +15363,30 @@ function resetSasoiToMenu(){
 // ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
 
 // =================================
-// ◎ 譜面タイトル中央 → 右上アニメーション
+// ◎ 譜面番号 → 譜面タイトル中央表示
 // =================================
 //
 // ゲーム開始時に、現在選択されている
-// 譜面タイトルを釣り穴ライン中央へ表示する。
+// 譜面番号を中央へ表示する。
 //
-// その後、元々右上に表示されている
-// 譜面タイトルの実際の位置を取得し、
-// そこへ移動させる。
+// 譜面番号のアニメーション終了後、
+// 譜面タイトルを中央へ表示する。
 //
-// ※固定座標ではなく、
-//   実際のタイトル位置を取得するため、
-//   「移動先がズレて見えなくなる」
-//   問題を防止する。
+// 譜面タイトルのアニメーション終了後、
+// callbackを実行する。
+//
+// callback:
+// ・右上の譜面番号＋タイトル表示
+// ・譜面開始
+//
+// 固定時間による待機は使用しない。
+// CSSアニメーションの animationend を
+// 実際に検知して次へ進む。
 // =================================
 
-function showSasoiScoreTitleAnimation(){
+function showSasoiScoreTitleAnimation(
+  callback
+){
 
   // ---------------------------------
   // ゲーム画面を取得
@@ -14840,7 +15403,7 @@ function showSasoiScoreTitleAnimation(){
   ){
 
     console.log(
-      "🎣 譜面タイトルアニメーション失敗：sasoiGameが見つかりません"
+      "🎣 譜面中央アニメーション失敗：sasoiGameが見つかりません"
     );
 
     return;
@@ -14849,8 +15412,7 @@ function showSasoiScoreTitleAnimation(){
 
 
   // ---------------------------------
-  // 元々右上に表示されている
-  // 譜面タイトルを取得
+  // 右上の譜面タイトルを取得
   // ---------------------------------
 
   const titleElement =
@@ -14864,7 +15426,7 @@ function showSasoiScoreTitleAnimation(){
   ){
 
     console.log(
-      "🎣 譜面タイトルアニメーション失敗：sasoiGameScoreTitleが見つかりません"
+      "🎣 譜面中央アニメーション失敗：sasoiGameScoreTitleが見つかりません"
     );
 
     return;
@@ -14885,432 +15447,256 @@ function showSasoiScoreTitleAnimation(){
   ){
 
     console.log(
-      "🎣 譜面タイトルアニメーション失敗：譜面タイトルが空です"
+      "🎣 譜面中央アニメーション失敗：譜面タイトルが空です"
     );
 
     return;
 
   }
 
+
   // =================================
-  // ◎ 右上の元タイトルを一時的に隠す
-  // =================================
-  //
-  // 中央タイトルが右上へ移動している間、
-  // 元々右上にあるタイトルを非表示にする。
-  //
-  // 中央タイトルの移動完了後に再表示する。
+  // ◎ 譜面番号を取得
   // =================================
 
-  titleElement.style.visibility =
-    "hidden";
+  const numberElement =
+    document.querySelector(
+      ".sasoi-score-number"
+    );
 
-  // ---------------------------------
-  // 前回のアニメーション表示を削除
-  // ---------------------------------
 
-  const oldCenterTitle =
+  const number =
+    numberElement
+      ? numberElement.textContent.trim()
+      : "";
+
+
+  console.log(
+    "🎣 中央表示用 譜面番号:",
+    number
+  );
+
+
+  // =================================
+  // ◎ 前回の中央表示を完全削除
+  // =================================
+
+  const oldNumber =
+    game.querySelector(
+      ".sasoi-score-number-animation"
+    );
+
+
+  if(
+    oldNumber
+  ){
+
+    oldNumber.remove();
+
+  }
+
+
+  const oldTitle =
     game.querySelector(
       ".sasoi-score-title-animation"
     );
 
 
   if(
-    oldCenterTitle
+    oldTitle
   ){
 
-    oldCenterTitle.remove();
+    oldTitle.remove();
 
   }
 
 
-  // ---------------------------------
-  // 中央表示用タイトルを作成
-  // ---------------------------------
-
-  const centerTitle =
-    document.createElement(
-      "div"
-    );
-
-
-  centerTitle.className =
-    "sasoi-score-title-animation";
-
-
-  centerTitle.textContent =
-    title;
-
-
-  // ---------------------------------
-  // ゲーム画面へ追加
-  // ---------------------------------
-
-  game.appendChild(
-    centerTitle
-  );
-
-
   // =================================
-  // 中央表示位置を確認
-  // =================================
-
-  const gameRect =
-    game.getBoundingClientRect();
-
-
-  const centerRect =
-    centerTitle.getBoundingClientRect();
-
-
-  console.log(
-    "================================="
-  );
-
-  console.log(
-    "🎣 譜面タイトル中央表示"
-  );
-
-  console.log(
-    "タイトル:",
-    title
-  );
-
-  console.log(
-    "ゲーム画面:",
-    {
-      left:
-        gameRect.left,
-
-      top:
-        gameRect.top,
-
-      width:
-        gameRect.width,
-
-      height:
-        gameRect.height
-    }
-  );
-
-  console.log(
-    "中央タイトル:",
-    {
-      left:
-        centerRect.left,
-
-      top:
-        centerRect.top,
-
-      width:
-        centerRect.width,
-
-      height:
-        centerRect.height
-    }
-  );
-
-  console.log(
-    "中央X:",
-    centerRect.left +
-      centerRect.width / 2
-  );
-
-  console.log(
-    "中央Y:",
-    centerRect.top +
-      centerRect.height / 2
-  );
-
-  console.log(
-    "================================="
-  );
-
-
-  // =================================
-  // 中央表示時間
+  // ◎ 右上表示を一旦非表示にする
   // =================================
   //
-  // 現在は800ms。
-  // 時間調整は後で行う。
+  // リトライ時に、
+  // 前回の右上タイトルが残ったまま
+  // 中央表示中に見えてしまうのを防ぐ。
   // =================================
 
-  setTimeout(
-    function(){
+  const cornerName =
+    document.querySelector(
+      ".sasoi-score-name"
+    );
 
-      // ---------------------------------
-      // 中央タイトルがまだ存在するか確認
-      // ---------------------------------
 
-      if(
-        !centerTitle ||
-        !centerTitle.isConnected
-      ){
+  if(
+    cornerName
+  ){
+
+    cornerName.classList.remove(
+      "is-visible"
+    );
+
+  }
+
+
+  // =================================
+  // ◎ 中央 譜面番号
+  // =================================
+
+  if(
+    number
+  ){
+
+    const centerNumber =
+      document.createElement(
+        "div"
+      );
+
+
+    centerNumber.className =
+      "sasoi-score-number-animation";
+
+
+    centerNumber.textContent =
+      number;
+
+
+    // ---------------------------------
+    // ゲーム画面へ追加
+    // ---------------------------------
+
+    game.appendChild(
+      centerNumber
+    );
+
+
+    console.log(
+      "🎣 譜面番号：中央表示開始"
+    );
+
+
+    // =================================
+    // 譜面番号アニメーション終了
+    // =================================
+
+    centerNumber.addEventListener(
+      "animationend",
+      function(event){
+
+        // ---------------------------------
+        // 譜面番号アニメーション以外は無視
+        // ---------------------------------
+
+        if(
+          event.animationName !==
+          "sasoiScoreNumberCenterShow"
+        ){
+
+          return;
+
+        }
+
 
         console.log(
-          "🎣 譜面タイトル移動中止：中央タイトルが存在しません"
+          "🎣 譜面番号：中央表示終了"
         );
 
-        return;
 
+        // ---------------------------------
+        // 譜面番号を削除
+        // ---------------------------------
+
+        if(
+          centerNumber &&
+          centerNumber.isConnected
+        ){
+
+          centerNumber.remove();
+
+        }
+
+
+        // ---------------------------------
+        // 譜面タイトルを表示
+        // ---------------------------------
+
+        showSasoiCenterTitle();
+
+      },
+      {
+        once:true
       }
-
-
-      // =================================
-      // 現在の中央タイトル位置
-      // =================================
-
-      const startRect =
-        centerTitle.getBoundingClientRect();
-
-
-      // =================================
-      // 元々右上にある
-      // 譜面タイトル位置を取得
-      // =================================
-
-      const targetRect =
-        titleElement.getBoundingClientRect();
-
-
-      // =================================
-      // 移動先の中心座標
-      // =================================
-
-      const startCenterX =
-        startRect.left +
-        startRect.width / 2;
-
-
-      const startCenterY =
-        startRect.top +
-        startRect.height / 2;
-
-
-      const targetCenterX =
-        targetRect.left +
-        targetRect.width / 2;
-
-
-      const targetCenterY =
-        targetRect.top +
-        targetRect.height / 2;
-
-
-      // =================================
-      // 移動距離
-      // =================================
-
-      const moveX =
-        targetCenterX -
-        startCenterX;
-
-
-      const moveY =
-        targetCenterY -
-        startCenterY;
-
-
-      // =================================
-      // デバッグ
-      // =================================
-
-      console.log(
-        "================================="
-      );
-
-      console.log(
-        "🎣 譜面タイトル：中央 → 右上"
-      );
-
-      console.log(
-        "移動開始位置:",
-        {
-          x:
-            startCenterX,
-
-          y:
-            startCenterY
-        }
-      );
-
-      console.log(
-        "右上タイトル位置:",
-        {
-          x:
-            targetCenterX,
-
-          y:
-            targetCenterY
-        }
-      );
-
-      console.log(
-        "移動距離:",
-        {
-          x:
-            moveX,
-
-          y:
-            moveY
-        }
-      );
-
-      console.log(
-        "================================="
-      );
-
-
-      // =================================
-      // 右上移動開始
-      // =================================
-      //
-      // CSS側の
-      //
-      // .is-moving
-      //
-      // でtransformアニメーションを
-      // 実行する。
-      //
-      // =================================
-
-      centerTitle.style.setProperty(
-        "--sasoi-title-move-x",
-        moveX + "px"
-      );
-
-
-      centerTitle.style.setProperty(
-        "--sasoi-title-move-y",
-        moveY + "px"
-      );
-
-
-      centerTitle.classList.add(
-        "is-moving"
-      );
-
-// =================================
-// ◎ アニメーション終了後
-//    中央用タイトルを削除
-// =================================
-//
-// 中央 → 右上への移動が完了したら、
-// アニメーション用に作成したタイトルを削除する。
-// 元々の右上タイトルはそのまま残る。
-// =================================
-
-centerTitle.addEventListener(
-  "animationend",
-  function(){
-
-    // ---------------------------------
-    // 右上の元タイトルを再表示
-    // ---------------------------------
-
-    titleElement.style.visibility =
-      "visible";
-
-
-    // ---------------------------------
-    // アニメーション用タイトルを削除
-    // ---------------------------------
-
-    if(
-      centerTitle &&
-      centerTitle.isConnected
-    ){
-
-      centerTitle.remove();
-
-    }
-
-
-    console.log(
-      "🎣 譜面タイトル：中央 → 右上移動完了"
     );
 
-  },
-  {
-    once:true
   }
-);
 
-      console.log(
-        "🎣 譜面タイトル：中央 → 右上移動開始"
+  else{
+
+    // =================================
+    // 譜面番号が存在しない場合
+    // =================================
+    //
+    // 番号が取得できなくても、
+    // タイトル表示へ進める。
+    // =================================
+
+    console.log(
+      "🎣 譜面番号なし：タイトル中央表示へ"
+    );
+
+
+    showSasoiCenterTitle();
+
+  }
+
+
+  // =================================
+  // ◎ 中央 譜面タイトル表示
+  // =================================
+
+  function showSasoiCenterTitle(){
+
+    // ---------------------------------
+    // 念のため既存タイトルを削除
+    // ---------------------------------
+
+    const oldTitle =
+      game.querySelector(
+        ".sasoi-score-title-animation"
       );
 
 
-
-// =================================
-// ◎ タイトル移動アニメーション終了監視
-// =================================
-
-centerTitle.addEventListener(
-  "animationend",
-  function(event){
-
-    // ---------------------------------
-    // 譜面タイトル移動アニメーション以外は無視
-    // ---------------------------------
-
     if(
-      event.animationName !==
-      "sasoiScoreTitleMoveToCorner"
+      oldTitle
     ){
 
-      return;
+      oldTitle.remove();
 
     }
 
 
-    console.log(
-      "🎣 譜面タイトル：右上移動アニメーション終了"
-    );
+    // ---------------------------------
+    // 中央表示用タイトルを作成
+    // ---------------------------------
+
+    const centerTitle =
+      document.createElement(
+        "div"
+      );
+
+
+    centerTitle.className =
+      "sasoi-score-title-animation";
+
+
+    centerTitle.textContent =
+      title;
 
 
     // ---------------------------------
-    // 実際の最終位置を確認
+    // ゲーム画面へ追加
     // ---------------------------------
 
-    const finalRect =
-      centerTitle.getBoundingClientRect();
-
-
-    const targetRect =
-      titleElement.getBoundingClientRect();
-
-
-    console.log(
-      "🎣 タイトル最終位置確認"
-    );
-
-
-    console.log(
-      "移動タイトル中心:",
-      {
-        x:
-          finalRect.left +
-          finalRect.width / 2,
-
-        y:
-          finalRect.top +
-          finalRect.height / 2
-      }
-    );
-
-
-    console.log(
-      "右上タイトル中心:",
-      {
-        x:
-          targetRect.left +
-          targetRect.width / 2,
-
-        y:
-          targetRect.top +
-          targetRect.height / 2
-      }
+    game.appendChild(
+      centerTitle
     );
 
 
@@ -15318,13 +15704,92 @@ centerTitle.addEventListener(
       "================================="
     );
 
+    console.log(
+      "🎣 譜面タイトル中央表示開始"
+    );
+
+    console.log(
+      "タイトル:",
+      title
+    );
+
+    console.log(
+      "================================="
+    );
+
+
+    // =================================
+    // ◎ 中央タイトル
+    //    アニメーション終了監視
+    // =================================
+
+    centerTitle.addEventListener(
+      "animationend",
+      function(event){
+
+        // ---------------------------------
+        // 譜面タイトルのアニメーション
+        // 以外は無視
+        // ---------------------------------
+
+        if(
+          event.animationName !==
+          "sasoiScoreTitleCenterShow"
+        ){
+
+          return;
+
+        }
+
+
+        console.log(
+          "🎣 譜面タイトル：中央アニメーション終了"
+        );
+
+
+        // ---------------------------------
+        // 中央タイトルを削除
+        // ---------------------------------
+
+        if(
+          centerTitle &&
+          centerTitle.isConnected
+        ){
+
+          centerTitle.remove();
+
+        }
+
+
+        // =================================
+        // ◎ callback
+        // =================================
+        //
+        // ここまで来て初めて、
+        //
+        // ・右上表示
+        // ・楽譜開始
+        //
+        // を実行する。
+        //
+        // =================================
+
+        if(
+          typeof callback ===
+          "function"
+        ){
+
+          callback();
+
+        }
+
+      },
+      {
+        once:true
+      }
+    );
+
   }
-);
-
-
-    },
-    800
-  );
 
 }
 
