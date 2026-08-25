@@ -10310,6 +10310,19 @@ if(
 
       }
 
+// ---------------------------------
+// タッチボタンをゲーム画面の
+// 初期位置へ戻す
+// ---------------------------------
+
+if(
+  typeof window.sasoiResetTouchPosition ===
+  "function"
+){
+
+  window.sasoiResetTouchPosition();
+
+}
 
       // ---------------------------------
       // 誘いの名人の初期画面を表示
@@ -10461,6 +10474,7 @@ if ('serviceWorker' in navigator) {
 
 <!-- 誘いの名人 -->
 <script src="SasoiNoMeijin.js"></script>
+<script src="sasoiTouchMove.js"></script>
 
 </body>
 </html>

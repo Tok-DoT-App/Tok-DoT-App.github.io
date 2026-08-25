@@ -2219,7 +2219,10 @@ style.textContent = `
 }
 
 
-/* 長押し位置 */
+/* =================================
+   誘いの名人
+   タッチボタン
+================================= */
 
 .sasoi-touch{
 
@@ -2289,6 +2292,8 @@ style.textContent = `
   transform:scale(0.96);
 
 }
+
+
 
 /* 穂先横ライン */
 
@@ -3257,6 +3262,8 @@ style.textContent = `
   font-size:14px;
 
   font-family:"Yuji Boku",serif;
+
+  font-weight:bold;
 
   color:#17252B;
 
@@ -4993,7 +5000,7 @@ style.textContent = `
       0.42
     );
 
-  z-index:9999;
+  z-index:10000;
 
 }
 
@@ -5212,7 +5219,7 @@ style.textContent = `
       0.42
     );
 
-  z-index:9999;
+  z-index:10000;
 
 }
 
