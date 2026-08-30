@@ -3134,7 +3134,7 @@ rgba(
 }
 
 /* ==========================================
-   1匹ゲット!
+   シングル!
 ========================================== */
 
 .sasoi-catch-result.single{
@@ -14683,7 +14683,7 @@ function showSasoiCatchFishAnimation(
 //
 // 200以上 → トリプル!!!
 // 190以上 → ダブル!!
-// 160以上 → 1匹ゲット!
+// 160以上 → シングル!
 //
 // を判定表示の真上に表示する。
 //
@@ -14830,7 +14830,7 @@ function showSasoiCatchResult(){
   ){
 
     resultText =
-      "1匹ゲット!";
+      "シングル!";
 
     currentCatchCount =
       1;
@@ -14900,7 +14900,7 @@ function showSasoiCatchResult(){
 
   if(
     resultText ===
-    "1匹ゲット!"
+    "シングル!"
   ){
 
     result.classList.add(
