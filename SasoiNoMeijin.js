@@ -4297,6 +4297,9 @@ rgba(
 
 }
 
+
+
+
 /* =================================
    累計釣果ケース
 ================================= */
@@ -4981,6 +4984,190 @@ rgba(
     15% 50%;
 
 }
+
+/* =================================
+釣果ハイスコアケース
+================================= */
+
+.sasoi-catch-highscore-display{
+
+position:
+absolute;
+
+left:
+calc(35% + 46px);
+
+bottom:
+35px;
+
+width:
+86px;
+
+height:
+28px;
+
+box-sizing:
+border-box;
+
+display:
+grid;
+
+grid-template-columns:
+1fr auto;
+
+grid-template-rows:
+10px 1fr;
+
+align-items:
+center;
+
+justify-items:
+center;
+
+background:
+#b9e8f2;
+
+border:
+1px solid
+rgba(255,255,255,0.65);
+
+border-radius:
+9px;
+
+color:
+#26343a;
+
+font-family:
+"Yuji Boku",
+serif;
+
+pointer-events:
+none;
+
+z-index:
+20;
+
+}
+
+/* =================================
+   HIGH
+================================= */
+
+.sasoi-catch-highscore-label{
+
+  grid-column:
+    1 / 3;
+
+  grid-row:
+    1;
+
+  font-size:
+    7px;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+
+  align-self:
+    center;
+
+  position:
+    relative;
+
+  left:
+    -18px;
+
+}
+
+
+/* =================================
+   ハイスコア数字
+================================= */
+
+.sasoi-catch-highscore-count{
+
+  grid-column:
+    1;
+
+  grid-row:
+    2;
+
+  font-size:
+    15px;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+
+  text-align:
+    right;
+
+  justify-self:
+    end;
+
+  position:
+    relative;
+
+  left:
+    -11px;
+
+  top:
+    -2px;
+
+  text-shadow:
+    0 1px 1px
+    rgba(255,255,255,0.55);
+
+}
+
+
+/* =================================
+   匹
+================================= */
+
+.sasoi-catch-highscore-unit{
+
+  grid-column:
+    2;
+
+  grid-row:
+    2;
+
+  font-size:
+    7px;
+
+  font-weight:
+    900;
+
+  line-height:
+    1;
+
+  align-self:
+    center;
+
+  justify-self:
+    start;
+
+  position:
+    relative;
+
+  left:
+    -11px;
+
+  margin-left:
+    2px;
+
+  text-shadow:
+    0 1px 1px
+    rgba(255,255,255,0.55);
+
+}
+
+
 /* =================================
    譜面選択へ戻る確認モーダル
    ゲーム画面内だけを覆う
@@ -5428,6 +5615,24 @@ rgba(
 document.head.appendChild(style);
 
 // =================================
+// ◎ 今回のプレイで釣った匹数
+// =================================
+//
+// sasoiTotalCatchCountとは別管理。
+//
+// sasoiTotalCatchCount
+// → アプリ全体の累計釣果
+//
+// sasoiCurrentCatchCount
+// → 今回の1プレイで釣った匹数
+//
+// =================================
+
+let sasoiCurrentCatchCount =
+0;
+
+
+// =================================
 // ◎ 釣果投入アニメーション管理
 // =================================
 //
@@ -5680,8 +5885,10 @@ index <
 0
 ){
 
+
 index =
   sasoiScoreList.length - 1;
+
 
 }
 
@@ -5690,8 +5897,10 @@ index >=
 sasoiScoreList.length
 ){
 
+
 index =
   0;
+
 
 }
 
@@ -5715,7 +5924,9 @@ sasoiSelectedScoreIndex
 // 現在の譜面の背景データを取得
 // ---------------------------------
 
-applySasoiScoreBackground(selectedScore);
+applySasoiScoreBackground(
+selectedScore
+);
 
 // ---------------------------------
 // 譜面データをゲームへ渡す
@@ -5723,6 +5934,18 @@ applySasoiScoreBackground(selectedScore);
 
 sasoiScore =
 selectedScore.score;
+
+// =================================
+// ◎ 譜面ごとの釣果HIGHを表示
+// =================================
+//
+// 譜面選択を切り替えた瞬間に、
+// その譜面専用の釣果HIGHを表示する。
+//
+// 興味ゲージHIGHとは別管理。
+// =================================
+
+updateSasoiCatchRecordHighDisplay();
 
 // ---------------------------------
 // デバッグ
@@ -5737,15 +5960,64 @@ selectedScore.title
 
 }
 
+
 // ==========================================
-// 現在選択中の譜面を取得
+// ◎ 現在選択中の譜面を取得
+// ==========================================
+//
+// sasoiScoreManager.js内部からも使用でき、
+// SasoiNoMeijin.jsからも使用できるように
+// windowへ公開する。
+//
 // ==========================================
 
 function getSelectedSasoiScore(){
 
-  return sasoiScoreList[
-    sasoiSelectedScoreIndex
-  ];
+return sasoiScoreList[
+sasoiSelectedScoreIndex
+];
+
+}
+
+// ==========================================
+// ◎ 現在選択中の譜面を外部公開
+// ==========================================
+//
+// SasoiNoMeijin.js側から
+//
+// window.getSelectedSasoiScore()
+//
+// で現在の譜面を取得できるようにする。
+//
+// ==========================================
+
+window.getSelectedSasoiScore =
+getSelectedSasoiScore;
+
+
+
+function getSasoiGaugeHighScoreStorageKey(){
+
+const scoreData =
+getSelectedSasoiScore();
+
+if(
+!scoreData ||
+!scoreData.id
+){
+
+console.log(
+  "🎣 譜面別ハイスコア保存キー取得失敗"
+);
+
+return null;
+
+}
+
+return (
+"sasoiGaugeHighScore_" +
+scoreData.id
+);
 
 }
 
@@ -6407,35 +6679,97 @@ area.innerHTML = `
        ワカサギ外し
   ================================= -->
 
+  <div
+    class="sasoi-wakasagi-hazushi"
+  >
+
+
 <div
-  class="sasoi-wakasagi-hazushi"
+  class="sasoi-wakasagi-hazushi-arm"
+></div>
+
+<div
+  class="sasoi-wakasagi-hazushi-base"
+></div>
+
+
+  </div>
+
+  <!-- =================================
+       累計釣果数
+  ================================= -->
+
+<span
+id="sasoiTotalCatchCount"
+class="sasoi-total-catch-count"
+
 >
 
-  <div
-    class="sasoi-wakasagi-hazushi-arm"
-  ></div>
 
-  <div
-    class="sasoi-wakasagi-hazushi-base"
-  ></div>
-
-</div>
+0
 
 
-  <span
-    id="sasoiTotalCatchCount"
-    class="sasoi-total-catch-count"
-  >
-    0
   </span>
 
-  <span
-    class="sasoi-total-catch-unit"
-  >
-    匹
+<span
+class="sasoi-total-catch-unit"
+
+>
+
+
+匹
+
+
   </span>
 
 </div>
+
+<!-- =================================
+     釣果ハイスコア表示
+     累計釣果ケースの右隣
+================================= -->
+
+<div
+  id="sasoiCatchHighScoreDisplay"
+  class="sasoi-catch-highscore-display"
+>
+
+<span
+class="sasoi-catch-highscore-label"
+
+>
+
+
+HIGH
+
+
+  </span>
+
+<span
+id="sasoiCatchHighScoreCount"
+class="sasoi-catch-highscore-count"
+
+>
+
+
+0
+
+
+  </span>
+
+<span
+class="sasoi-catch-highscore-unit"
+
+>
+
+
+匹
+
+
+  </span>
+
+</div>
+
 
   <button
   class="sasoi-back-btn"
@@ -6818,15 +7152,19 @@ function changeSasoiScore(
       // 譜面番号を変更
       // ------------------------------------
 
-      sasoiSelectedScoreIndex =
-        nextIndex;
-
+setSasoiSelectedScore(nextIndex);
 
       // ------------------------------------
       // 表示更新
       // ------------------------------------
 
       updateSasoiScoreSelectDisplay();
+
+  // ------------------------------------
+  // 譜面別ハイスコア表示更新
+  // ------------------------------------
+
+  updateSasoiGaugeHighScoreDisplay();
 
 
       // ------------------------------------
@@ -7752,27 +8090,35 @@ console.log(
 
 function getSasoiGaugeHighScore(){
 
-  const savedHighScore =
-    localStorage.getItem(
-      "sasoiGaugeHighScore"
-    );
+const storageKey =
+getSasoiGaugeHighScoreStorageKey();
 
+if(
+!storageKey
+){
 
-  const highScore =
-    Number(savedHighScore);
+return 0;
 
+}
 
-  if(
-    Number.isFinite(highScore) &&
-    highScore > 0
-  ){
+const savedHighScore =
+localStorage.getItem(
+storageKey
+);
 
-    return highScore;
+const highScore =
+Number(savedHighScore);
 
-  }
+if(
+Number.isFinite(highScore) &&
+highScore > 0
+){
 
+return highScore;
 
-  return 0;
+}
+
+return 0;
 
 }
 
@@ -7817,47 +8163,67 @@ function updateSasoiGaugeHighScoreDisplay(){
 // ==========================================
 
 function updateSasoiGaugeHighScore(
-  currentScore
+currentScore
 ){
 
-  const score =
-    Number(currentScore);
+const score =
+Number(currentScore);
 
+// ----------------------------------------
+// 数値ではない場合
+// ----------------------------------------
 
-  if(
-    !Number.isFinite(score)
-  ){
+if(
+!Number.isFinite(score)
+){
 
-    return;
+return;
 
-  }
+}
 
+// ----------------------------------------
+// 現在の譜面用
+// ハイスコア保存キーを取得
+// ----------------------------------------
 
-  const highScore =
-    getSasoiGaugeHighScore();
+const storageKey =
+getSasoiGaugeHighScoreStorageKey();
 
+if(
+!storageKey
+){
 
-  // ----------------------------------------
-  // ハイスコア更新
-  // ----------------------------------------
+return;
 
-  if(
-    score > highScore
-  ){
+}
 
-    localStorage.setItem(
-      "sasoiGaugeHighScore",
-      String(score)
-    );
+// ----------------------------------------
+// 現在の譜面のハイスコアを取得
+// ----------------------------------------
 
-  }
+const highScore =
+getSasoiGaugeHighScore();
 
+// ----------------------------------------
+// ハイスコア更新
+// ----------------------------------------
 
-  // ----------------------------------------
-  // 表示更新
-  // ----------------------------------------
+if(
+score > highScore
+){
 
-  updateSasoiGaugeHighScoreDisplay();
+localStorage.setItem(
+  storageKey,
+  String(score)
+);
+
+}
+
+// ----------------------------------------
+// 表示更新
+// ----------------------------------------
+
+updateSasoiGaugeHighScoreDisplay();
 
 }
 
@@ -8072,82 +8438,95 @@ if(
 // ==========================================
 
 const sasoiHighScoreResetOK =
-  document.getElementById(
-    "sasoiHighScoreResetOK"
+document.getElementById(
+"sasoiHighScoreResetOK"
+);
+
+if(
+sasoiHighScoreResetOK
+){
+
+sasoiHighScoreResetOK.onclick =
+function(event){
+
+  event.preventDefault();
+
+  event.stopPropagation();
+
+
+  // --------------------------------------
+  // 現在の譜面用
+  // ハイスコア保存キーを取得
+  // --------------------------------------
+
+  const storageKey =
+    getSasoiGaugeHighScoreStorageKey();
+
+
+  // --------------------------------------
+  // 保存キーが取得できない場合
+  // --------------------------------------
+
+  if(
+    !storageKey
+  ){
+
+    console.log(
+      "★ ハイスコアリセット失敗：譜面情報を取得できません"
+    );
+
+    return;
+
+  }
+
+
+  // --------------------------------------
+  // 現在の譜面のハイスコアを0にする
+  // --------------------------------------
+
+  localStorage.setItem(
+    storageKey,
+    "0"
   );
 
 
-if(
-  sasoiHighScoreResetOK
-){
+  // --------------------------------------
+  // 表示を更新
+  // --------------------------------------
 
-  sasoiHighScoreResetOK.onclick =
-    function(event){
-
-      event.preventDefault();
-
-      event.stopPropagation();
+  updateSasoiGaugeHighScoreDisplay();
 
 
-      // --------------------------------------
-      // ハイスコアを0にする
-      // --------------------------------------
+  // --------------------------------------
+  // モーダルを閉じる
+  // --------------------------------------
 
-      localStorage.setItem(
-        "sasoiGaugeHighScore",
-        "0"
-      );
-
-
-      // --------------------------------------
-      // 表示を0にする
-      // --------------------------------------
-
-      const highScoreDisplay =
-        document.getElementById(
-          "sasoiGaugeHighScore"
-        );
+  const modal =
+    document.getElementById(
+      "sasoiHighScoreResetModal"
+    );
 
 
-      if(
-        highScoreDisplay
-      ){
+  if(
+    modal
+  ){
 
-        highScoreDisplay.textContent =
-          "HIGH 0";
+    modal.style.display =
+      "none";
 
-      }
-
-
-      // --------------------------------------
-      // モーダルを閉じる
-      // --------------------------------------
-
-      const modal =
-        document.getElementById(
-          "sasoiHighScoreResetModal"
-        );
+  }
 
 
-      if(
-        modal
-      ){
+  // --------------------------------------
+  // 確認ログ
+  // --------------------------------------
 
-        modal.style.display =
-          "none";
+  console.log(
+    "★ 現在の譜面のハイスコアを0にリセットしました",
+    storageKey
+  );
 
-      }
-
-
-      // --------------------------------------
-      // 確認ログ
-      // --------------------------------------
-
-      console.log(
-        "★ ハイスコアを0にリセットしました"
-      );
-
-    };
+};
 
 }
 
@@ -12930,6 +13309,9 @@ selectedScore.number,
 selectedScore.title
 );
 
+
+
+
 // =================================
 // ◎ 初期画面背景を譜面に合わせて変更
 // =================================
@@ -13005,6 +13387,7 @@ console.log(
 sasoiTotalCatchCount =
   0;
 
+sasoiCurrentCatchCount = 0;
 
 // ---------------------------------
 // 画面の累計釣果表示もリセット
@@ -14384,46 +14767,256 @@ function hideSasoiActionMessage(){
 // =================================
 
 function showSasoiCatchFishAnimation(
-  remainingFishCount
+remainingFishCount
 ){
 
+// ---------------------------------
+// 今回のプレイ番号を取得
+// ---------------------------------
+
+const currentSessionId =
+sasoiCatchAnimationSessionId;
+
+// ---------------------------------
+// 釣果ケースを取得
+// ---------------------------------
+
+const catchDisplay =
+document.getElementById(
+"sasoiTotalCatchDisplay"
+);
+
+if(
+!catchDisplay
+){
+
+console.log(
+  "🎣 ワカサギ投入失敗：釣果ケースが見つかりません"
+);
+
+return;
+
+}
+
+// ---------------------------------
+// 投入する魚がない場合
+// ---------------------------------
+
+if(
+remainingFishCount <=
+0
+){
+
+return;
+
+}
+
+// ---------------------------------
+// この魚アニメーションが
+// 現在のプレイのものか確認
+// ---------------------------------
+
+if(
+currentSessionId !==
+sasoiCatchAnimationSessionId
+){
+
+console.log(
+  "🎣 ワカサギ投入中止：古いプレイのアニメーションです"
+);
+
+return;
+
+}
+
+// ---------------------------------
+// 前回の投入中ワカサギを削除
+// ---------------------------------
+
+const oldFish =
+catchDisplay.querySelector(
+".sasoi-catch-fish"
+);
+
+if(
+oldFish
+){
+
+oldFish.remove();
+
+}
+
+// ---------------------------------
+// ワカサギ画像を作成
+// ---------------------------------
+
+const fish =
+document.createElement(
+"img"
+);
+
+fish.className =
+"sasoi-catch-fish";
+
+fish.src =
+"images/wakasagi.png";
+
+fish.alt =
+"";
+
+// ---------------------------------
+// 今回の魚がどのプレイのものか記録
+// ---------------------------------
+
+fish.dataset.sasoiCatchSessionId =
+String(
+currentSessionId
+);
+
+// ---------------------------------
+// ケース内へ追加
+// ---------------------------------
+
+catchDisplay.appendChild(
+fish
+);
+
+console.log(
+"🐟 ワカサギ投入開始：残り",
+remainingFishCount,
+"匹",
+"session:",
+currentSessionId
+);
+
+// =================================
+// ◎ アニメーション終了
+// =================================
+
+fish.addEventListener(
+"animationend",
+function(){
+
   // ---------------------------------
-  // 今回のプレイ番号を取得
+  // リトライされていた場合
   // ---------------------------------
-
-  const currentSessionId =
-    sasoiCatchAnimationSessionId;
-
-
-  // ---------------------------------
-  // 釣果ケースを取得
-  // ---------------------------------
-
-  const catchDisplay =
-    document.getElementById(
-      "sasoiTotalCatchDisplay"
-    );
-
 
   if(
-    !catchDisplay
+    currentSessionId !==
+    sasoiCatchAnimationSessionId
   ){
 
     console.log(
-      "🎣 ワカサギ投入失敗：釣果ケースが見つかりません"
+      "🎣 古いワカサギアニメーション終了：加算しません"
     );
+
+
+    if(
+      fish &&
+      fish.isConnected
+    ){
+
+      fish.remove();
+
+    }
 
     return;
 
   }
 
 
+  // =================================
+  // ◎ 現在のプレイなら1匹加算
+  // =================================
+
+  sasoiTotalCatchCount +=
+    1;
+
+
+  sasoiCurrentCatchCount +=
+    1;
+
+
+  // =================================
+  // ◎ 累計釣果表示を更新
+  // =================================
+
+  const totalCatchCountDisplay =
+    document.getElementById(
+      "sasoiTotalCatchCount"
+    );
+
+
+  if(
+    totalCatchCountDisplay
+  ){
+
+    totalCatchCountDisplay.textContent =
+      sasoiTotalCatchCount;
+
+  }
+
+
+  // =================================
+  // ◎ 釣果HIGH更新
+  // =================================
+  //
+  // 魚が実際にケースへ入った時点で
+  // 今回のプレイの釣果数をHIGHと比較する。
+  //
+  // 例:
+  //
+  // 1匹目 → currentCatch = 1
+  // 2匹目 → currentCatch = 2
+  // 3匹目 → currentCatch = 3
+  //
+  // これにより3匹目で
+  // HIGH 2 → HIGH 3
+  // と正しく更新される。
+  // =================================
+
+  updateSasoiCatchRecordHigh();
+
+
   // ---------------------------------
-  // 投入する魚がない場合
+  // 累計釣果ログ
+  // ---------------------------------
+
+  console.log(
+    "🎣 ワカサギ投入完了：",
+    sasoiTotalCatchCount,
+    "匹",
+    "今回のプレイ:",
+    sasoiCurrentCatchCount,
+    "匹"
+  );
+
+
+  // ---------------------------------
+  // 今回の魚を削除
   // ---------------------------------
 
   if(
-    remainingFishCount <=
+    fish &&
+    fish.isConnected
+  ){
+
+    fish.remove();
+
+  }
+
+
+  // ---------------------------------
+  // 次の魚があるか確認
+  // ---------------------------------
+
+  const nextRemaining =
+    remainingFishCount -
+    1;
+
+
+  if(
+    nextRemaining <=
     0
   ){
 
@@ -14433,107 +15026,14 @@ function showSasoiCatchFishAnimation(
 
 
   // ---------------------------------
-  // この魚アニメーションが
-  // 現在のプレイのものか確認
+  // 少し間を空けて次の魚
   // ---------------------------------
 
-  if(
-    currentSessionId !==
-    sasoiCatchAnimationSessionId
-  ){
-
-    console.log(
-      "🎣 ワカサギ投入中止：古いプレイのアニメーションです"
-    );
-
-    return;
-
-  }
-
-
-  // ---------------------------------
-  // 前回の投入中ワカサギを削除
-  // ---------------------------------
-
-  const oldFish =
-    catchDisplay.querySelector(
-      ".sasoi-catch-fish"
-    );
-
-
-  if(
-    oldFish
-  ){
-
-    oldFish.remove();
-
-  }
-
-
-  // ---------------------------------
-  // ワカサギ画像を作成
-  // ---------------------------------
-
-  const fish =
-    document.createElement(
-      "img"
-    );
-
-
-  fish.className =
-    "sasoi-catch-fish";
-
-
-  fish.src =
-    "images/wakasagi.png";
-
-
-  fish.alt =
-    "";
-
-
-  // ---------------------------------
-  // 今回の魚がどのプレイのものか記録
-  // ---------------------------------
-
-  fish.dataset.sasoiCatchSessionId =
-    String(
-      currentSessionId
-    );
-
-
-  // ---------------------------------
-  // ケース内へ追加
-  // ---------------------------------
-
-  catchDisplay.appendChild(
-    fish
-  );
-
-
-  console.log(
-    "🐟 ワカサギ投入開始：残り",
-    remainingFishCount,
-    "匹",
-    "session:",
-    currentSessionId
-  );
-
-
-  // =================================
-  // ◎ アニメーション終了
-  // =================================
-
-  fish.addEventListener(
-    "animationend",
+  setTimeout(
     function(){
 
       // ---------------------------------
       // リトライされていた場合
-      // ---------------------------------
-      //
-      // 古いプレイの魚なので、
-      // 釣果へ加算しない。
       // ---------------------------------
 
       if(
@@ -14542,138 +15042,408 @@ function showSasoiCatchFishAnimation(
       ){
 
         console.log(
-          "🎣 古いワカサギアニメーション終了：加算しません"
+          "🎣 次のワカサギ投入を中止：新しいプレイが開始されています"
         );
-
-
-        if(
-          fish &&
-          fish.isConnected
-        ){
-
-          fish.remove();
-
-        }
 
         return;
 
       }
 
 
-      // ---------------------------------
-      // 現在のプレイなら1匹加算
-      // ---------------------------------
-
-      sasoiTotalCatchCount +=
-        1;
-
-
-      // ---------------------------------
-      // 累計釣果表示を取得
-      // ---------------------------------
-
-      const totalCatchCountDisplay =
-        document.getElementById(
-          "sasoiTotalCatchCount"
-        );
-
-
-      // ---------------------------------
-      // 累計釣果表示を更新
-      // ---------------------------------
-
-      if(
-        totalCatchCountDisplay
-      ){
-
-        totalCatchCountDisplay.textContent =
-          sasoiTotalCatchCount;
-
-      }
-
-
-      // ---------------------------------
-      // 累計釣果ログ
-      // ---------------------------------
-
-      console.log(
-        "🎣 ワカサギ投入完了：",
-        sasoiTotalCatchCount,
-        "匹"
+      showSasoiCatchFishAnimation(
+        nextRemaining
       );
 
-
-      // ---------------------------------
-      // 今回の魚を削除
-      // ---------------------------------
-
-      if(
-        fish &&
-        fish.isConnected
-      ){
-
-        fish.remove();
-
-      }
-
-
-      // ---------------------------------
-      // 次の魚があるか確認
-      // ---------------------------------
-
-      const nextRemaining =
-        remainingFishCount -
-        1;
-
-
-      if(
-        nextRemaining <=
-        0
-      ){
-
-        return;
-
-      }
-
-
-      // ---------------------------------
-      // 少し間を空けて次の魚
-      // ---------------------------------
-
-      setTimeout(
-        function(){
-
-          // ---------------------------------
-          // リトライされていた場合は
-          // 次の魚を投入しない
-          // ---------------------------------
-
-          if(
-            currentSessionId !==
-            sasoiCatchAnimationSessionId
-          ){
-
-            console.log(
-              "🎣 次のワカサギ投入を中止：新しいプレイが開始されています"
-            );
-
-            return;
-
-          }
-
-
-          showSasoiCatchFishAnimation(
-            nextRemaining
-          );
-
-        },
-        120
-      );
-
-    }
+    },
+    120
   );
 
+},
+{
+  once:true
 }
+
+);
+
+}
+
+
+const SASOI_CATCH_RECORD_HIGH_KEY =
+"sasoiCatchRecordHighScores";
+
+// =================================
+// ◎ 現在選択中の譜面IDを取得
+// =================================
+
+function getSasoiCatchRecordHighScoreId(){
+
+// ---------------------------------
+// 現在選択中の譜面を取得
+// ---------------------------------
+
+if(
+typeof window.getSelectedSasoiScore !==
+"function"
+){
+
+console.log(
+  "🎣 釣果HIGH：getSelectedSasoiScoreが利用できません"
+);
+
+return null;
+
+}
+
+const selectedScore =
+window.getSelectedSasoiScore();
+
+// ---------------------------------
+// 譜面が存在しない
+// ---------------------------------
+
+if(
+!selectedScore ||
+!selectedScore.id
+){
+
+console.log(
+  "🎣 釣果HIGH：現在の譜面IDを取得できません"
+);
+
+return null;
+
+}
+
+return String(
+selectedScore.id
+);
+
+}
+
+// =================================
+// ◎ 譜面別釣果HIGH一覧を取得
+// =================================
+
+function getSasoiCatchRecordHighData(){
+
+const saved =
+localStorage.getItem(
+SASOI_CATCH_RECORD_HIGH_KEY
+);
+
+// ---------------------------------
+// 保存データが存在しない
+// ---------------------------------
+
+if(
+!saved
+){
+
+return {};
+
+}
+
+// ---------------------------------
+// JSONを復元
+// ---------------------------------
+
+try{
+
+const data =
+  JSON.parse(
+    saved
+  );
+
+
+// ---------------------------------
+// データ形式チェック
+// ---------------------------------
+
+if(
+  !data ||
+  typeof data !== "object" ||
+  Array.isArray(data)
+){
+
+  console.log(
+    "🎣 釣果HIGH：保存データ形式が不正です"
+  );
+
+  return {};
+
+}
+
+
+return data;
+
+}
+
+catch(error){
+
+console.log(
+  "🎣 釣果HIGH：保存データ読み込み失敗",
+  error
+);
+
+return {};
+
+}
+
+}
+
+// =================================
+// ◎ 現在の譜面の釣果HIGHを取得
+// =================================
+
+function getCurrentSasoiCatchRecordHigh(){
+
+const scoreId =
+getSasoiCatchRecordHighScoreId();
+
+// ---------------------------------
+// 譜面IDが取得できない
+// ---------------------------------
+
+if(
+!scoreId
+){
+
+return 0;
+
+}
+
+const data =
+getSasoiCatchRecordHighData();
+
+const highScore =
+Number(
+data[scoreId]
+);
+
+// ---------------------------------
+// 保存値が不正
+// ---------------------------------
+
+if(
+!Number.isFinite(highScore) ||
+highScore < 0
+){
+
+return 0;
+
+}
+
+return Math.floor(
+highScore
+);
+
+}
+
+// =================================
+// ◎ 現在の譜面の釣果HIGHを表示
+// =================================
+
+function updateSasoiCatchRecordHighDisplay(){
+
+const display =
+document.getElementById(
+"sasoiCatchHighScoreCount"
+);
+
+// ---------------------------------
+// 表示場所が存在しない
+// ---------------------------------
+
+if(
+!display
+){
+
+console.log(
+  "🎣 釣果HIGH表示失敗：sasoiCatchHighScoreCountが見つかりません"
+);
+
+return;
+
+}
+
+
+console.log("🎵 HIGH表示更新時の譜面:", getSelectedSasoiScore()?.id);
+
+
+// ---------------------------------
+// 現在の譜面のHIGHを取得
+// ---------------------------------
+
+const highScore =
+getCurrentSasoiCatchRecordHigh();
+
+// ---------------------------------
+// 表示
+// ---------------------------------
+
+display.textContent =
+highScore;
+
+console.log(
+"🎣 釣果HIGH表示更新：",
+highScore,
+"匹"
+);
+
+}
+
+// =================================
+// ◎ 釣果HIGH更新・保存
+// =================================
+//
+// 今回のプレイで実際に釣った匹数
+// sasoiCurrentCatchCount
+//
+// と、現在の譜面のHIGHを比較する。
+//
+// 今回の釣果 > HIGH
+//
+// の場合だけ保存する。
+//
+// =================================
+
+function updateSasoiCatchRecordHigh(){
+
+// ---------------------------------
+// 現在の譜面IDを取得
+// ---------------------------------
+
+const scoreId =
+getSasoiCatchRecordHighScoreId();
+
+if(
+!scoreId
+){
+
+console.log(
+  "🎣 釣果HIGH更新失敗：現在の譜面IDを取得できません"
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 今回のプレイの釣果数
+// =================================
+
+const currentCatch =
+Number(
+sasoiCurrentCatchCount
+) || 0;
+
+// ---------------------------------
+// 0未満を防止
+// ---------------------------------
+
+if(
+currentCatch <
+0
+){
+
+return;
+
+}
+
+// =================================
+// ◎ 現在のHIGHを取得
+// =================================
+
+const currentHigh =
+getCurrentSasoiCatchRecordHigh();
+
+// =================================
+// ◎ HIGHを超えていない
+// =================================
+
+if(
+currentCatch <=
+currentHigh
+){
+
+console.log(
+  "🎣 釣果HIGH更新なし：",
+  "譜面:",
+  scoreId,
+  "今回:",
+  currentCatch,
+  "HIGH:",
+  currentHigh
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 譜面別HIGHデータを取得
+// =================================
+
+const data =
+getSasoiCatchRecordHighData();
+
+// =================================
+// ◎ 現在の譜面へ保存
+// =================================
+
+data[scoreId] =
+currentCatch;
+
+// =================================
+// ◎ localStorageへ保存
+// =================================
+
+try{
+
+localStorage.setItem(
+  SASOI_CATCH_RECORD_HIGH_KEY,
+  JSON.stringify(
+    data
+  )
+);
+
+}
+
+catch(error){
+
+console.log(
+  "🎣 釣果HIGH保存失敗：",
+  error
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 保存成功後に画面を更新
+// =================================
+
+updateSasoiCatchRecordHighDisplay();
+
+// =================================
+// ◎ デバッグ
+// =================================
+
+console.log(
+"🎣 釣果HIGH更新！",
+"譜面ID:",
+scoreId,
+"旧HIGH:",
+currentHigh,
+"新HIGH:",
+currentCatch
+);
+
+}
+
+
+
 
 // =================================
 // ◎ HIT時の釣果表示
@@ -14685,19 +15455,8 @@ function showSasoiCatchFishAnimation(
 // 190以上 → ダブル!!
 // 160以上 → シングル!
 //
-// を判定表示の真上に表示する。
+// を判定表示する。
 //
-// ---------------------------------
-//
-// ゲット表示
-// → HIT時に表示
-//
-// 累計釣果
-// → HITから4秒後に加算・表示
-//
-// ---------------------------------
-//
-// LOSTではこの関数を呼ばない。
 // =================================
 
 function showSasoiCatchResult(){
@@ -14711,10 +15470,6 @@ function showSasoiCatchResult(){
       "sasoiGaugeTotal"
     );
 
-
-  // =================================
-  // ゲージ合計が存在しない
-  // =================================
 
   if(
     !totalDisplay
@@ -14730,7 +15485,7 @@ function showSasoiCatchResult(){
 
 
   // =================================
-  // 画面に表示されている合計値を取得
+  // ゲージ合計を取得
   // =================================
 
   const gauge =
@@ -14769,19 +15524,19 @@ function showSasoiCatchResult(){
 
 
   // =================================
-  // 表示文字
-  // =================================
-
-  let resultText =
-    "";
-
-
-  // =================================
-  // ◎ 今回の釣果数
+  // 今回の釣果数
   // =================================
 
   let currentCatchCount =
     0;
+
+
+  // =================================
+  // 釣果結果文字
+  // =================================
+
+  let resultText =
+    "";
 
 
   // =================================
@@ -14881,7 +15636,7 @@ function showSasoiCatchResult(){
 
 
   // =================================
-  // 新しい表示を作成
+  // 新しい釣果表示を作成
   // =================================
 
   const result =
@@ -14890,13 +15645,13 @@ function showSasoiCatchResult(){
     );
 
 
-  // =================================
-  // ◎ 釣果結果ごとのクラスを設定
-  // =================================
-
   result.className =
     "sasoi-catch-result";
 
+
+  // =================================
+  // 結果ごとのクラス
+  // =================================
 
   if(
     resultText ===
@@ -14957,10 +15712,6 @@ function showSasoiCatchResult(){
   );
 
 
-  // =================================
-  // ◎ 今回の釣果をログ表示
-  // =================================
-
   console.log(
     "🎣 今回の釣果:",
     currentCatchCount,
@@ -14969,7 +15720,7 @@ function showSasoiCatchResult(){
 
 
   // =================================
-  // ◎ 前回の累計釣果反映タイマーを停止
+  // 前回の釣果反映タイマーを停止
   // =================================
 
   if(
@@ -14987,35 +15738,17 @@ function showSasoiCatchResult(){
 
 
   // =================================
-  // ◎ 4秒後に累計釣果を反映
-  // =================================
-  //
-  // ゲット表示はこの時点ですでに表示済み。
-  //
-  // 4秒後にだけ、
-  // ・累計へ加算
-  // ・ケースの数字を更新
-  //
-  // を行う。
+  // 3.5秒後に釣果をケースへ投入
   // =================================
 
   sasoiCatchCountTimer =
     setTimeout(
       function(){
 
-// =================================
-// ◎ ワカサギ投入開始
-// =================================
-//
-// 今回の釣果数を一気に加算せず、
-// 1匹ずつケースへ投入する。
-// 魚がケースに入ったタイミングで
-// 累計釣果を1匹ずつ +1 する。
-// =================================
+        showSasoiCatchFishAnimation(
+          currentCatchCount
+        );
 
-showSasoiCatchFishAnimation(
-  currentCatchCount
-);
 
         // ---------------------------------
         // 累計釣果表示を取得
@@ -15042,7 +15775,7 @@ showSasoiCatchFishAnimation(
 
 
         // ---------------------------------
-        // 累計釣果ログ
+        // ログ
         // ---------------------------------
 
         console.log(
@@ -15064,6 +15797,7 @@ showSasoiCatchFishAnimation(
     );
 
 }
+
 
 // ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
 
