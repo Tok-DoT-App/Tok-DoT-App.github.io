@@ -13320,6 +13320,10 @@ applySasoiScoreBackground(
 selectedScore
 );
 
+// ★ ゲーム開始時にも現在の譜面の釣果HIGHを表示
+updateSasoiCatchRecordHighDisplay();
+
+
 }
 
 
