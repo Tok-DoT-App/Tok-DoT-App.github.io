@@ -1186,59 +1186,62 @@ rgba(
 
   border-radius:12px;
 
-  /* =================================
-     金箔のような深い金色
-  ================================= */
+/* =================================
+金箔・金屏風風
+上品で深みのある黄金色
+================================= */
 
-  background:
-
-    /* ---------------------------------
-       金箔の細かな光
-    --------------------------------- */
-
-    repeating-linear-gradient(
-      92deg,
-      rgba(255,245,180,0.10) 0px,
-      rgba(255,245,180,0.10) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-
-    /* ---------------------------------
-       金の濃淡
-    --------------------------------- */
-
-    linear-gradient(
-      to bottom,
-      #E7C65A 0%,
-      #C99A2E 38%,
-      #A87518 70%,
-      #80500B 100%
-    ),
-
-    /* ---------------------------------
-       ベース
-    --------------------------------- */
-
-    #C99A2E;
+background:
 
 
-  /* =================================
-     金属・金箔の立体感
-  ================================= */
+/* ---------------------------------
+   金箔の細かな光
+--------------------------------- */
 
-  box-shadow:
+repeating-linear-gradient(
+  92deg,
+  rgba(255,248,205,0.12) 0px,
+  rgba(255,248,205,0.12) 1px,
+  transparent 1px,
+  transparent 4px
+),
 
-    0 4px 10px
-    rgba(45,30,5,0.32),
+/* ---------------------------------
+   金箔の濃淡
+--------------------------------- */
 
-    inset
-    0 2px 0
-    rgba(255,245,190,0.55),
+linear-gradient(
+  to bottom,
+  #F2D878 0%,
+  #D8B447 38%,
+  #B88A25 70%,
+  #8A5C12 100%
+),
 
-    inset
-    0 -4px 8px
-    rgba(70,40,0,0.28);
+/* ---------------------------------
+   ベース
+--------------------------------- */
+
+#D8B447;
+
+
+/* =================================
+金箔・金属の立体感
+================================= */
+
+box-shadow:
+
+
+0 4px 10px
+rgba(45,30,5,0.32),
+
+inset
+0 2px 0
+rgba(255,248,210,0.65),
+
+inset
+0 -4px 8px
+rgba(70,40,0,0.24);
 
 
   overflow:hidden;
@@ -1274,7 +1277,7 @@ rgba(
 
   border:none;
 
-  border-radius:12px;
+  border-radius:8px;
 
   background:
     linear-gradient(
@@ -1324,14 +1327,14 @@ rgba(
 
   transform:translateX(-50%);
 
-  width:60px;
+  width:68px;
   height:20px;
 
   font-size:14px;
 
   border:none;
 
-  border-radius:12px;
+  border-radius:8px;
 
   background:
     linear-gradient(
@@ -1595,221 +1598,288 @@ rgba(
 
 
 /* =================================
-   穂先取り付け部
-   赤い長方形
-   ================================= */
+穂先取り付け部
+赤い長方形
+================================= */
 
 .sasoi-line::after{
 
-  content:"";
+content:"";
 
-  position:absolute;
+position:absolute;
 
-  /* 縦線の下端から少しだけ出す */
-  bottom:-4px;
+bottom:-4px;
 
-  /* 縦線の中央に配置 */
-  left:50%;
+left:50%;
 
-  transform:
-    translateX(-50%);
+transform:
+translateX(-50%);
 
-  /* 縦線より幅広く */
-  width:6px;
+width:6px;
 
-  height:10px;
+height:10px;
 
-  /* 電動リール本体に合わせた赤 */
-  background:
-    linear-gradient(
-      to right,
-      #9f1d1d 0%,
-      #d92f2f 45%,
-      #f05252 100%
-    );
+/* =================================
+赤黒いダークレッド
+================================= */
 
-  /* 少しだけ角を丸める */
-  border-radius:2px;
+background:
+linear-gradient(
+to right,
+#4a0808 0%,
+#7f1515 45%,
+#a52a2a 100%
+);
 
-  /* 立体感 */
-  box-shadow:
-    inset 0 1px 1px
-    rgba(255,255,255,0.35),
+border-radius:2px;
 
-    inset 0 -1px 2px
-    rgba(0,0,0,0.30),
+box-shadow:
 
-    0 1px 2px
-    rgba(0,0,0,0.35);
+
+inset 0 1px 1px
+rgba(255,255,255,0.22),
+
+inset 0 -1px 2px
+rgba(0,0,0,0.45),
+
+0 1px 2px
+rgba(0,0,0,0.45);
+
+
+}
+
+/* =================================
+電動リール
+踏ん張りレッグ
+本体とたたき台の間
+黒寄りグレー調整版
+================================= */
+
+.sasoi-reel-leg{
+
+position:absolute;
+
+/* ---------------------------------
+現在うまくいっている位置
+--------------------------------- */
+
+left:46px;
+
+top:130px;
+
+/* ---------------------------------
+踏ん張りレッグの大きさ
+--------------------------------- */
+
+width:12px;
+
+height:15px;
+
+box-sizing:border-box;
+
+/* ---------------------------------
+中空
+中央は透明
+--------------------------------- */
+
+background:
+transparent;
+
+/* ---------------------------------
+黒寄りの金属フレーム
+左右の縦線だけ細く
+--------------------------------- */
+
+border-top:
+3px solid
+#3f3f3f;
+
+border-bottom:
+2px solid
+#3f3f3f;
+
+border-left:
+1px solid
+#3f3f3f;
+
+border-right:
+1px solid
+#3f3f3f;
+
+
+/* ---------------------------------
+少しだけ金具らしい形状
+上側の角を小さく
+--------------------------------- */
+
+clip-path:
+polygon(
+8% 0%,
+92% 0%,
+
+100% 6%,
+100% 92%,
+
+82% 100%,
+18% 100%,
+
+0% 92%,
+0% 6%
+);
+
+
+/* ---------------------------------
+黒寄りの金属感
+--------------------------------- */
+
+box-shadow:
+
+inset
+1px 0 1px
+rgba(255,255,255,0.28),
+
+inset
+-1px 0 2px
+rgba(0,0,0,0.65),
+
+0 1px 3px
+rgba(0,0,0,0.55);
+
+/* ---------------------------------
+縦向き
+--------------------------------- */
+
+transform:none;
+
+transform-origin:
+top center;
+
+/* ---------------------------------
+レイヤー
+たたき台より前
+本体より後ろ
+--------------------------------- */
+
+z-index:1;
+
+pointer-events:none;
 
 }
 
 
+
+
 /* =================================
-   電動リール本体（くびれ形状）
-   底面ポッコリ・半円強調版
+電動リール本体（くびれ形状）
+底面ポッコリ・半円強調版
 ================================= */
 
 .sasoi-weight{
 
-  width:18px;
+width:18px;
 
-  height:52px;
+height:52px;
 
-  background:
-  linear-gradient(
-    to right,
-    #8f1818,
-    #e53935 45%,
-    #ff7777
-  );
+/* =================================
+赤黒いダークレッド
+================================= */
 
+background:
+linear-gradient(
+to right,
+#3b0707 0%,
+#681010 35%,
+#8f1c1c 55%,
+#a82a2a 100%
+);
 
-  /* =================================
-     電動リール 横から見た流線型
-     底面を丸く膨らませる
-  ================================= */
+/* =================================
+電動リール 横から見た流線型
+底面を丸く膨らませる
+================================= */
 
-  clip-path:polygon(
-
-    /* ---------------------------------
-       1. 穂先挿入口（上部先端）
-    --------------------------------- */
-
-    35% 0%,
-    65% 0%,
+clip-path:polygon(
 
 
-    /* ---------------------------------
-       2. スプール周り（肩の最大幅）
-    --------------------------------- */
+35% 0%,
+65% 0%,
 
-    84% 5%,
-    95% 15%,
-    98% 28%,
-    98% 36%,
+84% 5%,
+95% 15%,
+98% 28%,
+98% 36%,
 
+93% 48%,
+88% 60%,
+86% 68%,
 
-    /* ---------------------------------
-       3. 中央のライン
-    --------------------------------- */
+88% 77%,
+92% 84%,
+94% 89%,
+93% 93%,
+89% 96%,
+83% 98%,
+75% 99.3%,
 
-    93% 48%,
-    88% 60%,
-    86% 68%,
+66% 99.8%,
+58% 100%,
+50% 100%,
+42% 100%,
+34% 99.8%,
+25% 99.3%,
 
+17% 98%,
+11% 96%,
+7% 93%,
+6% 89%,
+8% 84%,
+12% 77%,
 
-    /* ---------------------------------
-       4. 下部ボディ
-       丸い底面へゆっくり接続
-    --------------------------------- */
+14% 68%,
+12% 60%,
+7% 48%,
 
-    88% 77%,
-
-    92% 84%,
-
-    94% 89%,
-
-    93% 93%,
-
-    89% 96%,
-
-    83% 98%,
-
-    75% 99.3%,
-
-
-    /* ---------------------------------
-       5. 底面の半円
-       中央に向かって丸く膨らませる
-    --------------------------------- */
-
-    66% 99.8%,
-
-    58% 100%,
-
-    50% 100%,
-
-    42% 100%,
-
-    34% 99.8%,
-
-    25% 99.3%,
+2% 36%,
+2% 28%,
+5% 15%,
+16% 5%
 
 
-    /* ---------------------------------
-       6. 左側の半円
-    --------------------------------- */
+);
 
-    17% 98%,
+margin-top:0;
 
-    11% 96%,
+display:flex;
 
-    7% 93%,
+flex-direction:column;
 
-    6% 89%,
+align-items:center;
 
-    8% 84%,
+box-sizing:border-box;
 
-    12% 77%,
+padding-top:2px;
 
+/* =================================
+立体感
+================================= */
 
-    /* ---------------------------------
-       7. 左側ライン〜上部
-    --------------------------------- */
-
-    14% 68%,
-
-    12% 60%,
-
-    7% 48%,
+box-shadow:
 
 
-    /* ---------------------------------
-       左肩
-    --------------------------------- */
+inset
+0 -2px 4px
+rgba(0,0,0,.38),
 
-    2% 36%,
-    2% 28%,
-    5% 15%,
-    16% 5%
+inset
+0 0 6px
+rgba(255,255,255,.28),
 
-  );
+0 2px 4px
+rgba(0,0,0,.40);
 
-
-  margin-top:0;
-
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-
-
-  box-sizing:border-box;
-
-  padding-top:2px;
-
-
-  /* =================================
-     立体感
-  ================================= */
-
-  box-shadow:
-
-    inset
-    0 -2px 4px
-    rgba(0,0,0,.25),
-
-    inset
-    0 0 6px
-    rgba(255,255,255,.35),
-
-    0 2px 4px
-    rgba(0,0,0,.35);
 
 }
+
 
 
 /* =================================
@@ -3884,52 +3954,142 @@ rgba(
 
 
 /* =================================
-   ハイスコア
-   合計値の上
+ハイスコア
+左上にHIGH
+その下に数字
 ================================= */
 
 .sasoi-gauge-highscore{
 
-  display:block;
+display:
+flex;
 
-  width:38px;
+flex-direction:
+column;
 
-  height:12px;
+align-items:
+stretch;
 
-  box-sizing:border-box;
+justify-content:
+center;
 
-  text-align:right;
+width:
+38px;
 
-  padding-right:4px;
+height:
+22px;
 
-  font-size:10px;
+box-sizing:
+border-box;
 
-  font-family:"Yuji Boku",serif;
+padding:
+0;
 
-  font-weight:bold;
+font-family:
+"Yuji Boku",
+serif;
 
-  line-height:12px;
+font-weight:
+bold;
 
-  color:#17252B;
+color:
+#17252B;
 
-  white-space:nowrap;
+white-space:
+nowrap;
 
-  position:absolute;
+position:
+absolute;
 
-  right:0;
+right:
+0;
 
-  bottom:21px;
+bottom:
+18px;
 
-  transform:
-    translateX(-10px);
+transform:
+translateX(2px);
 
-  opacity:0.75;
+opacity:
+0.75;
 
-  pointer-events:auto;
+pointer-events:
+auto;
 
-  z-index:100;
+z-index:
+100;
 
 }
+
+/* =================================
+HIGH
+================================= */
+
+.sasoi-gauge-highscore-label{
+
+display:
+block;
+
+width:
+100%;
+
+font-size:
+7px;
+
+line-height:
+7px;
+
+height:
+7px;
+
+font-weight:
+bold;
+
+text-align:
+left;
+
+}
+
+/* =================================
+ハイスコア数字
+================================= */
+
+.sasoi-gauge-highscore-number{
+
+display:
+block;
+
+width:
+100%;
+
+font-size:
+10px;
+
+line-height:
+11px;
+
+font-weight:
+bold;
+
+text-align:
+right;
+
+padding-right:
+7px;
+
+box-sizing:
+border-box;
+
+position:
+relative;
+
+top:
+-2px;
+
+}
+
+
+
 
 /* =================================
    通常メモリ
@@ -5001,7 +5161,7 @@ bottom:
 35px;
 
 width:
-86px;
+74px;
 
 height:
 28px;
@@ -5024,30 +5184,71 @@ center;
 justify-items:
 center;
 
+/* ---------------------------------
+ハイスコア専用・ワインレッドの水
+--------------------------------- */
+
 background:
-#b9e8f2;
+linear-gradient(
+180deg,
+#e8b0bc 0%,
+#b9576d 45%,
+#8f3049 100%
+);
+
+/* ---------------------------------
+ケースの縁
+--------------------------------- */
 
 border:
 1px solid
-rgba(255,255,255,0.65);
+rgba(255,255,255,0.72);
 
 border-radius:
 9px;
 
+/* ---------------------------------
+外側の影＋
+上から水面へ落ち込む凹み影
+--------------------------------- */
+
+box-shadow:
+
+/* 外側 */
+0 2px 4px
+rgba(0,0,0,0.35),
+
+/* 上端から内側へ入る影 */
+inset 0 5px 5px
+rgba(70,10,25,0.38),
+
+/* 下側の水の明るさ */
+inset 0 -2px 2px
+rgba(255,255,255,0.28),
+
+/* 左右の内側 */
+inset 2px 0 3px
+rgba(255,255,255,0.18),
+
+inset -2px 0 3px
+rgba(70,10,25,0.18);
+
 color:
-#26343a;
+#fff4f6;
 
 font-family:
 "Yuji Boku",
 serif;
 
 pointer-events:
-none;
+auto;
 
 z-index:
 20;
 
 }
+
+
 
 /* =================================
    HIGH
@@ -5065,7 +5266,7 @@ z-index:
     7px;
 
   font-weight:
-    900;
+    500;
 
   line-height:
     1;
@@ -5077,7 +5278,7 @@ z-index:
     relative;
 
   left:
-    -18px;
+    -15px;
 
 }
 
@@ -5095,10 +5296,10 @@ z-index:
     2;
 
   font-size:
-    15px;
+    14px;
 
   font-weight:
-    900;
+    500;
 
   line-height:
     1;
@@ -5116,7 +5317,7 @@ z-index:
     -11px;
 
   top:
-    -2px;
+    -4px;
 
   text-shadow:
     0 1px 1px
@@ -5141,7 +5342,7 @@ z-index:
     7px;
 
   font-weight:
-    900;
+    500;
 
   line-height:
     1;
@@ -5603,6 +5804,225 @@ z-index:
 
   transform:
     scale(0.94);
+
+}
+
+
+/* =================================
+釣果HIGH
+リセット確認モーダル
+================================= */
+
+.sasoi-catch-highscore-reset-modal{
+
+display:none;
+
+position:fixed;
+
+inset:0;
+
+width:100%;
+
+height:100%;
+
+background:
+rgba(0,0,0,0.45);
+
+align-items:center;
+
+justify-content:center;
+
+z-index:1000;
+
+}
+
+/* =================================
+モーダル本体
+================================= */
+
+.sasoi-catch-highscore-reset-panel{
+
+width:250px;
+
+box-sizing:border-box;
+
+padding:
+18px
+16px
+15px;
+
+background:
+linear-gradient(
+to bottom,
+#fff8f5 0%,
+#f5e8e3 100%
+);
+
+border:
+1px solid
+rgba(255,255,255,0.85);
+
+border-radius:12px;
+
+box-shadow:
+
+
+0 5px 15px
+rgba(0,0,0,0.35),
+
+inset
+0 1px 1px
+rgba(255,255,255,0.8);
+
+
+}
+
+/* =================================
+タイトル
+================================= */
+
+.sasoi-catch-highscore-reset-title{
+
+text-align:center;
+
+font-family:
+"Yuji Boku",
+serif;
+
+font-size:16px;
+
+font-weight:bold;
+
+color:#4a1717;
+
+margin-bottom:10px;
+
+}
+
+/* =================================
+説明
+================================= */
+
+.sasoi-catch-highscore-reset-message{
+
+text-align:center;
+
+font-family:
+"Yuji Boku",
+serif;
+
+font-size:12px;
+
+color:#4a3834;
+
+line-height:1.5;
+
+margin-bottom:15px;
+
+}
+
+/* =================================
+ボタン
+================================= */
+
+.sasoi-catch-highscore-reset-buttons{
+
+display:flex;
+
+justify-content:center;
+
+gap:10px;
+
+}
+
+/* =================================
+共通ボタン
+================================= */
+
+.sasoi-catch-highscore-reset-button{
+
+width:90px;
+
+height:34px;
+
+border:none;
+
+border-radius:8px;
+
+font-family:
+"Yuji Boku",
+serif;
+
+font-size:12px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+box-sizing:border-box;
+
+}
+
+/* =================================
+続ける
+================================= */
+
+.sasoi-catch-highscore-reset-button.cancel{
+
+background:
+#d8d8d8;
+
+color:#333;
+
+box-shadow:
+
+
+inset
+0 1px 1px
+rgba(255,255,255,0.7),
+
+0 2px 3px
+rgba(0,0,0,0.2);
+
+
+}
+
+/* =================================
+リセット
+================================= */
+
+.sasoi-catch-highscore-reset-button.ok{
+
+background:
+linear-gradient(
+to bottom,
+#b83b3b 0%,
+#7d1717 100%
+);
+
+color:white;
+
+box-shadow:
+
+
+inset
+0 1px 1px
+rgba(255,255,255,0.25),
+
+0 2px 3px
+rgba(0,0,0,0.3);
+
+
+}
+
+/* =================================
+押下時
+================================= */
+
+.sasoi-catch-highscore-reset-button:active{
+
+transform:
+translateY(1px);
 
 }
 
@@ -6554,25 +6974,46 @@ area.innerHTML = `
 
 <div class="sasoi-gauge-values">
 
-  <!-- ハイスコア -->
-  <span
-    id="sasoiGaugeHighScore"
-    class="sasoi-gauge-highscore"
-  >HIGH 0</span>
+<!-- ハイスコア -->
+
+<span
+id="sasoiGaugeHighScore"
+class="sasoi-gauge-highscore"
+
+>
+
+<span
+class="sasoi-gauge-highscore-label"
+
+> HIGH</span>
+
+<span
+id="sasoiGaugeHighScoreNumber"
+class="sasoi-gauge-highscore-number"
+
+> 0</span>
+
+</span>
+
 
   <!-- 今回の加算値 -->
-  <span
-    id="sasoiGaugeAdd"
-    class="sasoi-gauge-add"
-  ></span>
+
+<span
+id="sasoiGaugeAdd"
+class="sasoi-gauge-add"
+
+> </span>
 
   <!-- 現在の合計値 -->
-  <span
-    id="sasoiGaugeTotal"
-    class="sasoi-gauge-total"
-  >0</span>
+
+<span
+id="sasoiGaugeTotal"
+class="sasoi-gauge-total"
+
+> 0</span>
 
 </div>
+
 
 <!-- =================================
      譜面名
@@ -6789,23 +7230,39 @@ class="sasoi-catch-highscore-unit"
 <div class="sasoi-edge bottom"></div>
 
 <!-- 電動リール周り -->
+
 <div class="sasoi-black"></div>
 
+<!-- =================================
+     踏ん張りレッグ
+     たたき台とリール本体の間
+================================= -->
+
+<div class="sasoi-reel-leg"></div>
+
 <div class="sasoi-rod">
+
   <div class="sasoi-tip"></div>
+
   <div class="sasoi-line"></div>
 
-  
   <div class="sasoi-weight">
-    <div class="sasoi-spool">
+
+
+<div class="sasoi-spool">
+
   <span class="sasoi-line-stop stop-12"></span>
+
   <span class="sasoi-line-stop stop-4"></span>
+
   <span class="sasoi-line-stop stop-8"></span>
+
 </div>
 
-    <div class="sasoi-display">
-      …
-    </div>
+<div class="sasoi-display">
+  …
+</div>
+
 
 <div class="sasoi-button"></div>
 
@@ -6916,7 +7373,7 @@ id="sasoiTouch">
     <div
       class="sasoi-highscore-reset-message"
     >
-      ハイスコアを0に戻しますか？
+      興味ゲージハイスコアを0に戻しますか？
     </div>
 
 
@@ -6952,6 +7409,72 @@ id="sasoiTouch">
 </div>
 
 <!-- ======================= ハイスコアリセット確認モーダル　======================= -->
+
+<!-- ======================= 釣果HIGHリセット確認モーダル ======================= -->
+
+<div
+  id="sasoiCatchHighScoreResetModal"
+  class="sasoi-highscore-reset-modal"
+>
+
+  <div
+    class="sasoi-highscore-reset-panel"
+  >
+
+
+<!-- タイトル -->
+
+<div
+  class="sasoi-highscore-reset-title"
+>
+  ハイスコアをリセット
+</div>
+
+
+<!-- 説明 -->
+
+<div
+  class="sasoi-highscore-reset-message"
+>
+  釣果ハイスコアを0に戻しますか？
+</div>
+
+
+<!-- ボタン -->
+
+<div
+  class="sasoi-highscore-reset-buttons"
+>
+
+  <!-- 続ける -->
+
+  <button
+    id="sasoiCatchHighScoreResetCancel"
+    class="sasoi-highscore-reset-button cancel"
+  >
+    続ける
+  </button>
+
+
+  <!-- リセット -->
+
+  <button
+    id="sasoiCatchHighScoreResetOK"
+    class="sasoi-highscore-reset-button ok"
+  >
+    リセット
+  </button>
+
+</div>
+
+
+  </div>
+
+</div>
+
+<!-- ======================= 釣果HIGHリセット確認モーダル ======================= -->
+
+
 
 </div>
 
@@ -8131,27 +8654,30 @@ return 0;
 
 function updateSasoiGaugeHighScoreDisplay(){
 
-  const highScoreDisplay =
-    document.getElementById(
-      "sasoiGaugeHighScore"
-    );
+const highScoreNumber =
+document.getElementById(
+"sasoiGaugeHighScoreNumber"
+);
+
+if(
+!highScoreNumber
+){
 
 
-  if(
-    !highScoreDisplay
-  ){
-
-    return;
-
-  }
+return;
 
 
-  const highScore =
-    getSasoiGaugeHighScore();
+}
 
+const highScore =
+getSasoiGaugeHighScore();
 
-  highScoreDisplay.textContent =
-    "HIGH " + highScore;
+// ---------------------------------
+// 数字だけを更新
+// ---------------------------------
+
+highScoreNumber.textContent =
+highScore;
 
 }
 
@@ -15445,6 +15971,460 @@ currentCatch
 );
 
 }
+
+
+
+
+
+
+// ==========================================
+// ◎ 釣果HIGHリセットモーダル
+// ==========================================
+
+function openSasoiCatchHighScoreResetModal(){
+
+const modal =
+document.getElementById(
+"sasoiCatchHighScoreResetModal"
+);
+
+if(
+!modal
+){
+
+return;
+
+}
+
+// =================================
+// ◎ 長押しタップボタンを取得
+// =================================
+
+const sasoiTouch =
+document.getElementById(
+"sasoiTouch"
+);
+
+// ---------------------------------
+// 長押しタップボタンを非表示
+// ---------------------------------
+
+if(
+sasoiTouch
+){
+
+sasoiTouch.style.display =
+"none";
+
+}
+
+// =================================
+// ◎ モーダルを表示
+// =================================
+
+modal.style.display =
+"flex";
+
+}
+
+
+// ==========================================
+// ◎ 釣果HIGHリセットモーダルを閉じる
+// ==========================================
+
+function closeSasoiCatchHighScoreResetModal(){
+
+const modal =
+document.getElementById(
+"sasoiCatchHighScoreResetModal"
+);
+
+if(
+!modal
+){
+
+return;
+
+}
+
+// =================================
+// ◎ モーダルを非表示
+// =================================
+
+modal.style.display =
+"none";
+
+// =================================
+// ◎ 長押しタップボタンを取得
+// =================================
+
+const sasoiTouch =
+document.getElementById(
+"sasoiTouch"
+);
+
+// ---------------------------------
+// 長押しタップボタンを再表示
+// ---------------------------------
+
+if(
+sasoiTouch
+){
+
+sasoiTouch.style.display =
+"";
+
+}
+
+}
+
+
+// ==========================================
+// ◎ 現在の譜面の釣果HIGHをリセット
+// ==========================================
+
+function resetCurrentSasoiCatchRecordHigh(){
+
+// ---------------------------------
+// 現在の譜面ID
+// ---------------------------------
+
+const scoreId =
+getSasoiCatchRecordHighScoreId();
+
+if(
+!scoreId
+){
+
+
+console.log(
+  "🎣 釣果HIGHリセット失敗：譜面IDを取得できません"
+);
+
+return;
+
+
+}
+
+// ---------------------------------
+// 現在の譜面別HIGHデータを取得
+// ---------------------------------
+
+const data =
+getSasoiCatchRecordHighData();
+
+// ---------------------------------
+// 現在の譜面だけ0にする
+// ---------------------------------
+
+data[scoreId] =
+0;
+
+// ---------------------------------
+// localStorageへ保存
+// ---------------------------------
+
+try{
+
+
+localStorage.setItem(
+  SASOI_CATCH_RECORD_HIGH_KEY,
+  JSON.stringify(
+    data
+  )
+);
+
+
+}
+
+catch(error){
+
+
+console.log(
+  "🎣 釣果HIGHリセット保存失敗：",
+  error
+);
+
+return;
+
+
+}
+
+// ---------------------------------
+// 表示を更新
+// ---------------------------------
+
+updateSasoiCatchRecordHighDisplay();
+
+console.log(
+"🎣 釣果HIGHリセット：",
+"譜面ID:",
+scoreId
+);
+
+}
+
+// ==========================================
+// ◎ 釣果HIGHリセットモーダル初期化
+// ==========================================
+
+function initSasoiCatchHighScoreResetModal(){
+
+const display =
+document.getElementById(
+"sasoiCatchHighScoreDisplay"
+);
+
+const modal =
+document.getElementById(
+"sasoiCatchHighScoreResetModal"
+);
+
+const cancelButton =
+document.getElementById(
+"sasoiCatchHighScoreResetCancel"
+);
+
+const okButton =
+document.getElementById(
+"sasoiCatchHighScoreResetOK"
+);
+
+if(
+!display ||
+!modal ||
+!cancelButton ||
+!okButton
+){
+
+
+console.log(
+  "🎣 釣果HIGHリセットモーダル初期化失敗"
+);
+
+return;
+
+
+}
+
+
+// =================================
+// ◎ ダブルタップ検出
+// =================================
+
+let sasoiCatchHighScoreLastTapTime =
+  0;
+
+
+document.addEventListener(
+  "touchend",
+  function(event){
+
+    const display =
+      document.getElementById(
+        "sasoiCatchHighScoreDisplay"
+      );
+
+
+    // ---------------------------------
+    // 釣果HIGH表示が存在しない場合
+    // ---------------------------------
+
+    if(
+      !display
+    ){
+
+      return;
+
+    }
+
+
+    // ---------------------------------
+    // HIGH表示以外へのタップは無視
+    // ---------------------------------
+
+    if(
+      !display.contains(
+        event.target
+      )
+    ){
+
+      return;
+
+    }
+
+
+    const now =
+      Date.now();
+
+
+    const elapsed =
+      now -
+      sasoiCatchHighScoreLastTapTime;
+
+
+    // ---------------------------------
+    // 350ms以内ならダブルタップ
+    // ---------------------------------
+
+    if(
+      elapsed > 0 &&
+      elapsed < 350
+    ){
+
+      event.preventDefault();
+
+
+      openSasoiCatchHighScoreResetModal();
+
+
+      sasoiCatchHighScoreLastTapTime =
+        0;
+
+
+      return;
+
+    }
+
+
+    sasoiCatchHighScoreLastTapTime =
+      now;
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+// =================================
+// ◎ PC等のダブルクリックにも対応
+// =================================
+
+document.addEventListener(
+  "dblclick",
+  function(event){
+
+    const display =
+      document.getElementById(
+        "sasoiCatchHighScoreDisplay"
+      );
+
+
+    // ---------------------------------
+    // HIGH表示が存在しない場合
+    // ---------------------------------
+
+    if(
+      !display
+    ){
+
+      return;
+
+    }
+
+
+    // ---------------------------------
+    // HIGH表示上でのダブルクリックだけ反応
+    // ---------------------------------
+
+    if(
+      !display.contains(
+        event.target
+      )
+    ){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    openSasoiCatchHighScoreResetModal();
+
+  }
+);
+
+
+
+// =================================
+// ◎ 続ける
+// =================================
+
+cancelButton.addEventListener(
+"click",
+function(){
+
+
+  closeSasoiCatchHighScoreResetModal();
+
+}
+
+
+);
+
+// =================================
+// ◎ リセット
+// =================================
+
+okButton.addEventListener(
+"click",
+function(){
+
+
+  resetCurrentSasoiCatchRecordHigh();
+
+  closeSasoiCatchHighScoreResetModal();
+
+}
+
+
+);
+
+// =================================
+// ◎ モーダル外側をタップして閉じる
+// =================================
+
+modal.addEventListener(
+"click",
+function(event){
+
+
+  if(
+    event.target === modal
+  ){
+
+    closeSasoiCatchHighScoreResetModal();
+
+  }
+
+}
+
+
+);
+
+console.log(
+"🎣 釣果HIGHリセットモーダル初期化完了"
+);
+
+}
+
+// ==========================================
+// ◎ 初期化
+// ==========================================
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+initSasoiCatchHighScoreResetModal();
+
+
+}
+);
 
 
 
