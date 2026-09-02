@@ -28,7 +28,7 @@ const sasoiScore04 = [
 
   // =====================
   // 1セット目
-  // ●－－－－○●－－－－
+  // ●－－－－
   // =====================
 
   {
@@ -61,6 +61,12 @@ const sasoiScore04 = [
     type:"hold"
   },
 
+
+  // =====================
+  // 2セット目
+  // ○●○●－－－－
+  // =====================
+
   {
     id:9,
     time:4500,
@@ -76,13 +82,13 @@ const sasoiScore04 = [
   {
     id:11,
     time:5100,
-    type:"hold"
+    type:"release"
   },
 
   {
     id:12,
     time:5400,
-    type:"hold"
+    type:"press"
   },
 
   {
@@ -97,33 +103,34 @@ const sasoiScore04 = [
     type:"hold"
   },
 
-  // =====================
-  // 2セット目
-  // ○●－－－－
-  // =====================
-
   {
     id:15,
     time:6300,
-    type:"release"
+    type:"hold"
   },
 
   {
     id:16,
     time:6600,
-    type:"press"
+    type:"hold"
   },
+
+
+  // =====================
+  // 3セット目
+  // ○●－－－－－
+  // =====================
 
   {
     id:17,
     time:6900,
-    type:"hold"
+    type:"release"
   },
 
   {
     id:18,
     time:7200,
-    type:"hold"
+    type:"press"
   },
 
   {
@@ -138,21 +145,16 @@ const sasoiScore04 = [
     type:"hold"
   },
 
-  // =====================
-  // 3セット目
-  // ○●－－－－
-  // =====================
-
   {
     id:21,
     time:8100,
-    type:"release"
+    type:"hold"
   },
 
   {
     id:22,
     time:8400,
-    type:"press"
+    type:"hold"
   },
 
   {
@@ -161,39 +163,40 @@ const sasoiScore04 = [
     type:"hold"
   },
 
+
+  // =====================
+  // 4セット目
+  // ○●○●－－－－－
+  // =====================
+
   {
     id:24,
     time:9000,
-    type:"hold"
+    type:"release"
   },
 
   {
     id:25,
     time:9300,
-    type:"hold"
+    type:"press"
   },
 
   {
     id:26,
     time:9600,
-    type:"hold"
+    type:"release"
   },
-
-  // =====================
-  // 4セット目
-  // ○●－－－－－
-  // =====================
 
   {
     id:27,
     time:9900,
-    type:"release"
+    type:"press"
   },
 
   {
     id:28,
     time:10200,
-    type:"press"
+    type:"hold"
   },
 
   {
@@ -220,20 +223,14 @@ const sasoiScore04 = [
     type:"hold"
   },
 
-  {
-    id:33,
-    time:11700,
-    type:"hold"
-  },
-
 
   // =====================
   // 最後の ◎
   // =====================
 
   {
-    id:34,
-    time:12000,
+    id:33,
+    time:11700,
     type:"bite"
   }
 

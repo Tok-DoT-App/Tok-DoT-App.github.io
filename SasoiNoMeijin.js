@@ -1626,10 +1626,12 @@ height:10px;
 background:
 linear-gradient(
 to right,
-#4a0808 0%,
-#7f1515 45%,
-#a52a2a 100%
+#5a0b0b 0%,
+#8a1717 35%,
+#b52d2d 55%,
+#c43a3a 100%
 );
+
 
 border-radius:2px;
 
@@ -1692,19 +1694,20 @@ transparent;
 
 border-top:
 3px solid
-#3f3f3f;
+#686868;
 
 border-bottom:
 2px solid
-#3f3f3f;
+#5a5a5a;
 
 border-left:
 1px solid
-#3f3f3f;
+#626262;
 
 border-right:
 1px solid
-#3f3f3f;
+#626262;
+
 
 
 /* ---------------------------------
@@ -1787,11 +1790,12 @@ height:52px;
 background:
 linear-gradient(
 to right,
-#3b0707 0%,
-#681010 35%,
-#8f1c1c 55%,
-#a82a2a 100%
+#5a0b0b 0%,
+#8a1717 35%,
+#b52d2d 55%,
+#c43a3a 100%
 );
+
 
 /* =================================
 電動リール 横から見た流線型
@@ -2177,7 +2181,7 @@ rgba(0,0,0,.40);
   height:70px;
 
   /* ★ ベースの黒 */
-  background-color:#111;
+  background-color:#252525;
 
   /* ★ 細かい斜めクロス模様 */
   background-image:
@@ -2200,7 +2204,7 @@ rgba(0,0,0,.40);
   background-size:6px 6px;
 
   /* ★ 外周を黒く */
-  border:2px solid #000;
+  border:2px solid #151515;
 
   border-radius:4px;
 

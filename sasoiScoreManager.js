@@ -222,7 +222,7 @@ title:"一誘一間・二誘連",
 
 titleKana:"いちゆういっかん・にゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore10,
 
@@ -245,7 +245,7 @@ title:"一誘一間・三誘連",
 
 titleKana:"いちゆういっかん・さんゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore11,
 
@@ -268,7 +268,7 @@ title:"二誘一間・一誘連",
 
 titleKana:"にゆういっかん・いちゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore12,
 
@@ -291,7 +291,7 @@ title:"二誘一間・三誘連",
 
 titleKana:"にゆういっかん・さんゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore13,
 
@@ -314,7 +314,7 @@ title:"三誘一間・一誘連",
 
 titleKana:"さんゆういっかん・いちゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore14,
 
@@ -337,7 +337,7 @@ title:"三誘一間・二誘連",
 
 titleKana:"さんゆういっかん・にゆうれん",
 
-difficulty:"★★☆☆☆",
+difficulty:"★★★☆☆",
 
 score:sasoiScore15,
 

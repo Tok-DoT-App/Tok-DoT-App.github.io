@@ -28,7 +28,7 @@ const sasoiScore12 = [
 
   // =====================
   // 1セット目
-  // ●－－－－○●－－－－
+  // ●－－－－
   // =====================
 
   {
@@ -61,6 +61,12 @@ const sasoiScore12 = [
     type:"hold"
   },
 
+
+  // =====================
+  // 2セット目
+  // ○●○●－－－－－
+  // =====================
+
   {
     id:9,
     time:4500,
@@ -76,13 +82,13 @@ const sasoiScore12 = [
   {
     id:11,
     time:5100,
-    type:"hold"
+    type:"release"
   },
 
   {
     id:12,
     time:5400,
-    type:"hold"
+    type:"press"
   },
 
   {
@@ -97,21 +103,16 @@ const sasoiScore12 = [
     type:"hold"
   },
 
-  // =====================
-  // 2セット目
-  // ○●－－－－
-  // =====================
-
   {
     id:15,
     time:6300,
-    type:"release"
+    type:"hold"
   },
 
   {
     id:16,
     time:6600,
-    type:"press"
+    type:"hold"
   },
 
   {
@@ -120,16 +121,22 @@ const sasoiScore12 = [
     type:"hold"
   },
 
+
+  // =====================
+  // 3セット目
+  // ○●－－－－－－
+  // =====================
+
   {
     id:18,
     time:7200,
-    type:"hold"
+    type:"release"
   },
 
   {
     id:19,
     time:7500,
-    type:"hold"
+    type:"press"
   },
 
   {
@@ -138,21 +145,16 @@ const sasoiScore12 = [
     type:"hold"
   },
 
-  // =====================
-  // 3セット目
-  // ○●－－－－
-  // =====================
-
   {
     id:21,
     time:8100,
-    type:"release"
+    type:"hold"
   },
 
   {
     id:22,
     time:8400,
-    type:"press"
+    type:"hold"
   },
 
   {
@@ -173,27 +175,28 @@ const sasoiScore12 = [
     type:"hold"
   },
 
-  {
-    id:26,
-    time:9600,
-    type:"hold"
-  },
 
   // =====================
   // 4セット目
-  // ○●－－－－－
+  // ○●－－－－－－
   // =====================
+
+  {
+    id:26,
+    time:9600,
+    type:"release"
+  },
 
   {
     id:27,
     time:9900,
-    type:"release"
+    type:"press"
   },
 
   {
     id:28,
     time:10200,
-    type:"press"
+    type:"hold"
   },
 
   {
