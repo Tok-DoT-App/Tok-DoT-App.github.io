@@ -2223,32 +2223,31 @@ rgba(0,0,0,.40);
 
 .sasoi-flow{
 
-  position:absolute;
+position:absolute;
 
-  left:0px;
+left:0px;
 
-  top:70px;
+top:70px;
 
-  font-size:20px;
+font-size:20px;
 
-  letter-spacing:5px;
+letter-spacing:5px;
 
-  /* ★ ワカサギの銀色のテカリをイメージした色 */
-  color:#EAF3C2;
+/* 譜面本体の色 */
+color:#ffffff;
 
-  text-shadow:
-  0 0 3px rgba(255,255,220,0.9),
-  0 0 8px rgba(220,235,130,0.45);
+text-shadow: 0 0 3px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.45);
 
-  white-space:nowrap;
+white-space:nowrap;
 
-  z-index:3;
+z-index:3;
 
-  pointer-events:none;
+pointer-events:none;
 
-  will-change:transform,left;
+will-change:transform,left;
 
 }
+
 
 .sasoi-flow span{
 
@@ -2302,6 +2301,92 @@ rgba(0,0,0,.40);
 
   }
 
+}
+
+
+/* =================================
+譜面の目
+● と ○ 専用
+================================= */
+
+.sasoi-note-eye{
+
+position:absolute;
+
+/* -------------------------------
+目全体の位置
+この2つを変更して位置調整
+------------------------------- */
+
+left:var(--eye-x, -1px);
+
+top:var(--eye-y, -1px);
+
+/* -------------------------------
+小さい○
+------------------------------- */
+
+width:7px;
+
+height:7px;
+
+border:1px solid #8ED8E8;
+
+border-radius:50%;
+
+box-sizing:border-box;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+pointer-events:none;
+
+z-index:10;
+
+transform:translate(5px,8px);
+
+}
+
+/* =================================
+目の中の小さい●
+================================= */
+
+.sasoi-note-eye::after{
+
+content:"";
+
+width:4px;
+
+height:4px;
+
+background:#222;
+
+border-radius:50%;
+
+display:block;
+
+}
+
+/* =================================
+小さい口
+================================= */
+.sasoi-note-eye::before {
+content: "";
+position: absolute;
+left: -5px;
+top: 6px;
+width: 6px;
+height: 1.2px;
+background: #888;
+transform: rotate(15deg);
+}
+
+.sasoi-flow span[data-type="release"] .sasoi-note-eye::before {
+background: #ffffff;
+width: 7px;
 }
 
 
@@ -8695,10 +8780,12 @@ function createSasoiNote(note){
 
 if(SASOI_DEBUG_MODE){
 
-  sasoiDebugText.note =
+
+sasoiDebugText.note =
   note.type.toUpperCase();
 
-  updateSasoiDebug();
+updateSasoiDebug();
+
 
 }
 
@@ -8707,16 +8794,16 @@ document.getElementById(
 "sasoiFlow"
 );
 
-
 if(!flow) return;
 
-
-
 const span =
-document.createElement("span");
+document.createElement(
+"span"
+);
 
-
+// ---------------------------------
 // 音符情報を保存
+// ---------------------------------
 
 span.dataset.id =
 note.id;
@@ -8727,84 +8814,175 @@ note.type;
 span.dataset.time =
 note.time;
 
-
+// ---------------------------------
 // 種類判定
+// ---------------------------------
 
-if(note.type==="count"){
+if(
+note.type ===
+"count"
+){
 
 
 span.innerText =
-note.value;
+  note.value;
 
 
 }
 
+else if(
+note.type ===
+"press"
+){
 
-else if(note.type==="press"){
 
- span.innerText =
- "●";
+span.innerText =
+  "●";
+
+
+// =================================
+// ●に目を追加
+// =================================
+
+const eye =
+  document.createElement(
+    "span"
+  );
+
+
+eye.className =
+  "sasoi-note-eye";
+
+
+// ---------------------------------
+// 目の位置
+// ---------------------------------
+//
+// この数値を変更すると
+// 目の位置を調整できます。
+//
+// X：右へ行くほど大きく
+// Y：下へ行くほど大きく
+//
+// ---------------------------------
+
+
+
+
+span.appendChild(
+  eye
+);
+
 
 }
 
+else if(
+note.type ===
+"hold"
+){
 
-else if(note.type==="hold"){
 
- span.innerText =
- "―";
+span.innerText =
+  "―";
+
 
 }
 
+else if(
+note.type ===
+"release"
+){
 
-else if(note.type==="release"){
 
- span.innerText =
- "○";
+span.innerText =
+  "○";
+
+
+// =================================
+// ○に目を追加
+// =================================
+
+const eye =
+  document.createElement(
+    "span"
+  );
+
+
+eye.className =
+  "sasoi-note-eye";
+
+
+// ---------------------------------
+// 目の位置
+// ---------------------------------
+
+
+
+span.appendChild(
+  eye
+);
+
 
 }
 
-else if(note.type==="bite"){
+else if(
+note.type ===
+"bite"
+){
 
- span.innerText =
- "◎";
+
+span.innerText =
+  "◎";
+
 
 }
 
-
+// ---------------------------------
 // 初期位置
+// ---------------------------------
 
 span.style.left =
 "0px";
 
+span.dataset.hit =
+"false";
 
-span.dataset.hit = "false";
-
-
+// ---------------------------------
 // 移動開始
+// ---------------------------------
 
 span.classList.add(
 "sasoi-note-move"
 );
 
-flow.appendChild(span);
+flow.appendChild(
+span
+);
 
-
+// ---------------------------------
 // 画面外へ出たら削除
+// ---------------------------------
 
-setTimeout(()=>{
+setTimeout(
+()=>{
+
 
   span.remove();
 
-},3000);
+},
+3000
 
+
+);
 
 console.log(
- "生成音符",
- span.dataset.id,
- span.dataset.type
+"生成音符",
+span.dataset.id,
+span.dataset.type
 );
 
 }
+
 
 // ==========================================
 // 興味ゲージ
