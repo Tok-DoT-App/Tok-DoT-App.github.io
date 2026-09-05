@@ -51,7 +51,7 @@ background-repeat:repeat;
 background-position:center;
 
 /* ここで1タイルの大きさを調整 */
-background-size:50px auto;
+background-size:500px auto;
 
 color:#263A38;
 
@@ -8865,14 +8865,16 @@ if(
       // 次の譜面開始
       // ---------------------------------
 
-      console.log(
-        "🎵 次の組み合わせ譜面を開始します"
-      );
+console.log( "🎵 次の組み合わせ譜面を開始します" );
 
+// =================================
+// ◎ 組み合わせ譜面
+// 判定表示10秒後自動消去開始
+// =================================
 
-      playNextSasoiNote(
-        sasoiPlaySessionId
-      );
+startSasoiCombinedJudgementHideTimer();
+
+playNextSasoiNote( sasoiPlaySessionId );
 
     },
     nextChartData
@@ -14435,6 +14437,29 @@ clearTimeout(sasoiPlayTimer);
 sasoiPlayTimer = null;
 }
 
+if(sasoiPlayTimer){
+clearTimeout(sasoiPlayTimer);
+sasoiPlayTimer = null;
+}
+
+// =================================
+// 組み合わせ譜面の判定表示タイマー停止
+// =================================
+
+if(
+sasoiCombinedJudgementHideTimer
+){
+
+clearTimeout(
+sasoiCombinedJudgementHideTimer
+);
+
+sasoiCombinedJudgementHideTimer =
+null;
+
+}
+
+
 const selectText =
 document.querySelector(
 ".sasoi-score-select-text"
@@ -15556,10 +15581,15 @@ if(
         "🎵 組み合わせ譜面：最初の通常譜面開始"
       );
 
+// ================================= 
+// ◎ 組み合わせ譜面 
+// 判定表示0.5秒後自動消去 
+// =================================
 
-      playNextSasoiNote(
-        sasoiPlaySessionId
-      );
+ startSasoiCombinedJudgementHideTimer();
+
+
+ playNextSasoiNote( sasoiPlaySessionId );
 
     }
   );
@@ -18113,6 +18143,215 @@ function showSasoiCatchResult(){
     );
 
 }
+
+// =================================
+// ◎ 組み合わせ譜面
+//    判定表示0.5秒後自動消去
+// =================================
+//
+// 組み合わせ譜面のプレイ開始から
+// 10秒経過した時点で、
+//
+// ・PERFECT / GOOD / BAD
+// ・HIT / LOST
+// ・1匹ゲット!
+// ・ダブル!!
+// ・トリプル!!!
+//
+// の表示だけを消す。
+//
+// 判定処理そのものは停止しない。
+// =================================
+
+let sasoiCombinedJudgementHideTimer =
+null;
+
+function startSasoiCombinedJudgementHideTimer(){
+
+// ---------------------------------
+// 前回タイマーを停止
+// ---------------------------------
+
+if(
+sasoiCombinedJudgementHideTimer
+){
+
+clearTimeout(
+  sasoiCombinedJudgementHideTimer
+);
+
+sasoiCombinedJudgementHideTimer =
+  null;
+
+}
+
+// ---------------------------------
+// 組み合わせ譜面以外は何もしない
+// ---------------------------------
+
+if(
+sasoiCombinedPlay !== true
+){
+
+return;
+
+}
+
+console.log(
+"🎣 組み合わせ譜面：判定表示0.5秒後フェードアウト開始"
+);
+
+// ---------------------------------
+// 0.5秒後にフェードアウト開始
+// ---------------------------------
+
+sasoiCombinedJudgementHideTimer =
+setTimeout(
+function(){
+
+    // =================================
+    // PERFECT / GOOD / BAD / HIT / LOST
+    // =================================
+
+    const judgement =
+      document.getElementById(
+        "sasoiJudgementDisplay"
+      );
+
+
+    if(
+      judgement
+    ){
+
+      // ---------------------------------
+      // フェードアウト準備
+      // ---------------------------------
+
+      judgement.style.transition =
+        "opacity 0.3s ease";
+
+      judgement.style.opacity =
+        "1";
+
+
+      // ---------------------------------
+      // 強制再描画
+      // ---------------------------------
+
+      void judgement.offsetWidth;
+
+
+      // ---------------------------------
+      // フェードアウト開始
+      // ---------------------------------
+
+      judgement.style.opacity =
+        "0";
+
+
+      // ---------------------------------
+      // フェードアウト完了後に初期化
+      // ---------------------------------
+
+      setTimeout(
+        function(){
+
+          judgement.textContent =
+            "";
+
+          judgement.className =
+            "sasoi-judgement-display";
+
+          judgement.style.transition =
+            "";
+
+          judgement.style.opacity =
+            "";
+
+        },
+        300
+      );
+
+    }
+
+
+    // =================================
+    // 1匹ゲット!
+    // シングル!
+    // ダブル!!
+    // トリプル!!!
+    // =================================
+
+    const catchResults =
+      document.querySelectorAll(
+        ".sasoi-catch-result"
+      );
+
+
+    catchResults.forEach(
+      function(result){
+
+        // ---------------------------------
+        // フェードアウト準備
+        // ---------------------------------
+
+        result.style.transition =
+          "opacity 0.3s ease";
+
+        result.style.opacity =
+          "1";
+
+
+        // ---------------------------------
+        // 強制再描画
+        // ---------------------------------
+
+        void result.offsetWidth;
+
+
+        // ---------------------------------
+        // フェードアウト開始
+        // ---------------------------------
+
+        result.style.opacity =
+          "0";
+
+
+        // ---------------------------------
+        // フェードアウト完了後に削除
+        // ---------------------------------
+
+        setTimeout(
+          function(){
+
+            result.remove();
+
+          },
+          300
+        );
+
+      }
+    );
+
+
+    // ---------------------------------
+    // タイマーをリセット
+    // ---------------------------------
+
+    sasoiCombinedJudgementHideTimer =
+      null;
+
+
+    console.log(
+      "🎣 組み合わせ譜面：判定表示をフェードアウトしました"
+    );
+
+  },
+  500
+);
+
+}
+
 
 // ------------------　新しいプレイを開始する　------------------
 

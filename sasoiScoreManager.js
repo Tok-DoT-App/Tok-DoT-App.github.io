@@ -360,9 +360,9 @@ number:"連誘技",
 
 numberKana:"れんゆうぎ",
 
-title:"誘一・二・三",
+title:"誘技・一・二・三",
 
-titleKana:"ゆういち・に・さん",
+titleKana:"ゆうぎ・ひぃ・ふぅ・みぃ",
 
 difficulty:"★★★★☆",
 
@@ -372,7 +372,7 @@ charts:[
   "score03"
 ],
 
-background:"images/sasoi-score01-bg.png"
+background:"images/sasoi-score16-bg.png"
 
 }
 
