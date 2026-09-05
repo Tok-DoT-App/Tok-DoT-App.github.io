@@ -6041,6 +6041,12 @@ document.head.appendChild(style);
 
 let sasoiCombinedPlay = false;
 
+// ------------------------------------
+// 今、組み合わせ譜面の何番目をプレイしているか
+// ------------------------------------
+
+let sasoiCombinedCharts = [];
+let sasoiCombinedChartIndex = 0;
 
 // =================================
 // ◎ 今回のプレイで釣った匹数
@@ -6313,10 +6319,8 @@ index <
 0
 ){
 
-
 index =
-  sasoiScoreList.length - 1;
-
+sasoiScoreList.length - 1;
 
 }
 
@@ -6325,10 +6329,8 @@ index >=
 sasoiScoreList.length
 ){
 
-
 index =
-  0;
-
+0;
 
 }
 
@@ -6349,12 +6351,53 @@ sasoiSelectedScoreIndex
 ];
 
 // ---------------------------------
+// 譜面情報が存在しない場合
+// ---------------------------------
+
+if(
+!selectedScore
+){
+
+console.log(
+"🎵 譜面変更失敗：譜面データがありません"
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 組み合わせ譜面か判定
+// =================================
+
+const isCombined =
+selectedScore.isCombined === true ||
+Array.isArray(
+selectedScore.charts
+);
+
+// ---------------------------------
+// 組み合わせ状態を保存
+// ---------------------------------
+
+sasoiCombinedPlay =
+isCombined;
+
+// ---------------------------------
 // 現在の譜面の背景データを取得
 // ---------------------------------
 
 applySasoiScoreBackground(
 selectedScore
 );
+
+// =================================
+// ◎ 通常譜面
+// =================================
+
+if(
+!isCombined
+){
 
 // ---------------------------------
 // 譜面データをゲームへ渡す
@@ -6363,14 +6406,84 @@ selectedScore
 sasoiScore =
 selectedScore.score;
 
+console.log(
+"🎵 通常譜面を選択:",
+selectedScore.id,
+selectedScore.number,
+selectedScore.title
+);
+
+}
+
+// =================================
+// ◎ 組み合わせ譜面
+// =================================
+
+else{
+
+// ---------------------------------
+// 組み合わせ譜面では、
+// 最初の譜面を取得する。
+//
+// ここではまだプレイ開始しない。
+// 実際の開始処理で
+// charts[0] を使用する。
+// ---------------------------------
+
+const firstChartId =
+selectedScore.charts &&
+selectedScore.charts.length >
+0
+? selectedScore.charts[0]
+: null;
+
+const firstChart =
+getSasoiScoreById(
+firstChartId
+);
+
+if(
+firstChart
+){
+
+sasoiScore =
+  firstChart.score;
+
+}
+
+else{
+
+sasoiScore =
+  [];
+
+console.log(
+  "🎵 組み合わせ譜面：最初の譜面を取得できません",
+  selectedScore.id
+);
+
+}
+
+console.log(
+"🎵 組み合わせ譜面を選択:",
+selectedScore.id,
+selectedScore.number,
+selectedScore.title,
+"構成:",
+selectedScore.charts
+);
+
+}
+
 // =================================
 // ◎ 譜面ごとの釣果HIGHを表示
 // =================================
 //
-// 譜面選択を切り替えた瞬間に、
-// その譜面専用の釣果HIGHを表示する。
+// 通常譜面:
+// score01 → score01専用HIGH
 //
-// 興味ゲージHIGHとは別管理。
+// 組み合わせ譜面:
+// combined01 → combined01専用HIGH
+//
 // =================================
 
 updateSasoiCatchRecordHighDisplay();
@@ -6383,11 +6496,12 @@ console.log(
 "🎵 譜面変更:",
 selectedScore.id,
 selectedScore.number,
-selectedScore.title
+selectedScore.title,
+"combined:",
+sasoiCombinedPlay
 );
 
 }
-
 
 // ==========================================
 // ◎ 現在選択中の譜面を取得
@@ -6537,13 +6651,16 @@ function animateSasoiScoreSelect(
 
 function updateSasoiScoreSelectDisplay(){
 
-  const selectedScore =
-    getSelectedSasoiScore();
+const selectedScore =
+getSelectedSasoiScore();
+
+if(!selectedScore){
 
 
-  if(!selectedScore){
+return;
 
-    return;
+
+}
 
 // ==========================================
 // ◎ 選択中の譜面に合わせて背景変更
@@ -6553,37 +6670,35 @@ applySasoiScoreBackground(
 selectedScore
 );
 
+// ==========================================
+// 譜面番号
+// ==========================================
 
-  }
+const numberDisplay =
+document.getElementById(
+"sasoiScoreSelectNumber"
+);
 
-
-  // ==========================================
-  // 譜面番号
-  // ==========================================
-
-  const numberDisplay =
-    document.getElementById(
-      "sasoiScoreSelectNumber"
-    );
+if(numberDisplay){
 
 
-  if(numberDisplay){
+numberDisplay.innerHTML = `
 
-    numberDisplay.innerHTML = `
+  <ruby>
 
-      <ruby>
+    ${selectedScore.number}
 
-        ${selectedScore.number}
+    <rt>
+      ${selectedScore.numberKana || ""}
+    </rt>
 
-        <rt>
-          ${selectedScore.numberKana || ""}
-        </rt>
+  </ruby>
 
-      </ruby>
+`;
 
-    `;
 
-  }
+}
+
 
 
   // ==========================================
@@ -7684,6 +7799,7 @@ id="sasoiTouch">
 
 `;
 
+
 // ------------------------------------
 // メニューの譜面名を更新
 // ------------------------------------
@@ -8406,29 +8522,206 @@ scoreSelectElement.addEventListener(
 // -------------------------------
 
 function playNextSasoiNote(
-  sessionId
+sessionId
 ){
 
-  // =================================
-  // プレイセッション確認
-  // =================================
-  //
-  // リトライ前の古い譜面タイマーが
-  // 後から実行されても、
-  // 新しいプレイには混ざらないようにする。
-  //
-  // =================================
+// =================================
+// プレイセッション確認
+// =================================
+//
+// リトライ前の古い譜面タイマーが
+// 後から実行されても、
+// 新しいプレイには混ざらないようにする。
+//
+// =================================
+
+if(
+sessionId !==
+undefined &&
+sessionId !==
+sasoiPlaySessionId
+){
+
+console.log(
+"🎵 古い譜面タイマーを無効化"
+);
+
+return;
+
+}
+
+// =================================
+// 譜面終了
+// =================================
+
+if(
+sasoiIndex >=
+sasoiScore.length
+){
+
+console.log(
+"譜面終了"
+);
+
+// =================================
+// 組み合わせ譜面の場合
+// =================================
+//
+// まだ次の譜面が存在する場合は、
+// ここではプレイ全体を終了しない。
+//
+// 興味ゲージだけリセットし、
+// 釣果は維持したまま次の譜面へ進む。
+//
+// =================================
+
+if(
+sasoiCombinedPlay
+){
+
+
+const hasNextCombinedChart =
+  transitionToNextSasoiCombinedChart();
+
+
+if(
+  hasNextCombinedChart
+){
+
+  console.log(
+    "[Sasoi] 組み合わせ譜面：中間譜面終了"
+  );
+
+
+  console.log(
+    "[Sasoi] 次の譜面タイトルを表示します"
+  );
+
+
+  // ---------------------------------
+  // 次の譜面を取得
+  // ---------------------------------
+
+  const nextCombinedChart =
+    sasoiCombinedCharts[
+      sasoiCombinedChartIndex
+    ];
+
+
+  // ---------------------------------
+  // 次の譜面が正しいデータか確認
+  // ---------------------------------
 
   if(
-    sessionId !==
-    undefined &&
-    sessionId !==
-    sasoiPlaySessionId
+    !Array.isArray(
+      nextCombinedChart
+    ) ||
+    nextCombinedChart.length === 0
   ){
 
-    console.log(
-      "🎵 古い譜面タイマーを無効化"
+    console.error(
+      "[Sasoi] 次の組み合わせ譜面が見つかりません",
+      nextCombinedChart
     );
+
+
+    // 異常時は安全にプレイ終了
+    sasoiCombinedPlay =
+      false;
+
+
+    stopSasoiCheck();
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // 次の譜面をセット
+  // ---------------------------------
+
+  sasoiScore =
+    nextCombinedChart;
+
+
+  // ---------------------------------
+  // 譜面位置を先頭へ戻す
+  // ---------------------------------
+
+  sasoiIndex =
+    0;
+
+
+  console.log(
+    "[Sasoi] 次の譜面をセットしました",
+    "index =",
+    sasoiCombinedChartIndex,
+    "catch total =",
+    sasoiTotalCatchCount,
+    "catch current =",
+    sasoiCurrentCatchCount
+  );
+
+
+  // =================================
+  // ◎ 次の通常譜面情報を取得
+  // =================================
+
+  const selectedCombinedScore =
+    getSelectedSasoiScore();
+
+
+  if(
+    !selectedCombinedScore ||
+    !Array.isArray(
+      selectedCombinedScore.charts
+    )
+  ){
+
+    console.error(
+      "[Sasoi] 組み合わせ譜面情報を取得できません"
+    );
+
+
+    sasoiCombinedPlay =
+      false;
+
+
+    stopSasoiCheck();
+
+    return;
+
+  }
+
+
+  const nextChartId =
+    selectedCombinedScore.charts[
+      sasoiCombinedChartIndex
+    ];
+
+
+  const nextChartData =
+    getSasoiScoreById(
+      nextChartId
+    );
+
+
+  if(
+    !nextChartData
+  ){
+
+    console.error(
+      "[Sasoi] 次の通常譜面データが見つかりません",
+      nextChartId
+    );
+
+
+    sasoiCombinedPlay =
+      false;
+
+
+    stopSasoiCheck();
 
     return;
 
@@ -8436,206 +8729,386 @@ function playNextSasoiNote(
 
 
   // =================================
-  // 譜面終了
+  // ◎ ゲーム画面の譜面表示を
+  //    次の通常譜面へ変更
   // =================================
 
-  if(
-    sasoiIndex >=
-    sasoiScore.length
-  ){
-
-    console.log(
-      "譜面終了"
+  const numberDisplay =
+    document.getElementById(
+      "sasoiGameScoreNumber"
     );
 
 
-    // ---------------------------------
-    // 最終判定
-    // ---------------------------------
+  const titleDisplay =
+    document.getElementById(
+      "sasoiGameScoreTitle"
+    );
 
-    if(
-      sasoiFishOn
-    ){
 
-      console.log(
-        "魚が掛かった状態で譜面終了"
-      );
+  if(
+    numberDisplay
+  ){
 
+    numberDisplay.textContent =
+      nextChartData.number;
+
+  }
+
+
+  if(
+    titleDisplay
+  ){
+
+    titleDisplay.textContent =
+      nextChartData.title;
+
+  }
+
+
+  console.log(
+    "🎣 次の通常譜面タイトル表示"
+  );
+
+
+  console.log(
+    "譜面番号:",
+    nextChartData.number
+  );
+
+
+  console.log(
+    "譜面タイトル:",
+    nextChartData.title
+  );
+
+
+  // =================================
+  // ◎ 次の譜面タイトルを中央表示
+  // =================================
+  //
+  // CSSアニメーションの
+  // animationendを待ってから
+  // 次の譜面を開始する。
+  //
+  // =================================
+
+  showSasoiScoreTitleAnimation(
+    function(){
 
       // ---------------------------------
-      // 釣れたことを確定
-      // ---------------------------------
-
-      console.log(
-        "釣れた！"
-      );
-
-
-      // 魚が掛かった状態を維持
-      sasoiFishOn =
-        true;
-
-
-      sasoiDebugText.fish =
-        "ON";
-
-
-      updateSasoiDebug();
-
-
-      // ---------------------------------
-      // 釣れたメッセージ
+      // プレイ中でなければ開始しない
       // ---------------------------------
 
       if(
-        typeof showSasoiMessage ===
-        "function"
+        !sasoiPlaying
       ){
 
-        showSasoiMessage(
-          "釣れました！"
+        return;
+
+      }
+
+
+      // ---------------------------------
+      // セッション確認
+      // ---------------------------------
+
+      if(
+        sessionId !==
+        undefined &&
+        sessionId !==
+        sasoiPlaySessionId
+      ){
+
+        console.log(
+          "🎵 次の譜面開始前：古いセッションを無効化"
+        );
+
+        return;
+
+      }
+
+
+      // ---------------------------------
+      // 右上の譜面番号＋タイトルを表示
+      // ---------------------------------
+
+      const cornerName =
+        document.querySelector(
+          ".sasoi-score-name"
+        );
+
+
+      if(
+        cornerName
+      ){
+
+        cornerName.classList.add(
+          "is-visible"
+        );
+
+
+        console.log(
+          "🎣 次の譜面：右上表示開始"
+        );
+
+      }
+      else{
+
+        console.log(
+          "🎣 次の譜面：右上表示失敗"
         );
 
       }
 
-    }
 
-    else{
+      // ---------------------------------
+      // 次の譜面開始
+      // ---------------------------------
 
       console.log(
-        "魚なしで終了"
+        "🎵 次の組み合わせ譜面を開始します"
       );
 
-    }
 
+      playNextSasoiNote(
+        sasoiPlaySessionId
+      );
 
-    console.log(
-      "誘い判定終了"
-    );
-
-
-    // ---------------------------------
-    // 判定停止
-    // ---------------------------------
-
-    stopSasoiCheck();
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // 現在の譜面を取得
-  // =================================
-
-  const note =
-    sasoiScore[
-      sasoiIndex
-    ];
-
-
-  // =================================
-  // 現在の譜面を表示
-  // =================================
-
-  createSasoiNote(
-    note
+    },
+    nextChartData
   );
 
 
-  sasoiIndex++;
+  return;
+
+}
 
 
-  // =================================
-  // 次の音符までの間隔計算
-  // =================================
+// ---------------------------------
+// ここまで来た場合
+// ---------------------------------
+//
+// 組み合わせ譜面ではあるが、
+// 次の譜面が存在しない。
+//
+// つまり、組み合わせ譜面全体が
+// 最後まで終了した。
+//
+// ここから下で最終判定を行う。
+//
+// ---------------------------------
 
-  let nextDelay =
-    500;
-
-
-  if(
-    sasoiIndex <
-    sasoiScore.length
-  ){
-
-    const nextNote =
-      sasoiScore[
-        sasoiIndex
-      ];
-
-
-    nextDelay =
-      nextNote.time -
-      note.time;
-
-
-    // ---------------------------------
-    // 念のため0以下にはしない
-    // ---------------------------------
-
-    if(
-      nextDelay <
-      1
-    ){
-
-      nextDelay =
-        1;
-
-    }
-
-  }
-
-  else{
-
-    // ---------------------------------
-    // 最後の音符
-    // ---------------------------------
-    //
-    // 最後の音符が画面を
-    // 流れ切るまで待つ
-    //
-    // ---------------------------------
-
-    nextDelay =
-      3000;
-
-  }
-
-
-  // =================================
-  // 次の音符を生成
-  // =================================
-  //
-  // 現在のプレイセッションIDを
-  // タイマーへ渡す。
-  //
-  // リトライ後に古いタイマーが
-  // 万一実行されても、
-  // セッションIDが違えば停止する。
-  //
-  // =================================
-
-  const currentSessionId =
-    sasoiPlaySessionId;
-
-
-  sasoiPlayTimer =
-    setTimeout(
-      function(){
-
-        playNextSasoiNote(
-          currentSessionId
-        );
-
-      },
-      nextDelay
-    );
+console.log(
+  "[Sasoi] 組み合わせ譜面：全譜面終了"
+);
 
 
 }
+
+// =================================
+// 最終判定
+// =================================
+
+if(
+sasoiFishOn
+){
+
+
+console.log(
+  "魚が掛かった状態で譜面終了"
+);
+
+
+// ---------------------------------
+// 釣れたことを確定
+// ---------------------------------
+
+console.log(
+  "釣れた！"
+);
+
+
+// 魚が掛かった状態を維持
+sasoiFishOn =
+  true;
+
+
+sasoiDebugText.fish =
+  "ON";
+
+
+updateSasoiDebug();
+
+
+// ---------------------------------
+// 釣れたメッセージ
+// ---------------------------------
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "釣れました！"
+  );
+
+}
+
+
+}
+
+else{
+
+
+console.log(
+  "魚なしで終了"
+);
+
+
+}
+
+console.log(
+"誘い判定終了"
+);
+
+// ---------------------------------
+// 組み合わせ譜面モード終了
+// ---------------------------------
+
+if(
+sasoiCombinedPlay
+){
+
+
+sasoiCombinedPlay =
+  false;
+
+
+console.log(
+  "[Sasoi] 組み合わせ譜面モードを終了しました"
+);
+
+
+}
+
+// ---------------------------------
+// 判定停止
+// ---------------------------------
+
+stopSasoiCheck();
+
+return;
+
+}
+
+// =================================
+// 現在の譜面を取得
+// =================================
+
+const note =
+sasoiScore[
+sasoiIndex
+];
+
+// =================================
+// 現在の譜面を表示
+// =================================
+
+createSasoiNote(
+note
+);
+
+sasoiIndex++;
+
+// =================================
+// 次の音符までの間隔計算
+// =================================
+
+let nextDelay =
+500;
+
+if(
+sasoiIndex <
+sasoiScore.length
+){
+
+const nextNote =
+sasoiScore[
+sasoiIndex
+];
+
+nextDelay =
+nextNote.time -
+note.time;
+
+// ---------------------------------
+// 念のため0以下にはしない
+// ---------------------------------
+
+if(
+nextDelay <
+1
+){
+
+
+nextDelay =
+  1;
+
+
+}
+
+}
+
+else{
+
+// ---------------------------------
+// 最後の音符
+// ---------------------------------
+//
+// 最後の音符が画面を
+// 流れ切るまで待つ
+//
+// ---------------------------------
+
+nextDelay =
+3000;
+
+}
+
+// =================================
+// 次の音符を生成
+// =================================
+//
+// 現在のプレイセッションIDを
+// タイマーへ渡す。
+//
+// リトライ後に古いタイマーが
+// 万一実行されても、
+// セッションIDが違えば停止する。
+//
+// =================================
+
+const currentSessionId =
+sasoiPlaySessionId;
+
+sasoiPlayTimer =
+setTimeout(
+function(){
+
+
+playNextSasoiNote(
+  currentSessionId
+);
+
+
+},
+nextDelay
+);
+
+}
+
+
 
 // -------------------------------
 // デバッグ表示用
@@ -9951,6 +10424,321 @@ function resetSasoiInterestGauge(){
   );
 
 }
+
+function showSasoiCombinedTitleAnimation(callback) {
+
+// =================================
+// ◎ 現在選択中の組み合わせ譜面
+// =================================
+
+const selectedScore =
+getSelectedSasoiScore();
+
+if (
+!selectedScore ||
+selectedScore.isCombined !== true
+) {
+
+
+if (
+  typeof callback ===
+  "function"
+) {
+
+  callback();
+
+}
+
+return;
+
+
+}
+
+// =================================
+// ◎ 譜面タイトル表示用要素
+// =================================
+
+const scoreNumber =
+document.querySelector(
+".sasoi-score-number"
+);
+
+const scoreTitle =
+document.querySelector(
+".sasoi-score-title"
+);
+
+// =================================
+// ◎ 表示要素が見つからない場合
+// =================================
+
+if (
+!scoreNumber ||
+!scoreTitle
+) {
+
+
+console.log(
+  "[Sasoi] 組み合わせタイトル表示要素が見つかりません"
+);
+
+if (
+  typeof callback ===
+  "function"
+) {
+
+  callback();
+
+}
+
+return;
+
+
+}
+
+// =================================
+// ◎ 組み合わせ譜面番号
+// =================================
+
+scoreNumber.textContent =
+selectedScore.number || "";
+
+// =================================
+// ◎ 組み合わせ譜面名
+// =================================
+
+scoreTitle.textContent =
+selectedScore.title || "";
+
+// =================================
+// ◎ 表示開始
+// =================================
+
+scoreNumber.classList.add(
+"show"
+);
+
+scoreTitle.classList.add(
+"show"
+);
+
+console.log(
+"[Sasoi] 組み合わせ譜面タイトル表示：",
+selectedScore.number,
+selectedScore.title
+);
+
+// =================================
+// ◎ 通常タイトル表示と同程度の間隔
+// =================================
+
+setTimeout(
+function(){
+
+
+  // ---------------------------------
+  // 表示を消す
+  // ---------------------------------
+
+  scoreNumber.classList.remove(
+    "show"
+  );
+
+  scoreTitle.classList.remove(
+    "show"
+  );
+
+
+  // ---------------------------------
+  // 次の処理
+  // ---------------------------------
+
+  if (
+    typeof callback ===
+    "function"
+  ) {
+
+    callback();
+
+  }
+
+},
+1800
+
+
+);
+
+}
+
+
+function resetSasoiForChartTransition() {
+
+// =================================
+// 譜面切り替え時は興味ゲージをリセット
+// =================================
+
+resetSasoiInterestGauge();
+
+// =================================
+// 組み合わせ譜面の場合
+// =================================
+//
+// 組み合わせ譜面では
+// 興味ゲージだけリセットし、
+// 釣果は次の譜面へ引き継ぐ。
+// =================================
+
+if (
+sasoiCombinedPlay
+) {
+
+
+console.log(
+  "[Sasoi] 組み合わせ譜面：譜面切り替え、釣果を維持します",
+  "total =",
+  sasoiTotalCatchCount,
+  "current =",
+  sasoiCurrentCatchCount
+);
+
+return;
+
+
+}
+
+// =================================
+// 通常譜面の場合
+// =================================
+//
+// 通常譜面での譜面切り替えでは
+// これまで通り釣果もリセットする。
+// =================================
+
+sasoiTotalCatchCount =
+0;
+
+sasoiCurrentCatchCount =
+0;
+
+const totalCatchCount =
+document.getElementById(
+"sasoiTotalCatchCount"
+);
+
+if (
+totalCatchCount
+) {
+
+
+totalCatchCount.textContent =
+  "0";
+
+
+}
+
+console.log(
+"[Sasoi] 通常譜面：譜面切り替えで釣果をリセットしました"
+);
+
+}
+
+// ==========================================
+// ◎ 現在の譜面が終了したので
+// ◎ 組み合わせ譜面の次へ進めるか確認
+// ==========================================
+
+function transitionToNextSasoiCombinedChart() {
+
+// =================================
+// 組み合わせ譜面ではない場合
+// =================================
+
+if (
+!sasoiCombinedPlay
+) {
+
+
+return false;
+
+
+}
+
+// =================================
+// 組み合わせ譜面データがない場合
+// =================================
+
+if (
+!Array.isArray(
+sasoiCombinedCharts
+) ||
+sasoiCombinedCharts.length === 0
+) {
+
+
+console.log(
+  "[Sasoi] 組み合わせ譜面データがありません"
+);
+
+return false;
+
+
+}
+
+// =================================
+// 次の譜面番号を計算
+// =================================
+
+const nextChartIndex =
+sasoiCombinedChartIndex +
+1;
+
+// =================================
+// 次の譜面が存在しない
+// =================================
+
+if (
+nextChartIndex >=
+sasoiCombinedCharts.length
+) {
+
+
+console.log(
+  "[Sasoi] 組み合わせ譜面：全譜面終了"
+);
+
+return false;
+
+
+}
+
+// =================================
+// 次の譜面へ移行
+// =================================
+
+sasoiCombinedChartIndex =
+nextChartIndex;
+
+console.log(
+"[Sasoi] 組み合わせ譜面：次の譜面へ移行",
+"index =",
+sasoiCombinedChartIndex
+);
+
+// =================================
+// 譜面切り替え時のリセット
+// =================================
+//
+// 組み合わせ譜面では
+// 興味ゲージだけリセットし、
+// 釣果は維持する。
+// =================================
+
+resetSasoiForChartTransition();
+
+return true;
+
+}
+
 
 
 function getSasoiXJudgement(note){
@@ -13617,6 +14405,80 @@ function stopSasoiCheck(){
 }
 
 
+function resetSasoiToMenu(){
+stopSasoiCheck();
+
+sasoiPlaySessionId++;
+
+console.log(
+"🎵 誘いの名人：旧プレイセッションを無効化",
+sasoiPlaySessionId
+);
+
+const sasoiFlow =
+document.getElementById("sasoiFlow");
+
+if(sasoiFlow){
+sasoiFlow.innerHTML = "";
+sasoiFlow.classList.remove("show");
+
+
+console.log(
+  "🎵 誘いの名人：流れている音符を完全削除"
+);
+
+
+}
+
+if(sasoiPlayTimer){
+clearTimeout(sasoiPlayTimer);
+sasoiPlayTimer = null;
+}
+
+const selectText =
+document.querySelector(
+".sasoi-score-select-text"
+);
+
+if(selectText){
+selectText.classList.remove(
+"is-sliding",
+"slide-out-up",
+"slide-in-from-down",
+"slide-out-down",
+"slide-in-from-up",
+"slide-from-bottom",
+"slide-from-top"
+);
+
+
+selectText.style.animation = "none";
+
+void selectText.offsetWidth;
+
+selectText.style.animation = "";
+
+
+}
+
+const game =
+document.getElementById("sasoiGame");
+
+if(game){
+game.style.display = "none";
+}
+
+const menu =
+document.getElementById("sasoiMenu");
+
+if(menu){
+menu.style.display = "flex";
+}
+}
+
+window.resetSasoiToMenu = resetSasoiToMenu;
+
+
 // -------------------------------
 // 長押しボタン
 // -------------------------------
@@ -14028,20 +14890,235 @@ hideSasoiActionMessage();
 const selectedScore =
 getSelectedSasoiScore();
 
-if(selectedScore){
+if(
+selectedScore
+){
+
+// =================================
+// ◎ 組み合わせ譜面か判定
+// =================================
+
+const isCombined =
+selectedScore.isCombined === true ||
+Array.isArray(
+selectedScore.charts
+);
+
+// =================================
+// ◎ 組み合わせ譜面
+// =================================
+
+if(
+isCombined
+){
+
+
+// ---------------------------------
+// 組み合わせプレイを有効化
+// ---------------------------------
+
+sasoiCombinedPlay =
+  true;
+
+
+// ---------------------------------
+// 組み合わせ譜面の進行位置を
+// 最初に戻す
+// ---------------------------------
+
+sasoiCombinedChartIndex =
+  0;
+
+
+// ---------------------------------
+// 組み合わせ譜面の実データを準備
+// ---------------------------------
+
+sasoiCombinedCharts =
+  [];
+
+
+// ---------------------------------
+// charts が存在するか確認
+// ---------------------------------
+
+if(
+  Array.isArray(
+    selectedScore.charts
+  ) &&
+  selectedScore.charts.length > 0
+){
+
+  selectedScore.charts.forEach(
+    function(chartId){
+
+      const chartData =
+        getSasoiScoreById(
+          chartId
+        );
+
+
+      // ---------------------------------
+      // 譜面データが正常なら追加
+      // ---------------------------------
+
+      if(
+        chartData &&
+        Array.isArray(
+          chartData.score
+        )
+      ){
+
+        sasoiCombinedCharts.push(
+          chartData.score
+        );
+
+
+        console.log(
+          "🎵 組み合わせ譜面を追加:",
+          chartData.id,
+          chartData.number,
+          chartData.title
+        );
+
+      }
+
+      // ---------------------------------
+      // 譜面データが取得できない場合
+      // ---------------------------------
+
+      else{
+
+        console.log(
+          "🎵 組み合わせ譜面の取得失敗:",
+          chartId
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+// =================================
+// ◎ 組み合わせ譜面チェック
+// =================================
+
+if(
+  sasoiCombinedCharts.length === 0
+){
+
+  console.log(
+    "🎵 組み合わせ譜面エラー：再生可能な譜面がありません"
+  );
+
+
+  sasoiCombinedPlay =
+    false;
+
+
+  sasoiCombinedChartIndex =
+    0;
+
+
+  sasoiCombinedCharts =
+    [];
+
+
+  sasoiScore =
+    [];
+
+
+}
+
+else{
+
+  // ---------------------------------
+  // 最初の譜面を再生対象にする
+  // ---------------------------------
+
+  sasoiScore =
+    sasoiCombinedCharts[0];
+
+
+  console.log(
+    "🎵 組み合わせ譜面開始:",
+    selectedScore.id,
+    selectedScore.number,
+    selectedScore.title
+  );
+
+
+  console.log(
+    "🎵 組み合わせ譜面構成:",
+    selectedScore.charts
+  );
+
+
+  console.log(
+    "🎵 組み合わせ譜面数:",
+    sasoiCombinedCharts.length
+  );
+
+
+  console.log(
+    "🎵 現在の組み合わせ譜面:",
+    sasoiCombinedChartIndex + 1,
+    "/",
+    sasoiCombinedCharts.length
+  );
+
+}
+
+
+}
+
+// =================================
+// ◎ 通常譜面
+// =================================
+
+else{
+
+
+// ---------------------------------
+// 組み合わせ状態を完全解除
+// ---------------------------------
+
+sasoiCombinedPlay =
+  false;
+
+
+sasoiCombinedChartIndex =
+  0;
+
+
+sasoiCombinedCharts =
+  [];
+
+
+// ---------------------------------
+// 通常譜面を設定
+// ---------------------------------
 
 sasoiScore =
-selectedScore.score;
+  Array.isArray(
+    selectedScore.score
+  )
+    ? selectedScore.score
+    : [];
+
 
 console.log(
-"🎵 ゲーム開始譜面:",
-selectedScore.id,
-selectedScore.number,
-selectedScore.title
+  "🎵 通常譜面開始:",
+  selectedScore.id,
+  selectedScore.number,
+  selectedScore.title
 );
 
 
-
+}
 
 // =================================
 // ◎ 初期画面背景を譜面に合わせて変更
@@ -14051,11 +15128,17 @@ applySasoiScoreBackground(
 selectedScore
 );
 
-// ★ ゲーム開始時にも現在の譜面の釣果HIGHを表示
+updateSasoiGameScoreDisplay();
+
+// =================================
+// ◎ ゲーム開始時にも
+//    現在の譜面の釣果HIGHを表示
+// =================================
+
 updateSasoiCatchRecordHighDisplay();
 
-
 }
+
 
 
 // ---------------------------------
@@ -14304,67 +15387,243 @@ flow.classList.remove("show");
 // =================================
 
 showSasoiScoreTitleAnimation(
-  function(){
-
-    // ---------------------------------
-    // プレイ中でなければ開始しない
-    // ---------------------------------
-
-    if(
-      !sasoiPlaying
-    ){
-
-      return;
-
-    }
+function(){
 
 
-    // ---------------------------------
-    // 右上の譜面番号＋タイトルを表示
-    // ---------------------------------
+// ---------------------------------
+// プレイ中でなければ開始しない
+// ---------------------------------
 
-    const cornerName =
-      document.querySelector(
-        ".sasoi-score-name"
-      );
+if(
+  !sasoiPlaying
+){
 
+  return;
 
-    if(
-      cornerName
-    ){
-
-      cornerName.classList.add(
-        "is-visible"
-      );
+}
 
 
-      console.log(
-        "🎣 譜面番号＋タイトル：右上表示開始"
-      );
+// =================================
+// ◎ 組み合わせ譜面の場合
+// =================================
 
-    }
-    else{
+if(
+  sasoiCombinedPlay === true &&
+  Array.isArray(sasoiCombinedCharts) &&
+  sasoiCombinedCharts.length > 0
+){
 
-      console.log(
-        "🎣 右上表示失敗：.sasoi-score-nameが見つかりません"
-      );
-
-    }
+  const firstChartId =
+    selectedScore.charts[0];
 
 
-    // ---------------------------------
-    // 譜面開始
-    // ---------------------------------
-
-    console.log(
-      "🎵 譜面開始：中央タイトルアニメーション終了"
+  const firstChartData =
+    getSasoiScoreById(
+      firstChartId
     );
 
 
-    playNextSasoiNote();
+  if(
+    !firstChartData
+  ){
+
+    console.error(
+      "[Sasoi] 最初の組み合わせ譜面データが見つかりません",
+      firstChartId
+    );
+
+    return;
 
   }
+
+
+  // ---------------------------------
+  // 最初の通常譜面をDOMへセット
+  // ---------------------------------
+
+  const numberDisplay =
+    document.getElementById(
+      "sasoiGameScoreNumber"
+    );
+
+
+  const titleDisplay =
+    document.getElementById(
+      "sasoiGameScoreTitle"
+    );
+
+
+  if(
+    numberDisplay
+  ){
+
+    numberDisplay.textContent =
+      firstChartData.number;
+
+  }
+
+
+  if(
+    titleDisplay
+  ){
+
+    titleDisplay.textContent =
+      firstChartData.title;
+
+  }
+
+
+  console.log(
+    "🎣 組み合わせ譜面：最初の通常譜面へ切り替え"
+  );
+
+
+  console.log(
+    "譜面番号:",
+    firstChartData.number
+  );
+
+
+  console.log(
+    "譜面タイトル:",
+    firstChartData.title
+  );
+
+
+  // ---------------------------------
+  // 最初の通常譜面タイトルを表示
+  // ---------------------------------
+  //
+  // 第2引数は使用しない。
+  // 現在のタイトル表示システムを
+  // そのまま利用する。
+  // ---------------------------------
+
+  showSasoiScoreTitleAnimation(
+    function(){
+
+      // ---------------------------------
+      // プレイ中でなければ開始しない
+      // ---------------------------------
+
+      if(
+        !sasoiPlaying
+      ){
+
+        return;
+
+      }
+
+
+      // ---------------------------------
+      // 右上の譜面番号＋タイトルを表示
+      // ---------------------------------
+
+      const cornerName =
+        document.querySelector(
+          ".sasoi-score-name"
+        );
+
+
+      if(
+        cornerName
+      ){
+
+        cornerName.classList.add(
+          "is-visible"
+        );
+
+
+        console.log(
+          "🎣 譜面番号＋タイトル：右上表示開始"
+        );
+
+      }
+      else{
+
+        console.log(
+          "🎣 右上表示失敗：.sasoi-score-nameが見つかりません"
+        );
+
+      }
+
+
+      // ---------------------------------
+      // 譜面開始
+      // ---------------------------------
+
+      console.log(
+        "🎵 組み合わせ譜面：最初の通常譜面開始"
+      );
+
+
+      playNextSasoiNote(
+        sasoiPlaySessionId
+      );
+
+    }
+  );
+
+
+  return;
+
+}
+
+
+// =================================
+// ◎ 通常譜面
+// =================================
+//
+// 従来処理
+// =================================
+
+const cornerName =
+  document.querySelector(
+    ".sasoi-score-name"
+  );
+
+
+if(
+  cornerName
+){
+
+  cornerName.classList.add(
+    "is-visible"
+  );
+
+
+  console.log(
+    "🎣 譜面番号＋タイトル：右上表示開始"
+  );
+
+}
+else{
+
+  console.log(
+    "🎣 右上表示失敗：.sasoi-score-nameが見つかりません"
+  );
+
+}
+
+
+// ---------------------------------
+// 譜面開始
+// ---------------------------------
+
+console.log(
+  "🎵 譜面開始：中央タイトルアニメーション終了"
 );
+
+
+playNextSasoiNote(
+  sasoiPlaySessionId
+);
+
+
+}
+);
+
+
 
 // =================================
 // 高頻度判定ループ開始
@@ -14453,84 +15712,172 @@ document
 .getElementById("sasoiRestartBtn")
 .onclick=function(){
 
-  console.log(
-    "誘いの名人：リトライ"
-  );
+console.log(
+"誘いの名人：リトライ"
+);
 
+// =================================
+// 現在のプレイを停止
+// =================================
 
-  // =================================
-  // 現在のプレイを停止
-  // =================================
+stopSasoiCheck();
 
-  stopSasoiCheck();
-
-
-  // =================================
-  // 現在のプレイタイマーを停止
-  // =================================
-
-  if(
-    sasoiPlayTimer
-  ){
-
-    clearTimeout(
-      sasoiPlayTimer
-    );
-
-    sasoiPlayTimer =
-      null;
-
-  }
+// =================================
+// 現在のプレイタイマーを停止
+// =================================
 
 if(
-  sasoiScoreStartTimer
+sasoiPlayTimer
 ){
 
-  clearTimeout(
-    sasoiScoreStartTimer
-  );
 
-  sasoiScoreStartTimer =
-    null;
+clearTimeout(
+  sasoiPlayTimer
+);
+
+sasoiPlayTimer =
+  null;
+
 
 }
 
-  // =================================
-  // スタート処理を再利用
-  // =================================
-  //
-  // 現在の sasoiStartBtn.onclick には
-  //
-  // ・譜面リセット
-  // ・ゲージリセット
-  // ・PRESS状態リセット
-  // ・◎状態リセット
-  // ・魚状態リセット
-  // ・判定表示リセット
-  // ・譜面再生
-  // ・判定ループ再開
-  //
-  // がすべて入っている。
-  //
-  // そのため、ここでは同じ処理を
-  // 二重に書かない。
-  // =================================
+// =================================
+// 譜面開始タイマーを停止
+// =================================
 
-  const startBtn =
-    document.getElementById(
-      "sasoiStartBtn"
-    );
+if(
+sasoiScoreStartTimer
+){
 
 
-  if(
-    startBtn
-  ){
+clearTimeout(
+  sasoiScoreStartTimer
+);
 
-    startBtn.click();
+sasoiScoreStartTimer =
+  null;
 
-  }
+
+}
+
+// =================================
+// 中央タイトルアニメーションを完全削除
+// =================================
+//
+// 組み合わせ譜面では
+//
+// 組み合わせタイトル
+// ↓
+// 内部譜面タイトル
+//
+// と複数の中央アニメーションが
+// 発生するため、リトライ前に
+// 残っている表示を完全に消す。
+//
+// =================================
+
+const game =
+document.getElementById(
+"sasoiGame"
+);
+
+if(
+game
+){
+
+
+const centerTitle =
+  game.querySelector(
+    ".sasoi-score-title-animation"
+  );
+
+
+if(
+  centerTitle
+){
+
+  centerTitle.remove();
+
+}
+
+
+const centerNumber =
+  game.querySelector(
+    ".sasoi-score-number-animation"
+  );
+
+
+if(
+  centerNumber
+){
+
+  centerNumber.remove();
+
+}
+
+
+}
+
+// =================================
+// 右上譜面表示をリセット
+// =================================
+
+const cornerName =
+document.querySelector(
+".sasoi-score-name"
+);
+
+if(
+cornerName
+){
+
+
+cornerName.classList.remove(
+  "is-visible"
+);
+
+
+}
+
+// =================================
+// スタート処理を再利用
+// =================================
+//
+// 現在の sasoiStartBtn.onclick には
+//
+// ・譜面リセット
+// ・ゲージリセット
+// ・PRESS状態リセット
+// ・◎状態リセット
+// ・魚状態リセット
+// ・判定表示リセット
+// ・譜面再生
+// ・判定ループ再開
+//
+// がすべて入っている。
+//
+// そのため、ここでは同じ処理を
+// 二重に書かない。
+//
+// =================================
+
+const startBtn =
+document.getElementById(
+"sasoiStartBtn"
+);
+
+if(
+startBtn
+){
+
+
+startBtn.click();
+
+
+}
 
 };
+
 
 
 // ==========================================
@@ -14627,150 +15974,221 @@ const sasoiBackConfirmOK =
 
 
 if(
-  sasoiBackConfirmOK
+sasoiBackConfirmOK
 ){
 
-  sasoiBackConfirmOK.onclick =
-    function(){
-
-      // --------------------------------------
-      // モーダルを閉じる
-      // --------------------------------------
-
-      const modal =
-        document.getElementById(
-          "sasoiBackConfirmModal"
-        );
+sasoiBackConfirmOK.onclick =
+function(){
 
 
-      if(
-        modal
-      ){
+  // --------------------------------------
+  // 確認モーダルを閉じる
+  // --------------------------------------
 
-        modal.style.display =
-          "none";
-
-      }
-
-
-      // --------------------------------------
-      // 現在のプレイを停止
-      // --------------------------------------
-
-      stopSasoiCheck();
+  const modal =
+    document.getElementById(
+      "sasoiBackConfirmModal"
+    );
 
 
-      // --------------------------------------
-      // 現在のプレイタイマーを停止
-      // --------------------------------------
+  if(
+    modal
+  ){
 
-      if(
-        sasoiPlayTimer
-      ){
+    modal.style.display =
+      "none";
 
-        clearTimeout(
-          sasoiPlayTimer
-        );
+  }
 
 
-        sasoiPlayTimer =
-          null;
+  // --------------------------------------
+  // 現在のプレイを停止
+  // --------------------------------------
 
-      }
-
-
-      // ======================================
-      // 譜面選択アニメーションを完全リセット
-      // ======================================
-
-      const selectText =
-        document.querySelector(
-          ".sasoi-score-select-text"
-        );
+  stopSasoiCheck();
 
 
-      if(
-        selectText
-      ){
+  // --------------------------------------
+  // 現在のプレイタイマーを停止
+  // --------------------------------------
 
-        // ------------------------------------
-        // アニメーション用クラスをすべて削除
-        // ------------------------------------
+  if(
+    sasoiPlayTimer
+  ){
 
-        selectText.classList.remove(
-          "is-sliding",
-          "slide-out-up",
-          "slide-in-from-down",
-          "slide-out-down",
-          "slide-in-from-up",
-          "slide-from-bottom",
-          "slide-from-top"
-        );
+    clearTimeout(
+      sasoiPlayTimer
+    );
 
 
-        // ------------------------------------
-        // animation状態も解除
-        // ------------------------------------
+    sasoiPlayTimer =
+      null;
 
-        selectText.style.animation =
-          "none";
+  }
 
 
-        // ------------------------------------
-        // 次回の譜面選択時に
-        // アニメーションできる状態へ戻す
-        // ------------------------------------
+  // --------------------------------------
+  // 譜面開始タイマーを停止
+  // --------------------------------------
 
-        void selectText.offsetWidth;
+  if(
+    sasoiScoreStartTimer
+  ){
 
-        selectText.style.animation =
-          "";
-
-      }
-
-
-      // --------------------------------------
-      // ゲーム画面を非表示
-      // --------------------------------------
-
-      const game =
-        document.getElementById(
-          "sasoiGame"
-        );
+    clearTimeout(
+      sasoiScoreStartTimer
+    );
 
 
-      if(
-        game
-      ){
+    sasoiScoreStartTimer =
+      null;
 
-        game.style.display =
-          "none";
-
-      }
+  }
 
 
-      // --------------------------------------
-      // 初期画面を表示
-      // --------------------------------------
+  // ======================================
+  // 中央タイトルアニメーションを完全削除
+  // ======================================
 
-      const menu =
-        document.getElementById(
-          "sasoiMenu"
-        );
+  const game =
+    document.getElementById(
+      "sasoiGame"
+    );
 
 
-      if(
-        menu
-      ){
+  if(
+    game
+  ){
 
-        menu.style.display =
-          "flex";
+    const centerTitle =
+      game.querySelector(
+        ".sasoi-score-title-animation"
+      );
 
-      }
 
-    };
+    if(
+      centerTitle
+    ){
+
+      centerTitle.remove();
+
+    }
+
+
+    const centerNumber =
+      game.querySelector(
+        ".sasoi-score-number-animation"
+      );
+
+
+    if(
+      centerNumber
+    ){
+
+      centerNumber.remove();
+
+    }
+
+  }
+
+
+  // ======================================
+  // 右上譜面番号＋タイトル表示をリセット
+  // ======================================
+
+  const cornerName =
+    document.querySelector(
+      ".sasoi-score-name"
+    );
+
+
+  if(
+    cornerName
+  ){
+
+    cornerName.classList.remove(
+      "is-visible"
+    );
+
+  }
+
+
+  // ======================================
+  // 譜面選択アニメーションを完全リセット
+  // ======================================
+
+  const selectText =
+    document.querySelector(
+      ".sasoi-score-select-text"
+    );
+
+
+  if(
+    selectText
+  ){
+
+    selectText.classList.remove(
+      "is-sliding",
+      "slide-out-up",
+      "slide-in-from-down",
+      "slide-out-down",
+      "slide-in-from-up",
+      "slide-from-bottom",
+      "slide-from-top"
+    );
+
+
+    selectText.style.animation =
+      "none";
+
+
+    void selectText.offsetWidth;
+
+
+    selectText.style.animation =
+      "";
+
+  }
+
+
+  // --------------------------------------
+  // ゲーム画面を非表示
+  // --------------------------------------
+
+  if(
+    game
+  ){
+
+    game.style.display =
+      "none";
+
+  }
+
+
+  // --------------------------------------
+  // 初期画面を表示
+  // --------------------------------------
+
+  const menu =
+    document.getElementById(
+      "sasoiMenu"
+    );
+
+
+  if(
+    menu
+  ){
+
+    menu.style.display =
+      "flex";
+
+  }
+
+};
+
 
 }
+
 
 
 
@@ -14907,163 +16325,94 @@ document.addEventListener(
 
 btn.onchange=function(){
 
-  // =================================
-  // ON
-  // =================================
+// =================================
+// ON
+// =================================
 
-  if(
-    this.checked
-  ){
-
-    // ---------------------------------
-    // 誘いの名人表示
-    // ---------------------------------
-
-    area.style.display =
-      "flex";
+if(
+this.checked
+){
 
 
-    // ---------------------------------
-    // ON状態を保存
-    // ---------------------------------
+// ---------------------------------
+// 誘いの名人表示
+// ---------------------------------
 
-    localStorage.setItem(
-      "sasoiNoMeijinEnabled",
-      "true"
-    );
+area.style.display =
+  "flex";
 
 
-    console.log(
-      "🎣 誘いの名人：ON"
-    );
+// ---------------------------------
+// ON状態を保存
+// ---------------------------------
+
+localStorage.setItem(
+  "sasoiNoMeijinEnabled",
+  "true"
+);
 
 
-    return;
-
-  }
-
-
-  // =================================
-  // OFF
-  // =================================
-  //
-  // 表示を消すだけではなく、
-  // 現在動いている誘いの名人を
-  // 完全に停止して初期画面へ戻す。
-  // =================================
+console.log(
+  "🎣 誘いの名人：ON"
+);
 
 
-  console.log(
-    "🎣 誘いの名人：OFF → プレイ完全停止"
-  );
+return;
 
 
-  // ---------------------------------
-  // OFF状態を保存
-  // ---------------------------------
-
-  localStorage.setItem(
-    "sasoiNoMeijinEnabled",
-    "false"
-  );
-
-
-  // =================================
-  // 現在のプレイを停止
-  // =================================
-
-  if(
-    typeof stopSasoiCheck ===
-    "function"
-  ){
-
-    stopSasoiCheck();
-
-  }
-
-
-  // =================================
-  // プレイタイマー停止
-  // =================================
-
-  if(
-    typeof sasoiPlayTimer !==
-      "undefined" &&
-    sasoiPlayTimer
-  ){
-
-    clearTimeout(
-      sasoiPlayTimer
-    );
-
-    sasoiPlayTimer =
-      null;
-
-  }
-
-
-  // =================================
-  // 譜面開始タイマー停止
-  // =================================
-
-  if(
-    typeof sasoiScoreStartTimer !==
-      "undefined" &&
-    sasoiScoreStartTimer
-  ){
-
-    clearTimeout(
-      sasoiScoreStartTimer
-    );
-
-    sasoiScoreStartTimer =
-      null;
-
-  }
-
-
-  // =================================
-  // 釣果加算タイマー停止
-  // =================================
-
-  if(
-    typeof sasoiCatchCountTimer !==
-      "undefined" &&
-    sasoiCatchCountTimer
-  ){
-
-    clearTimeout(
-      sasoiCatchCountTimer
-    );
-
-    sasoiCatchCountTimer =
-      null;
-
-  }
-
-
-  // =================================
-  // 判定アニメーションループ停止
-  // =================================
-
-  if(
-    typeof sasoiAnimationFrame !==
-      "undefined" &&
-    sasoiAnimationFrame !==
-      null
-  ){
-
-    cancelAnimationFrame(
-      sasoiAnimationFrame
-    );
-
-    sasoiAnimationFrame =
-      null;
-
-  }
+}
 
 // =================================
-// 誘いの名人関連モーダルをすべて閉じる
+// OFF
+// =================================
+//
+// 現在の誘いの名人プレイを
+// resetSasoiToMenu() によって
+// 完全停止する。
+// =================================
+
+console.log(
+"🎣 誘いの名人：OFF → プレイ完全停止"
+);
+
+// ---------------------------------
+// OFF状態を保存
+// ---------------------------------
+
+localStorage.setItem(
+"sasoiNoMeijinEnabled",
+"false"
+);
+
+// =================================
+// 誘いの名人プレイを完全停止
+// =================================
+//
+// resetSasoiToMenu() 内で、
+//
+// ・stopSasoiCheck()
+// ・旧プレイセッション無効化
+// ・流れている譜面削除
+// ・プレイタイマー停止
+// ・ゲーム画面非表示
+// ・メニュー表示
+//
+// を一括処理する。
+// =================================
+
+if(
+typeof resetSasoiToMenu ===
+"function"
+){
+
+
+resetSasoiToMenu();
+
+
+}
+
+// =================================
+// 誘いの名人関連モーダルを閉じる
 // =================================
 
 // ---------------------------------
@@ -15071,276 +16420,54 @@ btn.onchange=function(){
 // ---------------------------------
 
 const sasoiBackConfirmModal =
-  document.getElementById(
-    "sasoiBackConfirmModal"
-  );
-
+document.getElementById(
+"sasoiBackConfirmModal"
+);
 
 if(
-  sasoiBackConfirmModal
+sasoiBackConfirmModal
 ){
 
-  sasoiBackConfirmModal.style.display =
-    "none";
+
+sasoiBackConfirmModal.style.display =
+  "none";
+
 
 }
-
 
 // ---------------------------------
 // ハイスコアリセット確認モーダル
 // ---------------------------------
 
 const sasoiHighScoreResetModal =
-  document.getElementById(
-    "sasoiHighScoreResetModal"
-  );
-
+document.getElementById(
+"sasoiHighScoreResetModal"
+);
 
 if(
-  sasoiHighScoreResetModal
+sasoiHighScoreResetModal
 ){
 
-  sasoiHighScoreResetModal.style.display =
-    "none";
+
+sasoiHighScoreResetModal.style.display =
+  "none";
+
 
 }
 
-
-  // =================================
-  // プレイ状態を完全停止
-  // =================================
-
-  if(
-    typeof sasoiPlaying !==
-      "undefined"
-  ){
-
-    sasoiPlaying =
-      false;
-
-  }
-
-
-  // =================================
-  // 中央タイトルアニメーション削除
-  // =================================
-
-  const sasoiGame =
-    document.getElementById(
-      "sasoiGame"
-    );
-
-
-  if(
-    sasoiGame
-  ){
-
-    const centerTitle =
-      sasoiGame.querySelector(
-        ".sasoi-score-title-animation"
-      );
-
-
-    if(
-      centerTitle
-    ){
-
-      centerTitle.remove();
-
-    }
-
-
-    // ---------------------------------
-    // 中央譜面番号も削除
-    // ---------------------------------
-
-    const centerNumber =
-      sasoiGame.querySelector(
-        ".sasoi-score-number-animation"
-      );
-
-
-    if(
-      centerNumber
-    ){
-
-      centerNumber.remove();
-
-    }
-
-  }
-
-
-  // =================================
-  // 右上タイトル表示をリセット
-  // =================================
-
-  const titleElement =
-    document.getElementById(
-      "sasoiGameScoreTitle"
-    );
-
-
-  if(
-    titleElement
-  ){
-
-    titleElement.classList.remove(
-      "is-visible"
-    );
-
-  }
-
-
-  // =================================
-  // 右上譜面番号表示をリセット
-  // =================================
-
-  const numberElement =
-    document.getElementById(
-      "sasoiGameScoreNumber"
-    );
-
-
-  if(
-    numberElement
-  ){
-
-    numberElement.classList.remove(
-      "is-visible"
-    );
-
-  }
-
-
-  // =================================
-  // 譜面を停止
-  // =================================
-
-  const sasoiFlow =
-    document.getElementById(
-      "sasoiFlow"
-    );
-
-
-  if(
-    sasoiFlow
-  ){
-
-    sasoiFlow.innerHTML =
-      "";
-
-    sasoiFlow.classList.remove(
-      "show"
-    );
-
-  }
-
-
-  // =================================
-  // ゲーム画面を非表示
-  // =================================
-
-  if(
-    sasoiGame
-  ){
-
-    sasoiGame.style.display =
-      "none";
-
-  }
-
 // =================================
-// 譜面選択メニューアニメーションを完全リセット
+// 誘いの名人表示エリアを非表示
 // =================================
 
-const selectText =
-  document.querySelector(
-    ".sasoi-score-select-text"
-  );
+area.style.display =
+"none";
 
-
-if(
-  selectText
-){
-
-  // ---------------------------------
-  // アニメーション用クラスをすべて削除
-  // ---------------------------------
-
-  selectText.classList.remove(
-    "is-sliding",
-    "slide-out-up",
-    "slide-in-from-down",
-    "slide-out-down",
-    "slide-in-from-up",
-    "slide-from-bottom",
-    "slide-from-top"
-  );
-
-
-  // ---------------------------------
-  // 現在実行中のCSSアニメーションを停止
-  // ---------------------------------
-
-  selectText.style.animation =
-    "none";
-
-
-  // ---------------------------------
-  // レイアウトを再計算
-  // ---------------------------------
-  //
-  // 次回ONにしたとき、
-  // 同じアニメーションを
-  // もう一度正常に開始できるようにする。
-  // ---------------------------------
-
-  void selectText.offsetWidth;
-
-
-  // ---------------------------------
-  // animation指定を元に戻す
-  // ---------------------------------
-
-  selectText.style.animation =
-    "";
-
-}
-
-  // =================================
-  // 誘いの名人初期画面を表示
-  // =================================
-
-  const sasoiMenu =
-    document.getElementById(
-      "sasoiMenu"
-    );
-
-
-  if(
-    sasoiMenu
-  ){
-
-    sasoiMenu.style.display =
-      "flex";
-
-  }
-
-
-  // =================================
-  // 誘いの名人表示エリアを非表示
-  // =================================
-
-  area.style.display =
-    "none";
-
-
-  console.log(
-    "🎣 誘いの名人：完全停止 → 初期画面へ戻りました"
-  );
+console.log(
+"🎣 誘いの名人：完全停止 → 初期画面へ戻りました"
+);
 
 };
+
 
 
     }
@@ -16990,156 +18117,20 @@ function showSasoiCatchResult(){
 // ------------------　新しいプレイを開始する　------------------
 
 function resetSasoiCatchForNewPlay() {
-resetSasoiCatchForNewPlay();
-
-
-console.log("[Sasoi] 新しいプレイ開始：釣果をリセットしました");
-
-
-}
-
-function resetSasoiForChartTransition() {
-// 譜面切り替え時は興味ゲージだけリセットする
-resetSasoiInterestGauge();
-
-
-// 組み合わせ譜面では釣果を維持する
-if (sasoiCombinedPlay) {
-    console.log(
-        "[Sasoi] 組み合わせ譜面：譜面切り替え、釣果を維持します",
-        "total =", sasoiTotalCatchCount,
-        "current =", sasoiCurrentCatchCount
-    );
-    return;
-}
-
-// 通常譜面での譜面切り替えの場合は、
-// これまで通り釣果もリセットする
 sasoiTotalCatchCount = 0;
 sasoiCurrentCatchCount = 0;
+
 
 const totalCatchCount = document.getElementById("sasoiTotalCatchCount");
 if (totalCatchCount) {
     totalCatchCount.textContent = "0";
 }
 
-console.log("[Sasoi] 通常譜面：譜面切り替えで釣果をリセットしました");
+console.log("[Sasoi] 新しいプレイ開始：釣果をリセットしました");
 
 
 }
 
-
-
-// ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
-
-function resetSasoiToMenu(){
-
-  // --------------------------------------
-  // 現在のプレイを停止
-  // --------------------------------------
-
-  stopSasoiCheck();
-
-
-  // --------------------------------------
-  // プレイタイマーを停止
-  // --------------------------------------
-
-  if(
-    sasoiPlayTimer
-  ){
-
-    clearTimeout(
-      sasoiPlayTimer
-    );
-
-    sasoiPlayTimer =
-      null;
-
-  }
-
-
-  // --------------------------------------
-  // 譜面選択アニメーションを完全リセット
-  // --------------------------------------
-
-  const selectText =
-    document.querySelector(
-      ".sasoi-score-select-text"
-    );
-
-
-  if(
-    selectText
-  ){
-
-    selectText.classList.remove(
-      "is-sliding",
-      "slide-out-up",
-      "slide-in-from-down",
-      "slide-out-down",
-      "slide-in-from-up",
-      "slide-from-bottom",
-      "slide-from-top"
-    );
-
-
-    selectText.style.animation =
-      "none";
-
-
-    void selectText.offsetWidth;
-
-
-    selectText.style.animation =
-      "";
-
-  }
-
-
-  // --------------------------------------
-  // 誘いの名人ゲーム画面を非表示
-  // --------------------------------------
-
-  const game =
-    document.getElementById(
-      "sasoiGame"
-    );
-
-
-  if(
-    game
-  ){
-
-    game.style.display =
-      "none";
-
-  }
-
-
-
-  // --------------------------------------
-  // 誘いの名人初期画面を表示
-  // --------------------------------------
-
-  const menu =
-    document.getElementById(
-      "sasoiMenu"
-    );
-
-
-  if(
-    menu
-  ){
-
-    menu.style.display =
-      "flex";
-
-  }
-
-}
-
-// ------------------　誘いの名人をモーダルなしで初期画面へ戻す共通関数　------------------
 
 
 // ---------------------------------　JS終了地点　---------------------------------

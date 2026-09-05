@@ -1,15 +1,15 @@
 const sasoiScoreList = [
 
 // ==========================================
-// 第壱譜
+// 第壱誘
 // ==========================================
 
 {
 id:"score01",
 
-number:"第壱譜",
+number:"第壱誘",
 
-numberKana:"だいいっぷ",
+numberKana:"だいいちゆう",
 
 title:"一誘一間・四段重",
 
@@ -24,15 +24,15 @@ background:"images/sasoi-score01-bg.png"
 },
 
 // ==========================================
-// 第弐譜
+// 第弐誘
 // ==========================================
 
 {
 id:"score02",
 
-number:"第弐譜",
+number:"第弐誘",
 
-numberKana:"だいにふ",
+numberKana:"だいにゆう",
 
 title:"二誘一間・三段重",
 
@@ -47,15 +47,15 @@ background:"images/sasoi-score02-bg.png"
 },
 
 // ==========================================
-// 第参譜
+// 第参誘
 // ==========================================
 
 {
 id:"score03",
 
-number:"第参譜",
+number:"第参誘",
 
-numberKana:"だいさんぷ",
+numberKana:"だいさんゆう",
 
 title:"三誘一間・三段重",
 
@@ -70,15 +70,15 @@ background:"images/sasoi-score03-bg.png"
 },
 
 // ==========================================
-// 第肆譜
+// 第肆誘
 // ==========================================
 
 {
 id:"score04",
 
-number:"第肆譜",
+number:"第肆誘",
 
-numberKana:"だいよんぷ",
+numberKana:"だいよんゆう",
 
 title:"一誘一間・二誘挟",
 
@@ -93,15 +93,15 @@ background:"images/sasoi-score04-bg.png"
 },
 
 // ==========================================
-// 第伍譜
+// 第伍誘
 // ==========================================
 
 {
 id:"score05",
 
-number:"第伍譜",
+number:"第伍誘",
 
-numberKana:"だいごふ",
+numberKana:"だいごゆう",
 
 title:"一誘一間・三誘挟",
 
@@ -116,15 +116,15 @@ background:"images/sasoi-score05-bg.png"
 },
 
 // ==========================================
-// 第陸譜
+// 第陸誘
 // ==========================================
 
 {
 id:"score06",
 
-number:"第陸譜",
+number:"第陸誘",
 
-numberKana:"だいろっぷ",
+numberKana:"だいろくゆう",
 
 title:"二誘一間・一誘挟",
 
@@ -139,15 +139,15 @@ background:"images/sasoi-score06-bg.png"
 },
 
 // ==========================================
-// 第漆譜
+// 第漆誘
 // ==========================================
 
 {
 id:"score07",
 
-number:"第漆譜",
+number:"第漆誘",
 
-numberKana:"だいななふ",
+numberKana:"だいななゆう",
 
 title:"二誘一間・三誘挟",
 
@@ -162,15 +162,15 @@ background:"images/sasoi-score07-bg.png"
 },
 
 // ==========================================
-// 第捌譜
+// 第捌誘
 // ==========================================
 
 {
 id:"score08",
 
-number:"第捌譜",
+number:"第捌誘",
 
-numberKana:"だいはちふ",
+numberKana:"だいはちゆう",
 
 title:"三誘一間・一誘挟",
 
@@ -185,15 +185,15 @@ background:"images/sasoi-score08-bg.png"
 },
 
 // ==========================================
-// 第玖譜
+// 第玖誘
 // ==========================================
 
 {
 id:"score09",
 
-number:"第玖譜",
+number:"第玖誘",
 
-numberKana:"だいきゅうふ",
+numberKana:"だいきゅうゆう",
 
 title:"三誘一間・二誘挟",
 
@@ -208,15 +208,15 @@ background:"images/sasoi-score09-bg.png"
 },
 
 // ==========================================
-// 第拾譜
+// 第拾誘
 // ==========================================
 
 {
 id:"score10",
 
-number:"第拾譜",
+number:"第拾誘",
 
-numberKana:"だいじっぷ",
+numberKana:"だいじゅうゆう",
 
 title:"一誘一間・二誘連",
 
@@ -231,15 +231,15 @@ background:"images/sasoi-score10-bg.png"
 },
 
 // ==========================================
-// 第拾壱譜
+// 第拾壱誘
 // ==========================================
 
 {
 id:"score11",
 
-number:"第拾壱譜",
+number:"第拾壱誘",
 
-numberKana:"だいじゅういっぷ",
+numberKana:"だいじゅういちゆう",
 
 title:"一誘一間・三誘連",
 
@@ -254,15 +254,15 @@ background:"images/sasoi-score11-bg.png"
 },
 
 // ==========================================
-// 第拾弐譜
+// 第拾弐誘
 // ==========================================
 
 {
 id:"score12",
 
-number:"第拾弐譜",
+number:"第拾弐誘",
 
-numberKana:"だいじゅうにふ",
+numberKana:"だいじゅうにゆう",
 
 title:"二誘一間・一誘連",
 
@@ -277,15 +277,15 @@ background:"images/sasoi-score12-bg.png"
 },
 
 // ==========================================
-// 第拾参譜
+// 第拾参誘
 // ==========================================
 
 {
 id:"score13",
 
-number:"第拾参譜",
+number:"第拾参誘",
 
-numberKana:"だいじゅうさんぷ",
+numberKana:"だいじゅうさんゆう",
 
 title:"二誘一間・三誘連",
 
@@ -300,15 +300,15 @@ background:"images/sasoi-score13-bg.png"
 },
 
 // ==========================================
-// 第拾肆譜
+// 第拾肆誘
 // ==========================================
 
 {
 id:"score14",
 
-number:"第拾肆譜",
+number:"第拾肆誘",
 
-numberKana:"だいじゅうよんぷ",
+numberKana:"だいじゅうよんゆう",
 
 title:"三誘一間・一誘連",
 
@@ -323,15 +323,15 @@ background:"images/sasoi-score14-bg.png"
 },
 
 // ==========================================
-// 第拾伍譜
+// 第拾伍誘
 // ==========================================
 
 {
 id:"score15",
 
-number:"第拾伍譜",
+number:"第拾伍誘",
 
-numberKana:"だいじゅうごふ",
+numberKana:"だいじゅうごゆう",
 
 title:"三誘一間・二誘連",
 
@@ -346,6 +346,131 @@ background:"images/sasoi-score15-bg.png"
 }
 
 ];
+
+const sasoiCombinedScoreList = [
+
+// ==========================================
+// 連誘技 01
+// ==========================================
+
+{
+id:"combined01",
+
+number:"連誘技",
+
+numberKana:"れんゆうぎ",
+
+title:"誘一・二・三",
+
+titleKana:"ゆういち・に・さん",
+
+difficulty:"★★★★☆",
+
+charts:[
+  "score01",
+  "score02",
+  "score03"
+],
+
+background:"images/sasoi-score01-bg.png"
+
+}
+
+];
+
+const sasoiCombinedScoreListForSelect =
+sasoiCombinedScoreList.map(
+function(combinedScore){
+
+  return {
+
+    id:
+      combinedScore.id,
+
+    number:
+      combinedScore.number,
+
+    numberKana:
+      combinedScore.numberKana,
+
+    title:
+      combinedScore.title,
+
+    titleKana:
+      combinedScore.titleKana,
+
+    difficulty:
+      combinedScore.difficulty,
+
+    score:
+      null,
+
+    charts:
+      combinedScore.charts,
+
+    background:
+      combinedScore.background,
+
+    isCombined:
+      true
+
+  };
+
+}
+
+);
+
+sasoiScoreList.push(
+...sasoiCombinedScoreListForSelect
+);
+
+function getSasoiCombinedScoreById(
+id
+){
+
+if(
+!id
+){
+
+return null;
+
+}
+
+return sasoiCombinedScoreList.find(
+function(combinedScore){
+
+  return combinedScore.id === id;
+
+}
+
+) || null;
+
+}
+
+function getSasoiScoreById(
+id
+){
+
+if(
+!id
+){
+
+return null;
+
+}
+
+return sasoiScoreList.find(
+function(scoreData){
+
+  return scoreData.id === id;
+
+}
+
+) || null;
+
+}
+
+
 
 // =================================
 // ◎ 譜面番号 → 譜面タイトル中央表示
@@ -370,7 +495,8 @@ background:"images/sasoi-score15-bg.png"
 // =================================
 
 function showSasoiScoreTitleAnimation(
-callback
+callback,
+scoreData
 ){
 
 // ---------------------------------
@@ -387,7 +513,7 @@ if(
 ){
 
 console.log(
-  "🎣 譜面中央アニメーション失敗：sasoiGameが見つかりません"
+"🎣 譜面中央アニメーション失敗：sasoiGameが見つかりません"
 );
 
 return;
@@ -408,49 +534,88 @@ if(
 ){
 
 console.log(
-  "🎣 譜面中央アニメーション失敗：sasoiGameScoreTitleが見つかりません"
+"🎣 譜面中央アニメーション失敗：sasoiGameScoreTitleが見つかりません"
 );
 
 return;
 
 }
 
-// ---------------------------------
-// 現在の譜面タイトルを取得
-// ---------------------------------
+// =================================
+// ◎ 表示する譜面情報を決定
+// =================================
 
-const title =
-titleElement.textContent.trim();
+let title = "";
+let number = "";
+
+// ---------------------------------
+// 組み合わせ譜面などから
+// 譜面情報が渡された場合
+// ---------------------------------
 
 if(
-!title
+scoreData &&
+typeof scoreData === "object"
 ){
 
-console.log(
-  "🎣 譜面中央アニメーション失敗：譜面タイトルが空です"
-);
+number =
+typeof scoreData.number === "string"
+? scoreData.number.trim()
+: "";
 
-return;
+title =
+typeof scoreData.title === "string"
+? scoreData.title.trim()
+: "";
 
 }
 
-// =================================
-// ◎ 譜面番号を取得
-// =================================
+// ---------------------------------
+// 譜面情報が渡されていない場合
+// 今まで通り現在の画面情報を使用
+// ---------------------------------
+
+else{
+
+title =
+titleElement.textContent.trim();
 
 const numberElement =
 document.querySelector(
 ".sasoi-score-number"
 );
 
-const number =
+number =
 numberElement
 ? numberElement.textContent.trim()
 : "";
 
+}
+
+// ---------------------------------
+// タイトルが空なら終了
+// ---------------------------------
+
+if(
+!title
+){
+
+console.log(
+"🎣 中央表示失敗：譜面タイトルが空です"
+);
+
+return;
+
+}
+
 console.log(
 "🎣 中央表示用 譜面番号:",
 number
+);
+
+console.log(
+"🎣 中央表示用 譜面タイトル:",
+title
 );
 
 // =================================
@@ -484,7 +649,7 @@ oldTitle.remove();
 }
 
 // =================================
-// ◎ 右上表示を一旦非表示にする
+// ◎ 右上表示を一旦非表示
 // =================================
 
 const cornerName =
@@ -497,7 +662,7 @@ cornerName
 ){
 
 cornerName.classList.remove(
-  "is-visible"
+"is-visible"
 );
 
 }
@@ -511,72 +676,70 @@ number
 ){
 
 const centerNumber =
-  document.createElement(
-    "div"
-  );
-
+document.createElement(
+"div"
+);
 
 centerNumber.className =
-  "sasoi-score-number-animation";
-
+"sasoi-score-number-animation";
 
 centerNumber.textContent =
-  number;
-
+number;
 
 // ---------------------------------
 // ゲーム画面へ追加
 // ---------------------------------
 
 game.appendChild(
-  centerNumber
+centerNumber
 );
-
 
 console.log(
-  "🎣 譜面番号：中央表示開始"
+"🎣 譜面番号：中央表示開始"
 );
-
 
 // =================================
 // 譜面番号アニメーション終了
 // =================================
 
 centerNumber.addEventListener(
-  "animationend",
-  function(event){
-
-    if(
-      event.animationName !==
-      "sasoiScoreNumberCenterShow"
-    ){
-
-      return;
-
-    }
+"animationend",
+function(event){
 
 
-    console.log(
-      "🎣 譜面番号：中央表示終了"
-    );
+  if(
+    event.animationName !==
+    "sasoiScoreNumberCenterShow"
+  ){
 
+    return;
 
-    if(
-      centerNumber &&
-      centerNumber.isConnected
-    ){
-
-      centerNumber.remove();
-
-    }
-
-
-    showSasoiCenterTitle();
-
-  },
-  {
-    once:true
   }
+
+
+  console.log(
+    "🎣 譜面番号：中央表示終了"
+  );
+
+
+  if(
+    centerNumber &&
+    centerNumber.isConnected
+  ){
+
+    centerNumber.remove();
+
+  }
+
+
+  showSasoiCenterTitle();
+
+},
+{
+  once:true
+}
+
+
 );
 
 }
@@ -584,9 +747,8 @@ centerNumber.addEventListener(
 else{
 
 console.log(
-  "🎣 譜面番号なし：タイトル中央表示へ"
+"🎣 譜面番号なし：タイトル中央表示へ"
 );
-
 
 showSasoiCenterTitle();
 
@@ -599,59 +761,51 @@ showSasoiCenterTitle();
 function showSasoiCenterTitle(){
 
 const oldTitle =
-  game.querySelector(
-    ".sasoi-score-title-animation"
-  );
-
+game.querySelector(
+".sasoi-score-title-animation"
+);
 
 if(
-  oldTitle
+oldTitle
 ){
 
-  oldTitle.remove();
+
+oldTitle.remove();
+
 
 }
 
-
 const centerTitle =
-  document.createElement(
-    "div"
-  );
-
+document.createElement(
+"div"
+);
 
 centerTitle.className =
-  "sasoi-score-title-animation";
-
+"sasoi-score-title-animation";
 
 centerTitle.textContent =
-  title;
-
+title;
 
 game.appendChild(
-  centerTitle
+centerTitle
 );
-
 
 console.log(
-  "================================="
+"================================="
 );
-
 
 console.log(
-  "🎣 譜面タイトル中央表示開始"
+"🎣 譜面タイトル中央表示開始"
 );
-
 
 console.log(
-  "タイトル:",
-  title
+"タイトル:",
+title
 );
-
 
 console.log(
-  "================================="
+"================================="
 );
-
 
 // =================================
 // ◎ 中央タイトル
@@ -659,52 +813,56 @@ console.log(
 // =================================
 
 centerTitle.addEventListener(
-  "animationend",
-  function(event){
-
-    if(
-      event.animationName !==
-      "sasoiScoreTitleCenterShow"
-    ){
-
-      return;
-
-    }
+"animationend",
+function(event){
 
 
-    console.log(
-      "🎣 譜面タイトル：中央アニメーション終了"
-    );
+  if(
+    event.animationName !==
+    "sasoiScoreTitleCenterShow"
+  ){
 
+    return;
 
-    if(
-      centerTitle &&
-      centerTitle.isConnected
-    ){
-
-      centerTitle.remove();
-
-    }
-
-
-    if(
-      typeof callback ===
-      "function"
-    ){
-
-      callback();
-
-    }
-
-  },
-  {
-    once:true
   }
+
+
+  console.log(
+    "🎣 譜面タイトル：中央アニメーション終了"
+  );
+
+
+  if(
+    centerTitle &&
+    centerTitle.isConnected
+  ){
+
+    centerTitle.remove();
+
+  }
+
+
+  if(
+    typeof callback ===
+    "function"
+  ){
+
+    callback();
+
+  }
+
+},
+{
+  once:true
+}
+
+
 );
 
 }
 
 }
+
 
 // ==========================================
 // ◎ 譜面選択時の初期画面背景変更
