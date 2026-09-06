@@ -14687,8 +14687,12 @@ console.log("🔴 resetSasoiToMenu：一時停止表示を解除", pauseDisplay.
 }
 
 // =================================
-// 一時停止ボタンを通常状態へ戻す
+// 一時停止ボタンを完全リセット
 // =================================
+
+// ---------------------------------
+// 自動消去タイマーを停止
+// ---------------------------------
 
 if(
 sasoiPauseButtonHideTimer
@@ -14703,6 +14707,10 @@ null;
 
 }
 
+// ---------------------------------
+// ボタンを取得
+// ---------------------------------
+
 const pauseButton =
 document.getElementById(
 "sasoiPauseBtn"
@@ -14712,9 +14720,11 @@ if(
 pauseButton
 ){
 
+// 通常状態
 pauseButton.textContent =
 "Ⅱ";
 
+// ★ リトライ時は必ず非表示
 pauseButton.style.display =
 "none";
 
@@ -15094,6 +15104,44 @@ sasoiTouch.addEventListener(
 document
 .getElementById("sasoiStartBtn")
 .onclick=function(){
+
+
+// =================================
+// ◎ 一時停止ボタンを完全初期化
+// =================================
+
+if(
+typeof sasoiPauseButtonHideTimer !==
+"undefined" &&
+sasoiPauseButtonHideTimer
+){
+
+clearTimeout(
+sasoiPauseButtonHideTimer
+);
+
+sasoiPauseButtonHideTimer =
+null;
+
+}
+
+const startPauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+startPauseButton
+){
+
+startPauseButton.textContent =
+"Ⅱ";
+
+startPauseButton.style.display =
+"none";
+
+}
+
 
 
 document
@@ -16062,104 +16110,6 @@ if(
 }
 
 
-// =================================
-// 一時停止ボタンと関数を接続
-// =================================
-
-const sasoiPauseBtn =
-document.getElementById(
-"sasoiPauseBtn"
-);
-
-if(
-sasoiPauseBtn
-){
-
-sasoiPauseBtn.onclick =
-function(event){
-
-// ---------------------------------
-// ボタン自身のクリックを
-// ゲーム画面側へ伝えない
-// ---------------------------------
-
-event.stopPropagation();
-
-toggleSasoiPause();
-
-};
-
-}
-
-// =================================
-// ◎ ゲーム画面クリック
-// → 一時停止ボタンを表示
-// =================================
-
-const sasoiGameArea = document.getElementById("sasoiGame");
-
-if(sasoiGameArea){
-
-    sasoiGameArea.addEventListener("pointerdown", function(event){
-
-        if(!sasoiPlaying){
-            return;
-        }
-
-        if(sasoiPaused){
-            return;
-        }
-
-        if(event.target.closest && event.target.closest("#sasoiPauseBtn")){
-            return;
-        }
-
-        if(event.target.closest && event.target.closest("#sasoiTouch")){
-            return;
-        }
-
-        if(event.target.closest && event.target.closest("#sasoiRestartBtn")){
-            return;
-        }
-
-        if(event.target.closest && event.target.closest("#sasoiBackBtn")){
-            return;
-        }
-
-        if(sasoiPauseBtn){
-
-            // 既存の自動消去タイマーを解除
-            if(sasoiPauseButtonHideTimer){
-                clearTimeout(sasoiPauseButtonHideTimer);
-                sasoiPauseButtonHideTimer = null;
-            }
-
-            // 一時停止ボタンを表示
-            sasoiPauseBtn.style.display = "flex";
-            sasoiPauseBtn.textContent = "Ⅱ";
-
-            // 2秒間押されなければ自動で消す
-            sasoiPauseButtonHideTimer = setTimeout(function(){
-
-                // まだプレイ中かつ一時停止していない場合だけ消す
-                if(sasoiPlaying && !sasoiPaused){
-
-                    sasoiPauseBtn.style.display = "none";
-
-                    console.log("⏸️ 一時停止ボタン：操作がなかったため自動消去");
-
-                }
-
-                sasoiPauseButtonHideTimer = null;
-
-            }, 2000);
-        }
-
-        console.log("⏸️ ゲーム画面クリック：一時停止ボタン表示");
-
-    });
-
-}
 
 function hideSasoiPauseButton(){
 
@@ -16408,6 +16358,27 @@ startBtn
 
 startBtn.click();
 
+// =================================
+// ◎ リトライ後も一時停止ボタンを強制的に非表示
+// =================================
+
+const restartPauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+restartPauseButton
+){
+
+restartPauseButton.textContent =
+"Ⅱ";
+
+restartPauseButton.style.display =
+"none";
+
+}
+
 }
 
 };
@@ -16645,7 +16616,218 @@ document.addEventListener(
 
     initSasoiNoMeijin();
 
+// =================================
+// ◎ 誘いの名人 一時停止ボタン初期設定
+// =================================
+//
+// この処理はゲーム開始時ではなく、
+// ページ読み込み時に1回だけ登録する。
+//
+// リトライしてもイベントリスナーは増えない。
+// =================================
 
+const sasoiPauseBtn =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+const sasoiGameArea =
+document.getElementById(
+"sasoiGame"
+);
+
+// =================================
+// 一時停止ボタン
+// =================================
+
+if(
+sasoiPauseBtn
+){
+
+sasoiPauseBtn.onclick =
+function(event){
+
+event.preventDefault();
+
+event.stopPropagation();
+
+toggleSasoiPause();
+
+};
+
+}
+
+// =================================
+// ゲーム画面クリック
+// → 一時停止ボタンを表示
+// =================================
+
+if(
+sasoiGameArea
+){
+
+sasoiGameArea.addEventListener(
+"pointerdown",
+function(event){
+
+// ---------------------------------
+// プレイ中でなければ何もしない
+// ---------------------------------
+
+if(
+!sasoiPlaying
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 一時停止中は何もしない
+// ---------------------------------
+
+if(
+sasoiPaused
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 一時停止ボタン自身
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiPauseBtn")
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 入力ボタン
+//
+// sasoiTouch はゲーム操作用なので、
+// ここでは一時停止ボタンを表示しない。
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiTouch")
+){
+
+return;
+
+}
+
+// ---------------------------------
+// リトライボタン
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiRestartBtn")
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 戻るボタン
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiBackBtn")
+){
+
+return;
+
+}
+
+// =================================
+// 一時停止ボタンを表示
+// =================================
+
+if(
+sasoiPauseBtn
+){
+
+// ---------------------------------
+// 既存の自動消去タイマーを解除
+// ---------------------------------
+
+if(
+sasoiPauseButtonHideTimer
+){
+
+clearTimeout(
+sasoiPauseButtonHideTimer
+);
+
+sasoiPauseButtonHideTimer =
+null;
+
+}
+
+// ---------------------------------
+// ボタン表示
+// ---------------------------------
+
+sasoiPauseBtn.style.display =
+"flex";
+
+sasoiPauseBtn.textContent =
+"Ⅱ";
+
+// ---------------------------------
+// 2秒後に自動消去
+// ---------------------------------
+
+sasoiPauseButtonHideTimer =
+setTimeout(
+function(){
+
+// ---------------------------------
+// まだ通常プレイ中なら消す
+// ---------------------------------
+
+if(
+sasoiPlaying &&
+!sasoiPaused
+){
+
+sasoiPauseBtn.style.display =
+"none";
+
+console.log(
+"⏸️ 一時停止ボタン：操作がなかったため自動消去"
+);
+
+}
+
+sasoiPauseButtonHideTimer =
+null;
+
+},
+2000
+);
+
+}
+
+console.log(
+"⏸️ ゲーム画面クリック：一時停止ボタン表示"
+);
+
+},
+true
+);
+
+}
 
     // -------------------------------
     // 誘いの名人 右クリック禁止
