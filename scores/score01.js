@@ -8,21 +8,21 @@ const sasoiScore01 = [
     id:1,
     time:0,
     type:"count",
-    value:3
+    value:5
   },
 
   {
     id:2,
     time:1000,
     type:"count",
-    value:2
+    value:10
   },
 
   {
     id:3,
     time:2000,
     type:"count",
-    value:1
+    value:15
   },
 
 

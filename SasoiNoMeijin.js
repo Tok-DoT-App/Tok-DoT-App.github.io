@@ -2256,6 +2256,28 @@ rgba(0,0,0,.40);
 
 }
 
+/* =================================
+カウントダウン「m」表示
+================================= */
+
+.sasoi-flow span[data-type="count"]::after {
+
+content: "m";
+
+font-size: 0.45em;
+
+margin-left: -2px;
+
+vertical-align: middle;
+
+display: inline-block;
+
+transform: translateY(3px);
+
+}
+
+
+
 .sasoi-note-move{
 
   animation:sasoiNoteMove 2.5s linear forwards;

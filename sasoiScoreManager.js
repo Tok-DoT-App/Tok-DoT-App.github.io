@@ -347,36 +347,575 @@ background:"images/sasoi-score15-bg.png"
 
 ];
 
+
+
 const sasoiCombinedScoreList = [
+
 
 // ==========================================
 // 連誘技 01
 // ==========================================
-
 {
 id:"combined01",
-
 number:"連誘技",
-
 numberKana:"れんゆうぎ",
-
 title:"誘技・一・二・三",
-
-titleKana:"ゆうぎ・ひぃ・ふぅ・みぃ",
-
+titleKana:"ゆうぎ・ひ・ふ・み",
 difficulty:"★★★★☆",
-
 charts:[
-  "score01",
-  "score02",
-  "score03"
+"score01",
+"score02",
+"score03"
 ],
-
 background:"images/sasoi-score16-bg.png"
+},
 
+// ==========================================
+// 連誘技 02
+// ==========================================
+{
+id:"combined02",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・一・六・八",
+titleKana:"ゆうぎ・い・ろ・は",
+difficulty:"★★★★☆",
+charts:[
+"score01",
+"score06",
+"score08"
+],
+background:"images/sasoi-score17-bg.png"
+},
+
+// ==========================================
+// 連誘技 03
+// ==========================================
+{
+id:"combined03",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・三・四・六",
+titleKana:"ゆうぎ・さん・し・ろう",
+difficulty:"★★★★☆",
+charts:[
+"score03",
+"score04",
+"score06"
+],
+background:"images/sasoi-score18-bg.png"
+},
+
+// ==========================================
+// 連誘技 04
+// ==========================================
+{
+id:"combined04",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・八・七・五",
+titleKana:"ゆうぎ・は・な・こ",
+difficulty:"★★★★☆",
+charts:[
+"score08",
+"score07",
+"score05"
+],
+background:"images/sasoi-score19-bg.png"
+},
+
+// ==========================================
+// 連誘技 05
+// ==========================================
+{
+id:"combined05",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・四・一・五",
+titleKana:"ゆうぎ・よ・い・こ",
+difficulty:"★★★★☆",
+charts:[
+"score04",
+"score01",
+"score05"
+],
+background:"images/sasoi-score20-bg.png"
+},
+
+// ==========================================
+// 連誘技 06
+// ==========================================
+{
+id:"combined06",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・三・二・八",
+titleKana:"ゆうぎ・み・つ・ば",
+difficulty:"★★★★☆",
+charts:[
+"score03",
+"score02",
+"score08"
+],
+background:"images/sasoi-score21-bg.png"
+},
+
+// ==========================================
+// 連誘技 07
+// ==========================================
+{
+id:"combined07",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・三・五・八",
+titleKana:"ゆうぎ・さ・ご・はち",
+difficulty:"★★★★☆",
+charts:[
+"score03",
+"score05",
+"score08"
+],
+background:"images/sasoi-score22-bg.png"
+},
+
+// ==========================================
+// 連誘技 08
+// ==========================================
+{
+id:"combined08",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・七・五・三",
+titleKana:"ゆうぎ・しち・ご・さん",
+difficulty:"★★★★☆",
+charts:[
+"score07",
+"score05",
+"score03"
+],
+background:"images/sasoi-score23-bg.png"
+},
+
+// ==========================================
+// 連誘技 09
+// ==========================================
+{
+id:"combined09",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・八・七・三",
+titleKana:"ゆうぎ・は・な・み",
+difficulty:"★★★★☆",
+charts:[
+"score08",
+"score07",
+"score03"
+],
+background:"images/sasoi-score24-bg.png"
+},
+
+// ==========================================
+// 連誘技 10
+// ==========================================
+{
+id:"combined10",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・七・一・六",
+titleKana:"ゆうぎ・なな・い・ろ",
+difficulty:"★★★★☆",
+charts:[
+"score07",
+"score01",
+"score06"
+],
+background:"images/sasoi-score25-bg.png"
+},
+
+// ==========================================
+// 連誘技 11
+// ==========================================
+{
+id:"combined11",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・八・三・二",
+titleKana:"ゆうぎ・はち・み・つ",
+difficulty:"★★★★☆",
+charts:[
+"score08",
+"score03",
+"score02"
+],
+background:"images/sasoi-score26-bg.png"
+},
+
+// ==========================================
+// 連誘技 12
+// ==========================================
+{
+id:"combined12",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"誘技・三・一・五",
+titleKana:"ゆうぎ・さ・い・こう",
+difficulty:"★★★★☆",
+charts:[
+"score03",
+"score01",
+"score05"
+],
+background:"images/sasoi-score27-bg.png"
+},
+
+// ==========================================
+// 釣戰 01
+// ==========================================
+{
+id:"combined13",
+number:"釣戰",
+numberKana:"ちょうせん",
+title:"五十獲超",
+titleKana:"ごじゅっかくごえ",
+difficulty:"★★★★★",
+charts:[
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15"
+],
+background:"images/sasoi-score28-bg.png"
+},
+
+// ==========================================
+// 釣戰 02
+// ==========================================
+{
+id:"combined14",
+number:"釣戰",
+numberKana:"ちょうせん",
+title:"百獲超",
+titleKana:"ひゃっかくごえ",
+difficulty:"★★★★★",
+charts:[
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15"
+],
+background:"images/sasoi-score29-bg.png"
+},
+
+// ==========================================
+// 釣戰 03
+// ==========================================
+{
+id:"combined15",
+number:"釣戰",
+numberKana:"ちょうせん",
+title:"二百漁超",
+titleKana:"にひゃくりょうごえ",
+difficulty:"★★★★★",
+charts:[
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15"
+],
+background:"images/sasoi-score30-bg.png"
+},
+
+// ==========================================
+// 釣戰 04
+// ==========================================
+{
+id:"combined16",
+number:"釣戰",
+numberKana:"ちょうせん",
+title:"三百漁超",
+titleKana:"さんびゃくりょうごえ",
+difficulty:"★★★★★",
+charts:[
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15",
+"score01",
+"score02",
+"score03",
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09",
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15"
+],
+background:"images/sasoi-score31-bg.png"
 }
 
+
 ];
+
 
 const sasoiCombinedScoreListForSelect =
 sasoiCombinedScoreList.map(
