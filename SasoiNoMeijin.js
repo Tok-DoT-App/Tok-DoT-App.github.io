@@ -6050,6 +6050,68 @@ translateY(1px);
 }
 
 
+/* =================================
+誘いの名人 一時停止ボタン
+================================= */
+
+#sasoiPauseBtn{
+    position:absolute;
+    top:80px;
+    left:50%;
+    transform:translate(-50%, -50%);
+    z-index:100;
+    width:44px;
+    height:44px;
+    padding:0;
+    border:2px solid rgba(255,255,255,0.7);
+    border-radius:50%;
+    background:rgba(255,255,255,0.18);
+    color:#ffffff;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    -webkit-tap-highlight-color:transparent;
+    outline:none;
+}
+
+/* =================================
+一時停止中表示
+================================= */
+
+#sasoiPauseDisplay{
+
+position:absolute;
+
+left:50%;
+
+top:47%;
+
+transform:
+translate(-50%, -50%);
+
+z-index:99;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+width:110px;
+
+height:80px;
+
+pointer-events:auto;
+
+background:transparent;
+
+}
+
+
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -6124,6 +6186,50 @@ let sasoiCatchCountTimer =
   null;
 
 // -------------------------------
+// 一時停止状態
+// -------------------------------
+
+let sasoiTimer = null;
+
+let sasoiAnimationFrame = null;
+
+let sasoiPlaying = false;
+
+let sasoiPaused = false;
+
+// =================================
+// ◎ 一時停止前の判定ループ状態
+// =================================
+
+let sasoiWasAnimationRunning = false;
+
+// -------------------------------
+// 譜面再生管理
+// -------------------------------
+
+let sasoiIndex = 0;
+
+let sasoiPlayTimer = null;
+
+let sasoiPlaySessionId = 0;
+
+// -------------------------------
+// 一時停止ボタン
+// -------------------------------
+
+let sasoiPauseButtonHideTimer = null;
+
+// =================================
+// ◎ 一時停止用タイマー管理
+// =================================
+
+let sasoiPlayTimerStartedAt = null;
+
+let sasoiPlayTimerDelay = null;
+
+let sasoiPlayTimerRemaining = null;
+
+// -------------------------------
 // 初期表示生成
 // -------------------------------
 function initSasoiNoMeijin(){
@@ -6136,13 +6242,6 @@ function initSasoiNoMeijin(){
 
 const SASOI_DEBUG_MODE = true;
 
-
-let sasoiTimer = null;
-
-let sasoiAnimationFrame =
-  null;
-
-let sasoiPlaying = false;
 
 // -------------------------------
 // プレイヤー状態
@@ -6160,15 +6259,6 @@ let sasoiScoreTitleAnimationTimer =
 let sasoiScoreNoteStartTimer =
   null;
 
-// -------------------------------
-// 譜面再生管理
-// -------------------------------
-
-let sasoiIndex = 0;
-
-let sasoiPlayTimer = null;
-
-let sasoiPlaySessionId = 0;
 
 let sasoiStartTime = null;
 
@@ -7440,6 +7530,19 @@ class="sasoi-gauge-total"
   class="sasoi-judgement-display"
 >
 </div>
+
+<!-- =================================
+     誘いの名人 一時停止ボタン
+     ================================= -->
+
+<button
+id="sasoiPauseBtn"
+type="button"
+
+>
+
+Ⅱ</button>
+
 
 <button
   id="sasoiRestartBtn"
@@ -9020,6 +9123,35 @@ console.log(
 // 判定停止
 // ---------------------------------
 
+// 一時停止ボタンの自動消去タイマーを解除
+if(
+sasoiPauseButtonHideTimer
+){
+
+clearTimeout(
+sasoiPauseButtonHideTimer
+);
+
+sasoiPauseButtonHideTimer =
+null;
+
+}
+
+// 一時停止ボタンを強制的に非表示
+const pauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+pauseButton
+){
+
+pauseButton.style.display =
+"none";
+
+}
+
 stopSasoiCheck();
 
 return;
@@ -9116,23 +9248,70 @@ nextDelay =
 const currentSessionId =
 sasoiPlaySessionId;
 
+// =================================
+// ◎ 一時停止用タイマー情報を保存
+// =================================
+
+sasoiPlayTimerStartedAt =
+Date.now();
+
+sasoiPlayTimerDelay =
+nextDelay;
+
+sasoiPlayTimerRemaining =
+null;
+
 sasoiPlayTimer =
 setTimeout(
 function(){
 
 
-playNextSasoiNote(
-  currentSessionId
-);
+  // ---------------------------------
+  // タイマー実行時に
+  // 一時停止中なら進めない
+  // ---------------------------------
 
+  if(
+    sasoiPaused
+  ){
+
+    return;
+
+  }
+
+
+  // ---------------------------------
+  // タイマー情報をリセット
+  // ---------------------------------
+
+  sasoiPlayTimer =
+    null;
+
+  sasoiPlayTimerStartedAt =
+    null;
+
+  sasoiPlayTimerDelay =
+    null;
+
+
+  // ---------------------------------
+  // 次の音符
+  // ---------------------------------
+
+  playNextSasoiNote(
+    currentSessionId
+  );
 
 },
 nextDelay
+
+
 );
+
 
 }
 
-
+window.playNextSasoiNote = playNextSasoiNote;
 
 // -------------------------------
 // デバッグ表示用
@@ -9196,10 +9375,10 @@ function createSasoiNote(note){
 
 if(SASOI_DEBUG_MODE){
 
-  sasoiDebugText.note =
-  note.type.toUpperCase();
+sasoiDebugText.note =
+note.type.toUpperCase();
 
-  updateSasoiDebug();
+updateSasoiDebug();
 
 }
 
@@ -9208,16 +9387,14 @@ document.getElementById(
 "sasoiFlow"
 );
 
-
 if(!flow) return;
-
-
 
 const span =
 document.createElement("span");
 
-
+// =================================
 // 音符情報を保存
+// =================================
 
 span.dataset.id =
 note.id;
@@ -9228,60 +9405,58 @@ note.type;
 span.dataset.time =
 note.time;
 
-
+// =================================
 // 種類判定
+// =================================
 
 if(note.type==="count"){
-
 
 span.innerText =
 note.value;
 
-
 }
-
 
 else if(note.type==="press"){
 
- span.innerText =
- "●";
+span.innerText =
+"●";
 
 }
-
 
 else if(note.type==="hold"){
 
- span.innerText =
- "―";
+span.innerText =
+"―";
 
 }
 
-
 else if(note.type==="release"){
 
- span.innerText =
- "○";
+span.innerText =
+"○";
 
 }
 
 else if(note.type==="bite"){
 
- span.innerText =
- "◎";
+span.innerText =
+"◎";
 
 }
 
-
+// =================================
 // 初期位置
+// =================================
 
 span.style.left =
 "0px";
 
+span.dataset.hit =
+"false";
 
-span.dataset.hit = "false";
-
-
+// =================================
 // 移動開始
+// =================================
 
 span.classList.add(
 "sasoi-note-move"
@@ -9289,23 +9464,83 @@ span.classList.add(
 
 flow.appendChild(span);
 
+// =================================
+// ★ CSSアニメーション終了時に削除
+// =================================
+//
+// setTimeout(3000) は使用しない。
+//
+// animationend はCSSアニメーションが
+// 本当に最後まで到達した時だけ発生する。
+//
+// そのため、
+//
+// 譜面が流れる
+// ↓
+// 一時停止
+// ↓
+// 長時間経過
+//
+// しても、アニメーション自体が停止している限り
+// 音符は削除されない。
+//
+// 再開
+// ↓
+// アニメーションが最後まで進む
+// ↓
+// animationend
+// ↓
+// 音符削除
+//
+// となる。
+// =================================
 
-// 画面外へ出たら削除
+span.addEventListener(
+"animationend",
+function(){
 
-setTimeout(()=>{
+// ---------------------------------
+// 念のため現在の親要素を確認
+// ---------------------------------
 
-  span.remove();
+if(!span.parentNode){
 
-},3000);
 
+return;
+
+
+}
+
+// ---------------------------------
+// 音符を削除
+// ---------------------------------
+
+span.remove();
 
 console.log(
- "生成音符",
- span.dataset.id,
- span.dataset.type
+"🎵 譜面アニメーション終了：音符削除",
+span.dataset.id,
+span.dataset.type
+);
+
+},
+{
+once:true
+}
+);
+
+// =================================
+// デバッグ
+// =================================
+
+console.log(
+"生成音符",
+span.dataset.id,
+span.dataset.type
 );
 
 }
+
 
 
 // ==========================================
@@ -14430,7 +14665,70 @@ function stopSasoiCheck(){
 
 
 function resetSasoiToMenu(){
+
+// =================================
+// 一時停止状態を完全解除
+// =================================
+
+sasoiPaused = false;
+
+// =================================
+// 一時停止表示を完全解除
+// =================================
+
+const pauseDisplay = document.getElementById("sasoiPauseDisplay");
+
+if(pauseDisplay){
+
+pauseDisplay.style.display = "none";
+
+console.log("🔴 resetSasoiToMenu：一時停止表示を解除", pauseDisplay.style.display);
+
+}
+
+// =================================
+// 一時停止ボタンを通常状態へ戻す
+// =================================
+
+if(
+sasoiPauseButtonHideTimer
+){
+
+clearTimeout(
+sasoiPauseButtonHideTimer
+);
+
+sasoiPauseButtonHideTimer =
+null;
+
+}
+
+const pauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+pauseButton
+){
+
+pauseButton.textContent =
+"Ⅱ";
+
+pauseButton.style.display =
+"none";
+
+}
+
+// =================================
+// 現在のプレイを停止
+// =================================
+
 stopSasoiCheck();
+
+// =================================
+// 旧プレイセッションを無効化
+// =================================
 
 sasoiPlaySessionId++;
 
@@ -14439,29 +14737,46 @@ console.log(
 sasoiPlaySessionId
 );
 
+// =================================
+// 流れている音符を完全削除
+// =================================
+
 const sasoiFlow =
-document.getElementById("sasoiFlow");
-
-if(sasoiFlow){
-sasoiFlow.innerHTML = "";
-sasoiFlow.classList.remove("show");
-
-
-console.log(
-  "🎵 誘いの名人：流れている音符を完全削除"
+document.getElementById(
+"sasoiFlow"
 );
 
+if(
+sasoiFlow
+){
+
+sasoiFlow.innerHTML = "";
+
+sasoiFlow.classList.remove(
+"show"
+);
+
+console.log(
+"🎵 誘いの名人：流れている音符を完全削除"
+);
 
 }
 
-if(sasoiPlayTimer){
-clearTimeout(sasoiPlayTimer);
-sasoiPlayTimer = null;
-}
+// =================================
+// 現在のプレイタイマーを停止
+// =================================
 
-if(sasoiPlayTimer){
-clearTimeout(sasoiPlayTimer);
-sasoiPlayTimer = null;
+if(
+sasoiPlayTimer
+){
+
+clearTimeout(
+sasoiPlayTimer
+);
+
+sasoiPlayTimer =
+null;
+
 }
 
 // =================================
@@ -14481,13 +14796,19 @@ null;
 
 }
 
+// =================================
+// 譜面選択アニメーションを完全リセット
+// =================================
 
 const selectText =
 document.querySelector(
 ".sasoi-score-select-text"
 );
 
-if(selectText){
+if(
+selectText
+){
+
 selectText.classList.remove(
 "is-sliding",
 "slide-out-up",
@@ -14498,32 +14819,56 @@ selectText.classList.remove(
 "slide-from-top"
 );
 
-
-selectText.style.animation = "none";
+selectText.style.animation =
+"none";
 
 void selectText.offsetWidth;
 
-selectText.style.animation = "";
-
+selectText.style.animation =
+"";
 
 }
+
+// =================================
+// ゲーム画面を非表示
+// =================================
 
 const game =
-document.getElementById("sasoiGame");
+document.getElementById(
+"sasoiGame"
+);
 
-if(game){
-game.style.display = "none";
+if(
+game
+){
+
+game.style.display =
+"none";
+
 }
+
+// =================================
+// メニュー画面を表示
+// =================================
 
 const menu =
-document.getElementById("sasoiMenu");
+document.getElementById(
+"sasoiMenu"
+);
 
-if(menu){
-menu.style.display = "flex";
-}
+if(
+menu
+){
+
+menu.style.display =
+"flex";
+
 }
 
-window.resetSasoiToMenu = resetSasoiToMenu;
+}
+
+window.resetSasoiToMenu =
+resetSasoiToMenu;
 
 
 // -------------------------------
@@ -15192,9 +15537,25 @@ updateSasoiCatchRecordHighDisplay();
 
 sasoiPlaying = true;
 
+sasoiPaused = false;
+
 sasoiPlaySessionId++;
 
 sasoiIndex = 0;
+
+// =================================
+// ◎ 一時停止タイマー情報をリセット
+// =================================
+
+sasoiPlayTimerStartedAt =
+null;
+
+sasoiPlayTimerDelay =
+null;
+
+sasoiPlayTimerRemaining =
+null;
+
 
 // =================================
 // ◎ 釣果投入アニメーションを
@@ -15701,6 +16062,124 @@ if(
 }
 
 
+// =================================
+// 一時停止ボタンと関数を接続
+// =================================
+
+const sasoiPauseBtn =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+sasoiPauseBtn
+){
+
+sasoiPauseBtn.onclick =
+function(event){
+
+// ---------------------------------
+// ボタン自身のクリックを
+// ゲーム画面側へ伝えない
+// ---------------------------------
+
+event.stopPropagation();
+
+toggleSasoiPause();
+
+};
+
+}
+
+// =================================
+// ◎ ゲーム画面クリック
+// → 一時停止ボタンを表示
+// =================================
+
+const sasoiGameArea = document.getElementById("sasoiGame");
+
+if(sasoiGameArea){
+
+    sasoiGameArea.addEventListener("pointerdown", function(event){
+
+        if(!sasoiPlaying){
+            return;
+        }
+
+        if(sasoiPaused){
+            return;
+        }
+
+        if(event.target.closest && event.target.closest("#sasoiPauseBtn")){
+            return;
+        }
+
+        if(event.target.closest && event.target.closest("#sasoiTouch")){
+            return;
+        }
+
+        if(event.target.closest && event.target.closest("#sasoiRestartBtn")){
+            return;
+        }
+
+        if(event.target.closest && event.target.closest("#sasoiBackBtn")){
+            return;
+        }
+
+        if(sasoiPauseBtn){
+
+            // 既存の自動消去タイマーを解除
+            if(sasoiPauseButtonHideTimer){
+                clearTimeout(sasoiPauseButtonHideTimer);
+                sasoiPauseButtonHideTimer = null;
+            }
+
+            // 一時停止ボタンを表示
+            sasoiPauseBtn.style.display = "flex";
+            sasoiPauseBtn.textContent = "Ⅱ";
+
+            // 2秒間押されなければ自動で消す
+            sasoiPauseButtonHideTimer = setTimeout(function(){
+
+                // まだプレイ中かつ一時停止していない場合だけ消す
+                if(sasoiPlaying && !sasoiPaused){
+
+                    sasoiPauseBtn.style.display = "none";
+
+                    console.log("⏸️ 一時停止ボタン：操作がなかったため自動消去");
+
+                }
+
+                sasoiPauseButtonHideTimer = null;
+
+            }, 2000);
+        }
+
+        console.log("⏸️ ゲーム画面クリック：一時停止ボタン表示");
+
+    });
+
+}
+
+function hideSasoiPauseButton(){
+
+    if(sasoiPauseButtonHideTimer){
+
+        clearTimeout(sasoiPauseButtonHideTimer);
+
+        sasoiPauseButtonHideTimer = null;
+    }
+
+    const pauseButton = document.getElementById("sasoiPauseBtn");
+
+    if(pauseButton){
+
+        pauseButton.style.display = "none";
+
+    }
+
+}
+
 function sasoiJudgementLoop(){
 
   // ---------------------------------
@@ -15775,6 +16254,48 @@ console.log(
 stopSasoiCheck();
 
 // =================================
+// 一時停止状態を解除
+// =================================
+
+sasoiPaused = false;
+
+// =================================
+// 一時停止表示を完全解除
+// =================================
+
+const pauseDisplay =
+document.getElementById(
+"sasoiPauseDisplay"
+);
+
+if(
+pauseDisplay
+){
+
+pauseDisplay.style.display =
+"none";
+
+}
+
+// =================================
+// 一時停止ボタンを通常状態へ戻す
+// =================================
+
+const pauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+pauseButton
+){
+
+pauseButton.textContent =
+"Ⅱ";
+
+}
+
+// =================================
 // 現在のプレイタイマーを停止
 // =================================
 
@@ -15782,14 +16303,12 @@ if(
 sasoiPlayTimer
 ){
 
-
 clearTimeout(
-  sasoiPlayTimer
+sasoiPlayTimer
 );
 
 sasoiPlayTimer =
-  null;
-
+null;
 
 }
 
@@ -15801,31 +16320,17 @@ if(
 sasoiScoreStartTimer
 ){
 
-
 clearTimeout(
-  sasoiScoreStartTimer
+sasoiScoreStartTimer
 );
 
 sasoiScoreStartTimer =
-  null;
-
+null;
 
 }
 
 // =================================
 // 中央タイトルアニメーションを完全削除
-// =================================
-//
-// 組み合わせ譜面では
-//
-// 組み合わせタイトル
-// ↓
-// 内部譜面タイトル
-//
-// と複数の中央アニメーションが
-// 発生するため、リトライ前に
-// 残っている表示を完全に消す。
-//
 // =================================
 
 const game =
@@ -15837,36 +16342,35 @@ if(
 game
 ){
 
-
 const centerTitle =
-  game.querySelector(
-    ".sasoi-score-title-animation"
-  );
-
+game.querySelector(
+".sasoi-score-title-animation"
+);
 
 if(
-  centerTitle
+centerTitle
 ){
 
-  centerTitle.remove();
+
+centerTitle.remove();
+
 
 }
-
 
 const centerNumber =
-  game.querySelector(
-    ".sasoi-score-number-animation"
-  );
-
+game.querySelector(
+".sasoi-score-number-animation"
+);
 
 if(
-  centerNumber
+centerNumber
 ){
 
-  centerNumber.remove();
+
+centerNumber.remove();
+
 
 }
-
 
 }
 
@@ -15883,34 +16387,14 @@ if(
 cornerName
 ){
 
-
 cornerName.classList.remove(
-  "is-visible"
+"is-visible"
 );
-
 
 }
 
 // =================================
 // スタート処理を再利用
-// =================================
-//
-// 現在の sasoiStartBtn.onclick には
-//
-// ・譜面リセット
-// ・ゲージリセット
-// ・PRESS状態リセット
-// ・◎状態リセット
-// ・魚状態リセット
-// ・判定表示リセット
-// ・譜面再生
-// ・判定ループ再開
-//
-// がすべて入っている。
-//
-// そのため、ここでは同じ処理を
-// 二重に書かない。
-//
 // =================================
 
 const startBtn =
@@ -15922,13 +16406,12 @@ if(
 startBtn
 ){
 
-
 startBtn.click();
-
 
 }
 
 };
+
 
 
 
@@ -16020,10 +16503,9 @@ if(
 // ==========================================
 
 const sasoiBackConfirmOK =
-  document.getElementById(
-    "sasoiBackConfirmOK"
-  );
-
+document.getElementById(
+"sasoiBackConfirmOK"
+);
 
 if(
 sasoiBackConfirmOK
@@ -16033,9 +16515,9 @@ sasoiBackConfirmOK.onclick =
 function(){
 
 
-  // --------------------------------------
-  // 確認モーダルを閉じる
-  // --------------------------------------
+  // ======================================
+  // 戻る確認モーダルを閉じる
+  // ======================================
 
   const modal =
     document.getElementById(
@@ -16053,186 +16535,41 @@ function(){
   }
 
 
-  // --------------------------------------
-  // 現在のプレイを停止
-  // --------------------------------------
-
-  stopSasoiCheck();
-
-
-  // --------------------------------------
-  // 現在のプレイタイマーを停止
-  // --------------------------------------
-
-  if(
-    sasoiPlayTimer
-  ){
-
-    clearTimeout(
-      sasoiPlayTimer
-    );
-
-
-    sasoiPlayTimer =
-      null;
-
-  }
-
-
-  // --------------------------------------
-  // 譜面開始タイマーを停止
-  // --------------------------------------
-
-  if(
-    sasoiScoreStartTimer
-  ){
-
-    clearTimeout(
-      sasoiScoreStartTimer
-    );
-
-
-    sasoiScoreStartTimer =
-      null;
-
-  }
-
-
   // ======================================
-  // 中央タイトルアニメーションを完全削除
+  // ◎ 誘いの名人を完全停止して
+  //    メニューへ戻る
+  // ======================================
+  //
+  // resetSasoiToMenu() の中で
+  //
+  // ・sasoiPaused = false
+  // ・一時停止表示を消す
+  // ・一時停止ボタンを通常状態へ戻す
+  // ・判定ループ停止
+  // ・プレイセッション無効化
+  // ・音符削除
+  // ・プレイタイマー停止
+  // ・中央表示削除
+  // ・ゲーム画面非表示
+  // ・メニュー表示
+  //
+  // をまとめて処理する。
+  //
   // ======================================
 
-  const game =
-    document.getElementById(
-      "sasoiGame"
-    );
-
-
   if(
-    game
+    typeof resetSasoiToMenu ===
+    "function"
   ){
 
-    const centerTitle =
-      game.querySelector(
-        ".sasoi-score-title-animation"
-      );
-
-
-    if(
-      centerTitle
-    ){
-
-      centerTitle.remove();
-
-    }
-
-
-    const centerNumber =
-      game.querySelector(
-        ".sasoi-score-number-animation"
-      );
-
-
-    if(
-      centerNumber
-    ){
-
-      centerNumber.remove();
-
-    }
+    resetSasoiToMenu();
 
   }
+  else{
 
-
-  // ======================================
-  // 右上譜面番号＋タイトル表示をリセット
-  // ======================================
-
-  const cornerName =
-    document.querySelector(
-      ".sasoi-score-name"
+    console.log(
+      "⚠️ 戻る処理：resetSasoiToMenu が見つかりません"
     );
-
-
-  if(
-    cornerName
-  ){
-
-    cornerName.classList.remove(
-      "is-visible"
-    );
-
-  }
-
-
-  // ======================================
-  // 譜面選択アニメーションを完全リセット
-  // ======================================
-
-  const selectText =
-    document.querySelector(
-      ".sasoi-score-select-text"
-    );
-
-
-  if(
-    selectText
-  ){
-
-    selectText.classList.remove(
-      "is-sliding",
-      "slide-out-up",
-      "slide-in-from-down",
-      "slide-out-down",
-      "slide-in-from-up",
-      "slide-from-bottom",
-      "slide-from-top"
-    );
-
-
-    selectText.style.animation =
-      "none";
-
-
-    void selectText.offsetWidth;
-
-
-    selectText.style.animation =
-      "";
-
-  }
-
-
-  // --------------------------------------
-  // ゲーム画面を非表示
-  // --------------------------------------
-
-  if(
-    game
-  ){
-
-    game.style.display =
-      "none";
-
-  }
-
-
-  // --------------------------------------
-  // 初期画面を表示
-  // --------------------------------------
-
-  const menu =
-    document.getElementById(
-      "sasoiMenu"
-    );
-
-
-  if(
-    menu
-  ){
-
-    menu.style.display =
-      "flex";
 
   }
 
@@ -16240,8 +16577,6 @@ function(){
 
 
 }
-
-
 
 
 // ==========================================
@@ -18391,6 +18726,451 @@ console.log("[Sasoi] 新しいプレイ開始：釣果をリセットしまし�
 
 
 }
+
+
+// =================================
+// ◎ 誘いの名人 一時停止
+// =================================
+
+function pauseSasoiGame(){
+
+// ---------------------------------
+// すでに一時停止中なら何もしない
+// ---------------------------------
+
+if(
+sasoiPaused
+){
+
+
+return;
+
+
+}
+
+// ---------------------------------
+// プレイ中でなければ何もしない
+// ---------------------------------
+
+if(
+!sasoiPlaying
+){
+
+
+return;
+
+
+}
+
+console.log(
+"⏸️ 誘いの名人：一時停止"
+);
+
+// ---------------------------------
+// 一時停止状態
+// ---------------------------------
+
+sasoiPaused =
+true;
+
+// =================================
+// 次の譜面生成タイマーを停止
+// =================================
+
+if(
+sasoiPlayTimer
+){
+
+
+// ---------------------------------
+// 残り時間を計算
+// ---------------------------------
+
+if(
+  sasoiPlayTimerStartedAt !== null &&
+  sasoiPlayTimerDelay !== null
+){
+
+  const elapsed =
+    Date.now() -
+    sasoiPlayTimerStartedAt;
+
+
+  sasoiPlayTimerRemaining =
+    Math.max(
+      1,
+      sasoiPlayTimerDelay -
+      elapsed
+    );
+
+}
+
+
+clearTimeout(
+  sasoiPlayTimer
+);
+
+
+sasoiPlayTimer =
+  null;
+
+
+console.log(
+  "⏸️ 次の音符までの残り時間:",
+  sasoiPlayTimerRemaining
+);
+
+
+}
+
+// =================================
+// 流れている音符を停止
+// =================================
+
+const flow =
+document.getElementById(
+"sasoiFlow"
+);
+
+if(
+flow
+){
+
+
+const notes =
+  flow.querySelectorAll(
+    "span"
+  );
+
+
+notes.forEach(
+  function(note){
+
+    note.style.animationPlayState =
+      "paused";
+
+  }
+);
+
+
+console.log(
+  "⏸️ 譜面アニメーション停止"
+);
+
+// =================================
+// ◎ 譜面番号・譜面名中央表示も停止
+// =================================
+
+if(
+  typeof pauseSasoiScoreTitleAnimation ===
+  "function"
+){
+
+  pauseSasoiScoreTitleAnimation();
+
+}
+
+
+}
+
+// =================================
+// 判定ループを停止
+// =================================
+
+if(
+sasoiAnimationFrame !== null
+){
+
+
+cancelAnimationFrame(
+  sasoiAnimationFrame
+);
+
+
+sasoiAnimationFrame =
+  null;
+
+
+sasoiWasAnimationRunning =
+  true;
+
+
+}
+else{
+
+
+sasoiWasAnimationRunning =
+  false;
+
+
+}
+
+// =================================
+// 一時停止表示
+// =================================
+
+const pauseDisplay =
+document.getElementById(
+"sasoiPauseDisplay"
+);
+
+if(
+pauseDisplay
+){
+
+
+pauseDisplay.style.display =
+  "flex";
+
+
+}
+
+// =================================
+// ボタン表示変更
+// =================================
+
+const pauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+pauseButton
+){
+
+
+pauseButton.textContent =
+  "▶";
+
+
+}
+
+}
+
+// =================================
+// ◎ 誘いの名人 再開
+// =================================
+
+function resumeSasoiGame(){
+
+// ---------------------------------
+// 一時停止中でなければ何もしない
+// ---------------------------------
+
+if(
+!sasoiPaused
+){
+
+
+return;
+
+
+}
+
+console.log(
+"▶️ 誘いの名人：再開"
+);
+
+// ---------------------------------
+// 一時停止解除
+// ---------------------------------
+
+sasoiPaused =
+false;
+
+// =================================
+// 流れている音符を再開
+// =================================
+
+const flow =
+document.getElementById(
+"sasoiFlow"
+);
+
+if(
+flow
+){
+
+
+const notes =
+  flow.querySelectorAll(
+    "span"
+  );
+
+
+notes.forEach(
+  function(note){
+
+    note.style.animationPlayState =
+      "running";
+
+  }
+);
+
+
+console.log(
+  "▶️ 譜面アニメーション再開"
+);
+
+// =================================
+// ◎ 譜面番号・譜面名中央表示も再開
+// =================================
+
+if(
+  typeof resumeSasoiScoreTitleAnimation ===
+  "function"
+){
+
+  resumeSasoiScoreTitleAnimation();
+
+}
+
+}
+
+// =================================
+// 次の音符生成タイマーを再開
+// =================================
+
+if(
+sasoiPlayTimerRemaining !== null
+){
+
+
+const remaining =
+  sasoiPlayTimerRemaining;
+
+
+sasoiPlayTimerRemaining =
+  null;
+
+
+sasoiPlayTimerStartedAt =
+  Date.now();
+
+
+sasoiPlayTimerDelay =
+  remaining;
+
+
+const currentSessionId =
+  sasoiPlaySessionId;
+
+
+sasoiPlayTimer =
+  setTimeout(
+    function(){
+
+      // ---------------------------------
+      // 一時停止中なら実行しない
+      // ---------------------------------
+
+      if(
+        sasoiPaused
+      ){
+
+        return;
+
+      }
+
+
+window.playNextSasoiNote(
+currentSessionId
+);
+
+
+    },
+    remaining
+  );
+
+
+console.log(
+  "▶️ 次の音符まで",
+  remaining,
+  "ms"
+);
+
+
+}
+
+// =================================
+// 判定ループ再開
+// =================================
+
+if(
+sasoiPlaying
+){
+
+
+}
+
+// =================================
+// 一時停止表示を消す
+// =================================
+
+const pauseDisplay =
+document.getElementById(
+"sasoiPauseDisplay"
+);
+
+if(
+pauseDisplay
+){
+
+
+pauseDisplay.style.display =
+  "flex";
+
+
+}
+
+// =================================
+// ボタン表示変更
+// =================================
+
+const pauseButton =
+document.getElementById(
+"sasoiPauseBtn"
+);
+
+if(
+pauseButton
+){
+
+
+pauseButton.textContent = "Ⅱ";
+
+pauseButton.style.display = "none";
+
+
+}
+
+}
+
+// =================================
+// ◎ 一時停止ボタン共通処理
+// =================================
+
+function toggleSasoiPause(){
+
+if(
+sasoiPaused
+){
+
+
+resumeSasoiGame();
+
+
+}
+else{
+
+
+pauseSasoiGame();
+
+
+}
+
+}
+
 
 
 

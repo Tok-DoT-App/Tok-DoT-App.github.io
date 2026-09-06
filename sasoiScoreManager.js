@@ -1009,7 +1009,124 @@ function(scoreData){
 
 }
 
+// =================================
+// ◎ 譜面番号・譜面名中央表示
+//    一時停止制御
+// =================================
 
+function pauseSasoiScoreTitleAnimation(){
+
+  const game =
+    document.getElementById(
+      "sasoiGame"
+    );
+
+  if(
+    !game
+  ){
+
+    return;
+
+  }
+
+
+  const numberAnimation =
+    game.querySelector(
+      ".sasoi-score-number-animation"
+    );
+
+
+  const titleAnimation =
+    game.querySelector(
+      ".sasoi-score-title-animation"
+    );
+
+
+  if(
+    numberAnimation
+  ){
+
+    numberAnimation.style.animationPlayState =
+      "paused";
+
+  }
+
+
+  if(
+    titleAnimation
+  ){
+
+    titleAnimation.style.animationPlayState =
+      "paused";
+
+  }
+
+
+  console.log(
+    "⏸️ 譜面番号・譜面名中央アニメーション停止"
+  );
+
+}
+
+
+// =================================
+// ◎ 譜面番号・譜面名中央表示
+//    再開
+// =================================
+
+function resumeSasoiScoreTitleAnimation(){
+
+  const game =
+    document.getElementById(
+      "sasoiGame"
+    );
+
+  if(
+    !game
+  ){
+
+    return;
+
+  }
+
+
+  const numberAnimation =
+    game.querySelector(
+      ".sasoi-score-number-animation"
+    );
+
+
+  const titleAnimation =
+    game.querySelector(
+      ".sasoi-score-title-animation"
+    );
+
+
+  if(
+    numberAnimation
+  ){
+
+    numberAnimation.style.animationPlayState =
+      "running";
+
+  }
+
+
+  if(
+    titleAnimation
+  ){
+
+    titleAnimation.style.animationPlayState =
+      "running";
+
+  }
+
+
+  console.log(
+    "▶️ 譜面番号・譜面名中央アニメーション再開"
+  );
+
+}
 
 // =================================
 // ◎ 譜面番号 → 譜面タイトル中央表示
