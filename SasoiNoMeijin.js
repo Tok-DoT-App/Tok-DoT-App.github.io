@@ -2283,7 +2283,7 @@ transform: translateY(3px);
 
 .sasoi-note-move{
 
-  animation:sasoiNoteMove 2.0s linear forwards;
+  animation:sasoiNoteMove 2.5s linear forwards;
 
 }
 
