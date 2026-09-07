@@ -2242,7 +2242,7 @@ rgba(0,0,0,.40);
 
   pointer-events:none;
 
-  will-change:transform,left;
+  will-change:transform;
 
 }
 
@@ -2256,19 +2256,6 @@ rgba(0,0,0,.40);
 
 }
 
-/* =================================
-カウントダウンだけデジタル表示
-================================= */
-
-.sasoi-flow span[data-type="count"] {
-
-font-family: 'DSEG7', sans-serif;
-
-font-size:18px;
-
-top:4px;
-
-}
 
 /* =================================
 カウントダウン「m」表示
@@ -2296,24 +2283,16 @@ transform: translateY(3px);
 
 .sasoi-note-move{
 
-  animation:sasoiNoteMove 2.5s linear forwards;
+  animation:sasoiNoteMove 2.0s linear forwards;
 
 }
 
 
 @keyframes sasoiNoteMove{
 
-  from{
+from{ transform:translateX(310px); }
 
-    left:310px;
-
-  }
-
-  to{
-
-    left:-40px;
-
-  }
+to{ transform:translateX(-40px); }
 
 }
 
