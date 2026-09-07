@@ -2257,6 +2257,20 @@ rgba(0,0,0,.40);
 }
 
 /* =================================
+カウントダウンだけデジタル表示
+================================= */
+
+.sasoi-flow span[data-type="count"] {
+
+font-family: 'DSEG7', sans-serif;
+
+font-size:18px;
+
+top:4px;
+
+}
+
+/* =================================
 カウントダウン「m」表示
 ================================= */
 
@@ -2265,6 +2279,8 @@ rgba(0,0,0,.40);
 content: "m";
 
 font-size: 0.45em;
+
+font-family:sans-serif;
 
 margin-left: -2px;
 
@@ -16109,6 +16125,15 @@ if(
 
 }
 
+// ---------------------------------
+// 判定ループ開始
+// ---------------------------------
+
+sasoiAnimationFrame =
+requestAnimationFrame(
+window.sasoiJudgementLoop
+);
+
 
 
 function hideSasoiPauseButton(){
@@ -16130,60 +16155,61 @@ function hideSasoiPauseButton(){
 
 }
 
+
+
+};
+
+// =================================
+// 誘いの名人 判定ループ
+// =================================
+
 function sasoiJudgementLoop(){
 
-  // ---------------------------------
-  // プレイ中でなければ終了
-  // ---------------------------------
+// ---------------------------------
+// プレイ中でなければ終了
+// ---------------------------------
 
-  if(
-    !sasoiPlaying
-  ){
+if(
+!sasoiPlaying
+){
 
-    sasoiAnimationFrame =
-      null;
+sasoiAnimationFrame =
+null;
 
-    return;
-
-  }
-
-
-  // ---------------------------------
-  // 誘い判定
-  // ---------------------------------
-
-  checkSasoiHit();
-
-
-  // ---------------------------------
-  // ◎アワセ判定
-  // ---------------------------------
-
-  checkSasoiBiteAction();
-
-
-  // ---------------------------------
-  // 次フレーム
-  // ---------------------------------
-
-  sasoiAnimationFrame =
-    requestAnimationFrame(
-      sasoiJudgementLoop
-    );
+return;
 
 }
 
+// ---------------------------------
+// 誘い判定
+// ---------------------------------
+
+checkSasoiHit();
 
 // ---------------------------------
-// 判定ループ開始
+// ◎アワセ判定
+// ---------------------------------
+
+checkSasoiBiteAction();
+
+// ---------------------------------
+// 次フレーム
 // ---------------------------------
 
 sasoiAnimationFrame =
-  requestAnimationFrame(
-    sasoiJudgementLoop
-  );
+requestAnimationFrame(
+window.sasoiJudgementLoop
+);
 
-};
+}
+
+// =================================
+// ◎ 判定ループを外部公開
+// =================================
+
+window.sasoiJudgementLoop =
+sasoiJudgementLoop;
+
 
 // =================================
 // リトライ
@@ -16658,8 +16684,9 @@ toggleSasoiPause();
 }
 
 // =================================
-// ゲーム画面クリック
-// → 一時停止ボタンを表示
+// ゲーム画面タップ
+// → 中央の釣り穴ライン内だけ
+// 一時停止ボタンを表示
 // =================================
 
 if(
@@ -16711,7 +16738,7 @@ return;
 // 入力ボタン
 //
 // sasoiTouch はゲーム操作用なので、
-// ここでは一時停止ボタンを表示しない。
+// 一時停止ボタンを表示しない。
 // ---------------------------------
 
 if(
@@ -16743,6 +16770,92 @@ return;
 if(
 event.target.closest &&
 event.target.closest("#sasoiBackBtn")
+){
+
+return;
+
+}
+
+// =================================
+// モーダル内のタップは除外
+// =================================
+
+// ---------------------------------
+// 戻る確認モーダル
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiBackConfirmModal")
+){
+
+return;
+
+}
+
+// ---------------------------------
+// HIGHリセット確認モーダル
+// ---------------------------------
+
+if(
+event.target.closest &&
+event.target.closest("#sasoiHighScoreResetModal")
+){
+
+return;
+
+}
+
+// =================================
+// 中央の釣り穴ライン範囲を取得
+// =================================
+//
+// CSSの
+//
+// .sasoi-center-line
+//
+// 実際の表示位置・サイズを取得する。
+// =================================
+
+const sasoiCenterLine =
+document.querySelector(
+".sasoi-center-line"
+);
+
+// ---------------------------------
+// 中央ラインが存在しなければ終了
+// ---------------------------------
+
+if(
+!sasoiCenterLine
+){
+
+return;
+
+}
+
+// =================================
+// タップ位置が中央ライン内か確認
+// =================================
+
+const centerLineRect =
+sasoiCenterLine.getBoundingClientRect();
+
+const tapX =
+event.clientX;
+
+const tapY =
+event.clientY;
+
+// ---------------------------------
+// 中央ラインの外なら何もしない
+// ---------------------------------
+
+if(
+tapX < centerLineRect.left ||
+tapX > centerLineRect.right ||
+tapY < centerLineRect.top ||
+tapY > centerLineRect.bottom
 ){
 
 return;
@@ -16820,7 +16933,7 @@ null;
 }
 
 console.log(
-"⏸️ ゲーム画面クリック：一時停止ボタン表示"
+"⏸️ 中央の釣り穴ライン：一時停止ボタン表示"
 );
 
 },
@@ -19143,9 +19256,7 @@ if(
 !sasoiPaused
 ){
 
-
 return;
-
 
 }
 
@@ -19173,25 +19284,24 @@ if(
 flow
 ){
 
-
 const notes =
-  flow.querySelectorAll(
-    "span"
-  );
-
-
-notes.forEach(
-  function(note){
-
-    note.style.animationPlayState =
-      "running";
-
-  }
+flow.querySelectorAll(
+"span"
 );
 
+notes.forEach(
+function(note){
+
+
+note.style.animationPlayState =
+  "running";
+
+
+}
+);
 
 console.log(
-  "▶️ 譜面アニメーション再開"
+"▶️ 譜面アニメーション再開"
 );
 
 // =================================
@@ -19199,11 +19309,11 @@ console.log(
 // =================================
 
 if(
-  typeof resumeSasoiScoreTitleAnimation ===
-  "function"
+typeof resumeSasoiScoreTitleAnimation ===
+"function"
 ){
 
-  resumeSasoiScoreTitleAnimation();
+resumeSasoiScoreTitleAnimation();
 
 }
 
@@ -19217,71 +19327,91 @@ if(
 sasoiPlayTimerRemaining !== null
 ){
 
-
 const remaining =
-  sasoiPlayTimerRemaining;
-
+sasoiPlayTimerRemaining;
 
 sasoiPlayTimerRemaining =
-  null;
-
+null;
 
 sasoiPlayTimerStartedAt =
-  Date.now();
-
+Date.now();
 
 sasoiPlayTimerDelay =
-  remaining;
-
+remaining;
 
 const currentSessionId =
-  sasoiPlaySessionId;
-
+sasoiPlaySessionId;
 
 sasoiPlayTimer =
-  setTimeout(
-    function(){
-
-      // ---------------------------------
-      // 一時停止中なら実行しない
-      // ---------------------------------
-
-      if(
-        sasoiPaused
-      ){
-
-        return;
-
-      }
+setTimeout(
+function(){
 
 
-window.playNextSasoiNote(
-currentSessionId
-);
+  // ---------------------------------
+  // 一時停止中なら実行しない
+  // ---------------------------------
 
+  if(
+    sasoiPaused
+  ){
 
-    },
-    remaining
+    return;
+
+  }
+
+  sasoiPlayTimer =
+    null;
+
+  sasoiPlayTimerStartedAt =
+    null;
+
+  sasoiPlayTimerDelay =
+    null;
+
+  window.playNextSasoiNote(
+    currentSessionId
   );
 
+},
+remaining
 
-console.log(
-  "▶️ 次の音符まで",
-  remaining,
-  "ms"
+
 );
 
+console.log(
+"▶️ 次の音符まで",
+remaining,
+"ms"
+);
 
 }
 
 // =================================
 // 判定ループ再開
 // =================================
+//
+// 一時停止時に
+// requestAnimationFrame を停止しているため、
+// 再開時にもう一度開始する。
+// =================================
 
 if(
-sasoiPlaying
+sasoiPlaying &&
+sasoiWasAnimationRunning &&
+sasoiAnimationFrame === null
 ){
 
+console.log(
+"▶️ 誘いの名人：判定ループ再開"
+);
+
+sasoiAnimationFrame =
+requestAnimationFrame(
+sasoiJudgementLoop
+);
+
+sasoiWasAnimationRunning =
+false;
 
 }
 
@@ -19298,10 +19428,8 @@ if(
 pauseDisplay
 ){
 
-
 pauseDisplay.style.display =
-  "flex";
-
+"none";
 
 }
 
@@ -19318,15 +19446,16 @@ if(
 pauseButton
 ){
 
+pauseButton.textContent =
+"Ⅱ";
 
-pauseButton.textContent = "Ⅱ";
+pauseButton.style.display =
+"none";
 
-pauseButton.style.display = "none";
-
+}
 
 }
 
-}
 
 // =================================
 // ◎ 一時停止ボタン共通処理
