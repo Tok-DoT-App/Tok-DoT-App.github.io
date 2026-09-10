@@ -2265,7 +2265,7 @@ rgba(0,0,0,.40);
 
 content: "m";
 
-font-size: 0.45em;
+font-size: 0.60em;
 
 font-family:sans-serif;
 
@@ -2275,7 +2275,7 @@ vertical-align: middle;
 
 display: inline-block;
 
-transform: translateY(3px);
+transform: translateY(1px);
 
 }
 
@@ -3321,7 +3321,7 @@ to{ transform:translateX(-40px); }
 
   right:2px;
 
-  bottom:16px;
+  bottom:18px;
 
   text-align:left;
 
@@ -3725,7 +3725,7 @@ to{ transform:translateX(-40px); }
 
   width:38px;
 
-  height:22px;
+  height:20px;
 
   box-sizing:border-box;
 
@@ -4052,13 +4052,13 @@ width:
 100%;
 
 font-size:
-7px;
+10px;
 
 line-height:
-7px;
+10px;
 
 height:
-7px;
+10px;
 
 font-weight:
 bold;
@@ -4102,7 +4102,7 @@ position:
 relative;
 
 top:
--2px;
+-1px;
 
 }
 
@@ -4399,6 +4399,168 @@ top:
     );
 
 }
+
+/* =================================
+譜面進行表示
+誘技
+001/003
+================================= */
+
+#sasoiChartProgress{
+
+position:
+absolute;
+
+left:
+-8px;
+
+bottom:
+22px;
+
+z-index:
+10;
+
+display:
+none;
+
+flex-direction:
+column;
+
+align-items:
+stretch;
+
+justify-content:
+center;
+
+width:
+38px;
+
+height:
+22px;
+
+box-sizing:
+border-box;
+
+padding:
+0;
+
+font-family:
+"Yuji Boku",
+serif;
+
+font-weight:
+bold;
+
+color:
+#17252B;
+
+white-space:
+nowrap;
+
+opacity:
+0.75;
+
+pointer-events:
+none;
+
+}
+
+/* =================================
+譜面種別
+誘技
+================================= */
+
+#sasoiChartProgressLabel{
+
+display:
+block;
+
+width:
+100%;
+
+font-size:
+10px;
+
+line-height:
+7px;
+
+height:
+7px;
+
+font-weight:
+bold;
+
+text-align:
+left;
+
+}
+
+/* =================================
+譜面進行数字
+001/003
+================================= */
+
+#sasoiChartProgressNumber{
+
+display:
+block;
+
+width:
+100%;
+
+font-size:
+8px;
+
+line-height:
+12px;
+
+height:
+12px;
+
+font-weight:
+bold;
+
+text-align:
+right;
+
+padding-right:
+7px;
+
+box-sizing:
+border-box;
+
+position:
+relative;
+
+top:
+1px;
+
+font-variant-numeric:
+tabular-nums;
+
+}
+
+/* =================================
+現在 / 全体
+================================= */
+
+#sasoiChartProgressCurrent,
+#sasoiChartProgressTotal{
+
+font-size:
+10px;
+
+line-height:
+11px;
+
+font-weight:
+bold;
+
+font-variant-numeric:
+tabular-nums;
+
+}
+
 
 /* =================================
    興味ゲージ 魚アイコン
@@ -7393,6 +7555,15 @@ area.innerHTML = `
   >
 </div>
 
+<!-- =================================
+     誘技数表示
+================================= -->
+
+<div id="sasoiChartProgress" aria-hidden="true">
+<span id="sasoiChartProgressLabel">誘技</span>
+
+<span id="sasoiChartProgressNumber"> <span id="sasoiChartProgressCurrent">001</span> <span>/</span> <span id="sasoiChartProgressTotal">003</span> </span> </div>
+
 
 <!-- =================================
      興味ゲージ数値表示
@@ -8771,6 +8942,8 @@ if(
 
   sasoiIndex =
     0;
+
+updateSasoiChartProgressFromScore();
 
 
   console.log(
@@ -15478,6 +15651,8 @@ else{
     sasoiCombinedCharts[0];
 
 
+updateSasoiChartProgressFromScore();
+
   console.log(
     "🎵 組み合わせ譜面開始:",
     selectedScore.id,
@@ -15532,6 +15707,23 @@ sasoiCombinedChartIndex =
 sasoiCombinedCharts =
   [];
 
+// ---------------------------------
+// 組み合わせ譜面の進行表示を非表示
+// ---------------------------------
+
+const chartProgress =
+document.getElementById(
+"sasoiChartProgress"
+);
+
+if(
+chartProgress
+){
+
+chartProgress.style.display =
+"none";
+
+}
 
 // ---------------------------------
 // 通常譜面を設定
@@ -16360,6 +16552,35 @@ document.getElementById(
 if(
 startBtn
 ){
+
+// =================================
+// ◎ 譜面進行表示をリセット
+// =================================
+//
+// リトライ時に前回の
+// 「誘技 001/003」などが
+// 残らないようにする。
+// 組み合わせ譜面の場合は
+// スタート処理側で改めて表示する。
+// =================================
+
+const chartProgress =
+document.getElementById(
+"sasoiChartProgress"
+);
+
+if(
+chartProgress
+){
+
+chartProgress.style.display =
+"none";
+
+}
+
+// =================================
+// スタート処理
+// =================================
 
 startBtn.click();
 
@@ -19458,6 +19679,172 @@ pauseSasoiGame();
 
 
 }
+
+}
+
+
+// =================================
+// ◎ 譜面進行表示
+// =================================
+//
+// 例:
+//
+// 001/003　誘技
+// 002/003　誘技
+// 003/003　誘技
+//
+// 通常譜面:
+// 001/001　誘技
+//
+// 組み合わせ譜面:
+// charts の現在位置を表示する。
+// =================================
+
+function updateSasoiChartProgress(
+currentIndex,
+totalCount
+){
+
+const progress =
+document.getElementById(
+"sasoiChartProgress"
+);
+
+const current =
+document.getElementById(
+"sasoiChartProgressCurrent"
+);
+
+const total =
+document.getElementById(
+"sasoiChartProgressTotal"
+);
+
+const label =
+document.getElementById(
+"sasoiChartProgressLabel"
+);
+
+if(
+!progress ||
+!current ||
+!total ||
+!label
+){
+
+return;
+
+}
+
+// ---------------------------------
+// 通常譜面では非表示
+// ---------------------------------
+
+if(
+!sasoiCombinedPlay
+){
+
+progress.style.display =
+  "none";
+
+return;
+
+}
+
+// ---------------------------------
+// 異常値対策
+// ---------------------------------
+
+if(
+!Number.isFinite(currentIndex) ||
+!Number.isFinite(totalCount) ||
+totalCount <= 0
+){
+
+progress.style.display =
+  "none";
+
+return;
+
+}
+
+// ---------------------------------
+// 001 / 003 の形式にする
+// ---------------------------------
+
+current.textContent =
+String(currentIndex).padStart(
+3,
+"0"
+);
+
+total.textContent =
+String(totalCount).padStart(
+3,
+"0"
+);
+
+label.textContent =
+"誘技";
+
+// ---------------------------------
+// 表示
+// ---------------------------------
+
+progress.style.display =
+"flex";
+
+}
+
+// ---------------------------------
+// 呼び出し
+// ---------------------------------
+
+function updateSasoiChartProgressFromScore(){
+
+if(
+!sasoiCombinedPlay
+){
+
+const progress =
+  document.getElementById(
+    "sasoiChartProgress"
+  );
+
+if(
+  progress
+){
+
+  progress.style.display =
+    "none";
+
+}
+
+return;
+
+}
+
+if(
+!Array.isArray(
+sasoiCombinedCharts
+) ||
+sasoiCombinedCharts.length === 0
+){
+
+return;
+
+}
+
+const currentIndex =
+sasoiCombinedChartIndex + 1;
+
+const totalCount =
+sasoiCombinedCharts.length;
+
+updateSasoiChartProgress(
+currentIndex,
+totalCount
+);
 
 }
 

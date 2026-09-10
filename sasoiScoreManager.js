@@ -1,15 +1,15 @@
 const sasoiScoreList = [
 
 // ==========================================
-// 第壱誘
+// 壱誘技
 // ==========================================
 
 {
 id:"score01",
 
-number:"第壱誘",
+number:"壱誘技",
 
-numberKana:"だいいちゆう",
+numberKana:"いちゆうぎ",
 
 title:"一誘一間・四段重",
 
@@ -24,15 +24,15 @@ background:"images/sasoi-score01-bg.png"
 },
 
 // ==========================================
-// 第弐誘
+// 弐誘技
 // ==========================================
 
 {
 id:"score02",
 
-number:"第弐誘",
+number:"弐誘技",
 
-numberKana:"だいにゆう",
+numberKana:"にゆうぎ",
 
 title:"二誘一間・三段重",
 
@@ -47,15 +47,15 @@ background:"images/sasoi-score02-bg.png"
 },
 
 // ==========================================
-// 第参誘
+// 参誘技
 // ==========================================
 
 {
 id:"score03",
 
-number:"第参誘",
+number:"参誘技",
 
-numberKana:"だいさんゆう",
+numberKana:"さんゆうぎ",
 
 title:"三誘一間・三段重",
 
@@ -70,15 +70,15 @@ background:"images/sasoi-score03-bg.png"
 },
 
 // ==========================================
-// 第肆誘
+// 肆誘技
 // ==========================================
 
 {
 id:"score04",
 
-number:"第肆誘",
+number:"肆誘技",
 
-numberKana:"だいよんゆう",
+numberKana:"よんゆうぎ",
 
 title:"一誘一間・二誘挟",
 
@@ -93,15 +93,15 @@ background:"images/sasoi-score04-bg.png"
 },
 
 // ==========================================
-// 第伍誘
+// 伍誘技
 // ==========================================
 
 {
 id:"score05",
 
-number:"第伍誘",
+number:"伍誘技",
 
-numberKana:"だいごゆう",
+numberKana:"ごゆうぎ",
 
 title:"一誘一間・三誘挟",
 
@@ -116,15 +116,15 @@ background:"images/sasoi-score05-bg.png"
 },
 
 // ==========================================
-// 第陸誘
+// 陸誘技
 // ==========================================
 
 {
 id:"score06",
 
-number:"第陸誘",
+number:"陸誘技",
 
-numberKana:"だいろくゆう",
+numberKana:"ろくゆうぎ",
 
 title:"二誘一間・一誘挟",
 
@@ -139,15 +139,15 @@ background:"images/sasoi-score06-bg.png"
 },
 
 // ==========================================
-// 第漆誘
+// 漆誘技
 // ==========================================
 
 {
 id:"score07",
 
-number:"第漆誘",
+number:"漆誘技",
 
-numberKana:"だいななゆう",
+numberKana:"ななゆうぎ",
 
 title:"二誘一間・三誘挟",
 
@@ -162,15 +162,15 @@ background:"images/sasoi-score07-bg.png"
 },
 
 // ==========================================
-// 第捌誘
+// 捌誘技
 // ==========================================
 
 {
 id:"score08",
 
-number:"第捌誘",
+number:"捌誘技",
 
-numberKana:"だいはちゆう",
+numberKana:"はちゆうぎ",
 
 title:"三誘一間・一誘挟",
 
@@ -185,15 +185,15 @@ background:"images/sasoi-score08-bg.png"
 },
 
 // ==========================================
-// 第玖誘
+// 玖誘技
 // ==========================================
 
 {
 id:"score09",
 
-number:"第玖誘",
+number:"玖誘技",
 
-numberKana:"だいきゅうゆう",
+numberKana:"きゅうゆうぎ",
 
 title:"三誘一間・二誘挟",
 
@@ -208,15 +208,15 @@ background:"images/sasoi-score09-bg.png"
 },
 
 // ==========================================
-// 第拾誘
+// 拾誘技
 // ==========================================
 
 {
 id:"score10",
 
-number:"第拾誘",
+number:"拾誘技",
 
-numberKana:"だいじゅうゆう",
+numberKana:"じゅうゆうぎ",
 
 title:"一誘一間・二誘連",
 
@@ -231,15 +231,15 @@ background:"images/sasoi-score10-bg.png"
 },
 
 // ==========================================
-// 第拾壱誘
+// 拾壱誘技
 // ==========================================
 
 {
 id:"score11",
 
-number:"第拾壱誘",
+number:"拾壱誘技",
 
-numberKana:"だいじゅういちゆう",
+numberKana:"じゅういちゆうぎ",
 
 title:"一誘一間・三誘連",
 
@@ -254,15 +254,15 @@ background:"images/sasoi-score11-bg.png"
 },
 
 // ==========================================
-// 第拾弐誘
+// 拾弐誘技
 // ==========================================
 
 {
 id:"score12",
 
-number:"第拾弐誘",
+number:"拾弐誘技",
 
-numberKana:"だいじゅうにゆう",
+numberKana:"じゅうにゆうぎ",
 
 title:"二誘一間・一誘連",
 
@@ -277,15 +277,15 @@ background:"images/sasoi-score12-bg.png"
 },
 
 // ==========================================
-// 第拾参誘
+// 拾参誘技
 // ==========================================
 
 {
 id:"score13",
 
-number:"第拾参誘",
+number:"拾参誘技",
 
-numberKana:"だいじゅうさんゆう",
+numberKana:"じゅうさんゆうぎ",
 
 title:"二誘一間・三誘連",
 
@@ -300,15 +300,15 @@ background:"images/sasoi-score13-bg.png"
 },
 
 // ==========================================
-// 第拾肆誘
+// 拾肆誘技
 // ==========================================
 
 {
 id:"score14",
 
-number:"第拾肆誘",
+number:"拾肆誘技",
 
-numberKana:"だいじゅうよんゆう",
+numberKana:"じゅうよんゆうぎ",
 
 title:"三誘一間・一誘連",
 
@@ -323,15 +323,15 @@ background:"images/sasoi-score14-bg.png"
 },
 
 // ==========================================
-// 第拾伍誘
+// 拾伍誘技
 // ==========================================
 
 {
 id:"score15",
 
-number:"第拾伍誘",
+number:"拾伍誘技",
 
-numberKana:"だいじゅうごゆう",
+numberKana:"じゅうごゆうぎ",
 
 title:"三誘一間・二誘連",
 
@@ -353,14 +353,14 @@ const sasoiCombinedScoreList = [
 
 
 // ==========================================
-// 習誘 01
+// 連誘技 01
 // ==========================================
 {
 id:"combined01",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・一・二・三",
-titleKana:"れんゆうぎ・ひ・ふ・み",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・一・二・三",
+titleKana:"ひでん・ひ・ふ・みん",
 difficulty:"★★★☆☆",
 charts:[
 "score01",
@@ -371,14 +371,14 @@ background:"images/sasoi-score16-bg.png"
 },
 
 // ==========================================
-// 習誘 02
+// 連誘技 02
 // ==========================================
 {
 id:"combined02",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・一・六・八",
-titleKana:"れんゆうぎ・い・ろ・は",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・一・六・八",
+titleKana:"ひでん・い・ろ・は",
 difficulty:"★★★☆☆",
 charts:[
 "score01",
@@ -389,14 +389,14 @@ background:"images/sasoi-score17-bg.png"
 },
 
 // ==========================================
-// 習誘 03
+// 連誘技 03
 // ==========================================
 {
 id:"combined03",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・三・四・六",
-titleKana:"れんゆうぎ・さん・し・ろう",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・三・四・六",
+titleKana:"ひでん・さん・し・ろう",
 difficulty:"★★★☆☆",
 charts:[
 "score03",
@@ -407,14 +407,14 @@ background:"images/sasoi-score18-bg.png"
 },
 
 // ==========================================
-// 習誘 04
+// 連誘技 04
 // ==========================================
 {
 id:"combined04",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・八・七・五",
-titleKana:"れんゆうぎ・は・な・こ",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・八・七・五",
+titleKana:"ひでん・は・な・こ",
 difficulty:"★★★☆☆",
 charts:[
 "score08",
@@ -425,14 +425,14 @@ background:"images/sasoi-score19-bg.png"
 },
 
 // ==========================================
-// 習誘 05
+// 連誘技 05
 // ==========================================
 {
 id:"combined05",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・四・一・五",
-titleKana:"れんゆうぎ・よ・い・こ",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・四・一・五",
+titleKana:"ひでん・よ・い・こ",
 difficulty:"★★★☆☆",
 charts:[
 "score04",
@@ -443,14 +443,14 @@ background:"images/sasoi-score20-bg.png"
 },
 
 // ==========================================
-// 習誘 06
+// 連誘技 06
 // ==========================================
 {
 id:"combined06",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・三・二・八",
-titleKana:"れんゆうぎ・み・つ・ば",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・三・二・八",
+titleKana:"ひでん・み・つ・ば",
 difficulty:"★★★☆☆",
 charts:[
 "score03",
@@ -461,14 +461,14 @@ background:"images/sasoi-score21-bg.png"
 },
 
 // ==========================================
-// 習誘 07
+// 連誘技 07
 // ==========================================
 {
 id:"combined07",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・三・五・八",
-titleKana:"れんゆうぎ・さ・ご・はち",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・三・五・八",
+titleKana:"ひでん・さ・ご・はち",
 difficulty:"★★★☆☆",
 charts:[
 "score03",
@@ -479,14 +479,14 @@ background:"images/sasoi-score22-bg.png"
 },
 
 // ==========================================
-// 習誘 08
+// 連誘技 08
 // ==========================================
 {
 id:"combined08",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・七・五・三",
-titleKana:"れんゆうぎ・しち・ご・さん",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・七・五・三",
+titleKana:"ひでん・しち・ご・さん",
 difficulty:"★★★☆☆",
 charts:[
 "score07",
@@ -497,14 +497,14 @@ background:"images/sasoi-score23-bg.png"
 },
 
 // ==========================================
-// 習誘 09
+// 連誘技 09
 // ==========================================
 {
 id:"combined09",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・八・七・三",
-titleKana:"れんゆうぎ・は・な・み",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・八・七・三",
+titleKana:"ひでん・は・な・み",
 difficulty:"★★★☆☆",
 charts:[
 "score08",
@@ -515,14 +515,14 @@ background:"images/sasoi-score24-bg.png"
 },
 
 // ==========================================
-// 習誘 10
+// 連誘技 10
 // ==========================================
 {
 id:"combined10",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・七・一・六",
-titleKana:"れんゆうぎ・なな・い・ろ",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・七・一・六",
+titleKana:"ひでん・なな・い・ろ",
 difficulty:"★★★☆☆",
 charts:[
 "score07",
@@ -533,14 +533,14 @@ background:"images/sasoi-score25-bg.png"
 },
 
 // ==========================================
-// 習誘 11
+// 連誘技 11
 // ==========================================
 {
 id:"combined11",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・八・三・二",
-titleKana:"れんゆうぎ・はち・み・つ",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・八・三・二",
+titleKana:"ひでん・はち・み・つ",
 difficulty:"★★★☆☆",
 charts:[
 "score08",
@@ -551,14 +551,14 @@ background:"images/sasoi-score26-bg.png"
 },
 
 // ==========================================
-// 習誘 12
+// 連誘技 12
 // ==========================================
 {
 id:"combined12",
-number:"習誘",
-numberKana:"しゅうゆう",
-title:"連誘技・三・一・五",
-titleKana:"れんゆうぎ・さあ・い・こう",
+number:"連誘技",
+numberKana:"れんゆうぎ",
+title:"秘伝・三・一・五",
+titleKana:"ひでん・さ・い・こう",
 difficulty:"★★★☆☆",
 charts:[
 "score03",
@@ -576,7 +576,7 @@ id:"combined13",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
 title:"初釣戦・五十獲超",
-titleKana:"はつちょうせん・ごじゅっかくちょう",
+titleKana:"ちょうせん・ごじゅっかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -603,12 +603,7 @@ charts:[
 "score07",
 "score08",
 "score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15"
+"score10"
 ],
 background:"images/sasoi-score28-bg.png"
 },
@@ -620,8 +615,8 @@ background:"images/sasoi-score28-bg.png"
 id:"combined14",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"百釣戦・百獲超",
-titleKana:"ひゃくちょうせん・ひゃっかくちょう",
+title:"大釣戦・百獲超",
+titleKana:"だいちょうせん・ひゃっかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -673,17 +668,7 @@ charts:[
 "score02",
 "score03",
 "score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15"
+"score05"
 ],
 background:"images/sasoi-score29-bg.png"
 },
@@ -695,8 +680,8 @@ background:"images/sasoi-score29-bg.png"
 id:"combined15",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"爆釣戦・二百超",
-titleKana:"ばくちょうせん・にひゃくちょう",
+title:"大獲戦・二百獲超",
+titleKana:"だいかくせん・にひゃっかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -785,8 +770,8 @@ background:"images/sasoi-score30-bg.png"
 id:"combined16",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"大漁戦・三百超",
-titleKana:"たいりょうせん・さんびゃくちょう",
+title:"大漁戦・三百獲超",
+titleKana:"たいりょうせん・さんびゃっかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -915,6 +900,57 @@ background:"images/sasoi-score31-bg.png"
 
 
 ];
+
+sasoiCombinedScoreList.push(
+{
+id: "combined17",
+number: "誘名人",
+numberKana: "ゆうめいじん",
+title: "初釣戦・五十獲超",
+titleKana: "はつちょうせん・ごじゅっかくちょう",
+difficulty: "★★★★★",
+charts: sasoiCombinedScoreList.find(function(scoreData) {
+return scoreData.id === "combined13";
+}).charts,
+background: "images/sasoi-score28-bg.png"
+},
+{
+id: "combined18",
+number: "誘名人",
+numberKana: "ゆうめいじん",
+title: "大釣戦・百獲超",
+titleKana: "だいちょうせん・ひゃっかくちょう",
+difficulty: "★★★★★",
+charts: sasoiCombinedScoreList.find(function(scoreData) {
+return scoreData.id === "combined14";
+}).charts,
+background: "images/sasoi-score29-bg.png"
+},
+{
+id: "combined19",
+number: "誘名人",
+numberKana: "ゆうめいじん",
+title: "大獲戦・二百獲超",
+titleKana: "だいかくせん・にひゃっかくちょう",
+difficulty: "★★★★★",
+charts: sasoiCombinedScoreList.find(function(scoreData) {
+return scoreData.id === "combined15";
+}).charts,
+background: "images/sasoi-score30-bg.png"
+},
+{
+id: "combined20",
+number: "誘名人",
+numberKana: "ゆうめいじん",
+title: "大漁戦・三百獲超",
+titleKana: "たいりょうせん・さんびゃっかくちょう",
+difficulty: "★★★★★",
+charts: sasoiCombinedScoreList.find(function(scoreData) {
+return scoreData.id === "combined16";
+}).charts,
+background: "images/sasoi-score31-bg.png"
+}
+);
 
 
 const sasoiCombinedScoreListForSelect =
