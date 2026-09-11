@@ -78,7 +78,7 @@ id:"score04",
 
 number:"肆誘技",
 
-numberKana:"よんゆうぎ",
+numberKana:"しゆうぎ",
 
 title:"一誘一間・二誘挟",
 
@@ -147,7 +147,7 @@ id:"score07",
 
 number:"漆誘技",
 
-numberKana:"ななゆうぎ",
+numberKana:"しちゆうぎ",
 
 title:"二誘一間・三誘挟",
 
@@ -308,7 +308,7 @@ id:"score14",
 
 number:"拾肆誘技",
 
-numberKana:"じゅうよんゆうぎ",
+numberKana:"じゅうしゆうぎ",
 
 title:"三誘一間・一誘連",
 
@@ -575,8 +575,8 @@ background:"images/sasoi-score27-bg.png"
 id:"combined13",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"初釣戦・五十獲超",
-titleKana:"ちょうせん・ごじゅっかくちょう",
+title:"初釣戦・伍拾獲超",
+titleKana:"ちょうせん・ごじゅうかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -615,8 +615,8 @@ background:"images/sasoi-score28-bg.png"
 id:"combined14",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"大釣戦・百獲超",
-titleKana:"だいちょうせん・ひゃっかくちょう",
+title:"大釣戦・壱百獲超",
+titleKana:"だいちょうせん・いっぴゃくかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -680,8 +680,8 @@ background:"images/sasoi-score29-bg.png"
 id:"combined15",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"大獲戦・二百獲超",
-titleKana:"だいかくせん・にひゃっかくちょう",
+title:"大獲戦・弐百獲超",
+titleKana:"だいかくせん・にひゃくかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -770,8 +770,8 @@ background:"images/sasoi-score30-bg.png"
 id:"combined16",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"大漁戦・三百獲超",
-titleKana:"たいりょうせん・さんびゃっかくちょう",
+title:"大漁戦・参百獲超",
+titleKana:"たいりょうせん・さんびゃくかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -907,48 +907,48 @@ id: "combined17",
 number: "誘名人",
 numberKana: "ゆうめいじん",
 title: "初釣戦・五十獲超",
-titleKana: "はつちょうせん・ごじゅっかくちょう",
+titleKana: "はつちょうせん・ごじゅうかくちょう",
 difficulty: "★★★★★",
 charts: sasoiCombinedScoreList.find(function(scoreData) {
 return scoreData.id === "combined13";
 }).charts,
-background: "images/sasoi-score28-bg.png"
+background: "images/sasoi-score32-bg.png"
 },
 {
 id: "combined18",
 number: "誘名人",
 numberKana: "ゆうめいじん",
-title: "大釣戦・百獲超",
-titleKana: "だいちょうせん・ひゃっかくちょう",
+title: "大釣戦・壱百獲超",
+titleKana: "だいちょうせん・いっぴゃくかくちょう",
 difficulty: "★★★★★",
 charts: sasoiCombinedScoreList.find(function(scoreData) {
 return scoreData.id === "combined14";
 }).charts,
-background: "images/sasoi-score29-bg.png"
+background: "images/sasoi-score33-bg.png"
 },
 {
 id: "combined19",
 number: "誘名人",
 numberKana: "ゆうめいじん",
-title: "大獲戦・二百獲超",
-titleKana: "だいかくせん・にひゃっかくちょう",
+title: "大獲戦・弐百獲超",
+titleKana: "だいかくせん・にひゃくかくちょう",
 difficulty: "★★★★★",
 charts: sasoiCombinedScoreList.find(function(scoreData) {
 return scoreData.id === "combined15";
 }).charts,
-background: "images/sasoi-score30-bg.png"
+background: "images/sasoi-score34-bg.png"
 },
 {
 id: "combined20",
 number: "誘名人",
 numberKana: "ゆうめいじん",
-title: "大漁戦・三百獲超",
-titleKana: "たいりょうせん・さんびゃっかくちょう",
+title: "大漁戦・参百獲超",
+titleKana: "たいりょうせん・さんびゃくかくちょう",
 difficulty: "★★★★★",
 charts: sasoiCombinedScoreList.find(function(scoreData) {
 return scoreData.id === "combined16";
 }).charts,
-background: "images/sasoi-score31-bg.png"
+background: "images/sasoi-score35-bg.png"
 }
 );
 
@@ -1638,3 +1638,898 @@ scoreData.background
 );
 
 }
+
+
+// --------------------------------------------------------------------------------
+// 誘技解放コード関連はじめ
+// --------------------------------------------------------------------------------
+
+const SASOI_CLEAR_HISTORY_KEY =
+"sasoiClearHistory_v1";
+
+// ==========================================
+// ◎ 誘技クリア条件
+// ==========================================
+//
+// 各譜面を「条件以上の釣果」で
+// クリアしたかどうかを記録する。
+//
+// ハイスコアとは完全に別管理する。
+//
+// ==========================================
+
+const sasoiUnlockGroups = [
+
+// ----------------------------------------
+// 重誘技
+// 壱・弐・参
+// ----------------------------------------
+
+{
+id: "heavy",
+
+clearMessage:
+  "重誘技クリア",
+
+releaseMessage:
+  "誘技解放!",
+
+requiredCatch:
+  2,
+
+scoreIds: [
+  "score01",
+  "score02",
+  "score03"
+]
+
+},
+
+// ----------------------------------------
+// 肆誘技～玖誘技
+// ----------------------------------------
+
+{
+id: "squeeze",
+
+clearMessage:
+  "肆誘技～玖誘技クリア",
+
+releaseMessage:
+  "誘技解放!",
+
+requiredCatch:
+  2,
+
+scoreIds: [
+  "score04",
+  "score05",
+  "score06",
+  "score07",
+  "score08",
+  "score09"
+]
+
+},
+
+// ----------------------------------------
+// 拾誘技～拾伍誘技
+// ----------------------------------------
+
+{
+id: "chain",
+
+clearMessage:
+  "拾誘技～拾伍誘技クリア",
+
+releaseMessage:
+  "誘技解放!",
+
+requiredCatch:
+  2,
+
+scoreIds: [
+  "score10",
+  "score11",
+  "score12",
+  "score13",
+  "score14",
+  "score15"
+]
+
+},
+
+// ----------------------------------------
+// 連誘技 秘伝
+// ----------------------------------------
+
+{
+id: "secret",
+
+clearMessage:
+  "連誘技秘伝クリア",
+
+releaseMessage:
+  "誘技解放!",
+
+requiredCatch:
+  6,
+
+scoreIds: [
+  "combined01",
+  "combined02",
+  "combined03",
+  "combined04",
+  "combined05",
+  "combined06",
+  "combined07",
+  "combined08",
+  "combined09",
+  "combined10",
+  "combined11",
+  "combined12"
+]
+
+},
+
+// ----------------------------------------
+// 熟誘技
+// ----------------------------------------
+
+{
+id: "master",
+
+clearMessage:
+  "熟誘技クリア",
+
+releaseMessage:
+  "",
+
+requiredCatchByScore: {
+
+  combined13:
+    50,
+
+  combined14:
+    100,
+
+  combined15:
+    200,
+
+  combined16:
+    300
+
+},
+
+scoreIds: [
+  "combined13",
+  "combined14",
+  "combined15",
+  "combined16"
+]
+
+},
+
+// ----------------------------------------
+// 誘名人
+// ----------------------------------------
+
+{
+id: "yuumeijin",
+
+clearMessage:
+  "誘名人クリア",
+
+releaseMessage:
+  "",
+
+requiredCatchByScore: {
+
+  combined17:
+    50,
+
+  combined18:
+    100,
+
+  combined19:
+    200,
+
+  combined20:
+    300
+
+},
+
+scoreIds: [
+  "combined17",
+  "combined18",
+  "combined19",
+  "combined20"
+]
+
+}
+
+];
+
+// ==========================================
+// ◎ クリア履歴を読み込む
+// ==========================================
+
+function loadSasoiClearHistory(){
+
+try{
+
+const saved =
+  localStorage.getItem(
+    SASOI_CLEAR_HISTORY_KEY
+  );
+
+
+if(
+  !saved
+){
+
+  return {};
+
+}
+
+
+const parsed =
+  JSON.parse(
+    saved
+  );
+
+
+if(
+  !parsed ||
+  typeof parsed !== "object" ||
+  Array.isArray(parsed)
+){
+
+  return {};
+
+}
+
+
+return parsed;
+
+}
+catch(error){
+
+console.error(
+  "[Sasoi] クリア履歴読み込み失敗:",
+  error
+);
+
+
+return {};
+
+}
+
+}
+
+// ==========================================
+// ◎ クリア履歴を保存する
+// ==========================================
+
+function saveSasoiClearHistory(
+history
+){
+
+try{
+
+localStorage.setItem(
+  SASOI_CLEAR_HISTORY_KEY,
+  JSON.stringify(
+    history
+  )
+);
+
+
+console.log(
+  "[Sasoi] クリア履歴保存:",
+  history
+);
+
+}
+catch(error){
+
+console.error(
+  "[Sasoi] クリア履歴保存失敗:",
+  error
+);
+
+}
+
+}
+
+// ==========================================
+// ◎ 個別譜面のクリア履歴を確認
+// ==========================================
+
+function isSasoiScoreCleared(
+scoreId
+){
+
+if(
+!scoreId
+){
+
+return false;
+
+}
+
+const history =
+loadSasoiClearHistory();
+
+return history[scoreId] === true;
+
+}
+
+// ==========================================
+// ◎ 個別譜面をクリア済みにする
+// ==========================================
+//
+// 一度クリアした譜面は、
+// ハイスコアを0にしても
+// クリア状態を解除しない。
+// ==========================================
+
+function markSasoiScoreCleared(
+scoreId
+){
+
+if(
+!scoreId
+){
+
+return false;
+
+}
+
+const history =
+loadSasoiClearHistory();
+
+// ----------------------------------------
+// すでにクリア済みなら何もしない
+// ----------------------------------------
+
+if(
+history[scoreId] === true
+){
+
+return false;
+
+}
+
+history[scoreId] =
+true;
+
+saveSasoiClearHistory(
+history
+);
+
+console.log(
+"[Sasoi] 譜面クリア記録:",
+scoreId
+);
+
+return true;
+
+}
+
+// ==========================================
+// ◎ 解放グループがクリア済みか確認
+// ==========================================
+
+function isSasoiUnlockGroupCleared(
+group
+){
+
+if(
+!group ||
+!Array.isArray(
+group.scoreIds
+)
+){
+
+return false;
+
+}
+
+return group.scoreIds.every(
+function(scoreId){
+
+  return isSasoiScoreCleared(
+    scoreId
+  );
+
+}
+
+);
+
+}
+
+// ==========================================
+// ◎ 今回のプレイ結果を
+// 個別譜面クリアとして記録
+// ==========================================
+//
+// scoreId:
+// 今回プレイした譜面ID
+//
+// catchCount:
+// 今回のプレイで確定した釣果
+//
+// ==========================================
+
+function recordSasoiClearResult(
+scoreId,
+catchCount
+){
+
+if(
+!scoreId
+){
+
+console.log(
+  "[Sasoi] クリア判定失敗：scoreIdなし"
+);
+
+return null;
+
+}
+
+const scoreData =
+getSasoiCombinedScoreById(
+scoreId
+) ||
+getSasoiScoreById(
+scoreId
+);
+
+if(
+!scoreData
+){
+
+console.log(
+  "[Sasoi] クリア判定失敗：譜面データなし",
+  scoreId
+);
+
+return null;
+
+}
+
+const catchValue =
+Number(
+catchCount
+) || 0;
+
+// ========================================
+// ◎ すでにクリア済み
+// ========================================
+
+if(
+isSasoiScoreCleared(
+scoreId
+)
+){
+
+console.log(
+  "[Sasoi] すでにクリア済み:",
+  scoreId
+);
+
+
+return {
+  scoreId:
+    scoreId,
+
+  newlyCleared:
+    false,
+
+  catchCount:
+    catchValue
+};
+
+}
+
+// ========================================
+// ◎ 必要釣果を決定
+// ========================================
+
+let requiredCatch =
+0;
+
+// ----------------------------------------
+// 個別条件
+// ----------------------------------------
+
+for(
+let i = 0;
+i < sasoiUnlockGroups.length;
+i++
+){
+
+const group =
+  sasoiUnlockGroups[i];
+
+
+if(
+  !Array.isArray(
+    group.scoreIds
+  )
+){
+
+  continue;
+
+}
+
+
+if(
+  group.scoreIds.includes(
+    scoreId
+  )
+){
+
+  if(
+    group.requiredCatchByScore &&
+    typeof group.requiredCatchByScore[scoreId] ===
+      "number"
+  ){
+
+    requiredCatch =
+      group.requiredCatchByScore[scoreId];
+
+  }
+  else{
+
+    requiredCatch =
+      Number(
+        group.requiredCatch
+      ) || 0;
+
+  }
+
+
+  break;
+
+}
+
+}
+
+// ========================================
+// ◎ 条件未達成
+// ========================================
+
+if(
+catchValue <
+requiredCatch
+){
+
+console.log(
+  "[Sasoi] クリア条件未達成:",
+  scoreId,
+  "釣果:",
+  catchValue,
+  "必要:",
+  requiredCatch
+);
+
+
+return {
+  scoreId:
+    scoreId,
+
+  newlyCleared:
+    false,
+
+  catchCount:
+    catchValue,
+
+  requiredCatch:
+    requiredCatch
+};
+
+}
+
+// ========================================
+// ◎ クリア記録
+// ========================================
+
+const newlyCleared =
+markSasoiScoreCleared(
+scoreId
+);
+
+if(
+!newlyCleared
+){
+
+return {
+  scoreId:
+    scoreId,
+
+  newlyCleared:
+    false,
+
+  catchCount:
+    catchValue,
+
+  requiredCatch:
+    requiredCatch
+};
+
+}
+
+console.log(
+"[Sasoi] 譜面クリア:",
+scoreId,
+"釣果:",
+catchValue,
+"必要:",
+requiredCatch
+);
+
+return {
+scoreId:
+scoreId,
+
+newlyCleared:
+  true,
+
+catchCount:
+  catchValue,
+
+requiredCatch:
+  requiredCatch
+
+};
+
+}
+
+// ==========================================
+// ◎ 解放グループの完成判定
+// ==========================================
+//
+// 今回の譜面クリアによって、
+// グループ全体が初めて揃った場合だけ
+// 「クリア」＋「誘技解放」を返す。
+//
+// ==========================================
+
+function checkSasoiUnlockAfterClear(
+scoreId
+){
+
+if(
+!scoreId
+){
+
+return null;
+
+}
+
+for(
+let i = 0;
+i < sasoiUnlockGroups.length;
+i++
+){
+
+const group =
+  sasoiUnlockGroups[i];
+
+
+if(
+  !Array.isArray(
+    group.scoreIds
+  )
+){
+
+  continue;
+
+}
+
+
+if(
+  !group.scoreIds.includes(
+    scoreId
+  )
+){
+
+  continue;
+
+}
+
+
+// ======================================
+// ◎ グループ全体が揃ったか
+// ======================================
+
+const groupCleared =
+  isSasoiUnlockGroupCleared(
+    group
+  );
+
+
+if(
+  !groupCleared
+){
+
+  console.log(
+    "[Sasoi] グループ未完成:",
+    group.id
+  );
+
+
+  return null;
+
+}
+
+
+const history =
+  loadSasoiClearHistory();
+
+
+const unlockKey =
+  "group_" +
+  group.id;
+
+
+// ======================================
+// ◎ すでにグループ解放済み
+// ======================================
+
+if(
+  history[unlockKey] === true
+){
+
+  console.log(
+    "[Sasoi] グループ解放済み:",
+    group.id
+  );
+
+
+  return null;
+
+}
+
+
+// ======================================
+// ◎ グループ解放を記録
+// ======================================
+
+history[unlockKey] =
+  true;
+
+
+saveSasoiClearHistory(
+  history
+);
+
+
+console.log(
+  "================================="
+);
+
+console.log(
+  "[Sasoi] ★ 誘技解放 ★"
+);
+
+console.log(
+  "グループ:",
+  group.id
+);
+
+console.log(
+  "メッセージ:",
+  group.clearMessage
+);
+
+if(
+  group.releaseMessage
+){
+
+  console.log(
+    "メッセージ:",
+    group.releaseMessage
+  );
+
+}
+
+console.log(
+  "================================="
+);
+
+
+return {
+  groupId:
+    group.id,
+
+  clearMessage:
+    group.clearMessage,
+
+  releaseMessage:
+    group.releaseMessage,
+
+  newlyReleased:
+    true
+
+};
+
+}
+
+return null;
+
+}
+
+// ==========================================
+// ◎ クリア履歴確認用
+// ==========================================
+
+function getSasoiClearHistory(){
+
+return loadSasoiClearHistory();
+
+}
+
+// ==========================================
+// ◎ 誘技解放履歴をすべてリセット
+// ==========================================
+//
+// 通常のハイスコアリセットとは完全に別。
+// 現時点では通常操作から呼び出さない。
+//
+// ==========================================
+
+function resetSasoiUnlockHistory(){
+
+try{
+
+localStorage.removeItem(
+  SASOI_CLEAR_HISTORY_KEY
+);
+
+
+console.log(
+  "[Sasoi] 誘技クリア・解放履歴をリセットしました"
+);
+
+
+return true;
+
+}
+catch(error){
+
+console.error(
+  "[Sasoi] 誘技クリア・解放履歴リセット失敗:",
+  error
+);
+
+
+return false;
+
+}
+
+}
+
+// ==========================================
+// ◎ グローバル公開
+// ==========================================
+
+window.getSasoiClearHistory =
+getSasoiClearHistory;
+
+window.resetSasoiUnlockHistory =
+resetSasoiUnlockHistory;
+
+window.recordSasoiClearResult =
+recordSasoiClearResult;
+
+window.checkSasoiUnlockAfterClear =
+checkSasoiUnlockAfterClear;
+
+// --------------------------------------------------------------------------------
+// 誘技解放コード関連おわり
+// --------------------------------------------------------------------------------
+

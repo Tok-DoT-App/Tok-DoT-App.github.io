@@ -6268,7 +6268,77 @@ background:transparent;
 
 }
 
+/* =================================
+誘技解放表示関連
+================================= */
 
+.sasoi-unlock-message{
+
+position:absolute;
+
+left:50%;
+
+top:88px;
+
+transform:
+translate(
+-50%,
+-50%
+);
+
+font-size:22px;
+
+font-family:"Yuji Boku",serif;
+
+color:#FFFFFF;
+
+white-space:nowrap;
+
+pointer-events:none;
+
+z-index:40;
+
+opacity:0;
+
+}
+
+.sasoi-unlock-message.show{
+
+animation:
+sasoiUnlockMessageShow
+5000ms
+ease-in-out
+forwards;
+
+}
+
+@keyframes sasoiUnlockMessageShow{
+
+0%{
+
+opacity:0;
+
+}
+
+20%{
+
+opacity:1;
+
+}
+
+70%{
+
+opacity:1;
+
+}
+
+100%{
+
+opacity:0;
+
+}
+
+}
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -7509,6 +7579,16 @@ area.innerHTML = `
     スタート
 
   </button>
+<!-- =================================
+   デバッグ用誘技解放リセットボタン
+================================= -->
+
+<button
+type="button"
+onclick="resetSasoiUnlockHistory()"
+
+解放履歴リセット
+</button>
 
 
 </div>
@@ -7634,6 +7714,7 @@ class="sasoi-gauge-total"
   </div>
 
 </div>
+
 
   <!-- =================================
        通常メモリ
@@ -7903,6 +7984,13 @@ id="sasoiTouch">
   ○
 
 </div>
+
+<!-- =================================
+     誘技解放表示
+================================= -->
+
+<div class="sasoi-center-line"></div> <div id="sasoiUnlockMessage" class="sasoi-unlock-message" ></div>
+
 
 <!-- ======================= 譜面選択画面へ戻る確認モーダル　======================= -->
 
@@ -17491,6 +17579,176 @@ function hideSasoiActionMessage(){
 
 }
 
+// ==================================================================
+// 誘技クリア判定共通関数
+// ==================================================================
+
+function finalizeSasoiClearResult(){
+
+// =================================
+// ◎ 今回プレイした譜面を取得
+// =================================
+
+const selectedScore =
+typeof getSelectedSasoiScore ===
+"function"
+? getSelectedSasoiScore()
+: null;
+
+if(
+!selectedScore ||
+!selectedScore.id
+){
+
+
+console.log(
+  "[Sasoi] 誘技クリア判定失敗：選択譜面なし"
+);
+
+return;
+
+
+}
+
+const sasoiCompletedScoreId =
+selectedScore.id;
+
+// =================================
+// ◎ 今回確定した釣果
+// =================================
+
+const completedCatchCount =
+Number(
+sasoiTotalCatchCount
+) || 0;
+
+console.log(
+"[Sasoi] 誘技クリア判定",
+"譜面ID:",
+sasoiCompletedScoreId,
+"確定釣果:",
+completedCatchCount
+);
+
+// =================================
+// ◎ クリア記録
+// =================================
+
+if(
+typeof recordSasoiClearResult !==
+"function"
+){
+
+
+console.log(
+  "[Sasoi] クリア記録関数が見つかりません"
+);
+
+return;
+
+
+}
+
+const clearResult =
+recordSasoiClearResult(
+sasoiCompletedScoreId,
+completedCatchCount
+);
+
+if(
+!clearResult
+){
+
+
+console.log(
+  "[Sasoi] クリア記録結果なし"
+);
+
+return;
+
+
+}
+
+// =================================
+// ◎ 今回初めてクリアした場合のみ
+//    解放グループを確認
+// =================================
+
+if(
+clearResult.newlyCleared !== true
+){
+
+
+console.log(
+  "[Sasoi] 今回は新規クリアではありません:",
+  sasoiCompletedScoreId
+);
+
+return;
+
+
+}
+
+if(
+typeof checkSasoiUnlockAfterClear !==
+"function"
+){
+
+
+console.log(
+  "[Sasoi] 解放判定関数が見つかりません"
+);
+
+return;
+
+
+}
+
+const unlockResult =
+checkSasoiUnlockAfterClear(
+sasoiCompletedScoreId
+);
+
+// =================================
+// ◎ 新しい解放が発生した場合
+// =================================
+
+if(
+unlockResult &&
+unlockResult.newlyReleased === true
+){
+
+console.log(
+"🎉 誘技解放条件達成"
+);
+
+console.log(
+"[Sasoi] クリアメッセージ:",
+unlockResult.clearMessage
+);
+
+if(
+unlockResult.releaseMessage
+){
+
+console.log(
+  "[Sasoi] 解放メッセージ:",
+  unlockResult.releaseMessage
+);
+
+}
+
+showSasoiUnlockMessage(
+unlockResult.clearMessage,
+unlockResult.releaseMessage
+);
+
+}
+
+}
+
+
+
 // =================================
 // ◎ ワカサギ投入アニメーション
 // =================================
@@ -17514,71 +17772,60 @@ function showSasoiCatchFishAnimation(
 remainingFishCount
 ){
 
-// ---------------------------------
-// 今回のプレイ番号を取得
-// ---------------------------------
-
 const currentSessionId =
 sasoiCatchAnimationSessionId;
 
-// ---------------------------------
-// 釣果ケースを取得
-// ---------------------------------
-
-const catchDisplay =
+const totalDisplay =
 document.getElementById(
 "sasoiTotalCatchDisplay"
 );
 
 if(
-!catchDisplay
+!totalDisplay
 ){
 
+
 console.log(
-  "🎣 ワカサギ投入失敗：釣果ケースが見つかりません"
+  "🐟 釣果アニメーション失敗：表示エリアなし"
 );
 
 return;
 
-}
-
-// ---------------------------------
-// 投入する魚がない場合
-// ---------------------------------
-
-if(
-remainingFishCount <=
-0
-){
-
-return;
 
 }
 
-// ---------------------------------
-// この魚アニメーションが
-// 現在のプレイのものか確認
-// ---------------------------------
-
 if(
-currentSessionId !==
-sasoiCatchAnimationSessionId
+remainingFishCount <= 0
 ){
+
 
 console.log(
-  "🎣 ワカサギ投入中止：古いプレイのアニメーションです"
+  "🐟 釣果アニメーション終了：投入する魚なし"
 );
+
+// =================================
+// ◎ 釣果0匹の場合
+// =================================
+//
+// 魚アニメーション自体が発生しないため、
+// ここではクリア判定を行わない。
+//
+// 0匹のプレイについては、
+// showSasoiCatchResult() が呼ばれない
+// ケースで別途確定処理を行う。
+// =================================
 
 return;
 
+
 }
 
-// ---------------------------------
-// 前回の投入中ワカサギを削除
-// ---------------------------------
+// =================================
+// ◎ 古い釣果アニメーションを削除
+// =================================
 
 const oldFish =
-catchDisplay.querySelector(
+totalDisplay.querySelector(
 ".sasoi-catch-fish"
 );
 
@@ -17586,13 +17833,15 @@ if(
 oldFish
 ){
 
+
 oldFish.remove();
+
 
 }
 
-// ---------------------------------
-// ワカサギ画像を作成
-// ---------------------------------
+// =================================
+// ◎ 新しい魚を作成
+// =================================
 
 const fish =
 document.createElement(
@@ -17606,31 +17855,21 @@ fish.src =
 "images/wakasagi.png";
 
 fish.alt =
-"";
+"ワカサギ";
 
-// ---------------------------------
-// 今回の魚がどのプレイのものか記録
-// ---------------------------------
-
-fish.dataset.sasoiCatchSessionId =
+fish.dataset.sessionId =
 String(
 currentSessionId
 );
 
-// ---------------------------------
-// ケース内へ追加
-// ---------------------------------
-
-catchDisplay.appendChild(
+totalDisplay.appendChild(
 fish
 );
 
 console.log(
-"🐟 ワカサギ投入開始：残り",
-remainingFishCount,
-"匹",
-"session:",
-currentSessionId
+"🐟 ワカサギ投入開始",
+"残り:",
+remainingFishCount
 );
 
 // =================================
@@ -17641,9 +17880,10 @@ fish.addEventListener(
 "animationend",
 function(){
 
-  // ---------------------------------
-  // リトライされていた場合
-  // ---------------------------------
+
+  // =================================
+  // ◎ セッション確認
+  // =================================
 
   if(
     currentSessionId !==
@@ -17651,18 +17891,10 @@ function(){
   ){
 
     console.log(
-      "🎣 古いワカサギアニメーション終了：加算しません"
+      "🐟 古い釣果アニメーションを破棄"
     );
 
-
-    if(
-      fish &&
-      fish.isConnected
-    ){
-
-      fish.remove();
-
-    }
+    fish.remove();
 
     return;
 
@@ -17670,7 +17902,7 @@ function(){
 
 
   // =================================
-  // ◎ 現在のプレイなら1匹加算
+  // ◎ 釣果を確定
   // =================================
 
   sasoiTotalCatchCount +=
@@ -17685,17 +17917,17 @@ function(){
   // ◎ 累計釣果表示を更新
   // =================================
 
-  const totalCatchCountDisplay =
+  const totalCatchCount =
     document.getElementById(
       "sasoiTotalCatchCount"
     );
 
 
   if(
-    totalCatchCountDisplay
+    totalCatchCount
   ){
 
-    totalCatchCountDisplay.textContent =
+    totalCatchCount.textContent =
       sasoiTotalCatchCount;
 
   }
@@ -17704,55 +17936,29 @@ function(){
   // =================================
   // ◎ 釣果HIGH更新
   // =================================
-  //
-  // 魚が実際にケースへ入った時点で
-  // 今回のプレイの釣果数をHIGHと比較する。
-  //
-  // 例:
-  //
-  // 1匹目 → currentCatch = 1
-  // 2匹目 → currentCatch = 2
-  // 3匹目 → currentCatch = 3
-  //
-  // これにより3匹目で
-  // HIGH 2 → HIGH 3
-  // と正しく更新される。
-  // =================================
 
   updateSasoiCatchRecordHigh();
 
 
-  // ---------------------------------
-  // 累計釣果ログ
-  // ---------------------------------
-
   console.log(
-    "🎣 ワカサギ投入完了：",
+    "🎣 釣果確定:",
+    "累計:",
     sasoiTotalCatchCount,
-    "匹",
-    "今回のプレイ:",
-    sasoiCurrentCatchCount,
-    "匹"
+    "今回:",
+    sasoiCurrentCatchCount
   );
 
 
-  // ---------------------------------
-  // 今回の魚を削除
-  // ---------------------------------
+  // =================================
+  // ◎ 魚を削除
+  // =================================
 
-  if(
-    fish &&
-    fish.isConnected
-  ){
-
-    fish.remove();
-
-  }
+  fish.remove();
 
 
-  // ---------------------------------
-  // 次の魚があるか確認
-  // ---------------------------------
+  // =================================
+  // ◎ 次の魚
+  // =================================
 
   const nextRemaining =
     remainingFishCount -
@@ -17760,52 +17966,87 @@ function(){
 
 
   if(
-    nextRemaining <=
+    nextRemaining >
     0
   ){
+
+    setTimeout(
+      function(){
+
+        if(
+          currentSessionId !==
+          sasoiCatchAnimationSessionId
+        ){
+
+          return;
+
+        }
+
+
+        showSasoiCatchFishAnimation(
+          nextRemaining
+        );
+
+      },
+      120
+    );
+
 
     return;
 
   }
 
 
-  // ---------------------------------
-  // 少し間を空けて次の魚
-  // ---------------------------------
+  // =================================
+  // ◎ 今回の釣果がすべて確定
+  // =================================
 
-  setTimeout(
-    function(){
-
-      // ---------------------------------
-      // リトライされていた場合
-      // ---------------------------------
-
-      if(
-        currentSessionId !==
-        sasoiCatchAnimationSessionId
-      ){
-
-        console.log(
-          "🎣 次のワカサギ投入を中止：新しいプレイが開始されています"
-        );
-
-        return;
-
-      }
-
-
-      showSasoiCatchFishAnimation(
-        nextRemaining
-      );
-
-    },
-    120
+  console.log(
+    "🎣 今回の釣果投入完了",
+    "確定釣果:",
+    sasoiTotalCatchCount,
+    "匹"
   );
+
+
+// =================================
+// ◎ 誘技クリア判定
+// =================================
+
+// ---------------------------------
+// 組み合わせ譜面の場合
+// ---------------------------------
+//
+// 途中の譜面ではクリア判定しない。
+//
+// 組み合わせ譜面では、
+// 全譜面終了後の釣果投入完了時に
+// 累計釣果を使って最終判定する。
+//
+// ---------------------------------
+
+if(
+sasoiCombinedPlay
+){
+
+console.log(
+"[Sasoi] 組み合わせ譜面：途中の譜面なのでクリア判定を保留"
+);
+
+}
+else{
+
+finalizeSasoiClearResult();
+
+}
+
 
 },
 {
-  once:true
+  once:
+    true
 }
+
 
 );
 
@@ -18706,19 +18947,36 @@ function showSasoiCatchResult(){
   // 160未満
   // =================================
 
-  if(
-    gauge <
-    160
-  ){
+if(
+gauge <
+160
+){
 
-    console.log(
-      "🎣 釣果表示なし：ゲージ160未満",
-      gauge
-    );
 
-    return;
+console.log(
+  "🎣 釣果表示なし：ゲージ160未満",
+  gauge
+);
 
-  }
+
+// =================================
+// ◎ 釣果0匹としてプレイ結果を確定
+// =================================
+//
+// ゲージ160未満では
+// showSasoiCatchFishAnimation() が
+// 呼ばれないため、ここで確定する。
+//
+// =================================
+
+finalizeSasoiClearResult();
+
+
+return;
+
+
+}
+
 
 
   // =================================
@@ -19848,7 +20106,62 @@ totalCount
 
 }
 
+// ------------------------------------------------------------------
+// 誘技解放JS
+// ------------------------------------------------------------------
 
+function showSasoiUnlockMessage(clearMessage, releaseMessage){
+
+const messageElement =
+document.getElementById("sasoiUnlockMessage");
+
+if(!messageElement){
+
+console.log("[Sasoi] 解放メッセージ表示用要素が見つかりません");
+
+return;
+
+}
+
+messageElement.classList.remove("show");
+
+messageElement.textContent = "";
+
+void messageElement.offsetWidth;
+
+if(clearMessage){
+
+messageElement.textContent = clearMessage;
+
+messageElement.classList.add("show");
+
+}
+
+if(releaseMessage){
+
+setTimeout(() => {
+
+  if(!messageElement){
+
+    return;
+
+  }
+
+  messageElement.classList.remove("show");
+
+  messageElement.textContent = "";
+
+  void messageElement.offsetWidth;
+
+  messageElement.textContent = releaseMessage;
+
+  messageElement.classList.add("show");
+
+}, 5000);
+
+}
+
+}
 
 
 // ---------------------------------　JS終了地点　---------------------------------
