@@ -1669,18 +1669,18 @@ const sasoiUnlockGroups = [
 id: "heavy",
 
 clearMessage:
-  "重誘技クリア",
+"重誘技クリア",
 
 releaseMessage:
-  "誘技解放!",
+"誘技解放",
 
 requiredCatch:
-  2,
+2,
 
 scoreIds: [
-  "score01",
-  "score02",
-  "score03"
+"score01",
+"score02",
+"score03"
 ]
 
 },
@@ -1693,21 +1693,24 @@ scoreIds: [
 id: "squeeze",
 
 clearMessage:
-  "肆誘技～玖誘技クリア",
+"肆誘技～玖誘技クリア",
 
 releaseMessage:
-  "誘技解放!",
+"誘技解放",
+
+unlockMessage:
+"壱～参2匹以上達成で解放",
 
 requiredCatch:
-  2,
+2,
 
 scoreIds: [
-  "score04",
-  "score05",
-  "score06",
-  "score07",
-  "score08",
-  "score09"
+"score04",
+"score05",
+"score06",
+"score07",
+"score08",
+"score09"
 ]
 
 },
@@ -1720,21 +1723,24 @@ scoreIds: [
 id: "chain",
 
 clearMessage:
-  "拾誘技～拾伍誘技クリア",
+"拾誘技～拾伍誘技クリア",
 
 releaseMessage:
-  "誘技解放!",
+"誘技解放",
+
+unlockMessage:
+"肆～玖2匹以上達成で解放",
 
 requiredCatch:
-  2,
+2,
 
 scoreIds: [
-  "score10",
-  "score11",
-  "score12",
-  "score13",
-  "score14",
-  "score15"
+"score10",
+"score11",
+"score12",
+"score13",
+"score14",
+"score15"
 ]
 
 },
@@ -1747,27 +1753,30 @@ scoreIds: [
 id: "secret",
 
 clearMessage:
-  "連誘技秘伝クリア",
+"連誘技秘伝クリア",
 
 releaseMessage:
-  "誘技解放!",
+"誘技解放",
+
+unlockMessage:
+"拾～拾伍2匹以上達成で解放",
 
 requiredCatch:
-  6,
+6,
 
 scoreIds: [
-  "combined01",
-  "combined02",
-  "combined03",
-  "combined04",
-  "combined05",
-  "combined06",
-  "combined07",
-  "combined08",
-  "combined09",
-  "combined10",
-  "combined11",
-  "combined12"
+"combined01",
+"combined02",
+"combined03",
+"combined04",
+"combined05",
+"combined06",
+"combined07",
+"combined08",
+"combined09",
+"combined10",
+"combined11",
+"combined12"
 ]
 
 },
@@ -1780,32 +1789,35 @@ scoreIds: [
 id: "master",
 
 clearMessage:
-  "熟誘技クリア",
+"熟誘技クリア",
 
 releaseMessage:
-  "",
+"",
+
+unlockMessage:
+"連誘技6匹以上達成で解放",
 
 requiredCatchByScore: {
 
-  combined13:
-    50,
+combined13:
+50,
 
-  combined14:
-    100,
+combined14:
+100,
 
-  combined15:
-    200,
+combined15:
+200,
 
-  combined16:
-    300
+combined16:
+300
 
 },
 
 scoreIds: [
-  "combined13",
-  "combined14",
-  "combined15",
-  "combined16"
+"combined13",
+"combined14",
+"combined15",
+"combined16"
 ]
 
 },
@@ -1818,37 +1830,41 @@ scoreIds: [
 id: "yuumeijin",
 
 clearMessage:
-  "誘名人クリア",
+"誘名人クリア",
 
 releaseMessage:
-  "",
+"",
+
+unlockMessage:
+"熟誘技釣果条件達成で解放",
 
 requiredCatchByScore: {
 
-  combined17:
-    50,
+combined17:
+50,
 
-  combined18:
-    100,
+combined18:
+100,
 
-  combined19:
-    200,
+combined19:
+200,
 
-  combined20:
-    300
+combined20:
+300
 
 },
 
 scoreIds: [
-  "combined17",
-  "combined18",
-  "combined19",
-  "combined20"
+"combined17",
+"combined18",
+"combined19",
+"combined20"
 ]
 
 }
 
 ];
+
 
 // ==========================================
 // ◎ クリア履歴を読み込む
@@ -2048,6 +2064,309 @@ function(scoreId){
 );
 
 }
+
+
+// ==========================================
+// ◎ 譜面の解放状態を確認
+// ==========================================
+//
+// scoreId:
+// 確認したい譜面ID
+//
+// 戻り値:
+//
+// {
+//   found: true,
+//   unlocked: true / false,
+//   groupId: "...",
+//   unlockMessage: "..."
+// }
+//
+// ==========================================
+
+function getSasoiScoreUnlockStatus(
+scoreId
+){
+
+if(
+!scoreId
+){
+
+return {
+found:
+false,
+
+unlocked:
+false,
+
+groupId:
+null,
+
+unlockMessage:
+""
+};
+
+}
+
+// ========================================
+// ◎ 所属グループを探す
+// ========================================
+
+let targetGroup =
+null;
+
+let targetGroupIndex =
+-1;
+
+for(
+let i = 0;
+i < sasoiUnlockGroups.length;
+i++
+){
+
+const group =
+sasoiUnlockGroups[i];
+
+if(
+!Array.isArray(
+group.scoreIds
+)
+){
+
+continue;
+
+}
+
+if(
+group.scoreIds.includes(
+scoreId
+)
+){
+
+targetGroup =
+group;
+
+targetGroupIndex =
+i;
+
+break;
+
+}
+
+}
+
+// ========================================
+// ◎ 解放管理対象外
+// ========================================
+//
+// 解放システムに登録されていない譜面は
+// 通常どおりプレイ可能。
+// ========================================
+
+if(
+!targetGroup
+){
+
+return {
+found:
+false,
+
+unlocked:
+true,
+
+groupId:
+null,
+
+unlockMessage:
+""
+};
+
+}
+
+// ========================================
+// ◎ 壱～参は最初から解放
+// ========================================
+//
+// heavy は最初からプレイ可能。
+// ========================================
+
+if(
+targetGroup.id ===
+"heavy"
+){
+
+return {
+found:
+true,
+
+unlocked:
+true,
+
+groupId:
+targetGroup.id,
+
+unlockMessage:
+""
+};
+
+}
+
+// ========================================
+// ◎ クリア・解放履歴を取得
+// ========================================
+
+const history =
+loadSasoiClearHistory();
+
+// ========================================
+// ◎ 現在のグループ自身が
+//    すでに解放済みか確認
+// ========================================
+//
+// 例えば:
+//
+// group_squeeze === true
+//
+// なら、score04～09は解放済み。
+// ========================================
+
+const unlockKey =
+"group_" +
+targetGroup.id;
+
+if(
+history[unlockKey] === true
+){
+
+return {
+found:
+true,
+
+unlocked:
+true,
+
+groupId:
+targetGroup.id,
+
+unlockMessage:
+""
+};
+
+}
+
+// ========================================
+// ◎ 前のグループを確認
+// ========================================
+//
+// 解放条件は「自分のグループをクリア」ではなく、
+// 「ひとつ前のグループをクリア」したら
+// 次のグループが解放される構造。
+// ========================================
+
+const previousGroupIndex =
+targetGroupIndex -
+1;
+
+// ========================================
+// ◎ 前のグループが存在するか確認
+// ========================================
+
+if(
+previousGroupIndex >=
+0
+){
+
+const previousGroup =
+sasoiUnlockGroups[
+previousGroupIndex
+];
+
+// ======================================
+// ◎ 前のグループが存在する場合
+// ======================================
+
+if(
+previousGroup &&
+previousGroup.id
+){
+
+const previousUnlockKey =
+"group_" +
+previousGroup.id;
+
+// ====================================
+// ◎ 前のグループが解放済み
+// ====================================
+//
+// ここが今回の重要な修正箇所。
+//
+// 例:
+//
+// heavy 完成
+// ↓
+// group_heavy === true
+// ↓
+// squeeze を解放
+//
+// ====================================
+
+if(
+history[previousUnlockKey] === true
+){
+
+return {
+found:
+true,
+
+unlocked:
+true,
+
+groupId:
+targetGroup.id,
+
+unlockMessage:
+""
+};
+
+}
+
+}
+
+}
+
+// ========================================
+// ◎ 未解放
+// ========================================
+//
+// 前のグループがまだ完成していない場合。
+// ========================================
+
+return {
+found:
+true,
+
+unlocked:
+false,
+
+groupId:
+targetGroup.id,
+
+unlockMessage:
+targetGroup.unlockMessage ||
+""
+};
+
+}
+
+// ==========================================
+// ◎ グローバル公開
+// ==========================================
+
+window.getSasoiScoreUnlockStatus =
+getSasoiScoreUnlockStatus;
+
+
+
 
 // ==========================================
 // ◎ 今回のプレイ結果を

@@ -931,30 +931,203 @@ window.sasoiResetTouchPosition =
     );
 
 
-    // =======================================
-    // ゲーム開始
-    // =======================================
+// =======================================
+// ゲーム開始
+// =======================================
 
-    const startBtn =
-      document.getElementById(
-        "sasoiStartBtn"
-      );
+const startBtn =
+document.getElementById(
+"sasoiStartBtn"
+);
+
+if(
+startBtn
+){
+
+startBtn.addEventListener(
+"click",
+function(){
 
 
-    if(
-      startBtn
-    ){
+  // =================================
+  // ◎ 実際にゲーム画面が
+  //    開始状態になったか確認
+  // =================================
+  //
+  // 以前は
+  //
+  // window.sasoiPlaying !== true
+  //
+  // で判定していた。
+  //
+  // しかし sasoiPlaying が
+  // windowオブジェクトに公開されて
+  // いない場合、
+  //
+  // sasoiPlaying = true
+  //
+  // になっていても
+  //
+  // window.sasoiPlaying
+  //
+  // は true にならない。
+  //
+  // そのため、
+  //
+  // 「ゲーム未開始」
+  //
+  // と誤判定され、
+  // 10秒間の移動モード自体が
+  // 開始されていなかった。
+  //
+  // =================================
+  // ◎ 今回はゲーム画面の表示状態で判定
+  // =================================
+  //
+  // SasoiNoMeijin.jsでは
+  //
+  // 解放済み
+  // ↓
+  // sasoiGame.style.display = "block"
+  //
+  // 未解放
+  // ↓
+  // スタート処理途中でreturn
+  //
+  // となっている。
+  //
+  // したがってゲーム画面が
+  // 実際に表示されているかを
+  // 判定することで、
+  // 未解放スタートを確実に除外できる。
+  //
+  // =================================
 
-      startBtn.addEventListener(
-        "click",
-        function(){
+  const game =
+    document.getElementById(
+      "sasoiGame"
+    );
 
-          startMoveMode();
 
-        }
-      );
+  if(
+    !game
+  ){
 
-    }
+    console.log(
+      "🎮 タッチボタン移動開始：ゲーム画面がありません"
+    );
+
+    return;
+
+  }
+
+
+  const gameStyle =
+    window.getComputedStyle(
+      game
+    );
+
+
+  if(
+    gameStyle.display ===
+    "none"
+  ){
+
+    console.log(
+      "🎮 タッチボタン移動開始：ゲーム未開始のため実行しません"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // ◎ タッチボタンを取得
+  // =================================
+
+  const touch =
+    getTouch();
+
+
+  if(
+    !touch
+  ){
+
+    console.log(
+      "🎮 タッチボタン移動開始：sasoiTouchがありません"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // ◎ タッチボタンが非表示の場合
+  //    移動モードを開始しない
+  // =================================
+  //
+  // 未解放譜面の場合、
+  // SasoiNoMeijin.js側で
+  //
+  // sasoiTouch.style.display = "none"
+  //
+  // になるため、
+  // ここでも安全確認を行う。
+  //
+  // =================================
+
+  const touchStyle =
+    window.getComputedStyle(
+      touch
+    );
+
+
+  if(
+    touchStyle.display ===
+    "none" ||
+    touchStyle.visibility ===
+    "hidden"
+  ){
+
+    console.log(
+      "🎮 タッチボタン移動開始：タッチボタンが非表示のため実行しません"
+    );
+
+    return;
+
+  }
+
+
+  // =================================
+  // ◎ ゲーム開始済み
+  // =================================
+  //
+  // ここまで到達した場合、
+  //
+  // ・ゲーム画面が表示されている
+  // ・タッチボタンが表示されている
+  //
+  // ので、
+  // タッチボタン移動モードを開始する。
+  //
+  // =================================
+
+  console.log(
+    "🎮 タッチボタン移動開始：ゲーム開始を確認"
+  );
+
+
+  startMoveMode();
+
+}
+
+
+);
+
+}
+
 
 // =======================================
 // モーダル表示中

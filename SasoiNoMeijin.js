@@ -6269,16 +6269,17 @@ background:transparent;
 }
 
 /* =================================
-誘技解放表示関連
+ゲーム終了時の誘技解放表示
+※ ゲーム画面のレイアウトから独立
 ================================= */
 
 .sasoi-unlock-message{
 
-position:absolute;
+position:fixed;
 
 left:50%;
 
-top:88px;
+top:122px;
 
 transform:
 translate(
@@ -6296,7 +6297,7 @@ white-space:nowrap;
 
 pointer-events:none;
 
-z-index:40;
+z-index:9999;
 
 opacity:0;
 
@@ -6339,6 +6340,234 @@ opacity:0;
 }
 
 }
+
+
+/* =================================
+誘技メニュー用ロック表示
+※ 譜面選択メニューと同じ大きさ
+※ 譜面選択の上に暗い膜を重ねる
+================================= */
+
+.sasoi-menu-unlock-message{
+
+position:fixed;
+
+left:50%;
+
+top:135px;
+
+transform:
+translate(
+-50%,
+-50%
+);
+
+width:350px;
+
+height:44px;
+
+margin:0;
+
+padding:
+0 42px 0 20px;
+
+box-sizing:border-box;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+border-radius:19px;
+
+/* =================================
+◎ 譜面選択と同じ位置で
+上から重ねる
+================================= */
+
+z-index:30;
+
+/* =================================
+◎ ロック中だけ表示
+================================= */
+
+opacity:0;
+
+/* =================================
+◎ 暗いオーバーレイ
+
+
+ 譜面選択の白背景が
+ 下から透けて見える。
+
+
+================================= */
+
+background:
+rgba(
+0,
+0,
+0,
+0.48
+);
+
+/* =================================
+◎ 枠も暗くする
+================================= */
+
+border:
+1px solid
+rgba(
+0,
+0,
+0,
+0.18
+);
+
+/* =================================
+◎ 譜面選択の影に合わせて
+違和感をなくす
+================================= */
+
+box-shadow:
+inset 0 1px 0
+rgba(
+255,
+255,
+255,
+0.08
+);
+
+/* =================================
+◎ 文字設定
+================================= */
+
+font-size:22px;
+
+font-family:
+"Yuji Boku",
+serif;
+
+color:
+#FFFFFF;
+
+white-space:nowrap;
+
+pointer-events:none;
+
+}
+
+/* =================================
+◎ ロックメッセージ表示中
+================================= */
+
+.sasoi-menu-unlock-message.show{
+
+animation:
+sasoiMenuUnlockMessageShow
+5000ms
+ease-in-out
+forwards;
+
+}
+
+/* =================================
+◎ 表示アニメーション
+================================= */
+
+@keyframes sasoiMenuUnlockMessageShow{
+
+0%{
+
+
+opacity:0;
+
+
+}
+
+20%{
+
+
+opacity:1;
+
+
+}
+
+70%{
+
+
+opacity:1;
+
+
+}
+
+100%{
+
+
+opacity:0;
+
+
+}
+
+}
+
+
+
+
+/* ==========================================
+誘技デバッグ用
+解放履歴リセットボタン
+※ 他のレイアウトに影響させない
+========================================== */
+
+.sasoi-debug-unlock-reset-btn{
+
+position:fixed;
+
+right:20px;
+
+width:100px;
+
+bottom:-10px;
+
+z-index:9999;
+
+padding:6px 10px;
+
+font-size:11px;
+
+line-height:1.3;
+
+color:#666;
+
+background:rgba(255,255,255,0.9);
+
+border:1px solid #aaa;
+
+border-radius:6px;
+
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
+
+cursor:pointer;
+
+box-sizing:border-box;
+
+}
+
+.sasoi-debug-unlock-reset-btn:hover{
+
+background:#f0f0f0;
+
+}
+
+.sasoi-debug-unlock-reset-btn:active{
+
+transform:translateY(1px);
+
+}
+
+
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -6674,19 +6903,12 @@ index =
 }
 
 // ---------------------------------
-// 選択中譜面を保存
-// ---------------------------------
-
-sasoiSelectedScoreIndex =
-index;
-
-// ---------------------------------
 // 現在の譜面データを取得
 // ---------------------------------
 
 const selectedScore =
 sasoiScoreList[
-sasoiSelectedScoreIndex
+index
 ];
 
 // ---------------------------------
@@ -6704,6 +6926,54 @@ console.log(
 return;
 
 }
+
+// =================================
+// ◎ 選択中譜面のロック状態を確認
+// =================================
+//
+// 未解放譜面でも選択は可能。
+// ロック中の場合だけ、
+// メニュー側に解放条件を表示する。
+// =================================
+
+const unlockStatus =
+getSasoiScoreUnlockStatus(
+selectedScore.id
+);
+
+if(
+!unlockStatus.unlocked
+){
+
+showSasoiLockedMessage(
+unlockStatus.unlockMessage
+);
+
+console.log(
+"🎵 選択中の譜面はロック中:",
+selectedScore.id,
+unlockStatus.unlockMessage
+);
+
+}
+else{
+
+hideSasoiMenuUnlockMessage();
+
+}
+
+
+
+// ---------------------------------
+// 選択中譜面を保存
+// ---------------------------------
+//
+// 未解放譜面でも「表示・選択」は可能。
+// プレイ開始時に別途解放チェックを行う。
+// ---------------------------------
+
+sasoiSelectedScoreIndex =
+index;
 
 // =================================
 // ◎ 組み合わせ譜面か判定
@@ -6786,18 +7056,18 @@ firstChart
 ){
 
 sasoiScore =
-  firstChart.score;
+firstChart.score;
 
 }
 
 else{
 
 sasoiScore =
-  [];
+[];
 
 console.log(
-  "🎵 組み合わせ譜面：最初の譜面を取得できません",
-  selectedScore.id
+"🎵 組み合わせ譜面：最初の譜面を取得できません",
+selectedScore.id
 );
 
 }
@@ -6841,6 +7111,7 @@ sasoiCombinedPlay
 );
 
 }
+
 
 // ==========================================
 // ◎ 現在選択中の譜面を取得
@@ -7579,20 +7850,42 @@ area.innerHTML = `
     スタート
 
   </button>
+
+  <!-- =================================
+       誘技未解放表示用
+  ================================= -->
+<div
+  id="sasoiMenuUnlockMessage"
+  class="sasoi-menu-unlock-message"
+>
+</div>
+
 <!-- =================================
    デバッグ用誘技解放リセットボタン
 ================================= -->
 
 <button
 type="button"
+class="sasoi-debug-unlock-reset-btn"
 onclick="resetSasoiUnlockHistory()"
 
-解放履歴リセット
-</button>
+>
 
+解放リセット </button>
 
 </div>
 
+<!-- =================================
+     ゲーム終了時の誘技解放表示
+     ※ メニューの外
+     ※ ゲーム画面の外
+================================= -->
+
+<div
+  id="sasoiUnlockMessage"
+  class="sasoi-unlock-message"
+>
+</div>
 
 <!-- =================================
      ゲーム画面
@@ -7602,6 +7895,7 @@ onclick="resetSasoiUnlockHistory()"
   class="sasoi-game"
   id="sasoiGame"
 >
+
 
 <!--
 <div 
@@ -7984,12 +8278,6 @@ id="sasoiTouch">
   ○
 
 </div>
-
-<!-- =================================
-     誘技解放表示
-================================= -->
-
-<div class="sasoi-center-line"></div> <div id="sasoiUnlockMessage" class="sasoi-unlock-message" ></div>
 
 
 <!-- ======================= 譜面選択画面へ戻る確認モーダル　======================= -->
@@ -15096,6 +15384,40 @@ selectText.style.animation =
 }
 
 // =================================
+// ◎ 誘技解放メッセージを完全リセット
+// =================================
+
+const unlockMessage =
+document.getElementById(
+"sasoiUnlockMessage"
+);
+
+if(
+unlockMessage
+){
+
+unlockMessage.classList.remove(
+"show"
+);
+
+unlockMessage.textContent =
+"";
+
+unlockMessage.style.animation =
+"none";
+
+void unlockMessage.offsetWidth;
+
+unlockMessage.style.animation =
+"";
+
+console.log(
+"[Sasoi] 誘技解放メッセージをリセット"
+);
+
+}
+
+// =================================
 // ゲーム画面を非表示
 // =================================
 
@@ -15361,6 +15683,126 @@ document
 .getElementById("sasoiStartBtn")
 .onclick=function(){
 
+// =================================
+// ◎ 現在選択中の譜面を確認
+// =================================
+
+const selectedScore =
+getSelectedSasoiScore();
+
+if(
+!selectedScore
+){
+
+console.log(
+"🎵 スタート失敗：選択中の譜面がありません"
+);
+
+return;
+
+}
+
+const unlockStatus =
+getSasoiScoreUnlockStatus(
+selectedScore.id
+);
+
+// =================================
+// ◎ 未解放譜面
+// =================================
+
+if(
+!unlockStatus.unlocked
+){
+
+// =================================
+// ◎ ロックメッセージを表示状態にする
+// =================================
+//
+// 譜面選択時に表示されていない場合でも、
+// スタートボタンを押した時点で
+// 必ず現在の解放状態を再確認する。
+//
+// =================================
+
+showSasoiLockedMessage(
+unlockStatus.unlockMessage
+);
+
+// =================================
+// ◎ ゲームは開始しない
+// =================================
+//
+// 長押しタップボタンは非表示。
+//
+// =================================
+
+const sasoiTouch =
+document.getElementById(
+"sasoiTouch"
+);
+
+if(
+sasoiTouch
+){
+
+
+sasoiTouch.style.display =
+  "none";
+
+
+}
+
+console.log(
+"🎵 譜面ロック中：スタートせず",
+selectedScore.id
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 解放済み譜面
+// =================================
+//
+// ★重要
+//
+// 解放された瞬間に
+// メニューに残っているロックメッセージを
+// 必ず消去する。
+//
+// =================================
+
+hideSasoiMenuUnlockMessage();
+
+console.log(
+"🎵 譜面解放済み：ロックメッセージを消去",
+selectedScore.id
+);
+
+// =================================
+// ◎ 長押しタップボタンを表示
+// =================================
+
+const sasoiTouch =
+document.getElementById(
+"sasoiTouch"
+);
+
+if(
+sasoiTouch
+){
+
+sasoiTouch.style.display =
+"";
+
+console.log(
+"🎣 長押しタップボタン：解放済み譜面なので表示"
+);
+
+}
+
 
 // =================================
 // ◎ 一時停止ボタンを完全初期化
@@ -15397,7 +15839,6 @@ startPauseButton.style.display =
 "none";
 
 }
-
 
 
 document
@@ -15582,9 +16023,6 @@ hideSasoiActionMessage();
 // =================================
 // ◎ 現在選択中の譜面をゲームへ反映
 // =================================
-
-const selectedScore =
-getSelectedSasoiScore();
 
 if(
 selectedScore
@@ -20110,58 +20548,339 @@ totalCount
 // 誘技解放JS
 // ------------------------------------------------------------------
 
-function showSasoiUnlockMessage(clearMessage, releaseMessage){
+function showSasoiUnlockMessage(
+clearMessage,
+releaseMessage
+){
 
 const messageElement =
-document.getElementById("sasoiUnlockMessage");
+document.getElementById(
+"sasoiUnlockMessage"
+);
 
-if(!messageElement){
+if(
+!messageElement
+){
 
-console.log("[Sasoi] 解放メッセージ表示用要素が見つかりません");
+console.log(
+"[Sasoi] 解放メッセージ表示用要素が見つかりません"
+);
 
 return;
 
 }
 
-messageElement.classList.remove("show");
+// =================================
+// ◎ 既存の解放メッセージタイマーを解除
+// =================================
 
-messageElement.textContent = "";
+if(
+window.sasoiUnlockMessageTimer
+){
+
+clearTimeout(
+window.sasoiUnlockMessageTimer
+);
+
+window.sasoiUnlockMessageTimer =
+null;
+
+}
+
+// =================================
+// ◎ 現在の表示を完全に消去
+// =================================
+
+messageElement.classList.remove(
+"show"
+);
+
+messageElement.textContent =
+"";
+
+// =================================
+// ◎ アニメーション再実行
+// =================================
 
 void messageElement.offsetWidth;
 
-if(clearMessage){
+// =================================
+// ◎ クリアメッセージ表示
+// =================================
 
-messageElement.textContent = clearMessage;
+if(
+clearMessage
+){
 
-messageElement.classList.add("show");
+messageElement.textContent =
+clearMessage;
 
-}
-
-if(releaseMessage){
-
-setTimeout(() => {
-
-  if(!messageElement){
-
-    return;
-
-  }
-
-  messageElement.classList.remove("show");
-
-  messageElement.textContent = "";
-
-  void messageElement.offsetWidth;
-
-  messageElement.textContent = releaseMessage;
-
-  messageElement.classList.add("show");
-
-}, 5000);
+messageElement.classList.add(
+"show"
+);
 
 }
 
+// =================================
+// ◎ 解放メッセージ表示予約
+// =================================
+
+if(
+releaseMessage
+){
+
+window.sasoiUnlockMessageTimer =
+setTimeout(
+function(){
+
+// ---------------------------------
+// タイマー実行時に要素が存在するか確認
+// ---------------------------------
+
+if(
+!messageElement
+){
+
+return;
+
 }
+
+// ---------------------------------
+// 現在の表示を消去
+// ---------------------------------
+
+messageElement.classList.remove(
+"show"
+);
+
+messageElement.textContent =
+"";
+
+void messageElement.offsetWidth;
+
+// ---------------------------------
+// 解放メッセージ表示
+// ---------------------------------
+
+messageElement.textContent =
+releaseMessage;
+
+messageElement.classList.add(
+"show"
+);
+
+// ---------------------------------
+// タイマー情報を解除
+// ---------------------------------
+
+window.sasoiUnlockMessageTimer =
+null;
+
+},
+5000
+);
+
+}
+
+}
+
+// =================================
+// ◎ 誘技解放表示を完全に消去
+// =================================
+
+function hideSasoiUnlockMessage(){
+
+const messageElement =
+document.getElementById(
+"sasoiUnlockMessage"
+);
+
+// ---------------------------------
+// 解放メッセージタイマーを解除
+// ---------------------------------
+
+if(
+window.sasoiUnlockMessageTimer
+){
+
+clearTimeout(
+window.sasoiUnlockMessageTimer
+);
+
+window.sasoiUnlockMessageTimer =
+null;
+
+}
+
+// ---------------------------------
+// 表示を完全に消去
+// ---------------------------------
+
+if(
+messageElement
+){
+
+messageElement.classList.remove(
+"show"
+);
+
+messageElement.textContent =
+"";
+
+messageElement.style.opacity =
+"";
+
+}
+
+}
+
+function showSasoiLockedMessage(
+message
+){
+
+const messageElement =
+document.getElementById(
+"sasoiMenuUnlockMessage"
+);
+
+if(
+!messageElement
+){
+
+console.log(
+"[Sasoi] メニュー用ロックメッセージ表示要素が見つかりません"
+);
+
+return;
+
+}
+
+// =================================
+// ◎ 現在の表示を完全に消去
+// =================================
+
+messageElement.classList.remove(
+"show"
+);
+
+messageElement.textContent =
+"";
+
+// =================================
+// ◎ アニメーション再実行
+// =================================
+
+void messageElement.offsetWidth;
+
+// =================================
+// ◎ ロック条件を表示
+// =================================
+
+messageElement.textContent =
+message ||
+"この譜面はまだ解放されていません。";
+
+messageElement.classList.add(
+"show"
+);
+
+console.log(
+"🎵 メニューに譜面ロック条件表示:",
+message
+);
+
+}
+
+function hideSasoiMenuUnlockMessage(){
+
+const messageElement =
+document.getElementById(
+"sasoiMenuUnlockMessage"
+);
+
+if(
+!messageElement
+){
+
+return;
+
+}
+
+messageElement.classList.remove(
+"show"
+);
+
+messageElement.textContent =
+"";
+
+}
+
+
+// =================================
+// ◎ 現在選択中の譜面について、今この瞬間の解放状態を画面に反映
+// =================================
+
+function updateSasoiSelectedScoreUnlockDisplay(){
+
+const selectedScore =
+getSelectedSasoiScore();
+
+if(
+!selectedScore
+){
+
+
+hideSasoiMenuUnlockMessage();
+
+return;
+
+
+}
+
+const unlockStatus =
+getSasoiScoreUnlockStatus(
+selectedScore.id
+);
+
+// =================================
+// ◎ 未解放
+// =================================
+
+if(
+!unlockStatus.unlocked
+){
+
+
+showSasoiLockedMessage(
+  unlockStatus.unlockMessage
+);
+
+
+console.log(
+  "🎵 現在選択中譜面：未解放",
+  selectedScore.id
+);
+
+
+return;
+
+
+}
+
+// =================================
+// ◎ 解放済み
+// =================================
+
+hideSasoiMenuUnlockMessage();
+
+console.log(
+"🎵 現在選択中譜面：解放済み",
+selectedScore.id
+);
+
+}
+
+
 
 
 // ---------------------------------　JS終了地点　---------------------------------
