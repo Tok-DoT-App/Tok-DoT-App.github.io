@@ -1672,7 +1672,7 @@ clearMessage:
 "重誘技クリア",
 
 releaseMessage:
-"誘技解放",
+"誘技解放！",
 
 requiredCatch:
 2,
@@ -1696,7 +1696,7 @@ clearMessage:
 "肆誘技～玖誘技クリア",
 
 releaseMessage:
-"誘技解放",
+"誘技解放！！",
 
 unlockMessage:
 "壱～参2匹以上達成で解放",
@@ -1726,7 +1726,7 @@ clearMessage:
 "拾誘技～拾伍誘技クリア",
 
 releaseMessage:
-"誘技解放",
+"誘技解放！！！",
 
 unlockMessage:
 "肆～玖2匹以上達成で解放",
@@ -1756,7 +1756,7 @@ clearMessage:
 "連誘技秘伝クリア",
 
 releaseMessage:
-"誘技解放",
+"誘技解放！！！！",
 
 unlockMessage:
 "拾～拾伍2匹以上達成で解放",
@@ -2391,7 +2391,7 @@ if(
 ){
 
 console.log(
-  "[Sasoi] クリア判定失敗：scoreIdなし"
+"[Sasoi] クリア判定失敗：scoreIdなし"
 );
 
 return null;
@@ -2411,8 +2411,8 @@ if(
 ){
 
 console.log(
-  "[Sasoi] クリア判定失敗：譜面データなし",
-  scoreId
+"[Sasoi] クリア判定失敗：譜面データなし",
+scoreId
 );
 
 return null;
@@ -2423,35 +2423,6 @@ const catchValue =
 Number(
 catchCount
 ) || 0;
-
-// ========================================
-// ◎ すでにクリア済み
-// ========================================
-
-if(
-isSasoiScoreCleared(
-scoreId
-)
-){
-
-console.log(
-  "[Sasoi] すでにクリア済み:",
-  scoreId
-);
-
-
-return {
-  scoreId:
-    scoreId,
-
-  newlyCleared:
-    false,
-
-  catchCount:
-    catchValue
-};
-
-}
 
 // ========================================
 // ◎ 必要釣果を決定
@@ -2471,89 +2442,165 @@ i++
 ){
 
 const group =
-  sasoiUnlockGroups[i];
-
+sasoiUnlockGroups[i];
 
 if(
-  !Array.isArray(
-    group.scoreIds
-  )
+!Array.isArray(
+group.scoreIds
+)
 ){
 
-  continue;
+continue;
 
 }
 
-
 if(
-  group.scoreIds.includes(
-    scoreId
-  )
+group.scoreIds.includes(
+scoreId
+)
 ){
 
-  if(
-    group.requiredCatchByScore &&
-    typeof group.requiredCatchByScore[scoreId] ===
-      "number"
-  ){
-
-    requiredCatch =
-      group.requiredCatchByScore[scoreId];
-
-  }
-  else{
-
-    requiredCatch =
-      Number(
-        group.requiredCatch
-      ) || 0;
-
-  }
+if(
+group.requiredCatchByScore &&
+typeof group.requiredCatchByScore[scoreId] ===
+"number"
+){
 
 
-  break;
+requiredCatch =
+  group.requiredCatchByScore[scoreId];
+
+
+}
+else{
+
+
+requiredCatch =
+  Number(
+    group.requiredCatch
+  ) || 0;
+
+
+}
+
+break;
 
 }
 
 }
 
 // ========================================
-// ◎ 条件未達成
+// ◎ 今回のプレイが
+//    クリア条件を達成したか
+// ========================================
+
+const currentPlayCleared =
+catchValue >=
+requiredCatch;
+
+// ========================================
+// ◎ 今回のプレイが条件未達成
+// ========================================
+//
+// 過去にクリア済みでも、
+// 今回の釣果が条件未達成なら
+// 「今回のクリア」とは扱わない。
+//
 // ========================================
 
 if(
-catchValue <
-requiredCatch
+!currentPlayCleared
 ){
 
 console.log(
-  "[Sasoi] クリア条件未達成:",
-  scoreId,
-  "釣果:",
-  catchValue,
-  "必要:",
-  requiredCatch
+"[Sasoi] 今回のプレイはクリア条件未達成:",
+scoreId,
+"釣果:",
+catchValue,
+"必要:",
+requiredCatch
 );
 
+// ----------------------------------------
+// ◎ 過去のクリア履歴は維持
+// ----------------------------------------
 
 return {
-  scoreId:
-    scoreId,
+scoreId:
+scoreId,
 
-  newlyCleared:
-    false,
+newlyCleared:
+false,
 
-  catchCount:
-    catchValue,
+currentPlayCleared:
+false,
 
-  requiredCatch:
-    requiredCatch
+alreadyCleared:
+isSasoiScoreCleared(
+scoreId
+),
+
+catchCount:
+catchValue,
+
+requiredCatch:
+requiredCatch
 };
 
 }
 
 // ========================================
-// ◎ クリア記録
+// ◎ 今回のプレイはクリア条件達成
+// ========================================
+
+console.log(
+"[Sasoi] 今回のプレイはクリア条件達成:",
+scoreId,
+"釣果:",
+catchValue,
+"必要:",
+requiredCatch
+);
+
+// ========================================
+// ◎ すでに過去にクリア済みか確認
+// ========================================
+
+if(
+isSasoiScoreCleared(
+scoreId
+)
+){
+
+console.log(
+"[Sasoi] すでにクリア済み：今回も条件達成",
+scoreId
+);
+
+return {
+scoreId:
+scoreId,
+
+newlyCleared:
+false,
+
+currentPlayCleared:
+true,
+
+alreadyCleared:
+true,
+
+catchCount:
+catchValue,
+
+requiredCatch:
+requiredCatch
+};
+
+}
+
+// ========================================
+// ◎ 初めてクリアしたので記録
 // ========================================
 
 const newlyCleared =
@@ -2566,17 +2613,23 @@ if(
 ){
 
 return {
-  scoreId:
-    scoreId,
+scoreId:
+scoreId,
 
-  newlyCleared:
-    false,
+newlyCleared:
+false,
 
-  catchCount:
-    catchValue,
+currentPlayCleared:
+true,
 
-  requiredCatch:
-    requiredCatch
+alreadyCleared:
+true,
+
+catchCount:
+catchValue,
+
+requiredCatch:
+requiredCatch
 };
 
 }
@@ -2595,17 +2648,23 @@ scoreId:
 scoreId,
 
 newlyCleared:
-  true,
+true,
+
+currentPlayCleared:
+true,
+
+alreadyCleared:
+false,
 
 catchCount:
-  catchValue,
+catchValue,
 
 requiredCatch:
-  requiredCatch
-
+requiredCatch
 };
 
 }
+
 
 // ==========================================
 // ◎ 解放グループの完成判定

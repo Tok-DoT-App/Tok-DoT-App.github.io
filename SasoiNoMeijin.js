@@ -1169,6 +1169,71 @@ rgba(
 
 }
 
+/* =================================
+メニュー誘技クリア表示
+================================= */
+
+.sasoi-score-select-clear {
+position: absolute;
+
+right: 25px;
+top: 50%;
+
+transform: translateY(-50%) rotate(-8deg);
+
+width: 92px;
+height: 42px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+box-sizing: border-box;
+
+border: 3px solid #b33a3a;
+border-radius: 6px;
+
+color: #b33a3a;
+
+background: transparent;
+
+font-family: "Yuji Boku", serif;
+font-size: 14px;
+font-weight: bold;
+
+letter-spacing: 1px;
+
+white-space: nowrap;
+
+z-index: 15;
+
+pointer-events: none;
+
+opacity: 0;
+
+transition: opacity 0.2s ease;
+}
+
+.sasoi-score-select-clear.show {
+opacity: 1;
+animation: sasoiClearMenuBlink 3s ease-in-out infinite;
+}
+
+@keyframes sasoiClearMenuBlink {
+0% {
+opacity: 0.45;
+}
+
+50% {
+opacity: 1;
+}
+
+100% {
+opacity: 0.45;
+}
+}
+
+
 
 /* =================================
    ゲーム画面
@@ -2265,7 +2330,7 @@ rgba(0,0,0,.40);
 
 content: "m";
 
-font-size: 0.60em;
+font-size: 0.80em;
 
 font-family:sans-serif;
 
@@ -2275,7 +2340,7 @@ vertical-align: middle;
 
 display: inline-block;
 
-transform: translateY(1px);
+transform: translateY(-2px);
 
 }
 
@@ -6568,6 +6633,191 @@ transform:translateY(1px);
 }
 
 
+/* =================================
+誘技クリア印
+ゲーム終了時表示
+※ 誘技解放表示とは別管理
+================================= */
+
+.sasoi-clear-stamp{
+
+position:fixed;
+
+left:50%;
+
+top:122px;
+
+transform:
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(0.35);
+
+width:210px;
+
+height:60px;
+
+box-sizing:border-box;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+border:
+5px solid
+rgba(
+150,
+35,
+30,
+0.95
+);
+
+border-radius:10px;
+
+color:
+rgba(
+150,
+35,
+30,
+0.95
+);
+
+font-size:30px;
+
+font-family:
+"Yuji Boku",
+serif;
+
+font-weight:700;
+
+letter-spacing:4px;
+
+white-space:nowrap;
+
+pointer-events:none;
+
+z-index:9999;
+
+opacity:0;
+
+text-shadow:
+1px 1px 0
+rgba(150,35,30,0.18);
+
+}
+
+/* =================================
+◎ ハンコをポンッと押す
+================================= */
+
+.sasoi-clear-stamp.show{
+
+animation:
+sasoiClearStampShow
+0.55s
+cubic-bezier(
+0.16,
+1.25,
+0.35,
+1
+)
+forwards;
+
+}
+
+/* =================================
+◎ ポンッ
+================================= */
+
+@keyframes sasoiClearStampShow{
+
+0%{
+
+
+opacity:0;
+
+transform:
+  translate(
+    -50%,
+    -50%
+  )
+  rotate(-8deg)
+  scale(1.45);
+
+
+}
+
+35%{
+
+
+opacity:1;
+
+transform:
+  translate(
+    -50%,
+    -50%
+  )
+  rotate(-8deg)
+  scale(0.92);
+
+
+}
+
+55%{
+
+
+opacity:1;
+
+transform:
+  translate(
+    -50%,
+    -50%
+  )
+  rotate(-8deg)
+  scale(1.04);
+
+
+}
+
+75%{
+
+
+opacity:1;
+
+transform:
+  translate(
+    -50%,
+    -50%
+  )
+  rotate(-8deg)
+  scale(0.98);
+
+
+}
+
+100%{
+
+
+opacity:1;
+
+transform:
+  translate(
+    -50%,
+    -50%
+  )
+  rotate(-8deg)
+  scale(1);
+
+
+}
+
+}
+
+
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
 
@@ -6926,6 +7176,13 @@ console.log(
 return;
 
 }
+
+// =================================
+// ◎ メニューのクリア印を更新
+// =================================
+
+updateSasoiScoreSelectClear(selectedScore);
+
 
 // =================================
 // ◎ 選択中譜面のロック状態を確認
@@ -7701,6 +7958,8 @@ function updateSasoiGameScoreDisplay(){
 
   }
 
+updateSasoiScoreSelectClear(selectedScore);
+
 // ==========================================
 // ◎ 選択中の譜面に合わせて背景変更
 // ==========================================
@@ -7786,56 +8045,38 @@ area.innerHTML = `
      譜面選択
 ================================= -->
 
-<div
-  class="sasoi-score-select"
-  id="sasoiScoreSelect"
+<div class="sasoi-score-select" id="sasoiScoreSelect" > <div class="sasoi-score-select-text" >
+<span
+  class="sasoi-score-select-name"
+  id="sasoiScoreSelectNumber"
+></span>
+
+<span
+  class="sasoi-score-select-title"
+  id="sasoiScoreSelectTitle"
+></span>
+
+<span
+  class="sasoi-score-select-difficulty"
+  id="sasoiScoreSelectDifficulty"
+></span>
+</div> <!-- 譜面クリア済み表示 --> <div class="sasoi-score-select-clear" id="sasoiScoreSelectClear" > 誘技クリア </div> <div class="sasoi-score-select-arrows" >
+<button
+  type="button"
+  class="sasoi-score-select-arrow up"
+  id="sasoiScoreSelectUp"
 >
+  ▲
+</button>
 
-  <div
-    class="sasoi-score-select-text"
-  >
-
-    <span
-      class="sasoi-score-select-name"
-      id="sasoiScoreSelectNumber"
-    ></span>
-
-    <span
-      class="sasoi-score-select-title"
-      id="sasoiScoreSelectTitle"
-    ></span>
-
-    <span
-      class="sasoi-score-select-difficulty"
-      id="sasoiScoreSelectDifficulty"
-    ></span>
-
-  </div>
-
-
-  <div
-    class="sasoi-score-select-arrows"
-  >
-
-    <button
-      type="button"
-      class="sasoi-score-select-arrow up"
-      id="sasoiScoreSelectUp"
-    >
-      ▲
-    </button>
-
-    <button
-      type="button"
-      class="sasoi-score-select-arrow down"
-      id="sasoiScoreSelectDown"
-    >
-      ▼
-    </button>
-
-  </div>
-
-</div>
+<button
+  type="button"
+  class="sasoi-score-select-arrow down"
+  id="sasoiScoreSelectDown"
+>
+  ▼
+</button>
+</div> </div>
 
 
   <!-- =================================
@@ -7874,6 +8115,18 @@ onclick="resetSasoiUnlockHistory()"
 解放リセット </button>
 
 </div>
+
+<!-- =================================
+     誘技クリア印
+================================= -->
+
+<div
+  id="sasoiClearStamp"
+  class="sasoi-clear-stamp"
+>
+  誘技クリア
+</div>
+
 
 <!-- =================================
      ゲーム終了時の誘技解放表示
@@ -15384,6 +15637,24 @@ selectText.style.animation =
 }
 
 // =================================
+// ◎ 誘技クリアスタンプを完全リセット
+// =================================
+
+if(
+typeof hideSasoiClearStamp ===
+"function"
+){
+
+hideSasoiClearStamp();
+
+console.log(
+"[Sasoi] 誘技クリアスタンプをリセット"
+);
+
+}
+
+
+// =================================
 // ◎ 誘技解放メッセージを完全リセット
 // =================================
 
@@ -15452,6 +15723,19 @@ menu.style.display =
 "flex";
 
 }
+
+// =================================
+// ◎ メニューのクリア印を最新状態に更新
+// =================================
+
+const selectedScoreForClear =
+sasoiScoreList[
+sasoiSelectedScoreIndex
+];
+
+updateSasoiScoreSelectClear(
+selectedScoreForClear
+);
 
 }
 
@@ -16879,7 +17163,7 @@ return;
 
 // ---------------------------------
 // 誘い判定
-// ---------------------------------
+// --------------------------------
 
 checkSasoiHit();
 
@@ -16919,6 +17203,19 @@ document
 console.log(
 "誘いの名人：リトライ"
 );
+
+// =================================
+// ◎ 前回の誘技クリア表示を消す
+// =================================
+
+if(
+typeof hideSasoiClearStamp ===
+"function"
+){
+
+hideSasoiClearStamp();
+
+}
 
 // =================================
 // 現在のプレイを停止
@@ -18038,13 +18335,11 @@ if(
 !selectedScore.id
 ){
 
-
 console.log(
-  "[Sasoi] 誘技クリア判定失敗：選択譜面なし"
+"[Sasoi] 誘技クリア判定失敗：選択譜面なし"
 );
 
 return;
-
 
 }
 
@@ -18069,7 +18364,7 @@ completedCatchCount
 );
 
 // =================================
-// ◎ クリア記録
+// ◎ クリア記録関数の確認
 // =================================
 
 if(
@@ -18077,15 +18372,17 @@ typeof recordSasoiClearResult !==
 "function"
 ){
 
-
 console.log(
-  "[Sasoi] クリア記録関数が見つかりません"
+"[Sasoi] クリア記録関数が見つかりません"
 );
 
 return;
 
-
 }
+
+// =================================
+// ◎ 今回のクリア判定・記録
+// =================================
 
 const clearResult =
 recordSasoiClearResult(
@@ -18097,33 +18394,78 @@ if(
 !clearResult
 ){
 
-
 console.log(
-  "[Sasoi] クリア記録結果なし"
+"[Sasoi] クリア記録結果なし"
 );
 
 return;
-
 
 }
 
-// =================================
-// ◎ 今回初めてクリアした場合のみ
-//    解放グループを確認
-// =================================
+// ==========================================
+// ◎ 今回のプレイでクリア条件を達成したか
+// ==========================================
+//
+// isSasoiScoreCleared() は
+// 「過去にクリアしたことがあるか」を
+// 判断するための関数。
+//
+// ゲーム終了時のクリア印は、
+// 「今回のプレイ」で条件を達成したかを見る。
+//
+// ==========================================
 
-if(
-clearResult.newlyCleared !== true
-){
-
+const isCleared =
+clearResult.currentPlayCleared ===
+true;
 
 console.log(
-  "[Sasoi] 今回は新規クリアではありません:",
-  sasoiCompletedScoreId
+"[Sasoi] 今回のプレイのクリア状態:",
+sasoiCompletedScoreId,
+isCleared,
+"過去クリア済み:",
+clearResult.alreadyCleared
+);
+
+// ==========================================
+// ◎ 譜面クリア印を表示
+// ==========================================
+//
+// 今回のプレイで条件達成した場合のみ表示。
+//
+// ==========================================
+
+if(
+isCleared &&
+typeof showSasoiClearStamp ===
+"function"
+){
+
+showSasoiClearStamp();
+
+}
+
+// ==========================================
+// ◎ 今回初めてクリアした場合のみ
+//    解放グループを確認
+// ==========================================
+//
+// ★ここから下は既存の解放処理。
+// 基本的に変更しない。
+//
+// ==========================================
+
+if(
+clearResult.newlyCleared !==
+true
+){
+
+console.log(
+"[Sasoi] 今回は新規クリアではありません:",
+sasoiCompletedScoreId
 );
 
 return;
-
 
 }
 
@@ -18132,13 +18474,11 @@ typeof checkSasoiUnlockAfterClear !==
 "function"
 ){
 
-
 console.log(
-  "[Sasoi] 解放判定関数が見つかりません"
+"[Sasoi] 解放判定関数が見つかりません"
 );
 
 return;
-
 
 }
 
@@ -18153,7 +18493,8 @@ sasoiCompletedScoreId
 
 if(
 unlockResult &&
-unlockResult.newlyReleased === true
+unlockResult.newlyReleased ===
+true
 ){
 
 console.log(
@@ -18170,8 +18511,8 @@ unlockResult.releaseMessage
 ){
 
 console.log(
-  "[Sasoi] 解放メッセージ:",
-  unlockResult.releaseMessage
+"[Sasoi] 解放メッセージ:",
+unlockResult.releaseMessage
 );
 
 }
@@ -18182,6 +18523,116 @@ unlockResult.releaseMessage
 );
 
 }
+
+}
+
+
+// =================================
+// ◎ クリア後のクリア印表示
+// =================================
+
+function showSasoiClearStamp(){
+
+const stamp =
+document.getElementById(
+"sasoiClearStamp"
+);
+
+if(
+!stamp
+){
+
+console.log(
+"[Sasoi] 誘技クリア印が見つかりません"
+);
+
+return;
+
+}
+
+// ==========================================
+// ◎ ゲーム終了後なので
+//    タッチボタンを一時的に非表示
+// ==========================================
+
+const touchButton =
+document.getElementById(
+"sasoiTouch"
+);
+
+if(
+touchButton
+){
+
+touchButton.style.display =
+"none";
+
+console.log(
+"🎮 [Sasoi] ゲーム終了：タッチボタンを非表示"
+);
+
+}
+
+// ==========================================
+// ◎ 表示状態をリセット
+// ==========================================
+
+stamp.classList.remove(
+"show"
+);
+
+// ==========================================
+// ◎ アニメーションを再実行するため
+//    reflowを発生させる
+// ==========================================
+
+void stamp.offsetWidth;
+
+// ==========================================
+// ◎ 表示
+// ==========================================
+
+stamp.classList.add(
+"show"
+);
+
+console.log(
+"🎮 [Sasoi] 誘技クリア印を表示"
+);
+
+}
+
+
+
+// =================================
+// ◎ クリア後のクリア印表示リトライ・戻るで消す
+// =================================
+
+function hideSasoiClearStamp(){
+
+const stamp =
+document.getElementById(
+"sasoiClearStamp"
+);
+
+if(
+!stamp
+){
+
+return;
+
+}
+
+stamp.classList.remove(
+"show"
+);
+
+stamp.style.opacity =
+"0";
+
+console.log(
+"🎮 [Sasoi] 誘技クリア印を消去"
+);
 
 }
 
@@ -20881,6 +21332,96 @@ selectedScore.id
 }
 
 
+
+
+
+// =================================
+// ◎ クリア印更新専用関数
+// =================================
+// ==========================================
+// メニューの「誘技クリア」表示を更新
+// ==========================================
+
+function updateSasoiScoreSelectClear(
+selectedScore
+){
+
+const clearElement =
+document.getElementById(
+"sasoiScoreSelectClear"
+);
+
+// ---------------------------------
+// クリア印の要素が存在しない場合
+// ---------------------------------
+
+if(
+!clearElement
+){
+
+console.log(
+"🎵 メニュークリア印更新：表示要素がありません"
+);
+
+return;
+
+}
+
+// ---------------------------------
+// 選択中譜面が存在しない場合
+// ---------------------------------
+
+if(
+!selectedScore ||
+!selectedScore.id
+){
+
+clearElement.classList.remove(
+"show"
+);
+
+console.log(
+"🎵 メニュークリア印更新：譜面データがありません"
+);
+
+return;
+
+}
+
+// ---------------------------------
+// クリア履歴を確認
+// ---------------------------------
+
+if(
+isSasoiScoreCleared(
+selectedScore.id
+)
+){
+
+clearElement.classList.add(
+"show"
+);
+
+console.log(
+"🎵 メニュークリア印：表示",
+selectedScore.id
+);
+
+}
+else{
+
+clearElement.classList.remove(
+"show"
+);
+
+console.log(
+"🎵 メニュークリア印：非表示",
+selectedScore.id
+);
+
+}
+
+}
 
 
 // ---------------------------------　JS終了地点　---------------------------------
