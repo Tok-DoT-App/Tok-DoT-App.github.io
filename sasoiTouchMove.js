@@ -48,6 +48,10 @@
   let dragOffsetY =
     0;
 
+  let dragStartLeft = 0;
+  
+  let dragStartTop = 0;
+
 
   // =========================================
   // 初期位置保存
@@ -562,6 +566,11 @@
       touch.getBoundingClientRect();
 
 
+    dragStartLeft = rect.left;
+    
+    dragStartTop = rect.top;
+
+
     dragOffsetX =
       event.clientX -
       rect.left;
@@ -676,81 +685,170 @@
   }
 
 
-  // =========================================
-  // ドラッグ終了
-  // =========================================
+// =========================================
+// ドラッグ終了
+// =========================================
 
-  function handlePointerUp(
-    event
+function handlePointerUp(
+event
+){
+
+if(
+  !isDragging
+){
+
+  return;
+
+}
+
+
+if(
+  event.pointerId !==
+  dragPointerId
+){
+
+  return;
+
+}
+
+
+event.preventDefault();
+
+event.stopPropagation();
+
+event.stopImmediatePropagation();
+
+
+const touch =
+  getTouch();
+
+
+// =========================================
+// ★ 指を離した時点の位置を取得
+// =========================================
+
+let moved =
+  false;
+
+
+if(
+  touch
+){
+
+  const finalRect =
+    touch.getBoundingClientRect();
+
+
+  // =======================================
+  // 開始位置からどれくらい動いたか
+  // =======================================
+
+  const moveDistanceX =
+    Math.abs(
+      finalRect.left -
+      dragStartLeft
+    );
+
+
+  const moveDistanceY =
+    Math.abs(
+      finalRect.top -
+      dragStartTop
+    );
+
+
+  // =======================================
+  // ★ 5px以上動いていたら
+  //    「ボタンを移動した」と判定
+  // =======================================
+
+  if(
+    moveDistanceX > 5 ||
+    moveDistanceY > 5
   ){
 
-    if(
-      !isDragging
-    ){
+    moved =
+      true;
 
-      return;
+  }
 
+
+  console.log(
+    "🎮 タッチボタン移動距離:",
+    {
+      x:
+        moveDistanceX,
+
+      y:
+        moveDistanceY,
+
+      moved:
+        moved
     }
+  );
 
 
-    if(
-      event.pointerId !==
-      dragPointerId
-    ){
+  // =======================================
+  // Pointer Capture解除
+  // =======================================
 
-      return;
+  try{
 
-    }
-
-
-    event.preventDefault();
-
-    event.stopPropagation();
-
-    event.stopImmediatePropagation();
-
-
-    const touch =
-      getTouch();
-
-
-    if(
-      touch
-    ){
-
-      try{
-
-        touch.releasePointerCapture(
-          event.pointerId
-        );
-
-      }
-
-      catch(error){
-
-        console.log(
-          "🎮 releasePointerCapture失敗",
-          error
-        );
-
-      }
-
-    }
-
-
-    isDragging =
-      false;
-
-
-    dragPointerId =
-      null;
-
-
-    console.log(
-      "🎮 タッチボタン：ドラッグ終了"
+    touch.releasePointerCapture(
+      event.pointerId
     );
 
   }
+
+  catch(error){
+
+    console.log(
+      "🎮 releasePointerCapture失敗",
+      error
+    );
+
+  }
+
+}
+
+
+// =========================================
+// ドラッグ状態解除
+// =========================================
+
+isDragging =
+  false;
+
+
+dragPointerId =
+  null;
+
+
+console.log(
+  "🎮 タッチボタン：ドラッグ終了"
+);
+
+
+// =========================================
+// ★ タッチボタンを実際に移動した場合
+//    テンサプライズ登場
+// =========================================
+
+if(
+moved &&
+typeof window.showSasoiTenSurprise ===
+"function"
+){
+
+window.showSasoiTenSurprise();
+
+console.log(
+"🐟 テン：タッチボタン移動後にサプライズ登場"
+);
+
+}
+
+}
 
 
   // =========================================

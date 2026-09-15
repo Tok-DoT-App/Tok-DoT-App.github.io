@@ -6582,7 +6582,7 @@ opacity:0;
 
 /* ==========================================
 誘技デバッグ用
-解放履歴リセットボタン
+全履歴リセットボタン
 ※ 他のレイアウトに影響させない
 ========================================== */
 
@@ -6594,43 +6594,98 @@ right:20px;
 
 width:100px;
 
-bottom:-10px;
+bottom:-6px;
 
 z-index:9999;
 
-padding:6px 10px;
+padding:2px 6px;
 
-font-size:11px;
+font-size:12px;
 
-line-height:1.3;
+font-weight:bold;
 
-color:#666;
+line-height:1.0;
 
-background:rgba(255,255,255,0.9);
+color:#fff;
 
-border:1px solid #aaa;
+background:linear-gradient(
+to bottom,
+#e85a5a 0%,
+#c93636 55%,
+#a92323 100%
+);
 
-border-radius:6px;
+border:2px solid #8f1c1c;
 
-box-shadow:0 2px 6px rgba(0,0,0,0.15);
+border-radius:7px;
+
+box-shadow:
+0 3px 0 #711515,
+0 5px 8px rgba(0,0,0,0.28);
+
+text-shadow:
+0 1px 1px rgba(0,0,0,0.35);
 
 cursor:pointer;
 
 box-sizing:border-box;
 
+transition:
+transform .08s ease,
+box-shadow .08s ease;
+
+/* =================================
+◎ 通常は完全に非表示
+================================= */
+
+display:none;
+
 }
+
+/* =================================
+◎ マウスを乗せたとき
+================================= */
 
 .sasoi-debug-unlock-reset-btn:hover{
 
-background:#f0f0f0;
+background:linear-gradient(
+to bottom,
+#f06a6a 0%,
+#d94343 55%,
+#b72b2b 100%
+);
+
+box-shadow:
+0 3px 0 #711515,
+0 6px 10px rgba(0,0,0,0.32);
 
 }
+
+/* =================================
+◎ 押している間
+================================= */
 
 .sasoi-debug-unlock-reset-btn:active{
 
-transform:translateY(1px);
+transform:translateY(3px);
+
+box-shadow:
+0 0 0 #711515,
+0 2px 4px rgba(0,0,0,0.22);
 
 }
+
+/* =================================
+隠しコマンド解除後
+================================= */
+
+.sasoi-debug-unlock-reset-btn.show{
+
+display:block;
+
+}
+
+
 
 
 /* =================================
@@ -6811,6 +6866,269 @@ transform:
   )
   rotate(-8deg)
   scale(1);
+
+
+}
+
+}
+
+/* =================================
+テン
+サプライズ表示
+================================= */
+
+.sasoi-ten-surprise{
+
+position:absolute;
+
+right:28px;
+
+top:114px;
+
+width:78px;
+
+height:78px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+z-index:3;
+
+pointer-events:none;
+
+opacity:0;
+
+transform:
+scale(0.55)
+translateY(10px);
+
+transition:
+opacity 0.12s ease,
+transform 0.18s ease;
+
+}
+
+/* =================================
+テン表示
+================================= */
+
+.sasoi-ten-surprise.show{
+
+opacity:1;
+
+transform:
+scale(1)
+translateY(0);
+
+}
+
+/* =================================
+テンの顔
+================================= */
+
+.sasoi-ten-face{
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:1px;
+
+/* ★ 小さめの白いテン */
+
+font-size:0.88rem;
+
+color:white;
+
+font-family:
+system-ui,
+-apple-system,
+BlinkMacSystemFont,
+sans-serif;
+
+/* ★ 白文字を少し浮かせる */
+
+text-shadow:
+0 0 3px rgba(0,0,0,0.45),
+0 1px 2px rgba(0,0,0,0.35);
+
+}
+
+/* =================================
+左右
+================================= */
+
+.sasoi-ten-left,
+.sasoi-ten-right{
+
+display:flex;
+
+align-items:center;
+
+gap:0;
+
+}
+
+/* =================================
+目
+================================= */
+
+.sasoi-ten-eye{
+
+display:inline-block;
+
+position:relative;
+
+top:-1px;
+
+transform-origin:center;
+
+animation:
+sasoiTenEyeBlink
+11s
+infinite;
+
+}
+
+/* =================================
+まばたき
+================================= */
+
+@keyframes sasoiTenEyeBlink{
+
+0%,
+12%,
+15%,
+63%,
+66%,
+69%,
+72%,
+100%{
+
+
+transform:
+  scaleY(1);
+
+
+}
+
+13%,
+64%,
+70%{
+
+
+transform:
+  scaleY(.08);
+
+
+}
+
+}
+
+/* =================================
+サプライズ登場
+「びっくり！」と飛び出す
+================================= */
+
+.sasoi-ten-surprise.surprise{
+
+animation:
+sasoiTenSurprisePop
+0.48s
+cubic-bezier(
+0.18,
+0.88,
+0.32,
+1.28
+);
+
+}
+
+/* =================================
+びっくり登場アニメーション
+================================= */
+
+@keyframes sasoiTenSurprisePop{
+
+/* -------------------------------
+完全に隠れている
+------------------------------- */
+
+0%{
+
+
+opacity:0;
+
+transform:
+  scale(0.25)
+  translateY(18px);
+
+
+}
+
+/* -------------------------------
+一気に飛び出す
+------------------------------- */
+
+28%{
+
+
+opacity:1;
+
+transform:
+  scale(1.18)
+  translateY(-5px);
+
+
+}
+
+/* -------------------------------
+ちょっと跳ね返る
+------------------------------- */
+
+48%{
+
+
+opacity:1;
+
+transform:
+  scale(0.92)
+  translateY(3px);
+
+
+}
+
+/* -------------------------------
+もう一度少しだけ跳ねる
+------------------------------- */
+
+68%{
+
+
+transform:
+  scale(1.06)
+  translateY(-2px);
+
+
+}
+
+/* -------------------------------
+落ち着く
+------------------------------- */
+
+100%{
+
+
+opacity:1;
+
+transform:
+  scale(1)
+  translateY(0);
 
 
 }
@@ -8102,17 +8420,20 @@ area.innerHTML = `
 </div>
 
 <!-- =================================
-   デバッグ用誘技解放リセットボタン
+   デバッグ用誘技解放・各種リセット
+   隠しコマンドで表示
 ================================= -->
 
 <button
 type="button"
+id="sasoiDebugUnlockResetBtn"
 class="sasoi-debug-unlock-reset-btn"
-onclick="resetSasoiUnlockHistory()"
+onclick="resetSasoiDebugAll()"
 
 >
 
-解放リセット </button>
+全履歴リセット </button>
+
 
 </div>
 
@@ -8523,6 +8844,51 @@ class="sasoi-flow"
 id="sasoiFlow">
 
 </div>
+
+<!-- =================================
+     テン
+     サプライズ表示
+================================= -->
+
+<div
+  class="sasoi-ten-surprise"
+  id="sasoiTenSurprise"
+>
+
+  <div
+    class="sasoi-ten-face"
+  >
+
+
+<div class="sasoi-ten-left">
+
+  <span
+    class="sasoi-ten-eye"
+  >⦿</span>
+
+  <span>＞</span>
+
+</div>
+
+
+<span>・</span>
+
+
+<div class="sasoi-ten-right">
+
+  <span>＜</span>
+
+  <span
+    class="sasoi-ten-eye"
+  >⦿</span>
+
+</div>
+
+
+  </div>
+
+</div>
+
 
 <div
 class="sasoi-touch"
@@ -10415,6 +10781,8 @@ highScore;
 
 }
 
+window.updateSasoiGaugeHighScoreDisplay =
+updateSasoiGaugeHighScoreDisplay;
 
 
 // ==========================================
@@ -11480,6 +11848,8 @@ function resetSasoiInterestGauge(){
   );
 
 }
+
+
 
 function showSasoiCombinedTitleAnimation(callback) {
 
@@ -17666,6 +18036,12 @@ document.addEventListener(
     initSasoiNoMeijin();
 
 // =================================
+// ◎ テンサプライズ監視開始 
+// =================================
+
+startSasoiTenSurpriseWatcher();
+
+// =================================
 // ◎ 誘いの名人 一時停止ボタン初期設定
 // =================================
 //
@@ -19766,11 +20142,152 @@ function(){
 
 initSasoiCatchHighScoreResetModal();
 
+initSasoiDebugUnlockCommand();
 
 }
 );
 
+// ==========================================
+// ◎ 全譜面の釣果HIGHをリセット
+// ※ デバッグ用
+// ==========================================
 
+function resetAllSasoiCatchRecordHigh(){
+
+// ---------------------------------
+// 全譜面HIGHデータを取得
+// ---------------------------------
+
+const data =
+getSasoiCatchRecordHighData();
+
+// ---------------------------------
+// 全譜面のHIGHを0にする
+// ---------------------------------
+
+Object.keys(
+data
+).forEach(
+function(scoreId){
+
+
+  data[scoreId] =
+    0;
+
+}
+
+
+);
+
+// ---------------------------------
+// localStorageへ保存
+// ---------------------------------
+
+try{
+
+
+localStorage.setItem(
+  SASOI_CATCH_RECORD_HIGH_KEY,
+  JSON.stringify(
+    data
+  )
+);
+
+
+}
+
+catch(error){
+
+
+console.log(
+  "🎣 全譜面釣果HIGHリセット保存失敗：",
+  error
+);
+
+return;
+
+
+}
+
+// ---------------------------------
+// 現在表示中のHIGHを更新
+// ---------------------------------
+
+updateSasoiCatchRecordHighDisplay();
+
+console.log(
+"🎣 全譜面の釣果HIGHをリセットしました"
+);
+
+}
+
+// ==========================================
+// ◎ 全譜面の興味ゲージHIGHリセット
+// ※ デバッグ用
+// ==========================================
+
+function resetAllSasoiGaugeHighScore(){
+
+const allScoreLists = [
+typeof sasoiScoreList !== "undefined"
+? sasoiScoreList
+: [],
+typeof sasoiCombinedScoreList !== "undefined"
+? sasoiCombinedScoreList
+: []
+];
+
+let resetCount = 0;
+
+allScoreLists.forEach(function(scoreList){
+
+if(!Array.isArray(scoreList)){
+return;
+}
+
+scoreList.forEach(function(scoreData){
+
+if(
+!scoreData ||
+!scoreData.id
+){
+return;
+}
+
+const storageKey =
+"sasoiGaugeHighScore_" +
+scoreData.id;
+
+if(localStorage.getItem(storageKey) !== null){
+
+localStorage.setItem(
+storageKey,
+"0"
+);
+
+resetCount++;
+
+}
+
+});
+
+});
+
+updateSasoiGaugeHighScoreDisplay();
+
+console.log(
+"🎣 全譜面の興味ゲージHIGHをリセットしました：" +
+resetCount +
+"件"
+);
+
+}
+
+window.resetAllSasoiCatchRecordHigh =
+resetAllSasoiCatchRecordHigh;
+
+window.resetAllSasoiGaugeHighScore =
+resetAllSasoiGaugeHighScore;
 
 
 // =================================
@@ -21420,6 +21937,368 @@ selectedScore.id
 );
 
 }
+
+}
+
+
+// ==========================================
+// テン
+// サプライズ表示制御
+// ==========================================
+
+function showSasoiTenSurprise(){
+
+const ten =
+document.getElementById(
+"sasoiTenSurprise"
+);
+
+if(
+!ten
+){
+
+
+return;
+
+
+}
+
+// ---------------------------------
+// 一度表示状態をリセット
+// ---------------------------------
+
+ten.classList.remove(
+"show",
+"surprise"
+);
+
+// ---------------------------------
+// CSSアニメーション再起動
+// ---------------------------------
+
+void ten.offsetWidth;
+
+// ---------------------------------
+// サプライズ登場
+// ---------------------------------
+
+ten.classList.add(
+"show",
+"surprise"
+);
+
+console.log(
+"🐟 テン：サプライズ登場"
+);
+
+}
+
+window.showSasoiTenSurprise =
+showSasoiTenSurprise;
+
+// ==========================================
+// テン
+// 完全非表示
+// ==========================================
+
+function hideSasoiTenSurprise(){
+
+const ten =
+document.getElementById(
+"sasoiTenSurprise"
+);
+
+if(
+!ten
+){
+
+
+return;
+
+
+}
+
+ten.classList.remove(
+"show",
+"surprise"
+);
+
+console.log(
+"🐟 テン：非表示"
+);
+
+}
+
+// ==========================================
+// テン
+// タッチボタン状態に合わせる
+// ==========================================
+
+function updateSasoiTenSurprise(){
+
+const ten =
+document.getElementById(
+"sasoiTenSurprise"
+);
+
+const touch =
+document.getElementById(
+"sasoiTouch"
+);
+
+if(
+!ten ||
+!touch
+){
+
+
+return;
+
+
+}
+
+const touchStyle =
+window.getComputedStyle(
+touch
+);
+
+// ---------------------------------
+// タッチボタンが非表示
+// ---------------------------------
+
+if(
+touchStyle.display ===
+"none"
+){
+
+
+showSasoiTenSurprise();
+
+return;
+
+
+}
+
+// ---------------------------------
+// タッチボタンが表示中
+// ---------------------------------
+
+hideSasoiTenSurprise();
+
+}
+
+
+// ==========================================
+// テン
+// タッチボタン状態監視
+// ==========================================
+
+let sasoiTenLastTouchDisplay =
+null;
+
+// ==========================================
+// タッチボタンの表示状態を監視
+// ==========================================
+
+function startSasoiTenSurpriseWatcher(){
+
+const touch =
+document.getElementById(
+"sasoiTouch"
+);
+
+if(
+!touch
+){
+
+
+return;
+
+
+}
+
+// ---------------------------------
+// 現在状態
+// ---------------------------------
+
+sasoiTenLastTouchDisplay =
+window.getComputedStyle(
+touch
+).display;
+
+// ---------------------------------
+// 監視
+// ---------------------------------
+
+setInterval(
+function(){
+
+
+  const currentDisplay =
+    window.getComputedStyle(
+      touch
+    ).display;
+
+
+  // =================================
+  // 表示 → 非表示
+  // =================================
+
+  if(
+    sasoiTenLastTouchDisplay !==
+    "none" &&
+    currentDisplay ===
+    "none"
+  ){
+
+    showSasoiTenSurprise();
+
+  }
+
+
+  // =================================
+  // 非表示 → 表示
+  // =================================
+
+  if(
+    sasoiTenLastTouchDisplay ===
+    "none" &&
+    currentDisplay !==
+    "none"
+  ){
+
+    hideSasoiTenSurprise();
+
+  }
+
+
+  // ---------------------------------
+  // 状態保存
+  // ---------------------------------
+
+  sasoiTenLastTouchDisplay =
+    currentDisplay;
+
+
+},
+100
+
+
+);
+
+}
+
+
+// =========================================
+// 誘いの名人
+// 隠しコマンド
+// 初期メニュー10回タップで
+// デバッグリセットボタンを表示
+// =========================================
+
+let sasoiDebugTapCount =
+0;
+
+// =========================================
+// 隠しコマンド初期化
+// =========================================
+
+function initSasoiDebugUnlockCommand(){
+
+const menu =
+document.getElementById(
+"sasoiMenu"
+);
+
+const resetBtn =
+document.getElementById(
+"sasoiDebugUnlockResetBtn"
+);
+
+if(
+!menu ||
+!resetBtn
+){
+
+
+console.log(
+  "🎮 隠しコマンド初期化失敗：メニューまたはボタンがありません"
+);
+
+return;
+
+
+}
+
+// ---------------------------------------
+// 初期状態
+// ---------------------------------------
+
+sasoiDebugTapCount =
+0;
+
+resetBtn.classList.remove(
+"show"
+);
+
+// =======================================
+// 初期メニューのタップを監視
+// =======================================
+
+menu.addEventListener(
+"pointerdown",
+function(){
+
+
+  // -----------------------------------
+  // ボタン表示済みなら何もしない
+  // -----------------------------------
+
+  if(
+    resetBtn.classList.contains(
+      "show"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  sasoiDebugTapCount++;
+
+
+  console.log(
+    "🎮 隠しコマンドタップ:",
+    sasoiDebugTapCount,
+    "/ 10"
+  );
+
+
+  // =================================
+  // 10回到達
+  // =================================
+
+  if(
+    sasoiDebugTapCount >=
+    10
+  ){
+
+    resetBtn.classList.add(
+      "show"
+    );
+
+
+    console.log(
+      "🎮 隠しコマンド解除：デバッグリセット表示"
+    );
+
+  }
+
+}
+
+
+);
 
 }
 
