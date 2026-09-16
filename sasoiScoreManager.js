@@ -1669,7 +1669,7 @@ const sasoiUnlockGroups = [
 id: "heavy",
 
 clearMessage:
-"重誘技クリア",
+"重系誘技クリア",
 
 releaseMessage:
 "誘技解放！",
@@ -1693,13 +1693,13 @@ scoreIds: [
 id: "squeeze",
 
 clearMessage:
-"挟誘技クリア",
+"挟系誘技クリア",
 
 releaseMessage:
 "誘技解放！！",
 
 unlockMessage:
-"壱～参2匹以上達成で解放",
+"重系誘技2匹以上達成で解放",
 
 requiredCatch:
 2,
@@ -1723,13 +1723,13 @@ scoreIds: [
 id: "chain",
 
 clearMessage:
-"連誘技クリア",
+"連系誘技クリア",
 
 releaseMessage:
 "誘技解放！！！",
 
 unlockMessage:
-"肆～玖2匹以上達成で解放",
+"挟系誘技2匹以上達成で解放",
 
 requiredCatch:
 2,
@@ -1753,13 +1753,13 @@ scoreIds: [
 id: "secret",
 
 clearMessage:
-"秘伝誘技クリア",
+"秘伝系誘技クリア",
 
 releaseMessage:
-"誘技解放！！！！",
+"熟誘技解放！",
 
 unlockMessage:
-"拾～拾伍2匹以上達成で解放",
+"連系誘技2匹以上達成で解放",
 
 requiredCatch:
 6,
@@ -1792,10 +1792,10 @@ clearMessage:
 "熟誘技クリア",
 
 releaseMessage:
-"",
+"誘名人解放！",
 
 unlockMessage:
-"連誘技6匹以上達成で解放",
+"秘伝系誘技6匹以上達成で解放",
 
 requiredCatchByScore: {
 
@@ -1833,10 +1833,10 @@ clearMessage:
 "誘名人クリア",
 
 releaseMessage:
-"",
+"パーフェクト達成！",
 
 unlockMessage:
-"熟誘技釣果条件達成で解放",
+"熟系誘技釣果条件達成で解放",
 
 requiredCatchByScore: {
 
