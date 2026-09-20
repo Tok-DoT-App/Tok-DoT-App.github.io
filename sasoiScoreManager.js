@@ -576,7 +576,7 @@ id:"combined13",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
 title:"初釣戦・伍拾獲超",
-titleKana:"ちょうせん・ごじゅうかくちょう",
+titleKana:"はつちょうせん・ごじゅうかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -680,8 +680,8 @@ background:"images/sasoi-score29-bg.png"
 id:"combined15",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"大獲戦・弐百獲超",
-titleKana:"だいかくせん・にひゃくかくちょう",
+title:"大漁戦・弐百獲超",
+titleKana:"たいりょうせん・にひゃくかくちょう",
 difficulty:"★★★★☆",
 charts:[
 "score01",
@@ -761,141 +761,6 @@ charts:[
 "score15"
 ],
 background:"images/sasoi-score30-bg.png"
-},
-
-// ==========================================
-// 熟誘技 04
-// ==========================================
-{
-id:"combined16",
-number:"熟誘技",
-numberKana:"じゅくゆうぎ",
-title:"大漁戦・参百獲超",
-titleKana:"たいりょうせん・さんびゃくかくちょう",
-difficulty:"★★★★☆",
-charts:[
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15",
-"score01",
-"score02",
-"score03",
-"score04",
-"score05",
-"score06",
-"score07",
-"score08",
-"score09",
-"score10",
-"score11",
-"score12",
-"score13",
-"score14",
-"score15"
-],
-background:"images/sasoi-score31-bg.png"
 }
 
 
@@ -930,26 +795,15 @@ background: "images/sasoi-score33-bg.png"
 id: "combined19",
 number: "誘名人",
 numberKana: "ゆうめいじん",
-title: "大獲戦・弐百獲超",
-titleKana: "だいかくせん・にひゃくかくちょう",
+title: "大漁戦・弐百獲超",
+titleKana: "たいりょうせん・にひゃくかくちょう",
 difficulty: "★★★★★",
 charts: sasoiCombinedScoreList.find(function(scoreData) {
 return scoreData.id === "combined15";
 }).charts,
 background: "images/sasoi-score34-bg.png"
-},
-{
-id: "combined20",
-number: "誘名人",
-numberKana: "ゆうめいじん",
-title: "大漁戦・参百獲超",
-titleKana: "たいりょうせん・さんびゃくかくちょう",
-difficulty: "★★★★★",
-charts: sasoiCombinedScoreList.find(function(scoreData) {
-return scoreData.id === "combined16";
-}).charts,
-background: "images/sasoi-score35-bg.png"
 }
+
 );
 
 
@@ -1806,18 +1660,14 @@ combined14:
 100,
 
 combined15:
-200,
-
-combined16:
-300
+200
 
 },
 
 scoreIds: [
 "combined13",
 "combined14",
-"combined15",
-"combined16"
+"combined15"
 ]
 
 },
@@ -1847,18 +1697,14 @@ combined18:
 100,
 
 combined19:
-200,
-
-combined20:
-300
+200
 
 },
 
 scoreIds: [
 "combined17",
 "combined18",
-"combined19",
-"combined20"
+"combined19"
 ]
 
 }
