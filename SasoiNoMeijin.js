@@ -7144,6 +7144,12 @@ transform:
 document.head.appendChild(style);
 
 // =================================
+// ◎ BITE発生後の「300ms経過による時間切れ」だけを管理
+// =================================
+
+let sasoiBiteTimeoutTimer = null;
+
+// =================================
 // ◎ 通常譜面と組み合わせ譜面の切り替え用
 // =================================
 
@@ -13003,6 +13009,9 @@ function captureSasoiPressPosition(){
 
 }
 
+// =================================
+// Hit判定
+// =================================
 
 function checkSasoiHit(){
 
@@ -13246,13 +13255,16 @@ notes.forEach((note)=>{
 
 });
 
-  console.log(
-    "最近音符",
-    nearestNote.dataset.id,
-    nearestNote.dataset.type,
-    "距離",
-    nearestDistance
-  );
+console.log(
+"最近音符",
+nearestNote.dataset.id,
+nearestNote.dataset.type,
+"距離",
+nearestDistance,
+"visibility:",
+getComputedStyle(nearestNote).visibility
+);
+
 
   // =================================
   // 音符種類
@@ -14698,816 +14710,696 @@ function playSasoiFishOnShake(){
 
 function checkSasoiBiteAction(){
 
-  // =================================
-  // ◎が発生していない
-  // =================================
+if(!sasoiBiteWaiting){
+return;
+}
 
-  if(
-    !sasoiBiteWaiting
-  ){
+const elapsed =
+Date.now() -
+sasoiBiteStartTime;
 
-    return;
+// =================================
+// ◎ RELEASEされていない
+// =================================
+//
+// RELEASE前は時間判定をしない。
+//
+// 300ms経過によるLOSTは、
+// 別のsasoiBiteTimeoutTimerが担当する。
+//
+// =================================
 
-  }
+if(!sasoiBiteReleasePending){
 
+return;
 
-  // =================================
-  // ◎発生からの経過時間
-  // =================================
+}
 
-  const elapsed =
-    Date.now() -
-    sasoiBiteStartTime;
+// =================================
+// ◎発生時にPRESS状態だったか確認
+// =================================
 
+if(
+sasoiBiteActionAtStart !==
+"press"
+){
 
-  // =================================
-  // ◎発生後のrelease操作がない
-  // =================================
+console.log(
+  "◎アワセ失敗：◎発生時に指が置かれていませんでした",
+  elapsed,
+  "ms"
+);
 
-  if(
-    !sasoiBiteReleasePending
-  ){
+console.log(
+  "LOST"
+);
 
-    // 受付時間を超えた場合
-    // releaseされないまま魚が逃げる
+showSasoiActionJudgement(
+  "LOST"
+);
 
-    if(
-      elapsed >=
-      SASOI_BITE_TOO_LATE
-    ){
+console.log(
+  "アワセ準備ができていなかったため魚を掛けられませんでした"
+);
 
-      console.log(
-        "◎アワセ失敗：遅すぎ",
-        elapsed,
-        "ms"
-      );
 
+sasoiFishOn =
+  false;
 
-      console.log(
-        "LOST"
-      );
+sasoiFishTime =
+  null;
 
 
-      console.log(
-        "魚が逃げた..."
-      );
+sasoiBiteWaiting =
+  false;
 
+sasoiBiteStartTime =
+  null;
 
-      showSasoiActionJudgement(
-        "LOST"
-      );
+sasoiBiteActionAtStart =
+  null;
 
+sasoiBiteReleasePending =
+  false;
 
-      // =================================
-      // 魚は掛からない
-      // =================================
 
-      sasoiFishOn =
-        false;
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
 
-      sasoiFishTime =
-        null;
+if(
+  sasoiBiteTimeoutTimer
+){
 
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
 
-      // =================================
-      // ◎アワセ待ち終了
-      // =================================
-
-      sasoiBiteWaiting =
-        false;
-
-      sasoiBiteStartTime =
-        null;
-
-      sasoiBiteActionAtStart =
-        null;
-
-      sasoiBiteReleasePending =
-        false;
-
-
-      // =================================
-      // デバッグ表示
-      // =================================
-
-      sasoiDebugText.fish =
-        "LOST";
-
-      updateSasoiDebug();
-
-
-      // =================================
-      // 穂先ブルブル停止
-      // =================================
-
-      const tip =
-        document.querySelector(
-          ".sasoi-tip"
-        );
-
-
-      if(
-        tip
-      ){
-
-        tip.classList.remove(
-          "hit"
-        );
-
-      }
-
-
-      sasoiHitAnimating =
-        false;
-
-
-      // =================================
-      // メッセージ
-      // =================================
-
-      if(
-        typeof showSasoiMessage ===
-        "function"
-      ){
-
-        showSasoiMessage(
-          "あっ…魚が逃げてしまいました"
-        );
-
-      }
-
-
-      return;
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // ◎発生後のrelease
-  // =================================
-  //
-  // release操作が実際に行われた
-  // =================================
-
-
-  // =================================
-  // ◎発生時にpress状態ではなかった
-  // =================================
-  //
-  // アワセ準備ができていなかった
-  //
-  // → LOST
-  // =================================
-
-  if(
-    sasoiBiteActionAtStart !==
-    "press"
-  ){
-
-    console.log(
-      "◎アワセ失敗：◎発生時に指が置かれていませんでした",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "LOST"
-    );
-
-
-    showSasoiActionJudgement(
-      "LOST"
-    );
-
-
-    console.log(
-      "アワセ準備ができていなかったため魚を掛けられませんでした"
-    );
-
-
-    // =================================
-    // 魚は掛からない
-    // =================================
-
-    sasoiFishOn =
-      false;
-
-    sasoiFishTime =
-      null;
-
-
-    // =================================
-    // ◎アワセ待ち終了
-    // =================================
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    // =================================
-    // デバッグ表示
-    // =================================
-
-    sasoiDebugText.fish =
-      "LOST";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    // =================================
-    // メッセージ
-    // =================================
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "アワセの準備ができていませんでした"
-      );
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // ◎アワセタイミング判定
-  // =================================
-
-
-  // =================================
-  // 早すぎ
-  // =================================
-
-  if(
-    elapsed <
-    SASOI_BITE_TOO_EARLY
-  ){
-
-    console.log(
-      "◎アワセ失敗：早すぎ",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "LOST"
-    );
-
-
-    showSasoiActionJudgement(
-      "LOST"
-    );
-
-
-    console.log(
-      "魚がまだ仕掛けを食い込んでいません"
-    );
-
-
-    // =================================
-    // 魚は掛からない
-    // =================================
-
-    sasoiFishOn =
-      false;
-
-    sasoiFishTime =
-      null;
-
-
-    // =================================
-    // ◎アワセ待ち終了
-    // =================================
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    // =================================
-    // デバッグ表示
-    // =================================
-
-    sasoiDebugText.fish =
-      "LOST";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    // =================================
-    // メッセージ
-    // =================================
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "早すぎました"
-      );
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // SUPER EARLY
-  // =================================
-
-  if(
-    elapsed >=
-    SASOI_BITE_EARLY_START &&
-    elapsed <
-    SASOI_BITE_EARLY_END
-  ){
-
-    console.log(
-      "◎アワセ成功：SUPER EARLY",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "HIT"
-    );
-
-
-    showSasoiActionJudgement(
-      "HIT!!"
-    );
-
-showSasoiCatchResult();
-
-playSasoiFishOnShake();
-
-    console.log(
-      "超早合わせで魚が掛かった！"
-    );
-
-
-    sasoiFishOn =
-      true;
-
-    sasoiFishTime =
-      Date.now();
-
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    sasoiDebugText.fish =
-      "HIT";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "早合わせで魚が掛かりました！"
-      );
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // BESTゾーン
-  // =================================
-
-  if(
-    elapsed >=
-    SASOI_BITE_BEST_START &&
-    elapsed <
-    SASOI_BITE_BEST_END
-  ){
-
-    console.log(
-      "◎アワセ成功：BEST",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "HIT"
-    );
-
-
-    showSasoiActionJudgement(
-      "HIT!!"
-    );
-
-showSasoiCatchResult();
-
-playSasoiFishOnShake();
-
-    console.log(
-      "魚がしっかり掛かった！"
-    );
-
-
-    sasoiFishOn =
-      true;
-
-    sasoiFishTime =
-      Date.now();
-
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    sasoiDebugText.fish =
-      "HIT";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "魚がしっかり掛かりました！"
-      );
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // LATEゾーン
-  // =================================
-
-  if(
-    elapsed >=
-    SASOI_BITE_LATE_START &&
-    elapsed <
-    SASOI_BITE_LATE_END
-  ){
-
-    console.log(
-      "◎アワセ成功：LATE",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "HIT"
-    );
-
-
-    showSasoiActionJudgement(
-      "HIT!!"
-    );
-
-showSasoiCatchResult();
-
-playSasoiFishOnShake();
-
-    console.log(
-      "遅めのアワセでも魚が掛かった！"
-    );
-
-
-    sasoiFishOn =
-      true;
-
-    sasoiFishTime =
-      Date.now();
-
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    sasoiDebugText.fish =
-      "HIT";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "遅めのアワセでも掛かりました！"
-      );
-
-    }
-
-
-    return;
-
-  }
-
-
-  // =================================
-  // 遅すぎ
-  // =================================
-
-  if(
-    elapsed >=
-    SASOI_BITE_TOO_LATE
-  ){
-
-    console.log(
-      "◎アワセ失敗：遅すぎ",
-      elapsed,
-      "ms"
-    );
-
-
-    console.log(
-      "LOST"
-    );
-
-
-    showSasoiActionJudgement(
-      "LOST"
-    );
-
-
-    console.log(
-      "魚が逃げた..."
-    );
-
-
-    sasoiFishOn =
-      false;
-
-    sasoiFishTime =
-      null;
-
-
-    sasoiBiteWaiting =
-      false;
-
-    sasoiBiteStartTime =
-      null;
-
-    sasoiBiteActionAtStart =
-      null;
-
-    sasoiBiteReleasePending =
-      false;
-
-
-    sasoiDebugText.fish =
-      "LOST";
-
-    updateSasoiDebug();
-
-
-    // =================================
-    // 穂先ブルブル停止
-    // =================================
-
-    const tip =
-      document.querySelector(
-        ".sasoi-tip"
-      );
-
-
-    if(
-      tip
-    ){
-
-      tip.classList.remove(
-        "hit"
-      );
-
-    }
-
-
-    sasoiHitAnimating =
-      false;
-
-
-    if(
-      typeof showSasoiMessage ===
-      "function"
-    ){
-
-      showSasoiMessage(
-        "あっ…魚が逃げてしまいました"
-      );
-
-    }
-
-
-    return;
-
-  }
+  sasoiBiteTimeoutTimer =
+    null;
 
 }
 
 
+sasoiDebugText.fish =
+  "LOST";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "アワセの準備ができていませんでした"
+  );
+
+}
+
+
+return;
+
+}
+
+// =================================
+// ◎ 早すぎ判定
+// =================================
+
+if(
+elapsed <
+SASOI_BITE_TOO_EARLY
+){
+
+console.log(
+  "◎アワセ失敗：早すぎ",
+  elapsed,
+  "ms"
+);
+
+console.log(
+  "LOST"
+);
+
+showSasoiActionJudgement(
+  "LOST"
+);
+
+console.log(
+  "魚がまだ仕掛けを食い込んでいません"
+);
+
+
+sasoiFishOn =
+  false;
+
+sasoiFishTime =
+  null;
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
+
+if(
+  sasoiBiteTimeoutTimer
+){
+
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+}
+
+
+sasoiDebugText.fish =
+  "LOST";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "早すぎました"
+  );
+
+}
+
+
+return;
+
+}
+
+// =================================
+// ◎ SUPER EARLY
+// =================================
+
+if(
+elapsed >=
+SASOI_BITE_EARLY_START &&
+elapsed <
+SASOI_BITE_EARLY_END
+){
+
+console.log(
+  "◎アワセ成功：SUPER EARLY",
+  elapsed,
+  "ms"
+);
+
+console.log(
+  "HIT"
+);
+
+showSasoiActionJudgement(
+  "HIT!!"
+);
+
+showSasoiCatchResult();
+
+playSasoiFishOnShake();
+
+console.log(
+  "超早合わせで魚が掛かった！"
+);
+
+
+sasoiFishOn =
+  true;
+
+sasoiFishTime =
+  Date.now();
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
+
+if(
+  sasoiBiteTimeoutTimer
+){
+
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+}
+
+
+sasoiDebugText.fish =
+  "HIT";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "早合わせで魚が掛かりました！"
+  );
+
+}
+
+
+return;
+
+}
+
+// =================================
+// ◎ BEST
+// =================================
+
+if(
+elapsed >=
+SASOI_BITE_BEST_START &&
+elapsed <
+SASOI_BITE_BEST_END
+){
+
+console.log(
+  "◎アワセ成功：BEST",
+  elapsed,
+  "ms"
+);
+
+console.log(
+  "HIT"
+);
+
+showSasoiActionJudgement(
+  "HIT!!"
+);
+
+showSasoiCatchResult();
+
+playSasoiFishOnShake();
+
+console.log(
+  "魚がしっかり掛かった！"
+);
+
+
+sasoiFishOn =
+  true;
+
+sasoiFishTime =
+  Date.now();
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
+
+if(
+  sasoiBiteTimeoutTimer
+){
+
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+}
+
+
+sasoiDebugText.fish =
+  "HIT";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "魚がしっかり掛かりました！"
+  );
+
+}
+
+
+return;
+
+}
+
+// =================================
+// ◎ LATE
+// =================================
+
+if(
+elapsed >=
+SASOI_BITE_LATE_START &&
+elapsed <
+SASOI_BITE_LATE_END
+){
+
+console.log(
+  "◎アワセ成功：LATE",
+  elapsed,
+  "ms"
+);
+
+console.log(
+  "HIT"
+);
+
+showSasoiActionJudgement(
+  "HIT!!"
+);
+
+showSasoiCatchResult();
+
+playSasoiFishOnShake();
+
+console.log(
+  "遅めのアワセでも魚が掛かりました！"
+);
+
+
+sasoiFishOn =
+  true;
+
+sasoiFishTime =
+  Date.now();
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
+
+if(
+  sasoiBiteTimeoutTimer
+){
+
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+}
+
+
+sasoiDebugText.fish =
+  "HIT";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "遅めのアワセでも掛かりました！"
+  );
+
+}
+
+
+return;
+
+}
+
+// =================================
+// ◎ TOO LATE
+// =================================
+//
+// RELEASE操作そのものが300ms以降だった場合。
+//
+// =================================
+
+if(
+elapsed >=
+SASOI_BITE_TOO_LATE
+){
+
+console.log(
+  "◎アワセ失敗：遅すぎ",
+  elapsed,
+  "ms"
+);
+
+console.log(
+  "LOST"
+);
+
+showSasoiActionJudgement(
+  "LOST"
+);
+
+console.log(
+  "魚が逃げた..."
+);
+
+
+sasoiFishOn =
+  false;
+
+sasoiFishTime =
+  null;
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+// =================================
+// ◎ BITE時間切れタイマー停止
+// =================================
+
+if(
+  sasoiBiteTimeoutTimer
+){
+
+  clearTimeout(
+    sasoiBiteTimeoutTimer
+  );
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+}
+
+
+sasoiDebugText.fish =
+  "LOST";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "あっ…魚が逃げてしまいました"
+  );
+
+}
+
+
+return;
+
+}
+
+}
 
 
 // =================================
@@ -17221,6 +17113,154 @@ sasoiBiteActionAtStart = null;
 sasoiBiteReleasePending = false;
 
 
+// =================================
+// ◎ BITE時間切れタイマー開始
+// =================================
+//
+// RELEASEされないまま
+// SASOI_BITE_TOO_LATE に到達した場合だけ
+// LOSTにする。
+//
+// =================================
+
+if(
+sasoiBiteTimeoutTimer
+){
+
+clearTimeout(
+sasoiBiteTimeoutTimer
+);
+
+sasoiBiteTimeoutTimer =
+null;
+
+}
+
+sasoiBiteTimeoutTimer =
+setTimeout(
+function(){
+
+// ---------------------------------
+// すでにBITE待機が終了していたら
+// 何もしない
+// ---------------------------------
+
+if(
+  !sasoiBiteWaiting
+){
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+  return;
+
+}
+
+
+// ---------------------------------
+// RELEASE済みなら何もしない
+// ---------------------------------
+
+if(
+  sasoiBiteReleasePending
+){
+
+  sasoiBiteTimeoutTimer =
+    null;
+
+  return;
+
+}
+
+
+// ---------------------------------
+// 300ms経過
+// ---------------------------------
+
+console.log(
+  "◎アワセ失敗：遅すぎ",
+  Date.now() - sasoiBiteStartTime,
+  "ms"
+);
+
+console.log(
+  "LOST"
+);
+
+console.log(
+  "魚が逃げた..."
+);
+
+showSasoiActionJudgement(
+  "LOST"
+);
+
+
+sasoiFishOn =
+  false;
+
+sasoiFishTime =
+  null;
+
+
+sasoiBiteWaiting =
+  false;
+
+sasoiBiteStartTime =
+  null;
+
+sasoiBiteActionAtStart =
+  null;
+
+sasoiBiteReleasePending =
+  false;
+
+
+sasoiDebugText.fish =
+  "LOST";
+
+updateSasoiDebug();
+
+
+const tip =
+  document.querySelector(
+    ".sasoi-tip"
+  );
+
+
+if(tip){
+
+  tip.classList.remove(
+    "hit"
+  );
+
+}
+
+
+sasoiHitAnimating =
+  false;
+
+
+if(
+  typeof showSasoiMessage ===
+  "function"
+){
+
+  showSasoiMessage(
+    "あっ…魚が逃げてしまいました"
+  );
+
+}
+
+
+sasoiBiteTimeoutTimer =
+  null;
+
+},
+SASOI_BITE_TOO_LATE
+);
+
+
 // ---------------------------------
 // 穂先ブルブル状態
 // ---------------------------------
@@ -17684,11 +17724,6 @@ return;
 
 checkSasoiHit();
 
-// ---------------------------------
-// ◎アワセ判定
-// ---------------------------------
-
-checkSasoiBiteAction();
 
 // ---------------------------------
 // 次フレーム
