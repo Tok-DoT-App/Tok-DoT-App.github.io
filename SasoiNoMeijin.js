@@ -7397,15 +7397,15 @@ const SASOI_BITE_BEST_START = 100;
 const SASOI_BITE_BEST_END = 220;
 
 
-// 220～299ms
+// 220～349ms
 // → 遅めでもHIT
 const SASOI_BITE_LATE_START = 220;
-const SASOI_BITE_LATE_END = 350;
+const SASOI_BITE_LATE_END = 340;
 
 
-// 300ms以上
+// 340ms以上
 // → 遅すぎてLOST
-const SASOI_BITE_TOO_LATE = 350;
+const SASOI_BITE_TOO_LATE = 340;
 
 
 
