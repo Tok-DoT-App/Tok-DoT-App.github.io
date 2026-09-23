@@ -1627,7 +1627,7 @@ rgba(70,40,0,0.24);
 
 
 /* =================================
-   縦線
+   穂先｜
    ================================= */
 
 .sasoi-line{
@@ -1952,53 +1952,61 @@ rgba(0,0,0,.40);
 
 
 /* =================================
-   電動リールのスプール
+電動リールのスプール
 ================================= */
 
 .sasoi-spool{
 
-  width:14px;
+width:14px;
 
-  height:14px;
+height:14px;
 
-  min-width:14px;
+min-width:14px;
 
-  min-height:14px;
+min-height:14px;
 
-  aspect-ratio:1 / 1;
+aspect-ratio:1 / 1;
 
-  border-radius:50%;
+border-radius:50%;
 
-
-  background:
-  radial-gradient(
-    circle,
-
-    #d9a441 0%,
-    #d9a441 22%,
-
-    #222 25%,
-    #222 65%,
-
-    #777 70%,
-    #333 100%
-  );
+background:
 
 
-  border:1px solid #999;
+/* 中心点 */
+radial-gradient(
+  circle 1px at 50% 50%,
+  #111111 0,
+  #111111 1px,
+  transparent 1.1px
+),
 
-  box-sizing:border-box;
+/* スプール本体 */
+radial-gradient(
+  circle,
 
-  flex-shrink:0;
+  #d9a441 0%,
+  #d9a441 22%,
+
+  #222 25%,
+  #222 65%,
+
+  #777 70%,
+  #333 100%
+);
 
 
-  margin-top:2px;
+border:1px solid #999;
 
-  margin-bottom:1px;
+box-sizing:border-box;
 
+flex-shrink:0;
 
-  /* 糸留めの基準 */
-  position:relative;
+margin-top:2px;
+
+margin-bottom:1px;
+
+/* 糸留めの基準 */
+position:relative;
 
 }
 
@@ -2013,11 +2021,11 @@ rgba(0,0,0,.40);
   position:absolute;
 
   width:2px;
-  height:1px;
+  height:1.5px;
 
   background:#d8d8d8;
 
-  border-radius:1px;
+  border-radius:0.8px;
 
   z-index:5;
 
@@ -2077,38 +2085,70 @@ rgba(0,0,0,.40);
 
 
 /* =================================
-   ロックフリーレバー
+ロックフリーレバー
 ================================= */
 
 .sasoi-spool::after{
 
-  content:"";
+content:"";
 
-  position:absolute;
+position:absolute;
 
-  bottom:-3px;
+bottom:-4px;
 
-  left:50%;
+left:50%;
 
-  transform:
-    translateX(-50%);
+transform:
+translateX(-50%);
 
+width:9px;
 
-  width:9px;
+height:1px;
 
-  height:1px;
+background:#1a1a1a;
 
+border-radius:1px;
 
-  background:#1a1a1a;
-
-  border-radius:1px;
-
-
-  box-shadow:
-    0 0.5px 1px
-    rgba(0,0,0,0.5);
+box-shadow:
+0 0.5px 1px
+rgba(0,0,0,0.5);
 
 }
+
+
+
+/* =================================
+上部の黒い長方形
+================================= */
+
+.sasoi-spool::before{
+
+content:"";
+
+position:absolute;
+
+top:-6px;
+
+left:50%;
+
+transform:
+translateX(-50%);
+
+width:4px;
+
+height:5px;
+
+background:#363636;
+
+border-radius:0.5px;
+
+z-index:10;
+
+pointer-events:none;
+
+}
+
+
 
 
 /* 電動リールの表示盤 */
@@ -6725,9 +6765,9 @@ justify-content:center;
 border:
 5px solid
 rgba(
-150,
-35,
-30,
+210,
+55,
+45,
 0.95
 );
 
@@ -6735,9 +6775,9 @@ border-radius:10px;
 
 color:
 rgba(
-150,
-35,
-30,
+210,
+55,
+45,
 0.95
 );
 
@@ -6761,7 +6801,127 @@ opacity:0;
 
 text-shadow:
 1px 1px 0
-rgba(150,35,30,0.18);
+rgba(
+210,
+55,
+45,
+0.18
+);
+
+/* =================================
+◎ 朱肉の強いムラ・かすれ
+文字と枠の色が部分的に抜ける
+================================= */
+
+-webkit-mask-image:
+radial-gradient(
+ellipse 18px 5px at 8% 22%,
+transparent 0%,
+transparent 35%,
+rgba(0,0,0,0.25) 55%,
+black 78%
+),
+radial-gradient(
+ellipse 24px 6px at 24% 70%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.18) 52%,
+black 78%
+),
+radial-gradient(
+ellipse 16px 7px at 39% 28%,
+transparent 0%,
+transparent 32%,
+rgba(0,0,0,0.2) 55%,
+black 80%
+),
+radial-gradient(
+ellipse 28px 5px at 53% 78%,
+transparent 0%,
+transparent 28%,
+rgba(0,0,0,0.2) 52%,
+black 80%
+),
+radial-gradient(
+ellipse 20px 7px at 67% 24%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.15) 52%,
+black 78%
+),
+radial-gradient(
+ellipse 30px 6px at 79% 66%,
+transparent 0%,
+transparent 28%,
+rgba(0,0,0,0.2) 50%,
+black 78%
+),
+radial-gradient(
+ellipse 18px 5px at 92% 38%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.18) 52%,
+black 78%
+),
+linear-gradient(
+black,
+black
+);
+
+mask-image:
+radial-gradient(
+ellipse 18px 5px at 8% 22%,
+transparent 0%,
+transparent 35%,
+rgba(0,0,0,0.25) 55%,
+black 78%
+),
+radial-gradient(
+ellipse 24px 6px at 24% 70%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.18) 52%,
+black 78%
+),
+radial-gradient(
+ellipse 16px 7px at 39% 28%,
+transparent 0%,
+transparent 32%,
+rgba(0,0,0,0.2) 55%,
+black 80%
+),
+radial-gradient(
+ellipse 28px 5px at 53% 78%,
+transparent 0%,
+transparent 28%,
+rgba(0,0,0,0.2) 52%,
+black 80%
+),
+radial-gradient(
+ellipse 20px 7px at 67% 24%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.15) 52%,
+black 78%
+),
+radial-gradient(
+ellipse 30px 6px at 79% 66%,
+transparent 0%,
+transparent 28%,
+rgba(0,0,0,0.2) 50%,
+black 78%
+),
+radial-gradient(
+ellipse 18px 5px at 92% 38%,
+transparent 0%,
+transparent 30%,
+rgba(0,0,0,0.18) 52%,
+black 78%
+),
+linear-gradient(
+black,
+black
+);
 
 }
 
@@ -6792,85 +6952,77 @@ forwards;
 
 0%{
 
-
 opacity:0;
 
 transform:
-  translate(
-    -50%,
-    -50%
-  )
-  rotate(-8deg)
-  scale(1.45);
-
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(1.45);
 
 }
 
 35%{
 
-
 opacity:1;
 
 transform:
-  translate(
-    -50%,
-    -50%
-  )
-  rotate(-8deg)
-  scale(0.92);
-
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(0.92);
 
 }
 
 55%{
 
-
 opacity:1;
 
 transform:
-  translate(
-    -50%,
-    -50%
-  )
-  rotate(-8deg)
-  scale(1.04);
-
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(1.04);
 
 }
 
 75%{
 
-
 opacity:1;
 
 transform:
-  translate(
-    -50%,
-    -50%
-  )
-  rotate(-8deg)
-  scale(0.98);
-
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(0.98);
 
 }
 
 100%{
 
-
 opacity:1;
 
 transform:
-  translate(
-    -50%,
-    -50%
-  )
-  rotate(-8deg)
-  scale(1);
+translate(
+-50%,
+-50%
+)
+rotate(-8deg)
+scale(1);
 
+}
 
 }
 
-}
+
 
 /* =================================
 テン
