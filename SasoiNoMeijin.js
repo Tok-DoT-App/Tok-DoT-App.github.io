@@ -1732,7 +1732,7 @@ position:absolute;
 
 left:46px;
 
-top:130px;
+top:128px;
 
 /* ---------------------------------
 踏ん張りレッグの大きさ
@@ -1974,9 +1974,9 @@ background:
 
 /* 中心点 */
 radial-gradient(
-  circle 1px at 50% 50%,
+  circle 0.1px at 50% 50%,
   #111111 0,
-  #111111 1px,
+  #111111 0.1px,
   transparent 1.1px
 ),
 
@@ -2001,7 +2001,7 @@ box-sizing:border-box;
 
 flex-shrink:0;
 
-margin-top:2px;
+margin-top:1px;
 
 margin-bottom:1px;
 
@@ -2021,7 +2021,7 @@ position:relative;
   position:absolute;
 
   width:2px;
-  height:1.5px;
+  height:2px;
 
   background:#d8d8d8;
 
@@ -2094,7 +2094,7 @@ content:"";
 
 position:absolute;
 
-bottom:-4px;
+bottom:-3px;
 
 left:50%;
 
@@ -2103,7 +2103,7 @@ translateX(-50%);
 
 width:9px;
 
-height:1px;
+height:1.5px;
 
 background:#1a1a1a;
 
@@ -2153,7 +2153,7 @@ pointer-events:none;
 
 /* 電動リールの表示盤 */
 .sasoi-display{
-  margin-top:6px;
+  margin-top:4px;
   flex-shrink:0;
 
   width:6px;
@@ -2207,7 +2207,7 @@ pointer-events:none;
   position: absolute;
 
   /* 黒台形より全方向に「0.5px〜1px」大きく広げて白フチにする */
-  top: -2.5px;
+  top: -3.5px;
   bottom: -6.5px;
   left: -2.5px;
   right: -2.5px;
