@@ -2267,7 +2267,7 @@ overflow: visible;
   border-radius:50%;
 
   margin-top:1px;
-  margin-bottom:1px;
+  margin-bottom:1.5px;
 
   background:
   radial-gradient(
@@ -2389,7 +2389,7 @@ rgba(0,0,0,.55);
 /* リール本体左右ボタン */
 .sasoi-side-button {
 position: absolute;
-top: 66px;
+top: 68px;
 width: 6px;
 height: 6px;
 border-radius: 1px;
@@ -2399,17 +2399,15 @@ z-index: 0;
 
 background: #8a1717;
 
-border: 1px solid #4a0808;
-
 
 }
 
 .sasoi-side-button-left {
-left: 2.8px;
+left: 3px;
 }
 
 .sasoi-side-button-right {
-right: 2.8px;
+right: 3px;
 }
 
 
@@ -9073,7 +9071,7 @@ class="sasoi-catch-highscore-unit"
 </div>
 
 <div class="sasoi-display">
-  018
+  88
 </div>
 
 <div class="sasoi-button"></div>
