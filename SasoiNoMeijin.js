@@ -1957,13 +1957,13 @@ rgba(0,0,0,.40);
 
 .sasoi-spool{
 
-width:14px;
+width:12px;
 
-height:14px;
+height:12px;
 
-min-width:14px;
+min-width:12px;
 
-min-height:14px;
+min-height:12px;
 
 aspect-ratio:1 / 1;
 
@@ -1971,28 +1971,28 @@ border-radius:50%;
 
 background:
 
-
 /* 中心点 */
 radial-gradient(
-  circle 0.1px at 50% 50%,
-  #111111 0,
-  #111111 0.1px,
-  transparent 1.1px
+circle 0.35px at 50% 50%,
+#222222 0,
+#222222 0.35px,
+transparent 0.6px
 ),
 
 /* スプール本体 */
 radial-gradient(
-  circle,
+circle,
 
-  #d9a441 0%,
-  #d9a441 22%,
+#d9a441 0%,
+#d9a441 22%,
 
-  #222 25%,
-  #222 65%,
+#222 25%,
+#222 65%,
 
-  #777 70%,
-  #333 100%
+#777 70%,
+#333 100%
 );
+
 
 
 border:1px solid #999;
@@ -2012,76 +2012,105 @@ position:relative;
 
 
 /* =================================
-   糸留め金
-   12時・4時・8時方向
+糸留め金
+真ちゅう製・3方向
 ================================= */
 
 .sasoi-line-stop{
 
-  position:absolute;
+position:absolute;
 
-  width:2px;
-  height:2px;
+width:1.5px;
 
-  background:#d8d8d8;
+height:2.2px;
 
-  border-radius:0.8px;
+/* ---------------------------------
+真ちゅう風
+--------------------------------- */
 
-  z-index:5;
+background:
+linear-gradient(
+to right,
+#76521c 0%,
+#d0a84f 35%,
+#e0bd68 50%,
+#a87828 100%
+);
 
-  box-shadow:
-    0 0 0.5px rgba(255,255,255,.9),
-    0 0.5px 1px rgba(0,0,0,.8);
+border-radius:0.5px;
+
+z-index:5;
+
+/* ---------------------------------
+金属感
+--------------------------------- */
+
+box-shadow:
+
+
+0 0 0.5px
+rgba(255,220,130,0.9),
+
+0 0.5px 1px
+rgba(0,0,0,0.8);
+
+
+/* ---------------------------------
+回転の中心
+--------------------------------- */
+
+transform-origin:
+center center;
 
 }
 
-
 /* =================================
-   12時方向
+12時方向
 ================================= */
 
 .sasoi-line-stop.stop-12{
 
-  top:1px;
+top:0px;
 
-  left:50%;
+left:50%;
 
-  transform:
-    translateX(-50%);
+transform:
+translateX(-50%);
 
 }
 
-
 /* =================================
-   4時方向
+4時方向
+元の60度を維持
 ================================= */
 
 .sasoi-line-stop.stop-4{
 
-  right:1px;
+right:0px;
 
-  bottom:3px;
+bottom:2px;
 
-  transform:
-    rotate(60deg);
+transform:
+rotate(-60deg);
 
 }
 
-
 /* =================================
-   8時方向
+8時方向
+元の-60度を維持
 ================================= */
 
 .sasoi-line-stop.stop-8{
 
-  left:1px;
+left:0px;
 
-  bottom:3px;
+bottom:2px;
 
-  transform:
-    rotate(-60deg);
+transform:
+rotate(60deg);
 
 }
+
 
 
 /* =================================
@@ -2134,7 +2163,7 @@ left:50%;
 transform:
 translateX(-50%);
 
-width:4px;
+width:3px;
 
 height:5px;
 
@@ -2152,33 +2181,37 @@ pointer-events:none;
 
 
 /* 電動リールの表示盤 */
-.sasoi-display{
-  margin-top:4px;
-  flex-shrink:0;
+.sasoi-display {
+margin-top: 4px;
+flex-shrink: 0;
 
-  width:6px;
-  height:6px;
 
-  background:#b9ff95;
-  border:1px solid #5d8f54;
-  border-radius:2px;
+width: 6px;
+height: 6px;
 
-  color:#1d2b16;
-  font-size:3px;
-  font-family:"DSEG7";
-  line-height:5px;
+background: #b8b8b8;
+border: 1px solid #555;
+border-radius: 2px;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
+color: #222;
+font-size: 3px;
+font-family: "DSEG7";
+line-height: 5px;
 
-  box-shadow: inset 0 0 2px rgba(0,0,0,.25);
+display: flex;
+justify-content: center;
+align-items: center;
+text-align: center;
 
-  /* 台形を正しく背後に配置するための相対設定 */
-  position: relative;
-  overflow: visible;
+box-shadow: inset 0 0 2px rgba(0,0,0,.35);
+
+/* 台形を正しく背後に配置するための相対設定 */
+position: relative;
+overflow: visible;
+
+
 }
+
 
 /* 電動リールの表示盤の「後ろ側」台形 */
 .sasoi-display::before {
@@ -2186,7 +2219,7 @@ pointer-events:none;
   position: absolute;
 
   top: -2px;
-  bottom: -6px;
+  bottom: -9px;
   left: -2px;
   right: -2px;
 
@@ -2207,8 +2240,8 @@ pointer-events:none;
   position: absolute;
 
   /* 黒台形より全方向に「0.5px〜1px」大きく広げて白フチにする */
-  top: -3.5px;
-  bottom: -6.5px;
+  top: -2.5px;
+  bottom: -9.5px;
   left: -2.5px;
   right: -2.5px;
 
@@ -2252,6 +2285,36 @@ pointer-events:none;
 
 }
 
+/* =================================
+下側の操作ボタン
+グレー
+================================= */
+
+.sasoi-button-second{
+
+margin-top:0px;
+
+background:
+radial-gradient(
+circle at 30% 30%,
+#f0f0f0,
+#a8a8a8 55%,
+#555555 100%
+);
+
+box-shadow:
+inset 0 1px 1px
+rgba(255,255,255,.7),
+
+
+0 0 2px
+rgba(0,0,0,.55);
+
+
+}
+
+
+
 /* Tok.DoT ロゴ（リール用） */
 .sasoi-label {
   margin-top: -8px; /* ★負の値を大きくすると、さらに上に移動します */
@@ -2272,7 +2335,7 @@ pointer-events:none;
 }
 
 
-  /* たたき台 */
+/* たたき台 */
 .sasoi-black{
 
   position:absolute;
@@ -2322,6 +2385,33 @@ pointer-events:none;
   z-index:0;
 
 }
+
+/* リール本体左右ボタン */
+.sasoi-side-button {
+position: absolute;
+top: 66px;
+width: 6px;
+height: 6px;
+border-radius: 1px;
+box-sizing: border-box;
+z-index: 0;
+
+
+background: #8a1717;
+
+border: 1px solid #4a0808;
+
+
+}
+
+.sasoi-side-button-left {
+left: 2.8px;
+}
+
+.sasoi-side-button-right {
+right: 2.8px;
+}
+
 
 
 /* 流れてくる表示 */
@@ -8936,12 +9026,15 @@ class="sasoi-catch-highscore-unit"
   </button>
 
 <!-- ドーム船の縁 -->
+
 <div class="sasoi-edge top"></div>
 
 <!-- 中央ライン -->
+
 <div class="sasoi-center-line"></div>
 
 <!-- ドーム船の縁 -->
+
 <div class="sasoi-edge bottom"></div>
 
 <!-- 電動リール周り -->
@@ -8956,6 +9049,11 @@ class="sasoi-catch-highscore-unit"
 <div class="sasoi-reel-leg"></div>
 
 <div class="sasoi-rod">
+
+  <!-- 左右から押せるサイドボタン -->
+
+  <div class="sasoi-side-button sasoi-side-button-left"></div>
+  <div class="sasoi-side-button sasoi-side-button-right"></div>
 
   <div class="sasoi-tip"></div>
 
@@ -8975,17 +9073,19 @@ class="sasoi-catch-highscore-unit"
 </div>
 
 <div class="sasoi-display">
-  …
+  018
+</div>
+
+<div class="sasoi-button"></div>
+<div class="sasoi-button sasoi-button-second"></div>
+
+<div class="sasoi-label">
+  <span class="tokdot-name">
+    <span class="tokdot-dot">.</span>D
+  </span>
 </div>
 
 
-<div class="sasoi-button"></div>
-
-    <div class="sasoi-label">
-      <span class="tokdot-name">
-        <span class="tokdot-dot">.</span>D
-      </span>
-    </div>
   </div>
 </div>
 
@@ -9000,6 +9100,7 @@ class="sasoi-flow"
 id="sasoiFlow">
 
 </div>
+
 
 <!-- =================================
      テン
