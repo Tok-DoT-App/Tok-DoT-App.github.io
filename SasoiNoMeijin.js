@@ -7375,6 +7375,547 @@ transform:
 
 }
 
+/* ------------------------　誘いの名人インフォメーションCSS　------------------------ */
+
+
+.sasoi-info-btn {
+  -webkit-tap-highlight-color: transparent;
+
+  position: fixed;
+  left: 30px;
+  top: 170px;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: 2px solid rgba(255,255,255,.75);
+  border-radius: 50%;
+
+  background: #50C878;
+  color: #fff;
+
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,.28);
+
+  z-index: 150;
+
+  transition:
+    background-color .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.sasoi-info-btn:hover {
+  background: #2EAD65;
+  transform: scale(1.04);
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+}
+
+.sasoi-info-btn:active {
+  transform: scale(.95);
+}
+
+
+/* ---------- モーダル背景 ---------- */
+
+
+.sasoi-info-modal {
+  display: none;
+
+  position: fixed;
+  inset: 0;
+
+  box-sizing: border-box;
+  padding: 16px;
+
+  background: transparent;
+
+  z-index: 10000;
+}
+
+
+.sasoi-info-modal.sasoi-info-show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ---------- モーダル本体 ---------- */
+
+.sasoi-info-content {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(430px, 100%);
+  max-width: 430px;
+
+  height: auto;
+  max-height: 70vh;
+  max-height: 70dvh;
+
+  box-sizing: border-box;
+  padding: 0;
+
+  overflow: hidden;
+
+  color: #333;
+  background: #f9f9f9;
+
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+
+  text-align: left;
+  font-family: inherit;
+}
+
+/* ---------- ヘッダー ---------- */
+
+.sasoi-info-header {
+  position: relative;
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 52px;
+  padding: 8px 48px;
+
+  box-sizing: border-box;
+
+  background: #f9f9f9;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.sasoi-info-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+.sasoi-info-close-top {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+
+  background: #eaeaea;
+  color: #444;
+
+  font-size: 25px;
+  line-height: 1;
+
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.sasoi-info-close-top:hover {
+  background: #ddd;
+}
+
+/* ---------- スクロール本文 ---------- */
+
+.sasoi-info-body {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+
+  padding: 18px 20px 28px;
+
+  box-sizing: border-box;
+
+  font-size: 15px;
+  line-height: 1.8;
+
+  overflow-wrap: anywhere;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.sasoi-info-body p {
+  margin: 0 0 14px;
+}
+
+.sasoi-info-body h4 {
+  margin: 18px 0 7px;
+
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.sasoi-info-body hr {
+  height: 1px;
+  margin: 24px 0;
+
+  border: 0;
+  background: #e1e1e1;
+}
+
+.sasoi-info-body ul {
+  margin: 0 0 14px;
+  padding-left: 23px;
+}
+
+/* ---------- 冒頭・強調表示 ---------- */
+
+.sasoi-info-opening {
+  margin: 2px 0 14px !important;
+  text-align: center;
+  font-size: 20px !important;
+  font-weight: 700;
+}
+
+.sasoi-info-tagline {
+  margin: 12px 0 24px !important;
+
+  color: #555;
+  text-align: center;
+  font-weight: 700;
+}
+
+.sasoi-info-highlight {
+  padding: 10px 12px;
+
+  border-radius: 7px;
+  background: #eef6ff;
+
+  color: #245b91;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sasoi-info-joke {
+  color: #555;
+}
+
+/* ---------- アコーディオン：大見出し ---------- */
+
+.sasoi-info-section {
+  margin: 0 0 10px;
+  border: 1px solid #e2e6eb;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.sasoi-info-accordion {
+  -webkit-tap-highlight-color: transparent;
+
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 13px 14px;
+
+  border: none;
+  border-radius: 0;
+
+  background: #fff;
+  color: #333;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.sasoi-info-accordion:hover {
+  background: #f1f6fc;
+}
+
+.sasoi-info-accordion:focus-visible {
+  outline: 2px solid #2f80ed;
+  outline-offset: -3px;
+}
+
+.sasoi-info-arrow {
+  flex: 0 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+
+  background: #eaf2fc;
+  color: #2f80ed;
+
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.sasoi-info-accordion[aria-expanded="true"] {
+  background: #eef6ff;
+  color: #245b91;
+}
+
+.sasoi-info-accordion[aria-expanded="true"] .sasoi-info-arrow {
+  background: #2f80ed;
+  color: #fff;
+}
+
+/* ---------- アコーディオン本文 ---------- */
+
+.sasoi-info-panel {
+  padding: 15px 14px 6px;
+  border-top: 1px solid #e8edf2;
+  background: #fff;
+}
+
+/* hidden属性を他のCSSで上書きさせない */
+.sasoi-info-panel[hidden] {
+  display: none !important;
+}
+
+/* ---------- 入れ子アコーディオン ---------- */
+
+.sasoi-info-subsection {
+  margin: 0 0 9px;
+
+  border: 1px solid #e5e9ee;
+  border-radius: 7px;
+
+  overflow: hidden;
+  background: #fff;
+}
+
+.sasoi-info-sub-accordion {
+  min-height: 44px;
+  padding: 10px 11px;
+
+  background: #f7f9fc;
+
+  font-size: 14px;
+}
+
+.sasoi-info-sub-accordion:hover {
+  background: #edf3fa;
+}
+
+.sasoi-info-sub-accordion .sasoi-info-arrow {
+  flex-basis: 22px;
+
+  width: 22px;
+  height: 22px;
+
+  font-size: 15px;
+}
+
+.sasoi-info-sub-panel {
+  padding: 13px 12px 4px;
+}
+
+/* ---------- 判定カード ---------- */
+
+.sasoi-info-judgment {
+  margin: 12px 0;
+  padding: 12px 14px;
+
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+
+  background: #fff;
+}
+
+.sasoi-info-judgment h4 {
+  margin: 0 0 4px;
+}
+
+.sasoi-info-judgment p {
+  margin: 0 0 4px;
+}
+
+.sasoi-info-judgment > strong {
+  display: inline-block;
+  font-size: 18px;
+}
+
+.sasoi-info-miss {
+  background: #f5f5f5;
+}
+
+.sasoi-info-miss p {
+  margin-bottom: 0;
+}
+
+/* ---------- 釣果表示 ---------- */
+
+.sasoi-info-catch {
+  margin: 16px 0;
+  padding: 14px;
+
+  border-radius: 8px;
+  background: #fff;
+
+  border: 1px solid #e6e6e6;
+}
+
+.sasoi-info-catch p {
+  margin: 0;
+  padding: 8px 0;
+}
+
+.sasoi-info-catch p + p {
+  border-top: 1px solid #eee;
+}
+
+/* ---------- 注意書き ---------- */
+
+.sasoi-info-warning {
+  margin: 14px 0;
+  padding: 14px;
+
+  border-left: 4px solid #e6a23c;
+  border-radius: 6px;
+
+  background: #fff6e8;
+}
+
+.sasoi-info-warning > strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #8a5300;
+}
+
+.sasoi-info-warning p {
+  margin-bottom: 10px;
+}
+
+.sasoi-info-warning p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- 最後のメッセージ ---------- */
+
+.sasoi-info-philosophy {
+  margin: 18px 0 !important;
+  line-height: 2.1;
+}
+
+.sasoi-info-ending {
+  margin: 30px 0 4px !important;
+  text-align: center;
+  font-size: 19px !important;
+  font-weight: 700;
+}
+
+/* ---------- フッター ---------- */
+
+.sasoi-info-footer {
+  flex: 0 0 auto;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+
+  border-top: 1px solid #e5e5e5;
+  background: #f9f9f9;
+}
+
+.sasoi-info-close-bottom {
+  min-width: 110px;
+
+  padding: 9px 22px;
+  border: none;
+  border-radius: 7px;
+
+  background: #e3e3e3;
+  color: #333;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.sasoi-info-close-bottom:hover {
+  background: #d5d5d5;
+}
+
+/* ---------- 小さな画面への対応 ---------- */
+
+@media (max-width: 480px) {
+  .sasoi-info-modal {
+    padding: 10px;
+  }
+
+  .sasoi-info-content {
+    width: 100%;
+    max-height: 70vh;
+    max-height: 70dvh;
+    border-radius: 10px;
+  }
+
+  .sasoi-info-body {
+    padding: 15px 12px 24px;
+    font-size: 14px;
+  }
+
+  .sasoi-info-accordion {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .sasoi-info-sub-accordion {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .sasoi-info-opening {
+    font-size: 19px !important;
+  }
+
+  .sasoi-info-ending {
+    font-size: 18px !important;
+  }
+}
+
+
+/* ------------------------　誘いの名人インフォメーションCSS　------------------------ */
+
+
 
 
 /* --------------------------------------------　CSS最後　-------------------------------------------- */
@@ -8654,6 +9195,18 @@ area.innerHTML = `
 
   </button>
 
+<!-- ======================= 誘いの名人インフォメーションボタン ======================= -->
+
+<button
+  type="button"
+  id="sasoiInfoBtn"
+  class="sasoi-info-btn"
+  aria-label="誘いの名人 インフォメーション"
+  aria-controls="sasoiInfoModal"
+  aria-expanded="false">
+  i
+</button>
+
   <!-- =================================
        誘技未解放表示用
   ================================= -->
@@ -8703,6 +9256,386 @@ onclick="resetSasoiDebugAll()"
   id="sasoiUnlockMessage"
   class="sasoi-unlock-message"
 >
+</div>
+
+<!-- ======================= 誘いの名人インフォメーションモーダル ======================= -->
+
+<div
+  id="sasoiInfoModal"
+  class="sasoi-info-modal"
+  aria-hidden="true">
+
+  <div
+    class="sasoi-info-content"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sasoiInfoTitle">
+
+    <div class="sasoi-info-header">
+      <h2 id="sasoiInfoTitle">誘いの名人</h2>
+      <button
+        type="button"
+        id="sasoiInfoCloseTop"
+        class="sasoi-info-close-top"
+        aria-label="閉じる">×</button>
+    </div>
+
+    <div class="sasoi-info-body">
+
+      <p class="sasoi-info-opening">
+        その誘技に、興味はありますか？
+      </p>
+
+      <p class="sasoi-info-tagline">
+        流れるリズムで興味を誘う、<br>
+        いつかあなたも「誘名人」
+      </p>
+
+      <!-- 1. 誘技とは -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🎵 誘技とは？</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>「誘技」とは、<strong>魚の興味を引き出す誘いの技</strong>。</p>
+
+          <p>流れるリズムに合わせて、<br>
+          タイミングよく誘技を刻みましょう。</p>
+
+          <p class="sasoi-info-highlight">
+            誘技を刻む → 魚の興味が高まる
+          </p>
+
+          <p>これが「誘いの名人」の基本です。</p>
+
+          <p>また、誘技をクリアすることで、次のステップへ進めるようになります。</p>
+        </div>
+      </section>
+
+      <!-- 2. 基本の遊び方 -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🎮 基本の遊び方</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>ワカサギシーズン到来、湖のドーム船を舞台に、</p>
+
+          <p>釣り穴に流れてくる「●」「○」「ー」のタイミングに合わせて、タップボタンで、誘技を刻みましょう。</p>
+
+          <h4>● の操作</h4>
+          <p>「●」が判定ラインに来たタイミングで、<strong>指を置く（タップ）</strong>。</p>
+
+          <h4>○ の操作</h4>
+          <p>「○」が判定ラインに来たタイミングで、<strong>指を離す（リリース）</strong>。</p>
+
+          <h4>ー の操作</h4>
+          <p>「ー」が判定ラインを通過している間は、<strong>指を置き続ける（長押し）</strong>。</p>
+
+          <p>最後に流れてくる「◎」は「アワセ」のタイミング。</p>
+
+          <h4>◎ の操作</h4>
+          <p>「◎」が判定ラインに来たタイミングで、<strong>指を離す（リリース＝アワセ）</strong>。</p>
+
+          <p>早すぎてもLOST、遅すぎてもLOSTの可能性が…<br>
+          ちょうど良い「アワセ」のタイミングを見つけてワカサギをHIT!させましょう。</p>
+
+          <p>ただし…「誘名人」級になると…</p>
+          <p class="sasoi-info-joke">「◎」が消える!?とか…</p>
+        </div>
+      </section>
+
+      <!-- 3. 興味ゲージと判定 -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>❤️ 興味ゲージと判定</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>「興味ゲージ」は、<strong>魚がどれだけあなたの誘いに興味を持っているか</strong>を表します。</p>
+
+          <p>正確な誘技を刻むほど、興味ゲージを高めることができます。</p>
+
+          <p>操作のタイミングによって、<strong>魚の興味の高まり方</strong>が変わります。</p>
+
+          <div class="sasoi-info-judgment">
+            <h4>PERFECT</h4>
+            <p>最高のタイミング。</p>
+            <strong>＋10</strong>
+          </div>
+
+          <div class="sasoi-info-judgment">
+            <h4>GOOD</h4>
+            <p>良いタイミング。</p>
+            <strong>＋6</strong>
+          </div>
+
+          <div class="sasoi-info-judgment">
+            <h4>BAD</h4>
+            <p>少しタイミングがずれています。</p>
+            <strong>＋4</strong>
+          </div>
+
+          <div class="sasoi-info-judgment sasoi-info-miss">
+            <h4>MISS</h4>
+            <p><strong>誘技を続ける限り、MISSが無いのが「誘いの名人」</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. 興味ゲージと釣果 -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🎣 興味ゲージと釣果</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>高めた魚の興味を、釣果につなげていきます。</p>
+
+          <div class="sasoi-info-catch">
+            <p><strong>興味ゲージ 160以上</strong><br>シングル！＝1匹</p>
+            <p><strong>興味ゲージ 180以上</strong><br>ダブル！！＝2匹</p>
+            <p><strong>興味ゲージ 200以上</strong><br>トリプル！！！＝3匹</p>
+          </div>
+
+          <p class="sasoi-info-joke">
+            <strong>ただし…「アワセ」のタイミングも大事</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- 5. 誘技クリア -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🏆 誘技クリア</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>各誘技の条件をクリアすると、その誘技に<strong>「誘技クリア」</strong>の印が付きます。</p>
+
+          <p>クリアした誘技を確認しながら、すべての誘技制覇を目指しましょう！</p>
+
+          <p>クリア後のやり込み要素もあります。<br>
+          それぞれの誘技のハイスコアを目指しましょう！！</p>
+        </div>
+      </section>
+
+      <!-- 6. 誘技一時停止 -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>⏸ 誘技一時停止</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>誘技中は、<strong>釣り穴付近をタップすると、一時停止ボタンが出現します。</strong></p>
+
+          <p>一時停止ボタンをタップして停止。<br>
+          または、釣り穴中央をタップすれば即一時停止できます。</p>
+
+          <p>お好きな方をお使いください。</p>
+
+          <p>再開ボタン▶をタップして、続きから誘技できます。</p>
+        </div>
+      </section>
+
+      <!-- 7. 知っておくと便利なこと -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>💡 知っておくと便利なこと</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+
+          <!-- 小項目：誘技タイトル -->
+          <section class="sasoi-info-subsection">
+            <button type="button" class="sasoi-info-accordion sasoi-info-sub-accordion"
+              aria-expanded="false">
+              <span>📖 誘技タイトル</span>
+              <span class="sasoi-info-arrow">＋</span>
+            </button>
+
+            <div class="sasoi-info-panel sasoi-info-sub-panel" hidden>
+              <p>誘技のタイトルには、<strong>その誘技をプレイするためのヒント</strong>が隠されています。</p>
+
+              <p>プレイ前にタイトルにも注目してみてください。</p>
+            </div>
+          </section>
+
+          <!-- 小項目：タップボタン -->
+          <section class="sasoi-info-subsection">
+            <button type="button" class="sasoi-info-accordion sasoi-info-sub-accordion"
+              aria-expanded="false">
+              <span>👆 タップボタンは移動可能</span>
+              <span class="sasoi-info-arrow">＋</span>
+            </button>
+
+            <div class="sasoi-info-panel sasoi-info-sub-panel" hidden>
+              <p>誘技開始から<strong>10秒以内なら、プレイ位置を移動可能</strong>。</p>
+
+              <ul>
+                <li>タップしやすい位置への移動</li>
+                <li>苦手な方の手に持ち替えてプレイするセルフ鍛錬機能（笑）</li>
+              </ul>
+
+              <p><strong>ボタンに隠れてたテンちゃんもびっくり!？</strong></p>
+            </div>
+          </section>
+
+          <!-- 小項目：ハイスコア -->
+          <section class="sasoi-info-subsection">
+            <button type="button" class="sasoi-info-accordion sasoi-info-sub-accordion"
+              aria-expanded="false">
+              <span>🏆 誘技ハイスコア</span>
+              <span class="sasoi-info-arrow">＋</span>
+            </button>
+
+            <div class="sasoi-info-panel sasoi-info-sub-panel" hidden>
+              <p>各誘技ハイスコアは、<strong>ダブルタップでリセット</strong>可能。</p>
+
+              <p>自己ベストの達成感を、もう一度。</p>
+
+              <p>確認メッセージが出るのでご安心ください。</p>
+            </div>
+          </section>
+
+          <!-- 小項目：誘技カウント -->
+          <section class="sasoi-info-subsection">
+            <button type="button" class="sasoi-info-accordion sasoi-info-sub-accordion"
+              aria-expanded="false">
+              <span>🎣 誘技カウント</span>
+              <span class="sasoi-info-arrow">＋</span>
+            </button>
+
+            <div class="sasoi-info-panel sasoi-info-sub-panel" hidden>
+              <p>「誘技カウント（現誘技/誘技合計数）」は、<strong>残り誘技があとどのくらいか</strong>を知るためのものです。</p>
+
+              <p>今どこまで進んでいるのかを確認しながら、誘技クリアを目指し、最後の一匹まで誘い続けましょう。</p>
+            </div>
+          </section>
+
+          <!-- 小項目：リトライ -->
+          <section class="sasoi-info-subsection">
+            <button type="button" class="sasoi-info-accordion sasoi-info-sub-accordion"
+              aria-expanded="false">
+              <span>🔄 リトライ</span>
+              <span class="sasoi-info-arrow">＋</span>
+            </button>
+
+            <div class="sasoi-info-panel sasoi-info-sub-panel" hidden>
+              <p><strong>誘技スタートに失敗したとき。</strong></p>
+              <p><strong>誘技に納得がいかなかったとき。</strong></p>
+              <p><strong>「アワセ」に失敗したとき。</strong></p>
+
+              <p>そんなときは、リトライ。</p>
+
+              <p><strong>気持ち良い誘技のために、何度でもリトライ（笑）</strong></p>
+            </div>
+          </section>
+
+        </div>
+      </section>
+
+      <!-- 8. ON / OFF -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🐟「誘いの名人」ON／OFF</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>「誘いの名人」は、<strong>ON／OFFを切り替えることができます。</strong></p>
+
+          <p><strong>リアルの釣りに専念したいとき → OFFで集中。</strong></p>
+
+          <p><strong>リアルの釣りが渋いとき → ONで疑似誘技に切り替え（笑）。</strong></p>
+
+          <p>その日の気分でお楽しみください。</p>
+        </div>
+      </section>
+
+      <!-- 9. 裏コマンド -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🎁 ここまで読んでくれた方へ</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>ここまで読んでくれたあなたに、一つだけ裏コマンドを紹介します。</p>
+
+          <h4>🔓 隠しボタン</h4>
+
+          <p><strong>「誘いの名人」のタイトルを10回タップ</strong>すると、隠しリセットボタンが出現します。</p>
+
+          <div class="sasoi-info-warning">
+            <strong>⚠ 注意！</strong>
+            <p>裏コマンドなので、確認画面は出ません。</p>
+            <p>隠しリセットボタンを1回タップすると、各ハイスコアと誘技クリアの記録が消えます。</p>
+          </div>
+
+          <p>あなたの思い出は消えませんが、記録をリセットして、初心に戻って誘技することができます。</p>
+        </div>
+      </section>
+
+      <!-- 10. 最後に -->
+      <section class="sasoi-info-section">
+        <button type="button" class="sasoi-info-accordion"
+          aria-expanded="false">
+          <span>🌟 最後に</span>
+          <span class="sasoi-info-arrow">＋</span>
+        </button>
+
+        <div class="sasoi-info-panel" hidden>
+          <p>魚を誘うということは…</p>
+
+          <p class="sasoi-info-philosophy">
+            <strong>誘技を興味に変えること。</strong><br>
+            <strong>誘技をしつこくつづけること。</strong><br>
+            <strong>魚にアワセること。</strong>
+          </p>
+
+          <p>その一つひとつが<br>
+          「誘名人」へとつづく道</p>
+
+          <p class="sasoi-info-ending">
+            その誘技に、興味はありますか？
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="sasoi-info-footer">
+      <button
+        type="button"
+        id="sasoiInfoCloseBottom"
+        class="sasoi-info-close-bottom">
+        閉じる
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ======================= 誘いの名人インフォメーションモーダル ======================= -->
+
 </div>
 
 <!-- =================================
@@ -9333,10 +10266,6 @@ id="sasoiTouch">
 </div>
 
 <!-- ======================= 釣果HIGHリセット確認モーダル ======================= -->
-
-
-
-</div>
 
 `;
 
@@ -22766,7 +23695,236 @@ console.log(
 
 }
 
+// ---------------------------------　誘いの名人インフォメーションJS　---------------------------------
 
+(function initSasoiInformation() {
+
+  function initialize() {
+
+    const button = document.getElementById("sasoiInfoBtn");
+    const modal = document.getElementById("sasoiInfoModal");
+    const closeTop = document.getElementById("sasoiInfoCloseTop");
+    const closeBottom = document.getElementById("sasoiInfoCloseBottom");
+    const infoBody = modal
+      ? modal.querySelector(".sasoi-info-body")
+      : null;
+
+    // 必要なHTMLが存在しない場合は何もしない
+    if (!button || !modal || !closeTop || !closeBottom || !infoBody) {
+      return;
+    }
+
+// モーダルをゲーム画面の親要素から切り離してbody直下へ移動
+document.body.appendChild(modal);
+
+    // 二重初期化を防止
+    if (modal.dataset.sasoiInfoInitialized === "true") {
+      return;
+    }
+
+    modal.dataset.sasoiInfoInitialized = "true";
+
+    let previousOverflow = "";
+    let previouslyFocusedElement = null;
+
+    // ---------------------------------
+    // アコーディオンをすべて閉じる
+    // ---------------------------------
+
+    function resetAccordions() {
+
+      const accordionButtons = infoBody.querySelectorAll(
+        ".sasoi-info-accordion"
+      );
+
+      accordionButtons.forEach(function (accordionButton) {
+
+        accordionButton.setAttribute("aria-expanded", "false");
+
+        const arrow = accordionButton.querySelector(
+          ".sasoi-info-arrow"
+        );
+
+        if (arrow) {
+          arrow.textContent = "＋";
+        }
+
+        const panel = accordionButton.nextElementSibling;
+
+        if (panel && panel.classList.contains("sasoi-info-panel")) {
+          panel.hidden = true;
+        }
+
+      });
+
+    }
+
+    // ---------------------------------
+    // モーダルを開く
+    // ---------------------------------
+
+    function openModal() {
+
+      if (modal.classList.contains("sasoi-info-show")) {
+        return;
+      }
+
+      previouslyFocusedElement = document.activeElement;
+      previousOverflow = document.body.style.overflow;
+
+      // 開くたびにアコーディオンを閉じる
+      resetAccordions();
+
+      // 説明書を先頭に戻す
+      infoBody.scrollTop = 0;
+
+      // 背景ページのスクロールを停止
+      document.body.style.overflow = "hidden";
+
+      modal.classList.add("sasoi-info-show");
+      modal.setAttribute("aria-hidden", "false");
+      button.setAttribute("aria-expanded", "true");
+
+      closeTop.focus();
+
+    }
+
+    // ---------------------------------
+    // モーダルを閉じる
+    // ---------------------------------
+
+    function closeModal() {
+
+      if (!modal.classList.contains("sasoi-info-show")) {
+        return;
+      }
+
+      modal.classList.remove("sasoi-info-show");
+      modal.setAttribute("aria-hidden", "true");
+      button.setAttribute("aria-expanded", "false");
+
+      // 背景ページのスクロール状態を復元
+      document.body.style.overflow = previousOverflow;
+
+      // 開く前に操作していた要素へフォーカスを戻す
+      if (
+        previouslyFocusedElement &&
+        typeof previouslyFocusedElement.focus === "function"
+      ) {
+        previouslyFocusedElement.focus();
+      } else {
+        button.focus();
+      }
+
+    }
+
+    // ---------------------------------
+    // アコーディオンの開閉
+    // 大見出し・小見出し共通
+    // ---------------------------------
+
+    infoBody.addEventListener("click", function (event) {
+
+      const accordionButton = event.target.closest(
+        ".sasoi-info-accordion"
+      );
+
+      if (
+        !accordionButton ||
+        !infoBody.contains(accordionButton)
+      ) {
+        return;
+      }
+
+      const panel = accordionButton.nextElementSibling;
+
+      // 対応する本文がない場合は何もしない
+      if (
+        !panel ||
+        !panel.classList.contains("sasoi-info-panel")
+      ) {
+        return;
+      }
+
+      const isExpanded =
+        accordionButton.getAttribute("aria-expanded") === "true";
+
+      const shouldExpand = !isExpanded;
+
+      // 開閉状態を更新
+      accordionButton.setAttribute(
+        "aria-expanded",
+        String(shouldExpand)
+      );
+
+      panel.hidden = !shouldExpand;
+
+      // ＋ / － を切り替え
+      const arrow = accordionButton.querySelector(
+        ".sasoi-info-arrow"
+      );
+
+      if (arrow) {
+        arrow.textContent = shouldExpand ? "－" : "＋";
+      }
+
+    });
+
+    // ---------------------------------
+    // ボタン操作
+    // ---------------------------------
+
+    button.addEventListener("click", openModal);
+
+    closeTop.addEventListener("click", closeModal);
+
+    closeBottom.addEventListener("click", closeModal);
+
+    
+// モーダル本体以外をタップしたとき閉じる
+modal.addEventListener("pointerdown", function (event) {
+  const content = modal.querySelector(".sasoi-info-content");
+
+  if (content && !content.contains(event.target)) {
+    closeModal();
+  }
+});
+
+    // ESCキーで閉じる
+    document.addEventListener("keydown", function (event) {
+
+      if (
+        event.key === "Escape" &&
+        modal.classList.contains("sasoi-info-show")
+      ) {
+        closeModal();
+      }
+
+    });
+
+    // 初期表示はすべて閉じた状態
+    resetAccordions();
+
+  }
+
+  // DOMの読み込み状況に応じて初期化
+  if (document.readyState === "loading") {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initialize,
+      { once: true }
+    );
+
+  } else {
+
+    initialize();
+
+  }
+
+})();
+
+// ---------------------------------　誘いの名人インフォメーションJS　---------------------------------
 
 // ---------------------------------　JS終了地点　---------------------------------
 
