@@ -9288,7 +9288,7 @@ onclick="resetSasoiDebugAll()"
 
       <p class="sasoi-info-tagline">
         流れるリズムで興味を誘う、<br>
-        いつかあなたも「誘名人」
+        いつかあなたも「 誘名人 」
       </p>
 
       <!-- 1. 誘技とは -->
@@ -9385,7 +9385,8 @@ onclick="resetSasoiDebugAll()"
 
           <div class="sasoi-info-judgment sasoi-info-miss">
             <h4>MISS</h4>
-            <p><strong>誘技を続ける限り、MISSが無いのが「誘いの名人」</strong></p>
+            <p>たまにはそんな事もあるでしょう。</p>
+            <strong>＋0</strong>
           </div>
         </div>
       </section>
@@ -9489,7 +9490,7 @@ onclick="resetSasoiDebugAll()"
 
               <ul>
                 <li>タップしやすい位置への移動</li>
-                <li>苦手な方の手に持ち替えてプレイするセルフ鍛錬機能（笑）</li>
+                <li>苦手な方の手に持ち替えてプレイする<br>セルフ鍛錬機能（笑）</li>
               </ul>
 
               <p><strong>ボタンに隠れてたテンちゃんもびっくり!？</strong></p>
@@ -9607,7 +9608,7 @@ onclick="resetSasoiDebugAll()"
 
           <p class="sasoi-info-philosophy">
             <strong>誘技を興味に変えること。</strong><br>
-            <strong>誘技をしつこくつづけること。</strong><br>
+            <strong>しつこくつづけること。</strong><br>
             <strong>魚にアワセること。</strong>
           </p>
 
