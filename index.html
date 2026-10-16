@@ -10679,23 +10679,15 @@ if ('serviceWorker' in navigator) {
     isAndroid ||
     /Mobile|Tablet/i.test(userAgent);
 
-  function isPwaInstalled() {
-    let savedInstalled = false;
+  
+function isPwaInstalled() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: fullscreen)").matches ||
+    navigator.standalone === true
+  );
+}
 
-    try {
-      savedInstalled =
-        localStorage.getItem(PWA_INSTALLED_KEY) === "true";
-    } catch (error) {
-      console.log("PWA installation status could not be read.");
-    }
-
-    const isStandalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.matchMedia("(display-mode: fullscreen)").matches ||
-      navigator.standalone === true;
-
-    return savedInstalled || isStandalone;
-  }
 
   function showPwaModal() {
     if (isPwaInstalled() || promptFinished) {
@@ -10783,19 +10775,15 @@ if ('serviceWorker' in navigator) {
   });
 
   // インストール完了をブラウザが通知した場合
-  window.addEventListener("appinstalled", function () {
-    try {
-      localStorage.setItem(PWA_INSTALLED_KEY, "true");
-    } catch (error) {
-      console.log("PWA installation status could not be saved.");
-    }
+  
+window.addEventListener("appinstalled", function () {
+  promptFinished = true;
+  deferredInstallPrompt = null;
+  hidePwaModal();
 
-    promptFinished = true;
-    deferredInstallPrompt = null;
-    hidePwaModal();
+  console.log("PWA installation completed.");
+});
 
-    console.log("PWA installation completed.");
-  });
 
   // OKボタン
   pwaOkButton.addEventListener("click", async function () {
