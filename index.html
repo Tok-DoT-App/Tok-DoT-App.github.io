@@ -10660,6 +10660,7 @@ if ('serviceWorker' in navigator) {
 
   const userAgent = navigator.userAgent || "";
 
+ 
   const isIOS =
     /iPhone|iPad|iPod/i.test(userAgent) ||
     (
@@ -10668,6 +10669,10 @@ if ('serviceWorker' in navigator) {
     );
 
   const isAndroid = /Android/i.test(userAgent);
+
+  // LINE内ブラウザで開かれているかを判定
+  const isLineApp = /Line\//i.test(userAgent);
+
 
   const isMobile =
     isIOS ||
@@ -10704,6 +10709,7 @@ if ('serviceWorker' in navigator) {
     pwaModal.style.display = "none";
   }
 
+
   function showInstallPromptMessage() {
     guideMode = false;
 
@@ -10711,39 +10717,55 @@ if ('serviceWorker' in navigator) {
     pwaMessage.textContent =
       "ホーム画面に追加すると、次回からアプリをすぐに開けます。";
 
-    pwaOkButton.textContent = "OK";
+    pwaOkButton.textContent = "インストール";
     pwaLaterButton.textContent = "あとで";
+    pwaLaterButton.style.display = "";
   }
 
   function showHomeScreenGuide() {
     guideMode = true;
 
-    pwaTitle.textContent = "ホーム画面に追加する方法";
+    pwaTitle.textContent = "アプリをホーム画面に追加";
 
-    if (isIOS) {
+    if (isLineApp) {
       pwaMessage.innerHTML =
-        "1. Safariの画面下部（または上部）の共有ボタン " +
-        "（四角から上向きの矢印）を押します。<br><br>" +
-        "2. メニューから「ホーム画面に追加」を選びます。<br><br>" +
-        "3. 画面の案内に従って「追加」を押してください。<br><br>" +
-        "※ Safari以外のブラウザでは、操作方法が異なる場合があります。";
+        "<strong>【1】LINEからブラウザで開く</strong><br>" +
+        "LINEで届いたアプリのアドレスを開いている場合は、" +
+        "まずLINEの画面右下にある「︙」を押してください。<br><br>" +
+        "メニューから「デフォルトのブラウザで開く」を選びます。<br><br>" +
+        "<strong>【2】ブラウザでインストールする</strong><br>" +
+        "ブラウザでアプリが開いたら、インストール案内が表示される場合は「インストール」を押してください。<br><br>" +
+        "案内が表示されない場合は、ブラウザのメニューから「アプリをインストール」または「ホーム画面に追加」を選んでください。";
+    } else if (isIOS) {
+      pwaMessage.innerHTML =
+        "<strong>【1】Safariで開く</strong><br>" +
+        "LINEから開いた場合は、右下の「︙」などのメニューから、" +
+        "Safariなどの外部ブラウザで開いてください。<br><br>" +
+        "<strong>【2】ホーム画面に追加</strong><br>" +
+        "Safariの共有ボタン（四角から上向きの矢印）を押します。<br><br>" +
+        "メニューから「ホーム画面に追加」を選び、画面の案内に従って「追加」を押してください。<br><br>" +
+        "※ iOSのバージョンによってメニューの位置や表示が異なる場合があります。";
     } else if (isAndroid) {
       pwaMessage.innerHTML =
-        "1. ブラウザ右上のメニュー（︙）を押します。<br><br>" +
-        "2. 「アプリをインストール」または「ホーム画面に追加」を選びます。<br><br>" +
-        "3. 画面の案内に従って追加してください。<br><br>" +
-        "※ ブラウザによって表示や操作方法が異なります。";
+        "<strong>【1】ブラウザで開く</strong><br>" +
+        "LINEから開いた場合は、画面右下の「︙」から" +
+        "「デフォルトのブラウザで開く」を選んでください。<br><br>" +
+        "<strong>【2】ホーム画面に追加</strong><br>" +
+        "ブラウザでアプリが開いたら、インストール案内が表示される場合は「インストール」を押してください。<br><br>" +
+        "案内が表示されない場合は、ブラウザ右上の「︙」を押し、" +
+        "「アプリをインストール」または「ホーム画面に追加」を選んでください。";
     } else {
       pwaMessage.innerHTML =
         "ブラウザのメニューを開き、" +
-        "「アプリをインストール」または" +
-        "「ホーム画面に追加」を探してください。<br><br>" +
-        "※ 端末やブラウザによって操作方法が異なります。";
+        "「アプリをインストール」または「ホーム画面に追加」を選んでください。<br><br>" +
+        "LINEから開いている場合は、まずLINEのメニューから外部ブラウザで開いてください。";
     }
 
-    pwaOkButton.textContent = "閉じる";
-    pwaLaterButton.textContent = "閉じる";
+    // 案内画面では、左右とも「閉じる」になるのを防ぐ
+    pwaOkButton.textContent = "確認しました";
+    pwaLaterButton.style.display = "none";
   }
+
 
   // ブラウザが標準のインストール画面を利用できると通知した場合
   window.addEventListener("beforeinstallprompt", function (event) {
@@ -10818,20 +10840,28 @@ if ('serviceWorker' in navigator) {
     hidePwaModal();
   });
 
+
   // 初回表示時の準備
   window.addEventListener("load", function () {
     if (isPwaInstalled()) {
       return;
     }
 
-    // 標準インストール画面が使える場合は、その案内を表示
+    // LINE内では、最初に外部ブラウザで開く方法を案内する
+    if (isLineApp) {
+      showHomeScreenGuide();
+      showPwaModal();
+      return;
+    }
+
+    // 標準インストール画面が使える場合
     if (deferredInstallPrompt) {
       showInstallPromptMessage();
       showPwaModal();
       return;
     }
 
-    // スマートフォンなどで標準画面が使えない場合は手順を案内
+    // 標準画面が使えないスマートフォンでは手順を案内
     if (isMobile) {
       showHomeScreenGuide();
 
@@ -10849,6 +10879,7 @@ if ('serviceWorker' in navigator) {
       }, 1500);
     }
   });
+
 
 })();
 </script>
