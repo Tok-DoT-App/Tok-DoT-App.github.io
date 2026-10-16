@@ -10776,14 +10776,30 @@ function isPwaInstalled() {
 
   // インストール完了をブラウザが通知した場合
   
+
 window.addEventListener("appinstalled", function () {
   promptFinished = true;
   deferredInstallPrompt = null;
-  hidePwaModal();
+
+  // インストール完了後の案内に切り替える
+  guideMode = true;
+
+  pwaTitle.textContent = "インストールが完了しました！";
+
+  pwaMessage.innerHTML =
+    "「誘いの名人」のインストールが完了しました。<br><br>" +
+    "<strong>次回からは、ブラウザではなく、ホーム画面に追加されたアプリアイコンから起動してください。</strong><br><br>" +
+    "現在開いているブラウザの画面を閉じて、ホーム画面に戻り、「誘いの名人」のアイコンをタップしてください。<br><br>" +
+    "アプリ専用の画面で、快適にご利用いただけます。";
+
+  pwaOkButton.textContent = "確認しました";
+  pwaLaterButton.style.display = "none";
+
+  // 完了メッセージを表示する
+  pwaModal.style.display = "flex";
 
   console.log("PWA installation completed.");
 });
-
 
   // OKボタン
   pwaOkButton.addEventListener("click", async function () {
