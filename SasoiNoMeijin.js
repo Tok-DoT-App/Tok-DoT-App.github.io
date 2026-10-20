@@ -12922,29 +12922,23 @@ function setSasoiGaugeLevel(level){
 
 
 
-// =================================
-// 興味ゲージ
-// 魚アイコン位置更新
-// =================================
-//
-// 魚は「現在点灯している最後のメモリ」の
-// 中央に配置する。
-//
-// メモリは右 → 左へ進むため、
-//
-// level 1
-// → allTicks[0]
-//
-// level 2
-// → allTicks[1]
-//
-// ...
-//
-// level 20
-// → allTicks[19]
-//
-// となる。
-// =================================
+ // =================================
+ // 興味ゲージ
+ // 魚アイコン位置更新
+ // =================================
+ //
+ // 魚は「現在点灯している最後のメモリ」の
+ // 中央に配置する。
+ //
+ // level 0  → allTicks[0]
+ // level 1  → allTicks[0]
+ // level 2  → allTicks[1]
+ // ...
+ // level 20 → allTicks[19]
+ //
+ // ピンチズームや親要素の scale による
+ // 座標のずれを補正する。
+ // =================================
 
 function updateSasoiGaugeFishPosition(
   allTicks,
@@ -12956,12 +12950,10 @@ function updateSasoiGaugeFishPosition(
       "sasoiGaugeFish"
     );
 
-
   const gauge =
     document.querySelector(
       ".sasoi-interest-gauge"
     );
-
 
   if(
     !fish ||
@@ -12969,11 +12961,8 @@ function updateSasoiGaugeFishPosition(
     !allTicks ||
     allTicks.length === 0
   ){
-
     return;
-
   }
-
 
   /* ---------------------------------
      魚の位置に使用するメモリ
@@ -12981,34 +12970,14 @@ function updateSasoiGaugeFishPosition(
 
   let targetTick;
 
+  if(level <= 0){
 
-  if(
-    level <= 0
-  ){
-
-    /*
-       0の場合は右端の最初のメモリを
-       魚の初期位置として使用する。
-
-       まだメモリは点灯していないが、
-       「ここから左へ進む」という
-       スタート位置になる。
-    */
-
-    targetTick =
-      allTicks[0];
+    // 0の場合は右端の最初のメモリ
+    targetTick = allTicks[0];
 
   }else{
 
-    /*
-       点灯している最後のメモリ
-
-       level 1 → index 0
-       level 2 → index 1
-       ...
-       level 20 → index 19
-    */
-
+    // 点灯している最後のメモリ
     targetTick =
       allTicks[
         Math.min(
@@ -13019,18 +12988,12 @@ function updateSasoiGaugeFishPosition(
 
   }
 
-
-  if(
-    !targetTick
-  ){
-
+  if(!targetTick){
     return;
-
   }
 
-
   /* ---------------------------------
-     ゲージとメモリの位置を取得
+     表示上の座標を取得
   --------------------------------- */
 
   const gaugeRect =
@@ -13039,70 +13002,90 @@ function updateSasoiGaugeFishPosition(
   const tickRect =
     targetTick.getBoundingClientRect();
 
+  /* ---------------------------------
+     ゲージ内部のCSS座標へ変換
+  --------------------------------- */
+
+  // 表示上の座標とCSS上の座標の倍率を取得。
+  // 親要素の transform: scale(...) に対応する。
+  const scaleX =
+    gauge.offsetWidth > 0
+      ? gaugeRect.width / gauge.offsetWidth
+      : 1;
+
+  const scaleY =
+    gauge.offsetHeight > 0
+      ? gaugeRect.height / gauge.offsetHeight
+      : 1;
+
+  // 0除算や異常値を防止
+  const safeScaleX =
+    Number.isFinite(scaleX) && scaleX > 0
+      ? scaleX
+      : 1;
+
+  const safeScaleY =
+    Number.isFinite(scaleY) && scaleY > 0
+      ? scaleY
+      : 1;
 
   /* ---------------------------------
-     メモリ中央座標
+     メモリ中央の表示座標
   --------------------------------- */
 
   const tickCenterX =
     tickRect.left +
     tickRect.width / 2;
 
-
   const tickCenterY =
     tickRect.top +
     tickRect.height / 2;
 
-
   /* ---------------------------------
-     ゲージ基準の座標へ変換
+     ゲージ基準のCSS座標へ変換
   --------------------------------- */
 
-const fishLeft =
-  tickCenterX -
-  gaugeRect.left -
-  11;
+  const fishLeft =
+    (tickCenterX - gaugeRect.left) /
+      safeScaleX -
+    7;
 
+  const fishTop =
+    (tickCenterY - gaugeRect.top) /
+    safeScaleY;
 
-const fishTop =
-  tickCenterY -
-  gaugeRect.top;
+  /* ---------------------------------
+     デバッグ
+  --------------------------------- */
 
+  console.log(
+    "魚位置補正",
+    {
+      level: level,
+      gaugeLeft: gaugeRect.left,
+      gaugeWidth: gaugeRect.width,
+      gaugeCssWidth: gauge.offsetWidth,
+      scaleX: safeScaleX,
+      scaleY: safeScaleY,
+      tickLeft: tickRect.left,
+      tickWidth: tickRect.width,
+      tickCenterX: tickCenterX,
+      fishLeft: fishLeft,
+      fishTop: fishTop
+    }
+  );
 
-/* ---------------------------------
-   デバッグ
---------------------------------- */
+  /* ---------------------------------
+     魚をメモリ中央へ移動
+  --------------------------------- */
 
-console.log(
-  "魚位置",
-  fishLeft,
-  fishTop
-);
+  fish.style.left =
+    fishLeft + "px";
 
-console.log(
-  "魚位置確認",
-  {
-    gaugeLeft: gaugeRect.left,
-    gaugeWidth: gaugeRect.width,
-    tickLeft: tickRect.left,
-    tickWidth: tickRect.width,
-    tickCenterX: tickCenterX,
-    fishLeft: fishLeft
-  }
-);
-
-/* ---------------------------------
-   魚をメモリ中央へ移動
---------------------------------- */
-
-fish.style.left =
-  fishLeft + "px";
-
-fish.style.top =
-  fishTop + "px";
+  fish.style.top =
+    fishTop + "px";
 
 }
-
 
 
 // =================================
