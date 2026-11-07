@@ -635,665 +635,31 @@ function saveRevivalQr() {
 }
 
 
-
-
 /* =========================================================
-   QRコード読み取り方法の選択
-   Double Bite!! 専用モーダル
+   QRコード読み取り画面
 ========================================================= */
 
 function openRevivalRestore() {
 
-    // 既存の選択モーダルがあれば削除
-    const oldModal = document.getElementById(
-        "revivalRestoreChoiceModal"
-    );
+    const input = document.getElementById("revivalQrFile");
 
-    if (oldModal) {
-        oldModal.remove();
-    }
+    if (!input) {
 
-    // モーダル本体
-    const modal = document.createElement("div");
-
-    modal.id = "revivalRestoreChoiceModal";
-    modal.className = "revival-modal";
-
-    Object.assign(modal.style, {
-        display: "flex",
-        zIndex: "100002"
-    });
-
-    // モーダル内容
-    const content = document.createElement("div");
-
-    content.className = "revival-modal-content";
-
-    // ヘッダー
-    const header = document.createElement("div");
-
-    header.className = "revival-modal-header";
-
-    const headerTitle = document.createElement("span");
-
-    headerTitle.textContent = "データ引継ぎ";
-
-    // 閉じるボタン
-    const closeButton = document.createElement("button");
-
-    closeButton.className = "revival-close";
-    closeButton.textContent = "×";
-
-    closeButton.onclick = function() {
-
-        modal.remove();
-
-    };
-
-    header.appendChild(headerTitle);
-    header.appendChild(closeButton);
-
-    // 本文
-    const body = document.createElement("div");
-
-    body.className = "revival-modal-body";
-
-    // 説明
-    const description = document.createElement("p");
-
-    description.className = "revival-description";
-
-    description.textContent =
-        "バックアップの読み取り方法を選択してください。";
-
-    // カメラ読み取りボタン
-    const cameraButton = document.createElement("button");
-
-    cameraButton.className =
-        "revival-action-btn restore-action";
-
-    cameraButton.innerHTML =
-        "<span>📷</span> カメラで読み取る";
-
-    cameraButton.onclick = function() {
-
-        modal.remove();
-
-        startRevivalCamera();
-
-    };
-
-    // 画像ファイル読み取りボタン
-    const fileButton = document.createElement("button");
-
-    fileButton.className =
-        "revival-action-btn backup-action";
-
-    fileButton.innerHTML =
-        "<span>▧</span> 画像ファイルから読み取る";
-
-    fileButton.onclick = function() {
-
-        modal.remove();
-
-        const input = document.getElementById("revivalQrFile");
-
-        if (!input) {
-
-            alert("QRコード読み取り機能を準備できません。");
-
-            return;
-
-        }
-
-        input.value = "";
-        input.click();
-
-    };
-
-    // キャンセルボタン
-    const cancelButton = document.createElement("button");
-
-    cancelButton.className = "revival-save-btn";
-
-    cancelButton.textContent = "キャンセル";
-
-    cancelButton.style.background = "#888888";
-
-    cancelButton.onclick = function() {
-
-        modal.remove();
-
-    };
-
-    // 組み立て
-    body.appendChild(description);
-    body.appendChild(cameraButton);
-    body.appendChild(fileButton);
-    body.appendChild(cancelButton);
-
-    content.appendChild(header);
-    content.appendChild(body);
-
-    modal.appendChild(content);
-
-    // 背景クリックで閉じる
-    modal.addEventListener("click", function(event) {
-
-        if (event.target === modal) {
-
-            modal.remove();
-
-        }
-
-    });
-
-    document.body.appendChild(modal);
-
-}
-
-
-
-/* =========================================================
-   カメラ読み取り開始
-========================================================= */
-
-async function startRevivalCamera() {
-
-    if (typeof jsQR !== "function") {
-
-        alert("QRコード読み取りライブラリが読み込まれていません。");
+        alert("QRコード読み取り機能を準備できません。");
 
         return;
 
     }
 
-    if (
-        !navigator.mediaDevices ||
-        typeof navigator.mediaDevices.getUserMedia !== "function"
-    ) {
-
-        alert(
-            "このブラウザではカメラを利用できません。\n" +
-            "SafariまたはChromeで開き直してください。"
-        );
-
-        return;
-
-    }
-
-    // 既存のカメラを停止
-    stopRevivalCamera();
-
-    // カメラ画面
-    const modal = document.createElement("div");
-
-    modal.id = "revivalCameraModal";
-
-    Object.assign(modal.style, {
-        position: "fixed",
-        inset: "0",
-        zIndex: "100003",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0,0,0,0.9)",
-        padding: "16px",
-        boxSizing: "border-box"
-    });
-
-    // パネル
-    const panel = document.createElement("div");
-
-    Object.assign(panel.style, {
-        width: "100%",
-        maxWidth: "420px",
-        background: "#ffffff",
-        borderRadius: "16px",
-        padding: "18px",
-        boxSizing: "border-box",
-        textAlign: "center"
-    });
-
-    // タイトル
-    const title = document.createElement("div");
-
-    title.textContent = "QRコードを読み取っています";
-
-    Object.assign(title.style, {
-        fontSize: "17px",
-        fontWeight: "bold",
-        marginBottom: "12px",
-        color: "#333333"
-    });
-
-    // 説明
-    const description = document.createElement("div");
-
-    description.textContent =
-        "旧端末に表示したQRコードをカメラに映してください。";
-
-    Object.assign(description.style, {
-        fontSize: "13px",
-        lineHeight: "1.6",
-        color: "#666666",
-        marginBottom: "14px"
-    });
-
-    // カメラ映像
-    const video = document.createElement("video");
-
-    video.setAttribute("playsinline", "");
-    video.setAttribute("autoplay", "");
-    video.setAttribute("muted", "");
-
-    video.muted = true;
-    video.autoplay = true;
-    video.playsInline = true;
-
-    Object.assign(video.style, {
-        display: "block",
-        width: "100%",
-        maxHeight: "55vh",
-        objectFit: "contain",
-        background: "#111111",
-        borderRadius: "10px"
-    });
-
-    // 状態表示
-    const status = document.createElement("div");
-
-    status.textContent = "カメラを起動しています...";
-
-    Object.assign(status.style, {
-        fontSize: "13px",
-        color: "#555555",
-        marginTop: "12px",
-        marginBottom: "12px"
-    });
-
-    // 閉じるボタン
-    const closeButton = document.createElement("button");
-
-    closeButton.textContent = "キャンセル";
-
-    Object.assign(closeButton.style, {
-        width: "100%",
-        minHeight: "46px",
-        border: "none",
-        borderRadius: "10px",
-        background: "#888888",
-        color: "#ffffff",
-        fontSize: "15px",
-        fontWeight: "bold",
-        cursor: "pointer"
-    });
-
-    closeButton.onclick = function() {
-
-        closeRevivalCameraModal();
-
-    };
-
-    panel.appendChild(title);
-    panel.appendChild(description);
-    panel.appendChild(video);
-    panel.appendChild(status);
-    panel.appendChild(closeButton);
-
-    modal.appendChild(panel);
-
-    document.body.appendChild(modal);
-
-    // 背景クリックで終了
-    modal.addEventListener("click", function(event) {
-
-        if (event.target === modal) {
-            closeRevivalCameraModal();
-        }
-
-    });
-
-    try {
-
-        // 背面カメラを優先して起動
-        const stream = await navigator.mediaDevices.getUserMedia({
-
-            audio: false,
-
-            video: {
-                facingMode: {
-                    ideal: "environment"
-                },
-                width: {
-                    ideal: 1280
-                },
-                height: {
-                    ideal: 720
-                }
-            }
-
-        });
-
-        // 起動中に画面が閉じられていた場合
-        if (
-            !document.getElementById("revivalCameraModal")
-        ) {
-
-            stream.getTracks().forEach(track => track.stop());
-
-            return;
-
-        }
-
-        window.revivalCameraStream = stream;
-
-        video.srcObject = stream;
-
-        await video.play();
-
-        status.textContent =
-            "QRコードをカメラに映してください。";
-
-        const canvas = document.createElement("canvas");
-
-        const context = canvas.getContext("2d", {
-            willReadFrequently: true
-        });
-
-        // QRコードの読み取り処理
-        function scanFrame() {
-
-            if (
-                !window.revivalCameraStream ||
-                !document.getElementById("revivalCameraModal")
-            ) {
-                return;
-            }
-
-            if (
-                video.readyState >=
-                HTMLMediaElement.HAVE_ENOUGH_DATA
-            ) {
-
-                const width = video.videoWidth;
-                const height = video.videoHeight;
-
-                if (width > 0 && height > 0) {
-
-                    // 処理負荷を抑えるため縮小
-                    const scale = Math.min(
-                        1,
-                        800 / Math.max(width, height)
-                    );
-
-                    canvas.width = Math.floor(width * scale);
-                    canvas.height = Math.floor(height * scale);
-
-                    context.drawImage(
-                        video,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-
-                    const imageData = context.getImageData(
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-
-                    const code = jsQR(
-                        imageData.data,
-                        imageData.width,
-                        imageData.height
-                    );
-
-                    if (code) {
-
-                        // カメラを停止
-                        closeRevivalCameraModal();
-
-                        // 既存のバックアップ読み取り処理へ
-                        handleRevivalQrData(code.data);
-
-                        return;
-
-                    }
-
-                }
-
-            }
-
-            window.revivalCameraFrame =
-                requestAnimationFrame(scanFrame);
-
-        }
-
-        scanFrame();
-
-    } catch (error) {
-
-        console.error("カメラ起動エラー:", error);
-
-        stopRevivalCamera();
-
-        const cameraModal = document.getElementById(
-            "revivalCameraModal"
-        );
-
-        if (cameraModal) {
-            cameraModal.remove();
-        }
-
-        let message =
-            "カメラを起動できませんでした。";
-
-        if (
-            error.name === "NotAllowedError" ||
-            error.name === "PermissionDeniedError"
-        ) {
-
-            message +=
-                "\nカメラの使用を許可してください。";
-
-        } else if (
-            error.name === "NotFoundError"
-        ) {
-
-            message +=
-                "\n利用できるカメラが見つかりません。";
-
-        } else {
-
-            message +=
-                "\n" + error.message;
-
-        }
-
-        alert(message);
-
-    }
+    input.value = "";
+    input.click();
 
 }
 
 
-/* =========================================================
-   カメラ停止
-========================================================= */
-
-function stopRevivalCamera() {
-
-    // 読み取りループ停止
-    if (window.revivalCameraFrame) {
-
-        cancelAnimationFrame(
-            window.revivalCameraFrame
-        );
-
-        window.revivalCameraFrame = null;
-
-    }
-
-    // カメラストリーム停止
-    if (window.revivalCameraStream) {
-
-        window.revivalCameraStream
-            .getTracks()
-            .forEach(track => track.stop());
-
-        window.revivalCameraStream = null;
-
-    }
-
-}
-
 
 /* =========================================================
-   カメラ画面を閉じる
-========================================================= */
-
-function closeRevivalCameraModal() {
-
-    stopRevivalCamera();
-
-    const modal = document.getElementById(
-        "revivalCameraModal"
-    );
-
-    if (modal) {
-        modal.remove();
-    }
-
-}
-
-
-/* =========================================================
-   QRコードデータの解析・検証・表示
-   カメラと画像ファイルで共通使用
-========================================================= */
-
-function handleRevivalQrData(qrData) {
-
-    try {
-
-        if (typeof qrData !== "string") {
-
-            throw new Error("QRコードのデータが正しくありません。");
-
-        }
-
-        const prefix = "DBBACKUP1:";
-
-        if (!qrData.startsWith(prefix)) {
-
-            throw new Error(
-                "Double Bite!! のバックアップQRではありません。"
-            );
-
-        }
-
-        const base64 = qrData.slice(prefix.length);
-
-        const binary = atob(base64);
-
-        const compressed = new Uint8Array(binary.length);
-
-        for (let i = 0; i < binary.length; i++) {
-
-            compressed[i] = binary.charCodeAt(i);
-
-        }
-
-        // gzip解凍
-        const decompressed = fflate.gunzipSync(compressed);
-
-        // JSON変換
-        const json = new TextDecoder().decode(decompressed);
-
-        const backup = JSON.parse(json);
-
-        // データ検証
-        BackupManager.validateBackup(backup);
-
-        // 読み取りデータを保持
-        window.pendingRevivalBackup = backup;
-
-        // 結果表示
-        const resultArea = document.getElementById(
-            "revivalRestoreResult"
-        );
-
-        const message = document.getElementById(
-            "revivalRestoreMessage"
-        );
-
-        if (!resultArea || !message) {
-
-            throw new Error("復元確認画面が見つかりません。");
-
-        }
-
-        resultArea.style.display = "block";
-
-        const dateText = new Date(
-            backup.createdAt
-        ).toLocaleString("ja-JP");
-
-        message.textContent =
-            "バックアップの読み取りに成功しました。\n" +
-            "作成日時：" + dateText + "\n\n" +
-            "このバックアップで現在の対象データを上書きできます。";
-
-        // 復元ボタンを作成
-        let restoreButton = document.getElementById(
-            "revivalApplyRestoreBtn"
-        );
-
-        if (!restoreButton) {
-
-            restoreButton = document.createElement("button");
-
-            restoreButton.id = "revivalApplyRestoreBtn";
-            restoreButton.className = "revival-save-btn";
-            restoreButton.textContent = "このバックアップで復元する";
-
-            restoreButton.style.marginTop = "12px";
-
-            restoreButton.onclick = restoreRevivalBackup;
-
-            resultArea.appendChild(restoreButton);
-
-        }
-
-        restoreButton.style.display = "block";
-
-        console.log("バックアップ読み取り成功");
-        console.log("読み取り方法を問わずデータ検証成功");
-        console.log("作成日時:", backup.createdAt);
-        console.log("保存データ数:", Object.keys(backup.data).length);
-        console.log("保存データ:", backup.data);
-
-    } catch (error) {
-
-        window.pendingRevivalBackup = null;
-
-        console.error("QR読み取りエラー:", error);
-
-        alert(
-            "バックアップデータを正常に読み取れませんでした。\n" +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   QRコード画像ファイル読み取り
+   QRコード読み取り
 ========================================================= */
 
 function readRevivalQrFile(event) {
@@ -1326,11 +692,7 @@ function readRevivalQrFile(event) {
                 canvas.width = image.naturalWidth;
                 canvas.height = image.naturalHeight;
 
-                context.drawImage(
-                    image,
-                    0,
-                    0
-                );
+                context.drawImage(image, 0, 0);
 
                 const imageData = context.getImageData(
                     0,
@@ -1351,14 +713,101 @@ function readRevivalQrFile(event) {
 
                 }
 
-                // カメラ読み取りと共通の処理へ
-                handleRevivalQrData(code.data);
+                const prefix = "DBBACKUP1:";
+
+                if (!code.data.startsWith(prefix)) {
+
+                    throw new Error(
+                        "Double Bite!! のバックアップQRではありません。"
+                    );
+
+                }
+
+                const base64 = code.data.slice(prefix.length);
+
+                const binary = atob(base64);
+
+                const compressed = new Uint8Array(binary.length);
+
+                for (let i = 0; i < binary.length; i++) {
+
+                    compressed[i] = binary.charCodeAt(i);
+
+                }
+
+                // gzip解凍
+                const decompressed = fflate.gunzipSync(compressed);
+
+                // JSON変換
+                const json = new TextDecoder().decode(decompressed);
+
+                const backup = JSON.parse(json);
+
+                // データ検証
+                BackupManager.validateBackup(backup);
+
+                // 読み取りデータを保持
+                window.pendingRevivalBackup = backup;
+
+                // 結果表示
+                const resultArea = document.getElementById(
+                    "revivalRestoreResult"
+                );
+
+                const message = document.getElementById(
+                    "revivalRestoreMessage"
+                );
+
+                if (!resultArea || !message) {
+
+                    throw new Error("復元確認画面が見つかりません。");
+
+                }
+
+                resultArea.style.display = "block";
+
+                const dateText = new Date(
+                    backup.createdAt
+                ).toLocaleString("ja-JP");
+
+                message.textContent =
+                    "バックアップの読み取りに成功しました。\n" +
+                    "作成日時：" + dateText + "\n\n" +
+                    "このバックアップで現在の対象データを上書きできます。";
+
+                // 復元ボタンを作成
+                let restoreButton = document.getElementById(
+                    "revivalApplyRestoreBtn"
+                );
+
+                if (!restoreButton) {
+
+                    restoreButton = document.createElement("button");
+
+                    restoreButton.id = "revivalApplyRestoreBtn";
+                    restoreButton.className = "revival-save-btn";
+                    restoreButton.textContent = "このバックアップで復元する";
+
+                    restoreButton.style.marginTop = "12px";
+
+                    restoreButton.onclick = restoreRevivalBackup;
+
+                    resultArea.appendChild(restoreButton);
+
+                }
+
+                restoreButton.style.display = "block";
+
+                console.log("バックアップ読み取り成功");
+                console.log("作成日時:", backup.createdAt);
+                console.log("保存データ数:", Object.keys(backup.data).length);
+                console.log("保存データ:", backup.data);
 
             } catch (error) {
 
                 window.pendingRevivalBackup = null;
 
-                console.error("QR画像読み取りエラー:", error);
+                console.error("QR読み取りエラー:", error);
 
                 alert(
                     "バックアップデータを正常に読み取れませんでした。\n" +
@@ -1387,11 +836,7 @@ function readRevivalQrFile(event) {
 
     reader.readAsDataURL(file);
 
-    // 同じファイルを再度選択できるようにする
-    event.target.value = "";
-
 }
-
 
 
 

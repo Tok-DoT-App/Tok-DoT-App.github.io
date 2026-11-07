@@ -11127,6 +11127,7 @@ window.addEventListener("appinstalled", function () {
 
 <!-- ========================= PWA インストール案内 ========================= -->
 
+
 <!-- ========================= データ引継ぎ機能 ========================= -->
 <script src="backupManager.js"></script>
 
@@ -11150,7 +11151,7 @@ window.addEventListener("appinstalled", function () {
     <div class="revival-modal-body">
 
       <p class="revival-description">
-        大切な釣果や思い出をバックアップできます。
+        旧端末のデータをバックアップして、新しい端末に引き継ぐことができます。
       </p>
 
       <button
@@ -11170,7 +11171,14 @@ window.addEventListener("appinstalled", function () {
 
       <div id="revivalQrArea" style="display:none;">
 
-        <p>バックアップ用QRコード</p>
+        <p class="revival-description">
+          データ引継ぎ用QRコード
+        </p>
+
+        <p class="revival-description">
+          QRコードを画像として保存し、新しい端末に送ってください。
+          新しい端末でこの画像を読み込むと、データを引き継ぐことができます。
+        </p>
 
         <canvas id="revivalQrCanvas"></canvas>
 
@@ -11182,6 +11190,7 @@ window.addEventListener("appinstalled", function () {
 
       </div>
 
+
       <!-- QRコード読み取り用 -->
 
       <input
@@ -11190,6 +11199,7 @@ window.addEventListener("appinstalled", function () {
         accept="image/*"
         style="display:none"
         onchange="readRevivalQrFile(event)">
+
 
       <div
         id="revivalRestoreResult"
