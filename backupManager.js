@@ -657,7 +657,6 @@ function openRevivalRestore() {
 }
 
 
-
 /* =========================================================
    QRコード読み取り
 ========================================================= */
@@ -770,10 +769,12 @@ function readRevivalQrFile(event) {
                     backup.createdAt
                 ).toLocaleString("ja-JP");
 
-                message.textContent =
-                    "バックアップの読み取りに成功しました。\n" +
-                    "作成日時：" + dateText + "\n\n" +
-                    "このバックアップで現在の対象データを上書きできます。";
+
+message.innerHTML =
+    "バックアップの読み取りに成功しました。<br>" +
+    "作成日時：" + dateText + "<br>" +
+    "このバックアップでデータを復元します。";
+
 
                 // 復元ボタンを作成
                 let restoreButton = document.getElementById(
@@ -837,7 +838,6 @@ function readRevivalQrFile(event) {
     reader.readAsDataURL(file);
 
 }
-
 
 
 /* =========================================================
@@ -905,8 +905,9 @@ function showRevivalRestoreConfirm(backup) {
     // 説明
     const description = document.createElement("div");
 
-    description.textContent =
-        "次のバックアップデータで現在のデータを上書きします。";
+    description.innerHTML =
+        "次のバックアップデータで<br>" +
+        "データを復元します。";
 
     Object.assign(description.style, {
         fontSize: "14px",
@@ -935,8 +936,8 @@ function showRevivalRestoreConfirm(backup) {
     // 注意書き
     const warning = document.createElement("div");
 
-    warning.textContent =
-        "この端末のデータは削除・上書きされます。\n" +
+    warning.innerHTML =
+        "この端末のデータは削除・上書きされます。<br>" +
         "バックアップに存在しない対象データも削除されます。";
 
     Object.assign(warning.style, {
@@ -1016,7 +1017,6 @@ function showRevivalRestoreConfirm(backup) {
 }
 
 
-
 /* =========================================================
    復元ボタン
    確認モーダルを表示
@@ -1054,8 +1054,6 @@ function restoreRevivalBackup() {
     showRevivalRestoreConfirm(backup);
 
 }
-
-
 
 
 /* =========================================================
@@ -1162,7 +1160,6 @@ function showRevivalRestoreComplete(result) {
 }
 
 
-
 /* =========================================================
    復元実行
 ========================================================= */
@@ -1224,4 +1221,3 @@ function executeRevivalRestore(backup) {
     showRevivalRestoreComplete(result);
 
 }
-

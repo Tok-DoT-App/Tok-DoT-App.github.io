@@ -3914,12 +3914,18 @@ iframe {
   margin-right: 8px;
 }
 
+
+
 /* QRコード表示エリア */
 #revivalQrArea {
   margin-top: 16px;
   padding-top: 12px;
 
   border-top: 1px solid #ddd;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* QRコード */
@@ -3937,6 +3943,8 @@ iframe {
 
   box-sizing: border-box;
 }
+
+
 
 /* QRコード保存ボタン */
 .revival-save-btn {
@@ -11151,7 +11159,8 @@ window.addEventListener("appinstalled", function () {
     <div class="revival-modal-body">
 
       <p class="revival-description">
-        旧端末のデータをバックアップして、新しい端末に引き継ぐことができます。
+        旧端末のデータをバックアップして、<br>
+        新しい端末に引き継ぐことができます。
       </p>
 
       <button
@@ -11176,8 +11185,8 @@ window.addEventListener("appinstalled", function () {
         </p>
 
         <p class="revival-description">
-          QRコードを画像として保存し、新しい端末に送ってください。
-          新しい端末でこの画像を読み込むと、データを引き継ぐことができます。
+          QRコードを画像として保存し、新しい端末にメール等で転送してください。
+          新しい端末でこの画像ファイルを読み込むと、データを引き継ぐことができます。
         </p>
 
         <canvas id="revivalQrCanvas"></canvas>
