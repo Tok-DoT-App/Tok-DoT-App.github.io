@@ -6799,7 +6799,15 @@ soloLeftCountElem.onclick = () => {
 
   createRipple(soloLeftCountElem, 'ripple-btn');
   createRipple(centralCount, 'ripple-center');
-  if (navigator.vibrate && isVibrationEnabled) navigator.vibrate(20);
+
+console.log("振動API:", typeof navigator.vibrate);
+console.log("アプリ内振動設定:", isVibrationEnabled);
+
+if (typeof navigator.vibrate === "function" && isVibrationEnabled) {
+  const result = navigator.vibrate(20);
+  console.log("振動API実行:", result);
+}
+
 
 // --- PartnerMind Ver2 ---
 
@@ -6822,7 +6830,15 @@ soloRightCountElem.onclick = () => {
 
   createRipple(soloRightCountElem, 'ripple-btn');
   createRipple(centralCount, 'ripple-center');
-  if (navigator.vibrate && isVibrationEnabled) navigator.vibrate(20);
+
+console.log("振動API:", typeof navigator.vibrate);
+console.log("アプリ内振動設定:", isVibrationEnabled);
+
+if (typeof navigator.vibrate === "function" && isVibrationEnabled) {
+  const result = navigator.vibrate(20);
+  console.log("振動API実行:", result);
+}
+
 
 // --- PartnerMind Ver2 ---
 
