@@ -2517,7 +2517,6 @@ to{ transform:translateX(-40px); }
    タッチボタン
 ================================= */
 
-
 .sasoi-touch{
 
   position:absolute;
@@ -2549,7 +2548,6 @@ to{ transform:translateX(-40px); }
 
   z-index:4;
 
-  /* 選択・長押し時の標準動作を抑制 */
   user-select:none;
   -webkit-user-select:none;
 
@@ -2560,9 +2558,6 @@ to{ transform:translateX(-40px); }
   -webkit-user-drag:none;
   user-drag:none;
 
-  /* タップ時の標準ハイライトを抑制 */
-  -webkit-tap-highlight-color:transparent;
-
   /* 色をなめらかに変化させる */
   transition:
     background-color 0.25s ease,
@@ -2570,7 +2565,6 @@ to{ transform:translateX(-40px); }
     transform 0.15s ease;
 
 }
-
 
 
 /* =================================
@@ -19693,26 +19687,29 @@ true
 
 }
 
-    // -------------------------------
-    // 誘いの名人 右クリック禁止
-    // -------------------------------
 
-    document.addEventListener(
-      "contextmenu",
-      function(e){
+// -------------------------------
+// 誘いの名人 長押し時の標準動作抑制
+// -------------------------------
 
-        if(
-          e.target.closest(
-            "#SasoiNoMeijinArea"
-          )
-        ){
+document.addEventListener(
+  "contextmenu",
+  function(e){
 
-          e.preventDefault();
+    if(
+      e.target.closest(
+        "#SasoiNoMeijinArea"
+      )
+    ){
 
-        }
+      e.preventDefault();
+      e.stopPropagation();
 
-      }
-    );
+    }
+
+  },
+  true
+);
 
 
 

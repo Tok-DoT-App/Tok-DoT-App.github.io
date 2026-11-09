@@ -575,7 +575,7 @@ background:"images/sasoi-score27-bg.png"
 id:"combined13",
 number:"熟誘技",
 numberKana:"じゅくゆうぎ",
-title:"初釣戦・伍拾獲超",
+title:"初釣戦・五十獲超",
 titleKana:"はつちょうせん・ごじゅうかくちょう",
 difficulty:"★★★★☆",
 charts:[
