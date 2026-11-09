@@ -19687,29 +19687,26 @@ true
 
 }
 
+    // -------------------------------
+    // 誘いの名人 右クリック禁止
+    // -------------------------------
 
-// -------------------------------
-// 誘いの名人 長押し時の標準動作抑制
-// -------------------------------
+    document.addEventListener(
+      "contextmenu",
+      function(e){
 
-document.addEventListener(
-  "contextmenu",
-  function(e){
+        if(
+          e.target.closest(
+            "#SasoiNoMeijinArea"
+          )
+        ){
 
-    if(
-      e.target.closest(
-        "#SasoiNoMeijinArea"
-      )
-    ){
+          e.preventDefault();
 
-      e.preventDefault();
-      e.stopPropagation();
+        }
 
-    }
-
-  },
-  true
-);
+      }
+    );
 
 
 
