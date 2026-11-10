@@ -9603,7 +9603,7 @@ onclick="resetSasoiDebugAll()"
 
           <p class="sasoi-info-philosophy">
             <strong>誘技を興味に変えること。</strong><br>
-            <strong>しつこくつづけること。</strong><br>
+            <strong>誘技を重ねること。</strong><br>
             <strong>魚にアワセること。</strong>
           </p>
 
