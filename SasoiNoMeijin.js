@@ -2558,7 +2558,7 @@ to{ transform:translateX(-40px); }
   -webkit-user-drag:none;
   user-drag:none;
 
-  /* 色をなめらかに変化させる */
+  /* 色をなめらかに変化させるをOFF */
   transition: none;
 
 }
@@ -2573,10 +2573,13 @@ to{ transform:translateX(-40px); }
   /* 押している間：明るいオレンジ系 */
   background:#F4B942;
 
-  /* 少し光らせる */
+
+  /* 光彩を一時停止（検証用） */
+  /*
   box-shadow:
     0 0 10px rgba(255,213,79,0.75),
     0 0 20px rgba(255,213,79,0.45);
+  */
 
   /* 少しだけ沈む */
   transform:scale(0.96);
@@ -14411,15 +14414,23 @@ notes.forEach((note)=>{
 
 });
 
-console.log(
-"最近音符",
-nearestNote.dataset.id,
-nearestNote.dataset.type,
-"距離",
-nearestDistance,
-"visibility:",
-getComputedStyle(nearestNote).visibility
-);
+
+// ---------------------------------
+// ログ出力if (false) を if (true) に変更で復活
+// ---------------------------------
+
+if (false) {
+    console.log(
+        "最近音符",
+        nearestNote.dataset.id,
+        nearestNote.dataset.type,
+        "距離",
+        nearestDistance,
+        "visibility:",
+        getComputedStyle(nearestNote).visibility
+    );
+}
+
 
 
   // =================================
@@ -17335,9 +17346,11 @@ sasoiTouch.addEventListener(
     // ボタン色変更
     // =================================
 
-    sasoiTouch.classList.add(
-      "active"
-    );
+
+if (true) {
+    sasoiTouch.classList.add("active");
+}
+
 
 
     // =================================
@@ -17429,9 +17442,10 @@ function releaseAction(e){
   //
   // =================================
 
-  sasoiTouch.classList.remove(
-    "active"
-  );
+
+if (true) {
+    sasoiTouch.classList.remove("active");
+}
 
 
   // =================================
