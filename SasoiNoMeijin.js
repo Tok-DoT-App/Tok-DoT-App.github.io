@@ -2559,10 +2559,7 @@ to{ transform:translateX(-40px); }
   user-drag:none;
 
   /* 色をなめらかに変化させる */
-  transition:
-    background-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.15s ease;
+  transition: none;
 
 }
 
@@ -8154,6 +8151,7 @@ let sasoiBiteActionAtStart = null;
 
 let sasoiBiteReleasePending = false;
 
+
 // ◎アワセ受付時間
 const SASOI_BITE_WINDOW = 500;
 
@@ -8161,34 +8159,28 @@ const SASOI_BITE_WINDOW = 500;
 // ◎ アワセタイミング判定
 // =================================
 
-// 0～39ms
+// 0～29ms
 // → 早すぎて魚がまだ掛からない
-const SASOI_BITE_TOO_EARLY = 40;
+const SASOI_BITE_TOO_EARLY = 30;
 
-
-// 40～99ms
+// 30～99ms
 // → 超早合わせでもHIT
-const SASOI_BITE_EARLY_START = 40;
+const SASOI_BITE_EARLY_START = 30;
 const SASOI_BITE_EARLY_END = 100;
 
-
-// 100～219ms
+// 100～269ms
 // → 通常のHITゾーン
 const SASOI_BITE_BEST_START = 100;
-const SASOI_BITE_BEST_END = 220;
+const SASOI_BITE_BEST_END = 270;
 
-
-// 220～349ms
+// 270～399ms
 // → 遅めでもHIT
-const SASOI_BITE_LATE_START = 220;
-const SASOI_BITE_LATE_END = 340;
+const SASOI_BITE_LATE_START = 270;
+const SASOI_BITE_LATE_END = 400;
 
-
-// 340ms以上
+// 400ms以上
 // → 遅すぎてLOST
-const SASOI_BITE_TOO_LATE = 340;
-
-
+const SASOI_BITE_TOO_LATE = 400;
 
 // 釣果結果
 let sasoiResult = null;
