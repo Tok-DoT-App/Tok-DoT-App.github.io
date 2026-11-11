@@ -526,6 +526,108 @@ function closeRevivalModal() {
 
 }
 
+
+/* =========================================================
+   アプリ内通知モーダル
+========================================================= */
+
+function showRevivalNotice(message, title = "お知らせ") {
+
+    // すでに通知モーダルがあれば削除
+    const oldModal = document.getElementById(
+        "revivalNoticeModal"
+    );
+
+    if (oldModal) {
+        oldModal.remove();
+    }
+
+    // モーダル本体
+    const modal = document.createElement("div");
+
+    modal.id = "revivalNoticeModal";
+    modal.className = "revival-modal";
+    modal.style.display = "flex";
+    modal.style.zIndex = "100002";
+
+    // モーダル内容
+    const content = document.createElement("div");
+
+    content.className = "revival-modal-content";
+
+    // ヘッダー
+    const header = document.createElement("div");
+
+    header.className = "revival-modal-header";
+
+    const titleText = document.createElement("span");
+
+    titleText.textContent = title;
+
+    // 閉じるボタン
+    const closeButton = document.createElement("button");
+
+    closeButton.className = "revival-close";
+    closeButton.type = "button";
+    closeButton.textContent = "×";
+
+    // 本文
+    const body = document.createElement("div");
+
+    body.className = "revival-modal-body";
+
+    const messageText = document.createElement("p");
+
+    messageText.className = "revival-description";
+    messageText.textContent = String(message);
+
+    messageText.style.whiteSpace = "pre-line";
+    messageText.style.lineHeight = "1.8";
+    messageText.style.marginBottom = "20px";
+
+    // 閉じるボタン
+    const actionButton = document.createElement("button");
+
+    actionButton.className = "revival-save-btn";
+    actionButton.type = "button";
+    actionButton.textContent = "閉じる";
+
+    // 閉じる処理
+    function closeNotice() {
+
+        modal.remove();
+
+    }
+
+    closeButton.onclick = closeNotice;
+    actionButton.onclick = closeNotice;
+
+    // 背景タップでも閉じる
+    modal.addEventListener("click", function(event) {
+
+        if (event.target === modal) {
+            closeNotice();
+        }
+
+    });
+
+    // 要素を組み立てる
+    header.appendChild(titleText);
+    header.appendChild(closeButton);
+
+    body.appendChild(messageText);
+    body.appendChild(actionButton);
+
+    content.appendChild(header);
+    content.appendChild(body);
+
+    modal.appendChild(content);
+
+    document.body.appendChild(modal);
+
+}
+
+
 document.addEventListener("click", function(event) {
 
     const modal = document.getElementById("revivalModal");
@@ -549,7 +651,7 @@ function createRevivalBackup() {
 
     if (!result.success) {
 
-        alert("バックアップの作成に失敗しました。");
+        showRevivalNotice("バックアップの作成に失敗しました。");
 
         console.error(result.error);
 
@@ -562,7 +664,7 @@ function createRevivalBackup() {
 
     if (!canvas || !qrArea) {
 
-        alert("QRコードの表示場所が見つかりません。");
+        showRevivalNotice("QRコードの表示場所が見つかりません。");
 
         return;
 
@@ -594,7 +696,7 @@ function createRevivalBackup() {
 
         console.error("QRコード生成エラー:", error);
 
-        alert("QRコードの生成に失敗しました。");
+        showRevivalNotice("QRコードの生成に失敗しました。");
 
     }
 
@@ -628,7 +730,7 @@ function saveRevivalQr() {
 
         console.error("QR画像保存エラー:", error);
 
-        alert("QRコード画像の保存に失敗しました。");
+        showRevivalNotice("QRコード画像の保存に失敗しました。");
 
     }
 
@@ -645,7 +747,7 @@ function openRevivalRestore() {
 
     if (!input) {
 
-        alert("QRコード読み取り機能を準備できません。");
+        showRevivalNotice("QRコード読み取り機能を準備できません。");
 
         return;
 
@@ -669,7 +771,7 @@ function readRevivalQrFile(event) {
 
     if (typeof jsQR !== "function") {
 
-        alert("QRコード読み取りライブラリが読み込まれていません。");
+        showRevivalNotice("QRコード読み取りライブラリが読み込まれていません。");
 
         return;
 
@@ -810,7 +912,7 @@ message.innerHTML =
 
                 console.error("QR読み取りエラー:", error);
 
-                alert(
+                showRevivalNotice(
                     "バックアップデータを正常に読み取れませんでした。\n" +
                     error.message
                 );
@@ -821,7 +923,7 @@ message.innerHTML =
 
         image.onerror = function() {
 
-            alert("画像を読み込めませんでした。");
+            showRevivalNotice("画像を読み込めませんでした。");
 
         };
 
@@ -831,7 +933,7 @@ message.innerHTML =
 
     reader.onerror = function() {
 
-        alert("ファイルの読み込みに失敗しました。");
+        showRevivalNotice("ファイルの読み込みに失敗しました。");
 
     };
 
@@ -1028,7 +1130,7 @@ function restoreRevivalBackup() {
 
     if (!backup) {
 
-        alert("復元するバックアップデータがありません。");
+        showRevivalNotice("復元するバックアップデータがありません。");
 
         return;
 
@@ -1041,7 +1143,7 @@ function restoreRevivalBackup() {
 
     } catch (error) {
 
-        alert(
+        showRevivalNotice(
             "バックアップデータが正しくありません。\n" +
             error.message
         );
@@ -1173,7 +1275,7 @@ function executeRevivalRestore(backup) {
 
     } catch (error) {
 
-        alert(
+        showRevivalNotice(
             "バックアップデータが正しくありません。\n" +
             error.message
         );
@@ -1189,7 +1291,7 @@ function executeRevivalRestore(backup) {
 
         if (result.rollbackFailed) {
 
-            alert(
+            showRevivalNotice(
                 "重大なエラーが発生しました。\n" +
                 "復元と元データへの復旧の両方に失敗しています。\n\n" +
                 "エラー：" + result.error + "\n" +
@@ -1198,7 +1300,7 @@ function executeRevivalRestore(backup) {
 
         } else {
 
-            alert(
+            showRevivalNotice(
                 "復元に失敗しました。\n" +
                 "復元前のデータに戻しました。\n\n" +
                 result.error
