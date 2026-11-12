@@ -3738,234 +3738,381 @@ iframe {
 /* -------------------------- インフォメーションボタンCSS -------------------------- */
 
 
-/* -------------------------- データ引継ぎボタン -------------------------- */
+
+/* ==========================================
+   Double Bite!! データ引継ぎボタン
+   Smash!!!! デザイン統一
+========================================== */
 
 .revivalFab {
-  position: fixed;
-  left: 80%;
-  top: 610px;
-  transform: translateX(-50%);
+    position: fixed;
+    right: 20px;
+    bottom: 18px;
 
-  width: 36px;
-  height: 36px;
+    width: 36px;
+    height: 36px;
 
-  border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    border-radius: 50%;
 
-  background: linear-gradient(135deg, #805ad5, #553c9a);
-  border: 2px solid rgba(255,255,255,0.65);
+    background: linear-gradient(135deg, #9575cd, #673ab7);
+    color: #fff;
 
-  color: #fff;
-  font-size: 21px;
-  font-weight: bold;
-  padding-top: 6px;
+    font-size: 18px;
+    font-weight: bold;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    cursor: pointer;
+    z-index: 9000;
 
-  box-shadow: 0 3px 8px rgba(85,60,154,0.35);
+    box-shadow: 0 3px 8px rgba(103, 58, 183, 0.35);
 
-  cursor: pointer;
-  z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 
-  transition:
-    box-shadow .2s ease,
-    transform .2s ease;
+    transform: translate(-45px, -3px);
+
+    box-sizing: border-box;
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* hover */
+.revivalFab:hover {
+    box-shadow: 0 4px 10px rgba(103, 58, 183, 0.45);
+}
+
+/* フォーカス時 */
+.revivalFab:focus,
+.revivalFab:focus-visible {
+    outline: none;
+}
+
+/* 押した時 */
+.revivalFab:active {
+    transform: translate(-45px, -2px);
+    box-shadow: 0 2px 5px rgba(103, 58, 183, 0.35) inset;
+}
+
+
+
+/* ==========================================
+   Double Bite!! データ引継ぎボタン
+========================================== */
+
+.revivalFab {
+    position: fixed;
+    left: 80%;
+    top: 610px;
+    transform: translateX(-50%);
+
+    width: 36px;
+    height: 36px;
+
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    border-radius: 50%;
+
+    background: linear-gradient(135deg, #9575cd, #673ab7);
+    color: #fff;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+    z-index: 9000;
+
+    box-shadow: 0 3px 8px rgba(103, 58, 183, 0.35);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.revivalFab:hover {
+    box-shadow: 0 4px 10px rgba(103, 58, 183, 0.45);
+}
+
+.revivalFab:focus,
+.revivalFab:focus-visible {
+    outline: none;
 }
 
 .revivalFab:active {
-  transform: translateX(-50%) scale(0.95);
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 0 2px 5px rgba(103, 58, 183, 0.35) inset;
 }
 
-/* -------------------------- データ引継ぎボタン -------------------------- */
 
-/* ================= データ引継ぎモーダル ================= */
+/* ==========================================
+   データ引継ぎモーダル
+========================================== */
 
-.revival-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
+#revivalModal {
+    display: none;
+    position: fixed;
+    inset: 0;
 
-  background: rgba(0,0,0,0.65);
+    z-index: 10000;
 
-  z-index: 10000;
+    background: rgba(0, 0, 0, 0.65);
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
 
-  padding: 12px;
-  box-sizing: border-box;
-
-  overflow: hidden;
+    padding: 15px;
+    box-sizing: border-box;
 }
+
 
 /* モーダル本体 */
-.revival-modal-content {
-  width: 100%;
-  max-width: 360px;
 
-  /* 画面の高さに合わせる */
-  max-height: 90vh;
-  max-height: 90dvh;
+.smash-revival-content {
+    position: relative;
 
-  background: #fff;
-  color: #333;
+    width: 100%;
+    max-width: 420px;
 
-  border-radius: 18px;
-  overflow: hidden;
+    max-height: 85vh;
+    max-height: 85dvh;
 
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 
-  display: flex;
-  flex-direction: column;
+    background: #fff;
+    color: #333;
 
-  box-sizing: border-box;
+    border-radius: 16px;
+
+    padding: 22px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
 }
+
 
 /* ヘッダー */
-.revival-modal-header {
-  height: 54px;
-  min-height: 54px;
 
-  background: linear-gradient(135deg, #805ad5, #553c9a);
-  color: #fff;
+.smash-revival-header {
+    position: relative;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  position: relative;
+    margin-bottom: 18px;
 
-  font-size: 18px;
-  font-weight: bold;
+    padding: 0 42px;
 
-  flex-shrink: 0;
+    min-height: 36px;
 }
+
+
+/* タイトル */
+
+.smash-revival-title {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.4;
+
+    color: #333;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
 
 /* 閉じるボタン */
-.revival-close {
-  position: absolute;
-  right: 12px;
 
-  width: 34px;
-  height: 34px;
+.smash-revival-close {
+    position: absolute;
 
-  border: none;
-  background: transparent;
+    top: 50%;
+    right: 0;
 
-  color: #fff;
-  font-size: 27px;
+    transform: translateY(-50%);
 
-  cursor: pointer;
+    width: 34px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    background: transparent;
+
+    color: #666;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    padding: 0;
 }
 
-/* モーダル本文 */
-.revival-modal-body {
-  padding: 20px 18px;
-
-  text-align: center;
-
-  /* 本文部分だけスクロール */
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-
-  box-sizing: border-box;
-}
 
 /* 説明文 */
-.revival-description {
-  font-size: 13px;
-  color: #666;
-  margin: 0 0 20px;
-}
 
-/* 操作ボタン */
-.revival-action-btn {
-  width: 100%;
-  height: 52px;
-  min-height: 52px;
+.smash-revival-description {
+    font-size: 14px;
+    line-height: 1.7;
 
-  border: none;
-  border-radius: 12px;
+    color: #555;
 
-  color: #fff;
-  font-size: 15px;
-  font-weight: bold;
-
-  margin-bottom: 12px;
-
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.backup-action {
-  background: linear-gradient(135deg, #805ad5, #553c9a);
-}
-
-.restore-action {
-  background: linear-gradient(135deg, #3182ce, #2b6cb0);
-}
-
-.revival-action-btn span {
-  margin-right: 8px;
+    margin: 0 0 20px;
 }
 
 
+/* ==========================================
+   操作ボタン
+========================================== */
 
-/* QRコード表示エリア */
+.smash-revival-action {
+    display: block;
+
+    width: 100%;
+    min-height: 48px;
+
+    margin-top: 12px;
+    padding: 12px;
+
+    border: none;
+    border-radius: 9px;
+
+    color: #fff;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.smash-revival-backup {
+    background: #3949ab;
+}
+
+.smash-revival-restore {
+    background: #00897b;
+}
+
+.smash-revival-save {
+    background: #616161;
+}
+
+.smash-revival-action:active {
+    opacity: 0.8;
+    transform: scale(0.99);
+}
+
+
+/* ==========================================
+   QRコード表示
+========================================== */
+
 #revivalQrArea {
-  margin-top: 16px;
-  padding-top: 12px;
+    display: none;
 
-  border-top: 1px solid #ddd;
+    margin-top: 22px;
+    padding: 15px;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    text-align: center;
+
+    background: #fafafa;
 }
 
-/* QRコード */
 #revivalQrCanvas {
-  display: block;
+    display: block;
 
-  width: min(100%, 320px);
-  height: auto;
+    width: 100%;
+    max-width: 280px;
 
-  max-height: 38dvh;
+    height: auto;
 
-  object-fit: contain;
+    margin: 10px auto;
 
-  margin: 12px auto;
+    background: #fff;
+}
 
-  box-sizing: border-box;
+#revivalBackupDate {
+    font-size: 12px;
+    color: #666;
+
+    margin: 8px 0;
 }
 
 
+/* ==========================================
+   復元結果表示
+========================================== */
 
-/* QRコード保存ボタン */
-.revival-save-btn {
-  width: 100%;
-  height: 44px;
-  min-height: 44px;
+#revivalRestoreResult {
+    display: none;
 
-  border: none;
-  border-radius: 10px;
+    margin-top: 16px;
+    padding: 12px;
 
-  background: #38a169;
-  color: #fff;
+    border-radius: 8px;
 
-  font-weight: bold;
-  cursor: pointer;
-
-  flex-shrink: 0;
+    background: #f5f5f5;
 }
 
-/* ================= データ引継ぎモーダル ================= */
+#revivalRestoreMessage {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    white-space: pre-line;
+}
+
+
+/* ==========================================
+   ファイル入力欄
+========================================== */
+
+#revivalQrFile {
+    display: none;
+}
+
+
+/* ==========================================
+   スマートフォン表示
+========================================== */
+
+@media (max-width: 480px) {
+
+    .smash-revival-content {
+        padding: 18px;
+    }
+
+}
 
 
 /* -------------------------- 誘いの名人CSS -------------------------- */
@@ -4427,15 +4574,130 @@ iframe {
 </button>
 
 
-<!-- 全画面共通 データ引継ぎ -->
+<!-- ==========================================
+     Double Bite!! データ引継ぎボタン
+========================================== -->
+
 <button
-  id="revivalBtn"
-  class="revivalFab"
-  onclick="openRevivalModal()"
-  aria-label="データ引継ぎ">
-  ▦
+    type="button"
+    class="revivalFab"
+    id="revivalBtn"
+    onclick="openRevivalModal()"
+    aria-label="データ引継ぎ"
+    title="データ引継ぎ"
+>
+    ⇧
 </button>
 
+<!-- ==========================================
+     データ引継ぎモーダル
+========================================== -->
+
+<div id="revivalModal">
+
+    <div class="smash-revival-content">
+
+        <!-- ヘッダー -->
+
+        <div class="smash-revival-header">
+
+            <h2 class="smash-revival-title">
+                データ引継ぎ
+            </h2>
+
+            <button
+                type="button"
+                class="smash-revival-close"
+                onclick="closeRevivalModal()"
+                aria-label="閉じる"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- 説明 -->
+
+        <div class="smash-revival-description">
+            機種変更やアプリの再インストールに備えて、
+            データをQRコードで保存できます。<br><br>
+
+            保存したQRコード画像を読み込むことで、
+            別の端末へデータを引き継ぐことができます。
+        </div>
+
+
+        <!-- バックアップ作成 -->
+
+        <button
+            type="button"
+            class="smash-revival-action smash-revival-backup"
+            onclick="createRevivalBackup()"
+        >
+            QRコードを作成
+        </button>
+
+
+        <!-- QRコード表示エリア -->
+
+        <div id="revivalQrArea">
+
+            <div>
+                <strong>バックアップ用QRコード</strong>
+            </div>
+
+            <canvas id="revivalQrCanvas"></canvas>
+
+            <div id="revivalBackupDate"></div>
+
+            <button
+                type="button"
+                class="smash-revival-action smash-revival-save"
+                onclick="saveRevivalQr()"
+            >
+                QRコード画像を保存
+            </button>
+
+        </div>
+
+
+        <!-- データ復元 -->
+
+        <button
+            type="button"
+            class="smash-revival-action smash-revival-restore"
+            onclick="openRevivalRestore()"
+        >
+            QRコードからデータを復元
+        </button>
+
+
+        <!-- QR画像選択 -->
+
+        <input
+            type="file"
+            id="revivalQrFile"
+            accept="image/*"
+            onchange="readRevivalQrFile(event)"
+        >
+
+
+        <!-- 復元結果 -->
+
+        <div id="revivalRestoreResult">
+
+            <p id="revivalRestoreMessage"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================
+     データ引継ぎモーダル終了
+========================================== -->
 
 <!------------------------------ わいわいテント登録画面 ------------------------------>
 <!-- わいわいテント登録 -->
@@ -10726,12 +10988,18 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-<!-- QRコード用QRious ライブラリ読み込み -->
-<script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/fflate/umd/index.js"></script>
+<!-- QRコード生成ライブラリ（QRious） -->
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 
+<!-- データ圧縮・解凍ライブラリ（fflate） -->
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
+
+<!-- QRコード読み取りライブラリ（jsQR） -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+<!-- ========================= データ引継ぎ機能 ========================= -->
+<script src="backupManager.js"></script>
 
 <!-- OFUSE ウィジェット（async でOK） -->
 <script async src="https://ofuse.me/assets/platform/widget.js" charset="utf-8"></script>
@@ -11135,97 +11403,6 @@ window.addEventListener("appinstalled", function () {
 
 
 <!-- ========================= PWA インストール案内 ========================= -->
-
-
-<!-- ========================= データ引継ぎ機能 ========================= -->
-<script src="backupManager.js"></script>
-
-
-<!-- ================= データ引継ぎモーダル ================= -->
-
-<div id="revivalModal" class="revival-modal">
-
-  <div class="revival-modal-content">
-
-    <div class="revival-modal-header">
-      <span>データ引継ぎ</span>
-
-      <button
-        class="revival-close"
-        onclick="closeRevivalModal()">
-        ×
-      </button>
-    </div>
-
-    <div class="revival-modal-body">
-
-      <p class="revival-description">
-        旧端末のデータをバックアップして、<br>
-        新しい端末に引き継ぐことができます。
-      </p>
-
-      <button
-        class="revival-action-btn backup-action"
-        onclick="createRevivalBackup()">
-        <span>▦</span>
-        バックアップを作成
-      </button>
-
-      <button
-        class="revival-action-btn restore-action"
-        onclick="openRevivalRestore()">
-        <span>📷</span>
-        データを復元
-      </button>
-
-
-      <div id="revivalQrArea" style="display:none;">
-
-        <p class="revival-description">
-          データ引継ぎ用QRコード
-        </p>
-
-        <p class="revival-description">
-          QRコードを画像として保存し、新しい端末にメール等で転送してください。
-          新しい端末でこの画像ファイルを読み込むと、データを引き継ぐことができます。
-        </p>
-
-        <canvas id="revivalQrCanvas"></canvas>
-
-        <button
-          class="revival-save-btn"
-          onclick="saveRevivalQr()">
-          QRコードを保存
-        </button>
-
-      </div>
-
-
-      <!-- QRコード読み取り用 -->
-
-      <input
-        type="file"
-        id="revivalQrFile"
-        accept="image/*"
-        style="display:none"
-        onchange="readRevivalQrFile(event)">
-
-
-      <div
-        id="revivalRestoreResult"
-        style="display:none; margin-top:18px;">
-
-        <p id="revivalRestoreMessage"></p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- ================= データ引継ぎモーダル ================= -->
 
 
 </body>

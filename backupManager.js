@@ -1,8 +1,8 @@
 
 /* =========================================================
    backupManager.js
-   Double Bite!! バックアップ管理
-   Ver.2.0.0
+   Double Bite!! データ引継ぎ
+   Smash!!!! UI統合版
 
    ・バックアップデータ収集
    ・gzip圧縮
@@ -12,14 +12,20 @@
    ・バックアップデータ検証
    ・既存データの完全上書き復元
    ・復元失敗時のロールバック
+   ・独自確認／通知／完了モーダル
 ========================================================= */
 
-window.BackupManager = (() => {
+(function () {
 
     "use strict";
 
+    // ==========================================
+    // バックアップ設定
+    // ==========================================
+
     const BACKUP_FORMAT = "double-bite-backup";
     const BACKUP_VERSION = 1;
+    const QR_PREFIX = "DBBACKUP1:";
 
     // バックアップ対象の固定キー
     const BACKUP_KEYS = [
@@ -35,9 +41,9 @@ window.BackupManager = (() => {
     const GAUGE_HIGH_PREFIX = "sasoiGaugeHighScore_";
 
 
-    /* =====================================================
-       バックアップ対象キーか確認
-    ===================================================== */
+    // ==========================================
+    // 管理対象キーの判定
+    // ==========================================
 
     function isManagedKey(key) {
 
@@ -54,15 +60,15 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       現在のバックアップ対象データを収集
-    ===================================================== */
+    // ==========================================
+    // バックアップ対象データの収集
+    // ==========================================
 
     function collectData() {
 
         const data = {};
 
-        BACKUP_KEYS.forEach(key => {
+        BACKUP_KEYS.forEach(function (key) {
 
             const value = localStorage.getItem(key);
 
@@ -97,9 +103,9 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       現在のバックアップ対象キー一覧
-    ===================================================== */
+    // ==========================================
+    // 現在の管理対象キー一覧
+    // ==========================================
 
     function getManagedKeys() {
 
@@ -120,9 +126,9 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       バックアップデータ生成
-    ===================================================== */
+    // ==========================================
+    // バックアップデータ生成
+    // ==========================================
 
     function createBackup() {
 
@@ -141,13 +147,22 @@ window.BackupManager = (() => {
 
             const bytes = new TextEncoder().encode(json);
 
-            const compressed = fflate.gzipSync(bytes, {
+            if (
+                !window.fflate ||
+                typeof window.fflate.gzipSync !== "function"
+            ) {
+                throw new Error(
+                    "圧縮ライブラリ fflate が読み込まれていません。"
+                );
+            }
+
+            const compressed = window.fflate.gzipSync(bytes, {
                 level: 9
             });
 
             let binary = "";
 
-            compressed.forEach(byte => {
+            compressed.forEach(function (byte) {
                 binary += String.fromCharCode(byte);
             });
 
@@ -172,7 +187,8 @@ window.BackupManager = (() => {
 
             return {
                 success: false,
-                error: error.message
+                error: error.message ||
+                    "バックアップの作成に失敗しました。"
             };
 
         }
@@ -180,11 +196,22 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       バックアップ情報取得
-    ===================================================== */
+    // ==========================================
+    // バックアップ情報取得
+    // ==========================================
 
-    function getBackupInfo() {
+    function getBackupInfo(backup) {
+
+        if (backup && backup.data) {
+
+            return {
+                createdAt: backup.createdAt,
+                version: backup.version,
+                dataCount: Object.keys(backup.data).length,
+                keys: Object.keys(backup.data)
+            };
+
+        }
 
         const data = collectData();
 
@@ -196,29 +223,41 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       バックアップデータ検証
-    ===================================================== */
+    // ==========================================
+    // バックアップデータ検証
+    // ==========================================
 
     function validateBackup(backup) {
 
-        if (!backup || typeof backup !== "object") {
-            throw new Error("バックアップデータがありません。");
+        if (
+            !backup ||
+            typeof backup !== "object" ||
+            Array.isArray(backup)
+        ) {
+            throw new Error(
+                "バックアップデータがありません。"
+            );
         }
 
         if (backup.format !== BACKUP_FORMAT) {
-            throw new Error("バックアップ形式が違います。");
+            throw new Error(
+                "Double Bite!!用のバックアップ形式ではありません。"
+            );
         }
 
         if (backup.version !== BACKUP_VERSION) {
-            throw new Error("対応していないバックアップバージョンです。");
+            throw new Error(
+                "対応していないバックアップバージョンです。"
+            );
         }
 
         if (
             typeof backup.createdAt !== "string" ||
             !Number.isFinite(Date.parse(backup.createdAt))
         ) {
-            throw new Error("バックアップ日時が正しくありません。");
+            throw new Error(
+                "バックアップ日時が正しくありません。"
+            );
         }
 
         if (
@@ -226,16 +265,20 @@ window.BackupManager = (() => {
             typeof backup.data !== "object" ||
             Array.isArray(backup.data)
         ) {
-            throw new Error("バックアップデータの構造が正しくありません。");
+            throw new Error(
+                "バックアップデータの構造が正しくありません。"
+            );
         }
 
         const keys = Object.keys(backup.data);
 
         if (keys.length > 1000) {
-            throw new Error("バックアップのデータ件数が多すぎます。");
+            throw new Error(
+                "バックアップのデータ件数が多すぎます。"
+            );
         }
 
-        keys.forEach(key => {
+        keys.forEach(function (key) {
 
             if (!isManagedKey(key)) {
                 throw new Error(
@@ -246,7 +289,9 @@ window.BackupManager = (() => {
             const value = backup.data[key];
 
             if (typeof value !== "string") {
-                throw new Error("保存データの形式が正しくありません: " + key);
+                throw new Error(
+                    "保存データの形式が正しくありません: " + key
+                );
             }
 
             let parsed;
@@ -254,7 +299,9 @@ window.BackupManager = (() => {
             try {
                 parsed = JSON.parse(value);
             } catch (error) {
-                throw new Error("JSONデータが破損しています: " + key);
+                throw new Error(
+                    "JSONデータが破損しています: " + key
+                );
             }
 
             // 興味ゲージHIGHは数値
@@ -271,10 +318,9 @@ window.BackupManager = (() => {
                 }
 
                 return;
-
             }
 
-            // soloRecordsとPartnerMind釣行履歴は配列
+            // 履歴データは配列
             if (
                 key === "soloRecords" ||
                 key === "partnerMindTrips"
@@ -287,7 +333,6 @@ window.BackupManager = (() => {
                 }
 
                 return;
-
             }
 
             // その他の固定キーはオブジェクト
@@ -311,9 +356,9 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       既存データの退避
-    ===================================================== */
+    // ==========================================
+    // 既存データの退避
+    // ==========================================
 
     function backupCurrentData() {
 
@@ -321,7 +366,7 @@ window.BackupManager = (() => {
 
         const keys = getManagedKeys();
 
-        keys.forEach(key => {
+        keys.forEach(function (key) {
 
             snapshot[key] = localStorage.getItem(key);
 
@@ -332,15 +377,15 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       現在の対象データをすべて削除
-    ===================================================== */
+    // ==========================================
+    // 管理対象データをすべて削除
+    // ==========================================
 
     function clearManagedData() {
 
         const keys = getManagedKeys();
 
-        keys.forEach(key => {
+        keys.forEach(function (key) {
 
             localStorage.removeItem(key);
 
@@ -349,35 +394,45 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       既存データへの復元
-    ===================================================== */
+    // ==========================================
+    // 既存データへのロールバック
+    // ==========================================
 
     function restorePreviousData(snapshot) {
 
         clearManagedData();
 
-        Object.keys(snapshot).forEach(key => {
+        Object.keys(snapshot).forEach(function (key) {
 
             if (!isManagedKey(key)) {
-                throw new Error("復元対象外のキーです: " + key);
+                throw new Error(
+                    "復元対象外のキーです: " + key
+                );
             }
 
             localStorage.setItem(key, snapshot[key]);
 
         });
 
-        // 元の状態と一致するか確認
         const restoredKeys = getManagedKeys();
 
-        if (restoredKeys.length !== Object.keys(snapshot).length) {
-            throw new Error("復元前データのロールバックに失敗しました。");
+        if (
+            restoredKeys.length !==
+            Object.keys(snapshot).length
+        ) {
+            throw new Error(
+                "復元前データのロールバックに失敗しました。"
+            );
         }
 
-        Object.keys(snapshot).forEach(key => {
+        Object.keys(snapshot).forEach(function (key) {
 
-            if (localStorage.getItem(key) !== snapshot[key]) {
-                throw new Error("復元前データの照合に失敗しました: " + key);
+            if (
+                localStorage.getItem(key) !== snapshot[key]
+            ) {
+                throw new Error(
+                    "復元前データの照合に失敗しました: " + key
+                );
             }
 
         });
@@ -385,9 +440,9 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       バックアップデータで完全上書き
-    ===================================================== */
+    // ==========================================
+    // バックアップデータで完全上書き
+    // ==========================================
 
     function restoreBackup(backup) {
 
@@ -401,14 +456,16 @@ window.BackupManager = (() => {
             // 復元前の状態を退避
             snapshot = backupCurrentData();
 
-            // 既存のバックアップ対象データを削除
+            // 既存の管理対象データを削除
             clearManagedData();
 
             // バックアップ側のデータを書き込む
-            Object.keys(backup.data).forEach(key => {
+            Object.keys(backup.data).forEach(function (key) {
 
                 if (!isManagedKey(key)) {
-                    throw new Error("不正な復元キーです: " + key);
+                    throw new Error(
+                        "不正な復元キーです: " + key
+                    );
                 }
 
                 localStorage.setItem(
@@ -423,11 +480,15 @@ window.BackupManager = (() => {
 
             const expectedKeys = Object.keys(backup.data);
 
-            if (restoredKeys.length !== expectedKeys.length) {
-                throw new Error("復元データの件数が一致しません。");
+            if (
+                restoredKeys.length !== expectedKeys.length
+            ) {
+                throw new Error(
+                    "復元データの件数が一致しません。"
+                );
             }
 
-            expectedKeys.forEach(key => {
+            expectedKeys.forEach(function (key) {
 
                 if (
                     localStorage.getItem(key) !== backup.data[key]
@@ -446,7 +507,10 @@ window.BackupManager = (() => {
 
         } catch (error) {
 
-            console.error("復元処理エラー:", error);
+            console.error(
+                "復元処理エラー:",
+                error
+            );
 
             // 退避データがある場合は元に戻す
             if (snapshot !== null) {
@@ -488,838 +552,941 @@ window.BackupManager = (() => {
     }
 
 
-    /* =====================================================
-       公開する機能
-    ===================================================== */
+    // ==========================================
+    // QRコード文字列からバックアップを復元
+    // ==========================================
 
-    return {
-        createBackup,
-        getBackupInfo,
-        validateBackup,
-        restoreBackup
-    };
+    function decodeBackup(qrData) {
 
-})();
+        try {
 
+            if (
+                typeof qrData !== "string" ||
+                !qrData.startsWith(QR_PREFIX)
+            ) {
+                throw new Error(
+                    "Double Bite!!用のバックアップQRではありません。"
+                );
+            }
 
-/* =========================================================
-   データ引継ぎ モーダル制御
-========================================================= */
+            if (
+                !window.fflate ||
+                typeof window.fflate.gunzipSync !== "function"
+            ) {
+                throw new Error(
+                    "圧縮ライブラリ fflate が読み込まれていません。"
+                );
+            }
 
-function openRevivalModal() {
+            const base64 = qrData.substring(QR_PREFIX.length);
 
-    const modal = document.getElementById("revivalModal");
+            const binary = atob(base64);
 
-    if (!modal) return;
+            const compressed = new Uint8Array(binary.length);
 
-    modal.style.display = "flex";
+            for (let i = 0; i < binary.length; i++) {
+                compressed[i] = binary.charCodeAt(i);
+            }
 
-}
+            const decompressed =
+                window.fflate.gunzipSync(compressed);
 
-function closeRevivalModal() {
+            const json = new TextDecoder().decode(decompressed);
 
-    const modal = document.getElementById("revivalModal");
+            const backup = JSON.parse(json);
 
-    if (!modal) return;
+            validateBackup(backup);
 
-    modal.style.display = "none";
+            return {
+                success: true,
+                backup: backup
+            };
 
-}
+        } catch (error) {
 
+            console.error(
+                "QRコード解析エラー:",
+                error
+            );
 
-/* =========================================================
-   アプリ内通知モーダル
-========================================================= */
+            return {
+                success: false,
+                message: error.message ||
+                    "QRコードを読み取れませんでした。"
+            };
 
-function showRevivalNotice(message, title = "お知らせ") {
-
-    // すでに通知モーダルがあれば削除
-    const oldModal = document.getElementById(
-        "revivalNoticeModal"
-    );
-
-    if (oldModal) {
-        oldModal.remove();
-    }
-
-    // モーダル本体
-    const modal = document.createElement("div");
-
-    modal.id = "revivalNoticeModal";
-    modal.className = "revival-modal";
-    modal.style.display = "flex";
-    modal.style.zIndex = "100002";
-
-    // モーダル内容
-    const content = document.createElement("div");
-
-    content.className = "revival-modal-content";
-
-    // ヘッダー
-    const header = document.createElement("div");
-
-    header.className = "revival-modal-header";
-
-    const titleText = document.createElement("span");
-
-    titleText.textContent = title;
-
-    // 閉じるボタン
-    const closeButton = document.createElement("button");
-
-    closeButton.className = "revival-close";
-    closeButton.type = "button";
-    closeButton.textContent = "×";
-
-    // 本文
-    const body = document.createElement("div");
-
-    body.className = "revival-modal-body";
-
-    const messageText = document.createElement("p");
-
-    messageText.className = "revival-description";
-    messageText.textContent = String(message);
-
-    messageText.style.whiteSpace = "pre-line";
-    messageText.style.lineHeight = "1.8";
-    messageText.style.marginBottom = "20px";
-
-    // 閉じるボタン
-    const actionButton = document.createElement("button");
-
-    actionButton.className = "revival-save-btn";
-    actionButton.type = "button";
-    actionButton.textContent = "閉じる";
-
-    // 閉じる処理
-    function closeNotice() {
-
-        modal.remove();
-
-    }
-
-    closeButton.onclick = closeNotice;
-    actionButton.onclick = closeNotice;
-
-    // 背景タップでも閉じる
-    modal.addEventListener("click", function(event) {
-
-        if (event.target === modal) {
-            closeNotice();
         }
 
-    });
-
-    // 要素を組み立てる
-    header.appendChild(titleText);
-    header.appendChild(closeButton);
-
-    body.appendChild(messageText);
-    body.appendChild(actionButton);
-
-    content.appendChild(header);
-    content.appendChild(body);
-
-    modal.appendChild(content);
-
-    document.body.appendChild(modal);
-
-}
-
-
-document.addEventListener("click", function(event) {
-
-    const modal = document.getElementById("revivalModal");
-
-    if (!modal) return;
-
-    if (event.target === modal) {
-        closeRevivalModal();
     }
 
-});
+
+    // ==========================================
+    // BackupManager 公開
+    // ==========================================
+
+    window.BackupManager = {
+        createBackup: createBackup,
+        getBackupInfo: getBackupInfo,
+        validateBackup: validateBackup,
+        restoreBackup: restoreBackup,
+        decodeBackup: decodeBackup,
+        getManagedKeys: function () {
+            return getManagedKeys();
+        }
+    };
 
 
-/* =========================================================
-   QRコード生成
-========================================================= */
+    // ==========================================
+    // データ引継ぎ画面の操作
+    // ==========================================
 
-function createRevivalBackup() {
+    let pendingRevivalBackup = null;
 
-    const result = BackupManager.createBackup();
+    function openRevivalModal() {
 
-    if (!result.success) {
+        const modal = document.getElementById("revivalModal");
 
-        showRevivalNotice("バックアップの作成に失敗しました。");
-
-        console.error(result.error);
-
-        return;
+        if (modal) {
+            modal.style.display = "flex";
+        }
 
     }
 
-    const canvas = document.getElementById("revivalQrCanvas");
-    const qrArea = document.getElementById("revivalQrArea");
 
-    if (!canvas || !qrArea) {
+    function closeRevivalModal() {
 
-        showRevivalNotice("QRコードの表示場所が見つかりません。");
+        const modal = document.getElementById("revivalModal");
 
-        return;
+        if (modal) {
+            modal.style.display = "none";
+        }
 
-    }
-
-    try {
-
-        const qrData = "DBBACKUP1:" + result.compressedData;
-
-        new QRious({
-            element: canvas,
-            value: qrData,
-            size: 500,
-            level: "L",
-            padding: 20,
-            background: "#ffffff",
-            foreground: "#000000"
-        });
-
-        qrArea.style.display = "block";
-
-        console.log("QRバックアップ生成成功");
-        console.log("保存データ数:", result.dataCount);
-        console.log("圧縮サイズ:", result.compressedSize);
-        console.log("QRデータ文字数:", qrData.length);
-        console.log("QRコードサイズ:", canvas.width);
-
-    } catch (error) {
-
-        console.error("QRコード生成エラー:", error);
-
-        showRevivalNotice("QRコードの生成に失敗しました。");
+        clearRevivalQr();
 
     }
 
-}
 
+    // ==========================================
+    // QRコード表示のクリア
+    // ==========================================
 
-/* =========================================================
-   QRコード画像保存
-========================================================= */
+    function clearRevivalQr() {
 
-function saveRevivalQr() {
+        const area = document.getElementById("revivalQrArea");
 
-    const canvas = document.getElementById("revivalQrCanvas");
+        const canvas = document.getElementById("revivalQrCanvas");
 
-    if (!canvas) return;
+        const dateElement = document.getElementById("revivalBackupDate");
 
-    try {
+        const resultArea = document.getElementById("revivalRestoreResult");
 
-        const link = document.createElement("a");
+        const message = document.getElementById("revivalRestoreMessage");
 
-        link.download =
-            "DoubleBite_Backup_" +
-            new Date().toISOString().slice(0, 10) +
-            ".png";
+        const restoreButton = document.getElementById(
+            "revivalApplyRestoreBtn"
+        );
 
-        link.href = canvas.toDataURL("image/png");
+        const fileInput = document.getElementById("revivalQrFile");
 
-        link.click();
+        if (area) {
+            area.style.display = "none";
+        }
 
-    } catch (error) {
+        if (canvas) {
 
-        console.error("QR画像保存エラー:", error);
+            const context = canvas.getContext("2d");
 
-        showRevivalNotice("QRコード画像の保存に失敗しました。");
-
-    }
-
-}
-
-
-/* =========================================================
-   QRコード読み取り画面
-========================================================= */
-
-function openRevivalRestore() {
-
-    const input = document.getElementById("revivalQrFile");
-
-    if (!input) {
-
-        showRevivalNotice("QRコード読み取り機能を準備できません。");
-
-        return;
-
-    }
-
-    input.value = "";
-    input.click();
-
-}
-
-
-/* =========================================================
-   QRコード読み取り
-========================================================= */
-
-function readRevivalQrFile(event) {
-
-    const file = event.target.files[0];
-
-    if (!file) return;
-
-    if (typeof jsQR !== "function") {
-
-        showRevivalNotice("QRコード読み取りライブラリが読み込まれていません。");
-
-        return;
-
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = function() {
-
-        const image = new Image();
-
-        image.onload = function() {
-
-            try {
-
-                const canvas = document.createElement("canvas");
-                const context = canvas.getContext("2d");
-
-                canvas.width = image.naturalWidth;
-                canvas.height = image.naturalHeight;
-
-                context.drawImage(image, 0, 0);
-
-                const imageData = context.getImageData(
+            if (context) {
+                context.clearRect(
                     0,
                     0,
                     canvas.width,
                     canvas.height
                 );
-
-                const code = jsQR(
-                    imageData.data,
-                    imageData.width,
-                    imageData.height
-                );
-
-                if (!code) {
-
-                    throw new Error("QRコードを読み取れませんでした。");
-
-                }
-
-                const prefix = "DBBACKUP1:";
-
-                if (!code.data.startsWith(prefix)) {
-
-                    throw new Error(
-                        "Double Bite!! のバックアップQRではありません。"
-                    );
-
-                }
-
-                const base64 = code.data.slice(prefix.length);
-
-                const binary = atob(base64);
-
-                const compressed = new Uint8Array(binary.length);
-
-                for (let i = 0; i < binary.length; i++) {
-
-                    compressed[i] = binary.charCodeAt(i);
-
-                }
-
-                // gzip解凍
-                const decompressed = fflate.gunzipSync(compressed);
-
-                // JSON変換
-                const json = new TextDecoder().decode(decompressed);
-
-                const backup = JSON.parse(json);
-
-                // データ検証
-                BackupManager.validateBackup(backup);
-
-                // 読み取りデータを保持
-                window.pendingRevivalBackup = backup;
-
-                // 結果表示
-                const resultArea = document.getElementById(
-                    "revivalRestoreResult"
-                );
-
-                const message = document.getElementById(
-                    "revivalRestoreMessage"
-                );
-
-                if (!resultArea || !message) {
-
-                    throw new Error("復元確認画面が見つかりません。");
-
-                }
-
-                resultArea.style.display = "block";
-
-                const dateText = new Date(
-                    backup.createdAt
-                ).toLocaleString("ja-JP");
-
-
-message.innerHTML =
-    "バックアップの読み取りに成功しました。<br>" +
-    "作成日時：" + dateText + "<br>" +
-    "このバックアップでデータを復元します。";
-
-
-                // 復元ボタンを作成
-                let restoreButton = document.getElementById(
-                    "revivalApplyRestoreBtn"
-                );
-
-                if (!restoreButton) {
-
-                    restoreButton = document.createElement("button");
-
-                    restoreButton.id = "revivalApplyRestoreBtn";
-                    restoreButton.className = "revival-save-btn";
-                    restoreButton.textContent = "このバックアップで復元する";
-
-                    restoreButton.style.marginTop = "12px";
-
-                    restoreButton.onclick = restoreRevivalBackup;
-
-                    resultArea.appendChild(restoreButton);
-
-                }
-
-                restoreButton.style.display = "block";
-
-                console.log("バックアップ読み取り成功");
-                console.log("作成日時:", backup.createdAt);
-                console.log("保存データ数:", Object.keys(backup.data).length);
-                console.log("保存データ:", backup.data);
-
-            } catch (error) {
-
-                window.pendingRevivalBackup = null;
-
-                console.error("QR読み取りエラー:", error);
-
-                showRevivalNotice(
-                    "バックアップデータを正常に読み取れませんでした。\n" +
-                    error.message
-                );
-
             }
 
-        };
+        }
 
-        image.onerror = function() {
+        if (dateElement) {
+            dateElement.textContent = "";
+        }
 
-            showRevivalNotice("画像を読み込めませんでした。");
+        if (resultArea) {
+            resultArea.style.display = "none";
+        }
 
-        };
+        if (message) {
+            message.textContent = "";
+        }
 
-        image.src = reader.result;
+        if (restoreButton) {
+            restoreButton.remove();
+        }
 
-    };
+        if (fileInput) {
+            fileInput.value = "";
+        }
 
-    reader.onerror = function() {
+        pendingRevivalBackup = null;
 
-        showRevivalNotice("ファイルの読み込みに失敗しました。");
+        window.pendingRevivalBackup = null;
 
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-
-/* =========================================================
-   データ引継ぎ 確認モーダル
-========================================================= */
-
-function showRevivalRestoreConfirm(backup) {
-
-    // 既存の確認モーダルがあれば削除
-    const oldModal = document.getElementById(
-        "revivalConfirmModal"
-    );
-
-    if (oldModal) {
-        oldModal.remove();
     }
 
-    const dateText = new Date(
-        backup.createdAt
-    ).toLocaleString("ja-JP");
 
-    // モーダル本体
-    const modal = document.createElement("div");
+    // ==========================================
+    // 独自メッセージモーダル
+    // ==========================================
 
-    modal.id = "revivalConfirmModal";
+    let revivalDialogElement = null;
 
-    Object.assign(modal.style, {
-        position: "fixed",
-        inset: "0",
-        zIndex: "100000",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0, 0, 0, 0.75)",
-        padding: "20px",
-        boxSizing: "border-box"
-    });
 
-    // 確認パネル
-    const panel = document.createElement("div");
+    function closeRevivalDialog(callback) {
 
-    Object.assign(panel.style, {
-        width: "100%",
-        maxWidth: "360px",
-        background: "#ffffff",
-        borderRadius: "16px",
-        padding: "24px 20px",
-        boxSizing: "border-box",
-        textAlign: "center",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.3)"
-    });
+        if (revivalDialogElement) {
+            revivalDialogElement.remove();
+            revivalDialogElement = null;
+        }
 
-    // タイトル
-    const title = document.createElement("div");
+        if (typeof callback === "function") {
+            callback();
+        }
 
-    title.textContent = "データを復元しますか？";
+    }
 
-    Object.assign(title.style, {
-        fontSize: "19px",
-        fontWeight: "bold",
-        color: "#222222",
-        marginBottom: "18px"
-    });
 
-    // 説明
-    const description = document.createElement("div");
+    function showRevivalDialog(message, options) {
 
-    description.innerHTML =
-        "次のバックアップデータで<br>" +
-        "データを復元します。";
+        options = options || {};
 
-    Object.assign(description.style, {
-        fontSize: "14px",
-        lineHeight: "1.7",
-        color: "#444444",
-        marginBottom: "16px"
-    });
+        // 既に表示中のダイアログがあれば閉じる
+        if (revivalDialogElement) {
+            revivalDialogElement.remove();
+            revivalDialogElement = null;
+        }
 
-    // バックアップ情報
-    const info = document.createElement("div");
+        const isConfirm = options.showCancel === true;
 
-    info.textContent =
-        "作成日時：" + dateText;
+        const overlay = document.createElement("div");
 
-    Object.assign(info.style, {
-        whiteSpace: "pre-line",
-        background: "#f2f5f8",
-        borderRadius: "10px",
-        padding: "14px 10px",
-        fontSize: "13px",
-        lineHeight: "1.8",
-        color: "#333333",
-        marginBottom: "16px"
-    });
+        overlay.setAttribute("role", "presentation");
 
-    // 注意書き
-    const warning = document.createElement("div");
+        Object.assign(overlay.style, {
+            position: "fixed",
+            inset: "0",
+            zIndex: "20000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            boxSizing: "border-box",
+            background: "rgba(0, 0, 0, 0.58)"
+        });
 
-    warning.innerHTML =
-        "この端末のデータは削除・上書きされます。<br>" +
-        "バックアップに存在しない対象データも削除されます。";
+        const dialog = document.createElement("div");
 
-    Object.assign(warning.style, {
-        fontSize: "12px",
-        lineHeight: "1.7",
-        color: "#d9534f",
-        marginBottom: "22px"
-    });
+        dialog.setAttribute("role", "dialog");
+        dialog.setAttribute("aria-modal", "true");
+        dialog.setAttribute(
+            "aria-labelledby",
+            "smashRevivalDialogTitle"
+        );
 
-    // ボタン共通スタイル
-    function styleButton(button, background) {
-
-        Object.assign(button.style, {
+        Object.assign(dialog.style, {
             width: "100%",
-            border: "none",
-            borderRadius: "10px",
-            padding: "13px",
+            maxWidth: "420px",
+            maxHeight: "calc(100vh - 40px)",
+            overflowY: "auto",
+            boxSizing: "border-box",
+            padding: "24px 22px 20px",
+            borderRadius: "16px",
+            background: "#ffffff",
+            color: "#222222",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.30)",
+            fontFamily: "inherit"
+        });
+
+        const title = document.createElement("div");
+
+        title.id = "smashRevivalDialogTitle";
+
+        title.textContent =
+            options.title ||
+            (isConfirm ? "データ引継ぎの確認" : "データ引継ぎ");
+
+        Object.assign(title.style, {
+            marginBottom: "16px",
+            fontSize: "19px",
+            fontWeight: "700",
+            lineHeight: "1.4",
+            textAlign: "center"
+        });
+
+        const messageElement = document.createElement("div");
+
+        messageElement.textContent = String(message || "");
+
+        Object.assign(messageElement.style, {
+            marginBottom: "24px",
             fontSize: "15px",
-            fontWeight: "bold",
-            color: "#ffffff",
-            background: background,
-            cursor: "pointer",
-            marginTop: "10px"
+            lineHeight: "1.75",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "anywhere",
+            textAlign: "left"
+        });
+
+        const buttons = document.createElement("div");
+
+        Object.assign(buttons.style, {
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px"
+        });
+
+        function styleButton(button, primary) {
+
+            Object.assign(button.style, {
+                minWidth: isConfirm ? "112px" : "140px",
+                minHeight: "44px",
+                padding: "10px 18px",
+                border: primary ? "none" : "1px solid #b8b8b8",
+                borderRadius: "9px",
+                background: primary ? "#5b45b5" : "#ffffff",
+                color: primary ? "#ffffff" : "#333333",
+                fontSize: "15px",
+                fontWeight: "700",
+                cursor: "pointer",
+                touchAction: "manipulation"
+            });
+
+        }
+
+        const okButton = document.createElement("button");
+
+        okButton.type = "button";
+
+        okButton.textContent =
+            options.confirmText ||
+            (isConfirm ? "実行する" : "閉じる");
+
+        styleButton(okButton, true);
+
+        okButton.addEventListener("click", function () {
+            closeRevivalDialog(options.onConfirm);
+        });
+
+        if (isConfirm) {
+
+            const cancelButton = document.createElement("button");
+
+            cancelButton.type = "button";
+            cancelButton.textContent =
+                options.cancelText || "キャンセル";
+
+            styleButton(cancelButton, false);
+
+            cancelButton.addEventListener("click", function () {
+                closeRevivalDialog(options.onCancel);
+            });
+
+            buttons.appendChild(cancelButton);
+
+        }
+
+        buttons.appendChild(okButton);
+
+        dialog.appendChild(title);
+        dialog.appendChild(messageElement);
+        dialog.appendChild(buttons);
+
+        overlay.appendChild(dialog);
+
+        // 背景タップでは確認操作を確定させない
+        overlay.addEventListener("click", function (event) {
+
+            if (event.target === overlay && !isConfirm) {
+                closeRevivalDialog();
+            }
+
+        });
+
+        revivalDialogElement = overlay;
+
+        document.body.appendChild(overlay);
+
+        okButton.focus();
+
+    }
+
+
+    // ==========================================
+    // 通知表示
+    // ==========================================
+
+    function showRevivalNotice(message, isError) {
+
+        showRevivalDialog(message, {
+            title: isError ? "エラー" : "お知らせ",
+            confirmText: "閉じる"
         });
 
     }
 
-    // 復元ボタン
-    const restoreButton = document.createElement("button");
 
-    restoreButton.textContent = "復元する";
+    // ==========================================
+    // QRコードによるバックアップ作成
+    // ==========================================
 
-    styleButton(restoreButton, "#e06b36");
+    function createRevivalBackup() {
 
-    restoreButton.onclick = function() {
+        const result = window.BackupManager.createBackup();
 
-        modal.remove();
-
-        executeRevivalRestore(backup);
-
-    };
-
-    // キャンセルボタン
-    const cancelButton = document.createElement("button");
-
-    cancelButton.textContent = "キャンセル";
-
-    styleButton(cancelButton, "#888888");
-
-    cancelButton.onclick = function() {
-
-        modal.remove();
-
-    };
-
-    // 要素を組み立てる
-    panel.appendChild(title);
-    panel.appendChild(description);
-    panel.appendChild(info);
-    panel.appendChild(warning);
-    panel.appendChild(restoreButton);
-    panel.appendChild(cancelButton);
-
-    modal.appendChild(panel);
-
-    // 背景クリックで閉じる
-    modal.addEventListener("click", function(event) {
-
-        if (event.target === modal) {
-            modal.remove();
-        }
-
-    });
-
-    document.body.appendChild(modal);
-
-}
-
-
-/* =========================================================
-   復元ボタン
-   確認モーダルを表示
-========================================================= */
-
-function restoreRevivalBackup() {
-
-    const backup = window.pendingRevivalBackup;
-
-    if (!backup) {
-
-        showRevivalNotice("復元するバックアップデータがありません。");
-
-        return;
-
-    }
-
-    // 復元前に再検証
-    try {
-
-        BackupManager.validateBackup(backup);
-
-    } catch (error) {
-
-        showRevivalNotice(
-            "バックアップデータが正しくありません。\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-    // 独自確認モーダルを表示
-    showRevivalRestoreConfirm(backup);
-
-}
-
-
-/* =========================================================
-   データ引継ぎ 完了モーダル
-========================================================= */
-
-function showRevivalRestoreComplete(result) {
-
-    const modal = document.createElement("div");
-
-    modal.id = "revivalCompleteModal";
-
-    Object.assign(modal.style, {
-        position: "fixed",
-        inset: "0",
-        zIndex: "100001",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0, 0, 0, 0.75)",
-        padding: "20px",
-        boxSizing: "border-box"
-    });
-
-    const panel = document.createElement("div");
-
-    Object.assign(panel.style, {
-        width: "100%",
-        maxWidth: "360px",
-        background: "#ffffff",
-        borderRadius: "16px",
-        padding: "26px 20px",
-        boxSizing: "border-box",
-        textAlign: "center",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.3)"
-    });
-
-    const title = document.createElement("div");
-
-    title.textContent = "データ引継ぎが完了しました";
-
-    Object.assign(title.style, {
-        fontSize: "19px",
-        fontWeight: "bold",
-        color: "#26945b",
-        marginBottom: "18px"
-    });
-
-    const message = document.createElement("div");
-
-    message.textContent =
-        "バックアップデータを正常に復元しました。";
-
-    Object.assign(message.style, {
-        fontSize: "14px",
-        lineHeight: "1.8",
-        color: "#444444",
-        marginBottom: "18px"
-    });
-
-    const description = document.createElement("div");
-
-    description.textContent =
-        "復元したデータを反映するため、アプリを再読み込みしてください。";
-
-    Object.assign(description.style, {
-        fontSize: "13px",
-        lineHeight: "1.7",
-        color: "#666666",
-        marginBottom: "22px"
-    });
-
-    const reloadButton = document.createElement("button");
-
-    reloadButton.textContent = "アプリを再読み込み";
-
-    Object.assign(reloadButton.style, {
-        width: "100%",
-        border: "none",
-        borderRadius: "10px",
-        padding: "14px",
-        fontSize: "15px",
-        fontWeight: "bold",
-        color: "#ffffff",
-        background: "#26945b",
-        cursor: "pointer"
-    });
-
-    reloadButton.onclick = function() {
-
-        window.location.reload();
-
-    };
-
-    panel.appendChild(title);
-    panel.appendChild(message);
-    panel.appendChild(description);
-    panel.appendChild(reloadButton);
-
-    modal.appendChild(panel);
-
-    document.body.appendChild(modal);
-
-}
-
-
-/* =========================================================
-   復元実行
-========================================================= */
-
-function executeRevivalRestore(backup) {
-
-    // 実行直前にも再検証
-    try {
-
-        BackupManager.validateBackup(backup);
-
-    } catch (error) {
-
-        showRevivalNotice(
-            "バックアップデータが正しくありません。\n" +
-            error.message
-        );
-
-        return;
-
-    }
-
-    // 復元実行
-    const result = BackupManager.restoreBackup(backup);
-
-    if (!result.success) {
-
-        if (result.rollbackFailed) {
+        if (!result.success) {
 
             showRevivalNotice(
-                "重大なエラーが発生しました。\n" +
-                "復元と元データへの復旧の両方に失敗しています。\n\n" +
-                "エラー：" + result.error + "\n" +
-                "復旧エラー：" + result.rollbackError
+                result.error ||
+                "バックアップの作成に失敗しました。",
+                true
             );
 
-        } else {
+            return;
+
+        }
+
+        if (typeof window.QRious !== "function") {
 
             showRevivalNotice(
-                "復元に失敗しました。\n" +
-                "復元前のデータに戻しました。\n\n" +
-                result.error
+                "QRコード作成ライブラリ QRious が読み込まれていません。",
+                true
+            );
+
+            return;
+
+        }
+
+        const canvas = document.getElementById("revivalQrCanvas");
+
+        const area = document.getElementById("revivalQrArea");
+
+        if (!canvas || !area) {
+
+            showRevivalNotice(
+                "QRコード表示用のHTMLが見つかりません。",
+                true
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const qrData = QR_PREFIX + result.compressedData;
+
+            new window.QRious({
+                element: canvas,
+                value: qrData,
+                size: 500,
+                level: "L",
+                padding: 20,
+                background: "#ffffff",
+                foreground: "#000000"
+            });
+
+            area.style.display = "block";
+
+            const dateElement = document.getElementById(
+                "revivalBackupDate"
+            );
+
+            if (dateElement) {
+
+                dateElement.textContent =
+                    "作成日時：" +
+                    new Date(result.createdAt).toLocaleString("ja-JP");
+
+            }
+
+            console.log("QRバックアップ生成成功");
+            console.log("保存データ数:", result.dataCount);
+            console.log("圧縮サイズ:", result.compressedSize);
+            console.log("QRデータ文字数:", qrData.length);
+            console.log("QRコードサイズ:", canvas.width);
+
+        } catch (error) {
+
+            console.error(
+                "QRコード生成エラー:",
+                error
+            );
+
+            showRevivalNotice(
+                "QRコードの生成に失敗しました。",
+                true
             );
 
         }
 
-        console.error("復元失敗:", result);
+    }
 
-        return;
+
+    // ==========================================
+    // QRコード画像の保存
+    // ==========================================
+
+    function saveRevivalQr() {
+
+        const canvas = document.getElementById("revivalQrCanvas");
+
+        if (!canvas || !canvas.width || !canvas.height) {
+
+            showRevivalNotice(
+                "保存するQRコードがありません。",
+                true
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const link = document.createElement("a");
+
+            const date = new Date();
+
+            const dateText =
+                date.getFullYear() +
+                String(date.getMonth() + 1).padStart(2, "0") +
+                String(date.getDate()).padStart(2, "0");
+
+            link.download = "DoubleBite_Backup_" + dateText + ".png";
+
+            link.href = canvas.toDataURL("image/png");
+
+            link.click();
+
+        } catch (error) {
+
+            console.error(
+                "QRコード保存エラー:",
+                error
+            );
+
+            showRevivalNotice(
+                "QRコード画像を保存できませんでした。",
+                true
+            );
+
+        }
 
     }
 
-    // 復元成功
-    window.pendingRevivalBackup = null;
 
-    console.log("バックアップ復元成功:", result);
+    // ==========================================
+    // 復元用ファイル選択画面を開く
+    // ==========================================
 
-    // 独自の復元完了モーダルを表示
-    showRevivalRestoreComplete(result);
+    function openRevivalRestore() {
 
-}
+        const fileInput = document.getElementById("revivalQrFile");
+
+        if (!fileInput) {
+
+            showRevivalNotice(
+                "QRコード読み取り用のファイル入力欄がありません。",
+                true
+            );
+
+            return;
+
+        }
+
+        fileInput.value = "";
+
+        fileInput.click();
+
+    }
+
+
+    // ==========================================
+    // QRコード画像ファイルの読み取り
+    // ==========================================
+
+    function readRevivalQrFile(event) {
+
+        const file =
+            event.target.files && event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (typeof window.jsQR !== "function") {
+
+            showRevivalNotice(
+                "QRコード読み取りライブラリ jsQR が読み込まれていません。",
+                true
+            );
+
+            return;
+
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (loadEvent) {
+
+            const image = new Image();
+
+            image.onload = function () {
+
+                try {
+
+                    const canvas = document.createElement("canvas");
+
+                    const context = canvas.getContext(
+                        "2d",
+                        {
+                            willReadFrequently: true
+                        }
+                    );
+
+                    if (!context) {
+                        throw new Error(
+                            "画像処理を開始できませんでした。"
+                        );
+                    }
+
+                    canvas.width = image.naturalWidth;
+                    canvas.height = image.naturalHeight;
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0
+                    );
+
+                    const imageData = context.getImageData(
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+                    const qrResult = window.jsQR(
+                        imageData.data,
+                        imageData.width,
+                        imageData.height,
+                        {
+                            inversionAttempts: "attemptBoth"
+                        }
+                    );
+
+                    if (!qrResult || !qrResult.data) {
+
+                        throw new Error(
+                            "QRコードを読み取れませんでした。画像を確認してください。"
+                        );
+
+                    }
+
+                    // QRデータの解凍と検証
+                    const decoded =
+                        window.BackupManager.decodeBackup(
+                            qrResult.data
+                        );
+
+                    if (!decoded.success) {
+                        throw new Error(decoded.message);
+                    }
+
+                    pendingRevivalBackup = decoded.backup;
+
+                    window.pendingRevivalBackup = decoded.backup;
+
+                    console.log("バックアップ読み取り成功");
+
+                    console.log(
+                        "作成日時:",
+                        decoded.backup.createdAt
+                    );
+
+                    console.log(
+                        "保存データ数:",
+                        Object.keys(decoded.backup.data).length
+                    );
+
+                    // 読み取り成功後、復元確認画面を表示
+                    showRevivalRestoreConfirm(decoded.backup);
+
+                } catch (error) {
+
+                    pendingRevivalBackup = null;
+
+                    window.pendingRevivalBackup = null;
+
+                    console.error(
+                        "QRコード画像解析エラー:",
+                        error
+                    );
+
+                    showRevivalNotice(
+                        "バックアップデータを正常に読み取れませんでした。\n" +
+                        error.message,
+                        true
+                    );
+
+                }
+
+            };
+
+            image.onerror = function () {
+
+                showRevivalNotice(
+                    "画像ファイルを開けませんでした。",
+                    true
+                );
+
+            };
+
+            image.src = loadEvent.target.result;
+
+        };
+
+        reader.onerror = function () {
+
+            showRevivalNotice(
+                "ファイルの読み込みに失敗しました。",
+                true
+            );
+
+        };
+
+        reader.readAsDataURL(file);
+
+    }
+
+
+    // ==========================================
+    // 復元前の確認
+    // ==========================================
+
+    function showRevivalRestoreConfirm(backup) {
+
+        const info =
+            window.BackupManager.getBackupInfo(backup);
+
+        if (!info) {
+
+            pendingRevivalBackup = null;
+
+            window.pendingRevivalBackup = null;
+
+            showRevivalNotice(
+                "バックアップ情報を取得できませんでした。",
+                true
+            );
+
+            return;
+
+        }
+
+        const dateText =
+            new Date(info.createdAt).toLocaleString("ja-JP");
+
+        const message =
+            "バックアップを読み取りました。\n\n" +
+            "バックアップ日時：\n" +
+            dateText +
+            "\n\n" +
+            "現在の引継ぎ対象データは、バックアップの内容に置き換わります。\n" +
+            "バックアップに含まれていない対象データは削除されます。\n\n" +
+            "データ引継ぎを実行しますか？";
+
+        showRevivalDialog(message, {
+            title: "データ引継ぎの確認",
+            showCancel: true,
+            confirmText: "引継ぎする",
+            cancelText: "キャンセル",
+
+            onConfirm: function () {
+                restoreRevivalBackup();
+            },
+
+            onCancel: function () {
+
+                pendingRevivalBackup = null;
+
+                window.pendingRevivalBackup = null;
+
+                showRevivalNotice(
+                    "データ引継ぎをキャンセルしました。",
+                    false
+                );
+
+            }
+
+        });
+
+    }
+
+
+    // ==========================================
+    // データ引継ぎの実行
+    // ==========================================
+
+    function restoreRevivalBackup() {
+
+        const backup = pendingRevivalBackup;
+
+        if (!backup) {
+
+            showRevivalNotice(
+                "復元するバックアップデータがありません。",
+                true
+            );
+
+            return;
+
+        }
+
+        // 復元直前に再検証
+        try {
+
+            window.BackupManager.validateBackup(backup);
+
+        } catch (error) {
+
+            showRevivalNotice(
+                "バックアップデータが正しくありません。\n" +
+                error.message,
+                true
+            );
+
+            pendingRevivalBackup = null;
+
+            window.pendingRevivalBackup = null;
+
+            return;
+
+        }
+
+        const result =
+            window.BackupManager.restoreBackup(backup);
+
+        if (!result.success) {
+
+            let message;
+
+            if (result.rollbackFailed) {
+
+                message =
+                    "重大なエラーが発生しました。\n" +
+                    "復元と元データへの復旧の両方に失敗しています。\n\n" +
+                    "エラー：" + result.error + "\n" +
+                    "復旧エラー：" + result.rollbackError;
+
+            } else {
+
+                message =
+                    "復元に失敗しました。\n" +
+                    "復元前のデータに戻しました。\n\n" +
+                    result.error;
+
+            }
+
+            showRevivalNotice(message, true);
+
+            console.error("復元失敗:", result);
+
+            pendingRevivalBackup = null;
+
+            window.pendingRevivalBackup = null;
+
+            return;
+
+        }
+
+        pendingRevivalBackup = null;
+
+        window.pendingRevivalBackup = null;
+
+        console.log("バックアップ復元成功:", result);
+
+        showRevivalRestoreComplete(result);
+
+    }
+
+
+    // ==========================================
+    // データ引継ぎ完了
+    // ==========================================
+
+    function showRevivalRestoreComplete(result) {
+
+        showRevivalDialog(
+            "データ引継ぎが完了しました。\n\n" +
+            "アプリを再読み込みして、引き継いだデータを反映しますか？",
+            {
+                title: "引継ぎ完了",
+                showCancel: true,
+                confirmText: "再読み込み",
+                cancelText: "あとで",
+
+                onConfirm: function () {
+                    window.location.reload();
+                },
+
+                onCancel: function () {
+
+                    showRevivalNotice(
+                        "データ引継ぎは完了しています。反映するにはアプリを再読み込みしてください。",
+                        false
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // 画面外クリックでメインモーダルを閉じる
+    // ==========================================
+
+    document.addEventListener("click", function (event) {
+
+        const modal = document.getElementById("revivalModal");
+
+        if (
+            modal &&
+            event.target === modal
+        ) {
+            closeRevivalModal();
+        }
+
+    });
+
+
+    // ==========================================
+    // HTMLから呼び出す関数を公開
+    // ==========================================
+
+    window.openRevivalModal = openRevivalModal;
+
+    window.closeRevivalModal = closeRevivalModal;
+
+    window.createRevivalBackup = createRevivalBackup;
+
+    window.saveRevivalQr = saveRevivalQr;
+
+    window.openRevivalRestore = openRevivalRestore;
+
+    window.readRevivalQrFile = readRevivalQrFile;
+
+    window.restoreRevivalBackup = restoreRevivalBackup;
+
+})();
